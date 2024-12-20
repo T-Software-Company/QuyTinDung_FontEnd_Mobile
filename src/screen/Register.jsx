@@ -14,11 +14,11 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const Register = ({navigation}) => {
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [name, setName] = useState('demo');
+  const [phone, setPhone] = useState('0123456789');
+  const [email, setEmail] = useState('demo@gmail.com');
+  const [password, setPassword] = useState('123456789');
+  const [confirmPassword, setConfirmPassword] = useState('123456789');
   const [invisible, setInvisible] = useState(true);
   const [invisibleConfirm, setInvisibleConfirm] = useState(true);
 

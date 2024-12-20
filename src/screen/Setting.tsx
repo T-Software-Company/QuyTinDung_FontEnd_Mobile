@@ -50,7 +50,9 @@ const Setting = ({navigation}: any) => {
                 </View>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.wrapButton}>
+              <TouchableOpacity
+                style={styles.wrapButton}
+                onPress={() => navigation.navigate('LanguageSetting')}>
                 <Text style={styles.textButton}>Ngôn ngữ</Text>
                 <View style={styles.wrapText}>
                   <Text style={styles.textOption}>Tiếng Việt</Text>
@@ -79,7 +81,9 @@ const Setting = ({navigation}: any) => {
           <View style={styles.boxContent}>
             <Text style={styles.title}>BẢO MẬT</Text>
             <View style={styles.wrapContent}>
-              <TouchableOpacity style={styles.wrapButton}>
+              <TouchableOpacity
+                style={styles.wrapButton}
+                onPress={() => navigation.navigate('ChangePassword')}>
                 <Text style={styles.textButton}>Thay đổi mật khẩu</Text>
                 <View style={styles.wrapText}>
                   <View style={styles.wrapIcon}>

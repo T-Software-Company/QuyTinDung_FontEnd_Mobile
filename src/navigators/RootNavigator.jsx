@@ -15,8 +15,13 @@ import SentSaveScreen from '../screen/SentSave';
 import CreateLoanScreen from '../screen/CreateLoan';
 import NotificationScreen from '../screen/Notification';
 import InfoPersonScreen from '../screen/InfoPerson';
+import LanguageSettingScreen from '../screen/LanguageSetting';
+import ChangePasswordScreen from '../screen/ChangePassword';
+
+
 
 import LoginScreen from '../screen/Login';
+import ForgetPasswordScreen from '../screen/ForgetPassword';
 import RegisterScreen from '../screen/Register';
 
 import Footer from '../components/Footer/Footer';
@@ -101,11 +106,15 @@ export default RootComponent = function () {
 
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
+        <Stack.Screen name="ForgetPassword" component={ForgetPasswordScreen} />
+
         <Stack.Screen name="InfoSave" component={InfoSaveScreen} />
         <Stack.Screen name="InfoLoan" component={InfoLoanScreen} />
         <Stack.Screen name="InfoPerson" component={InfoPersonScreen} />
         <Stack.Screen name="SentSave" component={SentSaveScreen} />
         <Stack.Screen name="CreateLoan" component={CreateLoanScreen} />
+        <Stack.Screen name="LanguageSetting" component={LanguageSettingScreen} />
+        <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
 
 
         <Stack.Screen

@@ -16,7 +16,7 @@ const Home = ({navigation}) => {
       <View style={styles.container}>
         {/* Heading */}
         <View style={styles.containHeading}>
-          <TouchableOpacity style={styles.borderAvatar}>
+          <TouchableOpacity style={styles.borderAvatar} onPress={() => navigation.navigate("InfoPerson")}>
             <Image
               source={require('../../assets/images/avatar.jpg')}
               style={styles.avatar}

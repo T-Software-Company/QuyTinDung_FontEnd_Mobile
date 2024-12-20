@@ -14,10 +14,9 @@ import React, {useState} from 'react';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const Login = ({navigation}) => {
-  const [email, setEmail] = useState('demo@gmail.com');
-  const [password, setPassword] = useState('123456789');
-  const [invisible, setInvisible] = useState(true);
+const ForgetPassword = ({navigation}) => {
+  const [email, setEmail] = useState('');
+  const [idCccd, setIdCccd] = useState('');
 
   // Hàm kiểm tra định dạng email
   const isValidEmail = email => {
@@ -26,22 +25,7 @@ const Login = ({navigation}) => {
   };
 
   const handleSubmit = () => {
-    if (!email || !password) {
-      Alert.alert('Thông báo', 'Vui lòng nhập đầy đủ thông tin!');
-      return;
-    }
-
-    if (!isValidEmail(email)) {
-      Alert.alert('Thông báo', 'Email không hợp lệ!');
-      return;
-    }
-
-    if (password.length < 6) {
-      Alert.alert('Thông báo', 'Mật khẩu phải có ít nhất 6 ký tự!');
-      return;
-    }
-
-    navigation.navigate('HomeTabs');
+    Alert.alert('Thông báo', 'Chúng tôi đã gửi OTP về số điện thoại của bạn');
   };
 
   return (
@@ -54,7 +38,7 @@ const Login = ({navigation}) => {
             paddingHorizontal: 20,
             marginTop: 0.1 * windowHeight,
           }}>
-          <Text style={styles.title}>Đăng nhập</Text>
+          <Text style={styles.title}>Quên mật khẩu</Text>
 
           <View>
             <View style={{marginBottom: 20}}>
@@ -65,7 +49,7 @@ const Login = ({navigation}) => {
                   style={styles.icon}
                 />
                 <TextInput
-                  placeholder="Email"
+                  placeholder="Email / Số điện thoại"
                   placeholderTextColor="#aaa"
                   keyboardType="email-address"
                   onChangeText={setEmail}
@@ -76,52 +60,34 @@ const Login = ({navigation}) => {
               </View>
             </View>
             <View style={{marginBottom: 20}}>
-              <Text style={styles.heading}>Mật khẩu</Text>
+              <Text style={styles.heading}>Số CCCD của bạn</Text>
               <View>
                 <Image
                   source={require('../../assets/images/password-icon.png')}
                   style={styles.icon}
                 />
                 <TextInput
-                  placeholder="Mật khẩu"
+                  placeholder="Nhập CCCD"
                   placeholderTextColor="#aaa"
-                  secureTextEntry={invisible}
-                  onChangeText={setPassword}
-                  value={password}
+                  keyboardType="numeric"
+                  onChangeText={setIdCccd}
+                  value={idCccd}
                   style={styles.textInput}
                 />
-                <TouchableOpacity
-                  style={styles.iconEyes}
-                  onPress={() => setInvisible(!invisible)}>
-                  {invisible ? (
-                    <Image
-                      source={require('../../assets/images/eyes-icon.png')}
-                    />
-                  ) : (
-                    <Image
-                      style={{
-                        bottom: Platform.OS === 'ios' ? 4 : 4,
-                        paddingVertical: 0,
-                        textAlignVertical: 'center',
-                      }}
-                      source={require('../../assets/images/eyesclose-icon.png')}
-                    />
-                  )}
-                </TouchableOpacity>
               </View>
             </View>
           </View>
           <View>
             <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-              <Text style={styles.textButton}>Đăng nhập</Text>
+              <Text style={styles.textButton}>Quên mật khẩu</Text>
             </TouchableOpacity>
             <View style={styles.optionsNew}>
               <Text style={{color: '#a2a2a7', fontSize: 14}}>
-                Bạn đang là người mới.{' '}
+                Bạn đã nhớ lại mật khẩu.{' '}
               </Text>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('Register');
+                  navigation.goBack();
                 }}>
                 <Text
                   style={{
@@ -129,25 +95,10 @@ const Login = ({navigation}) => {
                     fontWeight: 'semibold',
                     fontSize: 14,
                   }}>
-                  Đăng ký
+                  Đăng nhập
                 </Text>
               </TouchableOpacity>
             </View>
-            <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('ForgetPassword');
-                }}>
-                <Text
-                  style={{
-                    color: '#0066ff',
-                    fontWeight: 'semibold',
-                    fontSize: 14,
-                    textAlign: "center",
-                    marginTop: 20
-                  }}>
-                  Quên mật khẩu
-                </Text>
-              </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -155,7 +106,7 @@ const Login = ({navigation}) => {
   );
 };
 
-export default Login;
+export default ForgetPassword;
 
 const styles = StyleSheet.create({
   view: {
@@ -176,7 +127,7 @@ const styles = StyleSheet.create({
   title: {
     color: '#1e1e2d',
     fontSize: 32,
-    lineHeight: 32,
+    lineHeight: 48,
     marginBottom: 38,
   },
   icon: {

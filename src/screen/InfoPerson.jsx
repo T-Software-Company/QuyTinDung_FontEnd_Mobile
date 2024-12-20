@@ -9,8 +9,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
-import {Dropdown, SelectCountry} from 'react-native-element-dropdown';
 
 import React, {useState} from 'react';
 
@@ -29,11 +27,15 @@ const InfoPerson = ({navigation}) => {
     sex: 'Nam',
     birthday: '01/07/1999',
     idcccd: '0123456789',
-    startDayCccd: "22/07/2020",
-    expireDayCccd: "22/07/2024",
-    placeCccd: "Cục trưởng cục cảnh sát",
-    addressCccd: "Thôn 7, Huyện Nam Hà, Tỉnh Hà Nam"
+    startDayCccd: '22/07/2020',
+    expireDayCccd: '22/07/2024',
+    placeCccd: 'Cục trưởng cục cảnh sát',
+    addressCccd: 'Thôn 7, Huyện Nam Hà, Tỉnh Hà Nam',
+  };
 
+  const handleSubmit = () => {
+    Alert.alert('Thông báo', 'Cập nhật thành công');
+    setIsEditable(false);
   };
 
   return (
@@ -115,7 +117,10 @@ const InfoPerson = ({navigation}) => {
                       keyboardType="numeric"
                       onChangeText={setNumber}
                       value={infoPerson?.phone}
-                      style={styles.textInput}
+                      style={[
+                        styles.textInput,
+                        isEditable ? styles.textEdit : '',
+                      ]}
                       editable={isEditable} // Chỉ cho phép focus khi `isEditable` là true
                     />
                   </View>
@@ -128,7 +133,10 @@ const InfoPerson = ({navigation}) => {
                       keyboardType="email-address"
                       onChangeText={setNumber}
                       value={infoPerson?.email}
-                      style={styles.textInput}
+                      style={[
+                        styles.textInput,
+                        isEditable ? styles.textEdit : '',
+                      ]}
                       editable={isEditable} // Chỉ cho phép focus khi `isEditable` là true
                     />
                   </View>
@@ -140,7 +148,10 @@ const InfoPerson = ({navigation}) => {
                       placeholderTextColor="#aaa"
                       onChangeText={setNumber}
                       value={infoPerson?.sex}
-                      style={styles.textInput}
+                      style={[
+                        styles.textInput,
+                        isEditable ? styles.textEdit : '',
+                      ]}
                       editable={isEditable} // Chỉ cho phép focus khi `isEditable` là true
                     />
                   </View>
@@ -152,7 +163,10 @@ const InfoPerson = ({navigation}) => {
                       placeholderTextColor="#aaa"
                       onChangeText={setNumber}
                       value={infoPerson?.birthday}
-                      style={styles.textInput}
+                      style={[
+                        styles.textInput,
+                        isEditable ? styles.textEdit : '',
+                      ]}
                       editable={isEditable} // Chỉ cho phép focus khi `isEditable` là true
                     />
                   </View>
@@ -165,11 +179,13 @@ const InfoPerson = ({navigation}) => {
                       keyboardType="numeric"
                       onChangeText={setNumber}
                       value={infoPerson?.address}
-                      style={styles.textInput}
+                      style={[
+                        styles.textInput,
+                        isEditable ? styles.textEdit : '',
+                      ]}
                       editable={isEditable} // Chỉ cho phép focus khi `isEditable` là true
                     />
                   </View>
-
                 </View>
               ) : (
                 <View>
@@ -181,7 +197,10 @@ const InfoPerson = ({navigation}) => {
                       keyboardType="numeric"
                       onChangeText={setNumber}
                       value={infoPerson?.idcccd}
-                      style={styles.textInput}
+                      style={[
+                        styles.textInput,
+                        isEditable ? styles.textEdit : '',
+                      ]}
                       editable={isEditable} // Chỉ cho phép focus khi `isEditable` là true
                     />
                   </View>
@@ -193,7 +212,10 @@ const InfoPerson = ({navigation}) => {
                       placeholderTextColor="#aaa"
                       onChangeText={setNumber}
                       value={infoPerson?.placeCccd}
-                      style={styles.textInput}
+                      style={[
+                        styles.textInput,
+                        isEditable ? styles.textEdit : '',
+                      ]}
                       editable={isEditable} // Chỉ cho phép focus khi `isEditable` là true
                     />
                   </View>
@@ -205,7 +227,10 @@ const InfoPerson = ({navigation}) => {
                       placeholderTextColor="#aaa"
                       onChangeText={setNumber}
                       value={infoPerson?.startDayCccd}
-                      style={styles.textInput}
+                      style={[
+                        styles.textInput,
+                        isEditable ? styles.textEdit : '',
+                      ]}
                       editable={isEditable} // Chỉ cho phép focus khi `isEditable` là true
                     />
                   </View>
@@ -217,7 +242,10 @@ const InfoPerson = ({navigation}) => {
                       placeholderTextColor="#aaa"
                       onChangeText={setNumber}
                       value={infoPerson?.expireDayCccd}
-                      style={styles.textInput}
+                      style={[
+                        styles.textInput,
+                        isEditable ? styles.textEdit : '',
+                      ]}
                       editable={isEditable} // Chỉ cho phép focus khi `isEditable` là true
                     />
                   </View>
@@ -229,23 +257,39 @@ const InfoPerson = ({navigation}) => {
                       placeholderTextColor="#aaa"
                       onChangeText={setNumber}
                       value={infoPerson?.addressCccd}
-                      style={styles.textInput}
+                      style={[
+                        styles.textInput,
+                        isEditable ? styles.textEdit : '',
+                      ]}
                       editable={isEditable} // Chỉ cho phép focus khi `isEditable` là true
                     />
                   </View>
                 </View>
               )}
-              <TouchableOpacity
-                style={styles.btn}
-                onPress={() => Alert.alert('Thông báo', 'Tất toán thành công')}>
-                <Text
-                  style={[
-                    styles.textWhite,
-                    {fontWeight: 'bold', textAlign: 'center'},
-                  ]}>
-                  Cập nhật
-                </Text>
-              </TouchableOpacity>
+              <View style={styles.wrapBtn}>
+                <TouchableOpacity
+                  style={[styles.btn, styles.btnNormal]}
+                  onPress={() => setIsEditable(true)}>
+                  <Text
+                    style={[
+                      styles.textWhite,
+                      {fontWeight: 'bold', textAlign: 'center', color: '#000'},
+                    ]}>
+                    Chỉnh sửa
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.btn, styles.btnPrimary]}
+                  onPress={handleSubmit}>
+                  <Text
+                    style={[
+                      styles.textWhite,
+                      {fontWeight: 'bold', textAlign: 'center'},
+                    ]}>
+                    Cập nhật
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </ScrollView>
@@ -368,6 +412,9 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
     textAlignVertical: 'center',
   },
+  textEdit: {
+    color: '#000',
+  },
 
   placeholderStyle: {
     color: '#aaa',
@@ -379,12 +426,27 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 
+  wrapBtn: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+
   btn: {
-    width: '100%',
-    backgroundColor: '#007BFF',
+    // flex: '1',
+    width: '48%',
     padding: 12,
     borderRadius: 12,
     marginTop: 8,
+  },
+
+  btnPrimary: {
+    backgroundColor: '#007BFF',
+  },
+
+  btnNormal: {
+    backgroundColor: '#ddd',
   },
 
   hidden: {

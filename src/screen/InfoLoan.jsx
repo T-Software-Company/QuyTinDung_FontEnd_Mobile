@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native';
 import React from 'react';
+import Header from '../components/Header/Header';
 
 const InfoLoan = ({navigation}) => {
   const data = [
@@ -31,21 +32,7 @@ const InfoLoan = ({navigation}) => {
       <View style={styles.container}>
         {/* Heading */}
 
-        <View style={styles.containHeading}>
-          <TouchableOpacity
-            style={styles.borderArrow}
-            onPress={() => navigation.goBack()}>
-            <Image source={require('../../assets/images/arrow-left.png')} />
-          </TouchableOpacity>
-          <View>
-            <Text style={styles.heading}>Thông tin khoản vay</Text>
-          </View>
-          <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
-            <Image
-              source={require('../../assets/images/notification-icon.png')}
-            />
-          </TouchableOpacity>
-        </View>
+        <Header Navbar="InfoLoan" navigation={navigation} />
 
         {/* Body */}
 

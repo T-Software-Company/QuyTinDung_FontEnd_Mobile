@@ -9,21 +9,13 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
 import {Dropdown, SelectCountry} from 'react-native-element-dropdown';
 
 import React, {useState} from 'react';
+import Header from '../components/Header/Header';
 
 const SentSave = ({navigation}) => {
   const [number, setNumber] = useState(null);
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
-  const [items, setItems] = useState([
-    {label: '1', value: '1'},
-    {label: '2', value: '2'},
-    {label: '3', value: '3'},
-    {label: '4', value: '4'},
-  ]);
 
   const rates = [
     {
@@ -80,21 +72,7 @@ const SentSave = ({navigation}) => {
       <View style={styles.container}>
         {/* Heading */}
 
-        <View style={styles.containHeading}>
-          <TouchableOpacity
-            style={styles.borderArrow}
-            onPress={() => navigation.goBack()}>
-            <Image source={require('../../assets/images/arrow-left.png')} />
-          </TouchableOpacity>
-          <View>
-            <Text style={styles.heading}>Gửi tiết kiệm</Text>
-          </View>
-          <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
-            <Image
-              source={require('../../assets/images/notification-icon.png')}
-            />
-          </TouchableOpacity>
-        </View>
+        <Header Navbar="SentSave" navigation={navigation} />
 
         {/* Body */}
 
@@ -139,7 +117,8 @@ const SentSave = ({navigation}) => {
 
                 {selectedRate ? (
                   <Text style={styles.rateText}>
-                    Lãi suất của kỳ hạn {selectedRate.lable} là {selectedRate.rate}
+                    Lãi suất của kỳ hạn {selectedRate.lable} là{' '}
+                    {selectedRate.rate}
                   </Text>
                 ) : (
                   <></>
@@ -191,7 +170,9 @@ const SentSave = ({navigation}) => {
               </View>
               <TouchableOpacity
                 style={styles.btn}
-                onPress={() => Alert.alert('Thông báo', 'Bạn đã gửi thành công')}>
+                onPress={() =>
+                  Alert.alert('Thông báo', 'Bạn đã gửi thành công')
+                }>
                 <Text
                   style={[
                     styles.textWhite,

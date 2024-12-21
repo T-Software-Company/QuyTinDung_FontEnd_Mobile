@@ -7,9 +7,17 @@ import {
   View,
 } from 'react-native';
 import React, {useState} from 'react';
+import Header from '../components/Header/Header';
+import Table from '../components/Table/Table';
+import SelectedTabs from '../components/SelectedTabs/SelectedTabs';
 
 const Rate = ({navigation}) => {
   const [selectedTab, setSelectedTab] = useState('saving');
+
+  const tabs = [
+    {key: 'saving', label: 'Tiết kiệm'},
+    {key: 'loan', label: 'Cho vay'},
+  ];
 
   const loanRates = [
     {key: 'Kỳ hạn', value: 'Lãi suất'},
@@ -40,64 +48,19 @@ const Rate = ({navigation}) => {
       <View style={styles.container}>
         {/* Heading */}
 
-        <View style={styles.containHeading}>
-          <View>
-            <Text style={styles.heading}>Lãi suất</Text>
-          </View>
-        </View>
+        <Header Navbar="Rate" />
 
         {/* Body */}
         <View style={styles.body}>
-          <View style={styles.tabBar}>
-            <TouchableOpacity
-              style={[styles.tab, selectedTab === 'saving' && styles.activeTab]}
-              onPress={() => setSelectedTab('saving')}>
-              <Text
-                style={[
-                  styles.tabText,
-                  selectedTab === 'saving' && styles.tabTextActive,
-                ]}>
-                Tiết kiệm
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.tab, selectedTab === 'loan' && styles.activeTab]}
-              onPress={() => setSelectedTab('loan')}>
-              <Text
-                style={[
-                  styles.tabText,
-                  selectedTab === 'loan' && styles.tabTextActive,
-                ]}>
-                Cho vay
-              </Text>
-            </TouchableOpacity>
-          </View>
+          <SelectedTabs
+            tabs={tabs}
+            selectedTab={selectedTab}
+            onSelectTab={setSelectedTab}
+          />
 
+          {/* View data */}
           <View style={styles.boxList}>
-            {data.map((box, idx) => (
-              <View
-                key={idx}
-                style={[
-                  styles.boxWrap,
-                  idx === 0 && styles.firstChild, // Áp dụng kiểu cho phần tử đầu tiên
-                  idx > 0 && idx < loanRates.length - 1 && styles.middleChild, // Phần tử giữa
-                ]}>
-                <Text
-                  style={[
-                    idx === 0 && styles.textKeyRow,
-                    idx > 0 && idx < loanRates.length - 1 && styles.textRow,
-                  ]}>
-                  {box.key}
-                </Text>
-                <Text
-                  style={[
-                    idx === 0 && styles.textKeyRow,
-                    idx > 0 && idx < loanRates.length - 1 && styles.textRow,
-                  ]}>
-                  {box.value}
-                </Text>
-              </View>
-            ))}
+            <Table name="rate" data={data} />
           </View>
         </View>
       </View>
@@ -117,47 +80,10 @@ const styles = StyleSheet.create({
     height: '100%',
   },
 
-  containHeading: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-    alignItems: 'center',
-    height: 42,
-  },
-  heading: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#1e1e2d',
-  },
-
   body: {
     marginTop: 32,
     paddingHorizontal: 20,
     paddingBottom: 8,
-  },
-
-  tabBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  tab: {
-    padding: 12,
-    backgroundColor: '#ddd',
-    borderRadius: 10,
-    width: '48%',
-    alignItems: 'center',
-  },
-  activeTab: {
-    backgroundColor: '#007BFF', // Màu nền khi tab được chọn
-  },
-  tabText: {
-    color: '#000',
-    fontWeight: 'bold',
-  },
-  tabTextActive: {
-    color: '#fff',
   },
 
   boxList: {
@@ -175,30 +101,5 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     height: 'auto',
-  },
-
-  boxWrap: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 12,
-  },
-
-  firstChild: {
-    backgroundColor: '#f4f4f4',
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
-  },
-  middleChild: {
-    borderBottomColor: '#f4f4f4',
-    borderBottomWidth: 1,
-  },
-
-  textKeyRow: {
-    fontWeight: 'bold',
-  },
-  textRow: {
-    fontWeight: 'regular',
   },
 });

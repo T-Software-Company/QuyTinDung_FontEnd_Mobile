@@ -9,6 +9,7 @@ import {
   Platform,
 } from 'react-native';
 import React, {useState} from 'react';
+import Header from '../components/Header/Header';
 
 const Notification = ({navigation}) => {
   const notifications = [
@@ -42,41 +43,27 @@ const Notification = ({navigation}) => {
       <View style={styles.container}>
         {/* Heading */}
 
-        <View style={styles.containHeading}>
-          <TouchableOpacity
-            style={styles.borderArrow}
-            onPress={() => navigation.goBack()}>
-            <Image source={require('../../assets/images/arrow-left.png')} />
-          </TouchableOpacity>
-          <View>
-            <Text style={styles.heading}>Thông báo</Text>
-          </View>
-          <TouchableOpacity style={styles.borderArrow}>
-            <Text
-              style={{
-                position: 'absolute',
-                right: 0,
-                width: '80',
-                textAlign: 'right',
-                flexShrink: 1,
-                flexWrap: 'nowrap',
-                flexDirection: 'row',
-                color: '#007BFF',
-                fontSize: 14,
-              }}>
-              Đã xem hết
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <Header Navbar="Notification" navigation={navigation} />
 
         {/* Body */}
         <ScrollView style={styles.body}>
           <View style={styles.wrapNotification}>
             {notifications.map(notification => (
-              <TouchableOpacity key={notification.id} style={[styles.boxNotification, !notification.seen ? styles.boxActive : ""]}>
+              <TouchableOpacity
+                key={notification.id}
+                style={[
+                  styles.boxNotification,
+                  !notification.seen ? styles.boxActive : '',
+                ]}>
                 <View style={styles.boxHeader}>
-                  <Text style={styles.headerNotification}>{notification.title}</Text>
-                  {!notification.seen ? <View style={styles.circleHeader}></View> : <></>}
+                  <Text style={styles.headerNotification}>
+                    {notification.title}
+                  </Text>
+                  {!notification.seen ? (
+                    <View style={styles.circleHeader}></View>
+                  ) : (
+                    <></>
+                  )}
                 </View>
                 <Text style={styles.descriptionNotification}>
                   {notification.desc}

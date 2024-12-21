@@ -4,6 +4,8 @@
  *
  * @format
  */
+// import 'react-native-gesture-handler'; // Đảm bảo import trước bất kỳ thư viện nào khác
+
 
 import React from 'react';
 import {StyleSheet, useColorScheme} from 'react-native';

@@ -11,11 +11,18 @@ import {
 } from 'react-native';
 
 import React, {useState} from 'react';
+import Header from '../components/Header/Header';
+import SelectedTabs from '../components/SelectedTabs/SelectedTabs';
 
 const InfoPerson = ({navigation}) => {
   const [number, setNumber] = useState(null);
   const [selectedTab, setSelectedTab] = useState('info');
   const [isEditable, setIsEditable] = useState(false);
+
+  const tabs = [
+    {key: 'info', label: 'THÔNG TIN LIÊN HỆ'},
+    {key: 'paper', label: 'GIẤY TỜ TÙY THÂN'},
+  ];
 
   const infoPerson = {
     id: 1,
@@ -43,21 +50,7 @@ const InfoPerson = ({navigation}) => {
       <View style={styles.container}>
         {/* Heading */}
 
-        <View style={styles.containHeading}>
-          <TouchableOpacity
-            style={styles.borderArrow}
-            onPress={() => navigation.goBack()}>
-            <Image source={require('../../assets/images/arrow-left.png')} />
-          </TouchableOpacity>
-          <View>
-            <Text style={styles.heading}>Thông tin cá nhân</Text>
-          </View>
-          <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
-            <Image
-              source={require('../../assets/images/notification-icon.png')}
-            />
-          </TouchableOpacity>
-        </View>
+        <Header Navbar="InfoPerson" navigation={navigation} />
 
         {/* Body */}
 
@@ -76,36 +69,12 @@ const InfoPerson = ({navigation}) => {
                 <Text style={styles.nameTitle}>Quỹ TDND Châu Đức</Text>
               </View>
 
-              <View style={styles.tabBar}>
-                <TouchableOpacity
-                  style={[
-                    styles.tab,
-                    selectedTab === 'info' && styles.activeTab,
-                  ]}
-                  onPress={() => setSelectedTab('info')}>
-                  <Text
-                    style={[
-                      styles.tabText,
-                      selectedTab === 'info' && styles.tabTextActive,
-                    ]}>
-                    THÔNG TIN LIÊN HỆ
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[
-                    styles.tab,
-                    selectedTab === 'paper' && styles.activeTab,
-                  ]}
-                  onPress={() => setSelectedTab('paper')}>
-                  <Text
-                    style={[
-                      styles.tabText,
-                      selectedTab === 'paper' && styles.tabTextActive,
-                    ]}>
-                    GIẤY TỜ TÙY THÂN
-                  </Text>
-                </TouchableOpacity>
-              </View>
+              {/* Tabs bar */}
+              <SelectedTabs
+                tabs={tabs}
+                selectedTab={selectedTab}
+                onSelectTab={setSelectedTab}
+              />
 
               {selectedTab === 'info' ? (
                 <View>
@@ -310,25 +279,6 @@ const styles = StyleSheet.create({
     height: '100%',
   },
 
-  containHeading: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    alignItems: 'center',
-  },
-  heading: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#1e1e2d',
-  },
-  borderArrow: {
-    width: 42,
-    height: 42,
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-  },
-
   body: {
     marginTop: 16,
     paddingHorizontal: 20,
@@ -355,29 +305,6 @@ const styles = StyleSheet.create({
     marginTop: 4,
     fontSize: 14,
     color: '#aaa',
-  },
-
-  tabBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  tab: {
-    padding: 12,
-    backgroundColor: '#ddd',
-    borderRadius: 10,
-    width: '48%',
-    alignItems: 'center',
-  },
-  activeTab: {
-    backgroundColor: '#007BFF', // Màu nền khi tab được chọn
-  },
-  tabText: {
-    color: '#000',
-    fontWeight: 'bold',
-  },
-  tabTextActive: {
-    color: '#fff',
   },
 
   textWhite: {
@@ -447,29 +374,5 @@ const styles = StyleSheet.create({
 
   btnNormal: {
     backgroundColor: '#ddd',
-  },
-
-  hidden: {
-    opacity: 0,
-    pointerEvents: 'none',
-  },
-
-  dropdown: {
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 5,
-    height: 50,
-    zIndex: 5000,
-  },
-  dropdownContainer: {
-    borderColor: '#ccc',
-    zIndex: 5000,
-    position: 'absolute',
-  },
-
-  rateText: {
-    marginTop: 12,
-    fontSize: 14,
-    color: '#007BFF',
   },
 });

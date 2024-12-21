@@ -1,35 +1,59 @@
 import {
   Image,
+  Linking,
   SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  Button,
+  Alert,
 } from 'react-native';
-import React from 'react';
+import React, {useRef} from 'react';
+import Header from '../components/Header/Header';
+// import { Modalize } from 'react-native-modalize';
 
-const Setting = ({navigation}: any) => {
+const Setting = ({navigation}) => {
+  // const modalizeRef = useRef(null);
+
+  // const openBottomSheet = () => {
+  //   modalizeRef.current?.open();
+  // };
+
+  // const closeBottomSheet = () => {
+  //   modalizeRef.current?.close();
+  // };
+  const phoneNumber = '1234567890'; // Thay bằng số điện thoại bạn muốn
+
+  const confirmAndMakeCall = () => {
+    Alert.alert(
+      'Xác nhận cuộc gọi',
+      `Bạn có muốn gọi đến số ${phoneNumber} không?`,
+      [
+        {
+          text: 'Hủy',
+          style: 'cancel',
+        },
+        {
+          text: 'Đồng ý',
+          onPress: () => makeCall(),
+        },
+      ],
+      {cancelable: true},
+    );
+  };
+
+  const makeCall = () => {
+    Linking.openURL(`tel:${phoneNumber}`).catch(err => {
+      console.error('Failed to make a call', err);
+    });
+  };
   return (
     <SafeAreaView style={styles.view}>
       <View style={styles.container}>
         {/* Heading */}
-        <View style={styles.containHeading}>
-          <TouchableOpacity
-            style={styles.borderArrow}
-            onPress={() => navigation.navigate('Login')}>
-            <Image source={require('../../assets/images/logout-icon.png')} />
-          </TouchableOpacity>
-          <View>
-            <Text style={styles.heading}>Cài đặt</Text>
-          </View>
-          <TouchableOpacity
-            style={styles.borderArrow}
-            onPress={() => navigation.navigate('Notification')}>
-            <Image
-              source={require('../../assets/images/notification-icon.png')}
-            />
-          </TouchableOpacity>
-        </View>
+
+        <Header Navbar="Setting" navigation={navigation} />
 
         {/* Body */}
 
@@ -64,10 +88,12 @@ const Setting = ({navigation}: any) => {
                 </View>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.wrapButton}>
+              <TouchableOpacity
+                style={styles.wrapButton}
+                onPress={confirmAndMakeCall}>
                 <Text style={styles.textButton}>Hotline</Text>
                 <View style={styles.wrapText}>
-                  <Text style={styles.textOption}>01234567789</Text>
+                  <Text style={styles.textOption}>{phoneNumber}</Text>
                   <View style={styles.wrapIcon}>
                     <Image
                       source={require('../../assets/images/arrow-right.png')}
@@ -106,6 +132,17 @@ const Setting = ({navigation}: any) => {
               </TouchableOpacity>
             </View>
           </View>
+          {/* <Modalize
+            ref={modalizeRef}
+            modalHeight={300}
+            handleStyle={styles.handle}
+            overlayStyle={styles.overlay}
+            modalStyle={styles.modal}>
+            <View style={styles.content}>
+              <Text style={styles.title}>Nội dung Bottom Sheet</Text>
+              <Button title="Đóng" onPress={closeBottomSheet} />
+            </View>
+          </Modalize> */}
         </View>
       </View>
     </SafeAreaView>
@@ -123,26 +160,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  containHeading: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    alignItems: 'center',
-  },
-  heading: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#1e1e2d',
-  },
-  borderArrow: {
-    width: 42,
-    height: 42,
-    backgroundColor: '#f4f4f4',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 9999,
-  },
+  
   containBody: {
     paddingHorizontal: 20,
     marginTop: 32,

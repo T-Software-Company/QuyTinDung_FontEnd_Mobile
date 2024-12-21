@@ -9,13 +9,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
-import {Dropdown, SelectCountry} from 'react-native-element-dropdown';
 
 import React, {useState} from 'react';
+import Header from '../components/Header/Header';
 
 const ChangePassword = ({navigation}) => {
-    const [currentPassword, setCurrentPassword] = useState("12345678")
+  const [currentPassword, setCurrentPassword] = useState('12345678');
   const [password, setPassword] = useState('123456789');
   const [confirmPassword, setConfirmPassword] = useState('123456789');
   const [invisibleCurrent, setInvisibleCurrent] = useState(true);
@@ -27,21 +26,7 @@ const ChangePassword = ({navigation}) => {
       <View style={styles.container}>
         {/* Heading */}
 
-        <View style={styles.containHeading}>
-          <TouchableOpacity
-            style={styles.borderArrow}
-            onPress={() => navigation.goBack()}>
-            <Image source={require('../../assets/images/arrow-left.png')} />
-          </TouchableOpacity>
-          <View>
-            <Text style={styles.heading}>Thay đổi mật khẩu</Text>
-          </View>
-          <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
-            <Image
-              source={require('../../assets/images/notification-icon.png')}
-            />
-          </TouchableOpacity>
-        </View>
+        <Header Navbar="ChangePassword" navigation={navigation} />
 
         {/* Body */}
 
@@ -204,25 +189,6 @@ const styles = StyleSheet.create({
     height: '100%',
   },
 
-  containHeading: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    alignItems: 'center',
-  },
-  heading: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#1e1e2d',
-  },
-  borderArrow: {
-    width: 42,
-    height: 42,
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-  },
-
   body: {
     marginTop: 16,
     paddingHorizontal: 20,
@@ -267,11 +233,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
 
-  hidden: {
-    opacity: 0,
-    pointerEvents: 'none',
-  },
-
   note: {
     display: 'flex',
     flexDirection: 'column',
@@ -283,6 +244,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'baseline',
+    
   },
   bullet: {
     color: '#888',

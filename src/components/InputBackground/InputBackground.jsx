@@ -1,13 +1,13 @@
 import {StyleSheet, TextInput} from 'react-native';
 import React from 'react';
 
-const InputBackground = ({value, setValue, placeholder, ...props}) => {
+const InputBackground = ({value, onChange, placeholder, ...props}) => {
   return (
     <>
       <TextInput
         placeholder={placeholder}
         placeholderTextColor={styles.placeholderTextColor.color}
-        onChangeText={setValue}
+        onChangeText={onChange}
         value={value}
         style={styles.textInput}
       />

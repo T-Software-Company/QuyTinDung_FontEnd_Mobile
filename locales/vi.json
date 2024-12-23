@@ -1,0 +1,92 @@
+{
+    "welcome": "Chào mừng đến với ứng dụng",
+    "navbar": {
+        "home": "Trang chủ",
+        "save": "Tiết kiệm",
+        "loan": "Khoản vay",
+        "rate": "Lãi suất",
+        "setting": "Cài đặt"
+    },
+    "home" : {
+        "welcome": "Chào bạn,",
+        "name": "Nguyễn Văn A",
+        "boxTitle": "Tổng tài sản",
+        "showButton": "Hiện",
+        "hideButton": "Ẩn",
+        "deposit": "Nạp tiền",
+        "withdraw": "Rút tiền",
+        "makeADeposit": "Gửi tiết kiệm",
+        "createLoan": "Tạo khoản vay",
+        "loanProduct": "Sản phẩm vay",
+        "titleLoanProduct": "Vay phục vụ đời sống",
+        "descLoanProduct": "Là khoản vay để thanh toán các chi phí cho mục đích tiêu dùng, sinh hoạt của cá nhân, gia đình.",
+        "help": "Bạn cần hỗ trợ gì?",
+        "descQuestion1": "Hướng dẫn nạp/rút tiền",
+        "descQuestion2": "Chat với nhân viên"
+    },
+    "save": {
+        "title": "Sổ tiết kiệm",
+        "totalAssets": "Tổng số tiền tiết kiệm",
+        "add": "Mở thêm",
+        "savingsList": "Danh sách sổ tiết kiệm",
+        "accountNumber": "Số tài khoản",
+        "originalAmount": "Số tiền gốc",
+        "dueDate": "Ngày đến hạn",
+        "status": "Trạng thái"
+    },
+    "loan": {
+        "title": "Khoản vay",
+        "totalAssets": "Tổng số tiền vay",
+        "add": "Vay thêm",
+        "loanList": "Danh sách khoản vay",
+        "loanAmount": "Số tiền vay",
+        "contractNumber": "Số hợp đồng",
+        "dueDate": "Ngày đến hạn",
+        "status": "Trạng thái"
+    },
+    "rate": {
+        "title": "Lãi suất",
+        "tabSave": "Tiết kiệm",
+        "tabLoan": "Cho vay",
+        "term": "Kỳ hạn",
+        "rate": "Lãi suất",
+        "day": "ngày",
+        "month": "tháng"
+    },
+    "settings": {
+      "title": "Cài đặt",
+      "generalInformation": "Thông tin chung",
+      "personalInformation": "Thông tin cá nhân",
+      "language": "Ngôn ngữ",
+      "languageSelected":  "Tiếng Việt",
+      "hotline": "Hotline",
+      "security": "Bảo mật",
+      "changePassword": "Thay đổi mật khẩu",
+      "privacyPolicy": "Chính sách quyền riêng tư"
+    },
+    "languageSettings": {
+        "title": "Ngôn ngữ",
+        "button": "Xác nhận",
+        "languageVietnam": "Tiếng Việt",
+        "languageEnglish": "Tiếng Anh"
+    },
+    "formCreateSave": {
+        "title": "Gửi tiết kiệm",
+        "depositAmount": "Số tiền cần gửi",
+        "depositRange": "Tối thiểu 1 triệu, tối đa 10 tỷ",
+        "termRate": "Kỳ hạn và lãi suất",
+        "selectTermRate": "Chọn kỳ hạn và lãi suất",
+        "renewalMethod": "Hình thức gia hạn",
+        "renewalOptions": "Chọn hình thức gia hạn",
+        "paymentMethod": "Phương thức thanh toán",
+        "selectPaymentMethod": "Chọn phương thức thanh toán",
+        "submit": "Gửi",
+        "month": "tháng",
+        "staff": "Tại quầy"   
+    },
+    "formCreateLoan": {
+        "title": "Tạo khoản vay"
+    }
+    
+  }
+  

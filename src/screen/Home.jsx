@@ -1,18 +1,14 @@
-import {
-  SafeAreaView,
-  StyleSheet,
-  View,
-  ScrollView,
-  Alert,
-} from 'react-native';
+import {SafeAreaView, StyleSheet, View, ScrollView, Alert} from 'react-native';
 import React from 'react';
 import Header from '../components/Header/Header';
 import ButtonShortCut from '../components/ButtonShortCut/ButtonShortCut';
 import WrapProductHome from '../components/WrapProductHome/WrapProductHome';
 import WrapQuestionHome from '../components/WrapQuestionHome/WrapQuestionHome';
 import BoxTotalNav from '../components/BoxTotalNav/BoxTotalNav';
+import {useTranslation} from 'react-i18next';
 
 const Home = ({navigation}) => {
+  const {t} = useTranslation();
   return (
     <SafeAreaView style={styles.view}>
       <View style={styles.container}>
@@ -30,34 +26,34 @@ const Home = ({navigation}) => {
 
             <View style={styles.wrapFunction}>
               <ButtonShortCut
-                name="Nạp tiền"
+                name={t('home.deposit')}
                 urlIcon={require('../../assets/images/sent-icon.png')}
                 styleCustom={{transform: [{rotate: '-90deg'}]}}
                 onPress={() => Alert.alert('Thông báo', 'Comming soon!')}
               />
               <ButtonShortCut
-                name="Rút tiền"
+                name={t('home.withdraw')}
                 urlIcon={require('../../assets/images/sent-icon.png')}
                 styleCustom={{transform: [{rotate: '90deg'}]}}
                 onPress={() => Alert.alert('Thông báo', 'Comming soon!')}
               />
               <ButtonShortCut
-                name="Gửi tiết kiệm"
+                name={t('home.makeADeposit')}
                 urlIcon={require('../../assets/images/save-sent-icon.png')}
                 onPress={() => navigation.navigate('SentSave')}
               />
               <ButtonShortCut
-                name="Tạo khoản vay"
+                name={t('home.createLoan')}
                 urlIcon={require('../../assets/images/loan-icon.png')}
                 onPress={() => navigation.navigate('CreateLoan')}
               />
             </View>
 
             {/* Product Home */}
-            <WrapProductHome name="Sản phẩm vay" />
+            <WrapProductHome name={t('home.loanProduct')} />
 
             {/* Question Home */}
-            <WrapQuestionHome name="Bạn cần hỗ trợ gì?" />
+            <WrapQuestionHome name={t('home.help')} />
           </View>
         </ScrollView>
       </View>

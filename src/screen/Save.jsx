@@ -11,31 +11,34 @@ import React from 'react';
 import Header from '../components/Header/Header';
 import Table from '../components/Table/Table';
 import BoxAdd from '../components/BoxAdd/BoxAdd';
+import {useTranslation} from 'react-i18next';
 
 const Save = ({navigation}) => {
+  const {t} = useTranslation();
+
   const data = [
     {
       id: 1,
       boxes: [
-        {key: 'Số tiền gốc', value: '100.000.000 đ'},
-        {key: 'Số tài khoản', value: '123-456-789'},
-        {key: 'Ngày đến hạn', value: '22/07/2024'},
+        {key: `${t("save.originalAmount")}`, value: '100.000.000 đ'},
+        {key: `${t("save.accountNumber")}`, value: '123-456-789'},
+        {key: `${t("save.dueDate")}`, value: '22/07/2024'},
       ],
     },
     {
       id: 2,
       boxes: [
-        {key: 'Số tiền gốc', value: '200.000.000 đ'},
-        {key: 'Số tài khoản', value: '987-654-321'},
-        {key: 'Ngày đến hạn', value: '15/08/2024'},
+        {key: `${t("save.originalAmount")}`, value: '200.000.000 đ'},
+        {key: `${t("save.accountNumber")}`, value: '987-654-321'},
+        {key: `${t("save.dueDate")}`, value: '15/08/2024'},
       ],
     },
     {
       id: 3,
       boxes: [
-        {key: 'Số tiền gốc', value: '300.000.000 đ'},
-        {key: 'Số tài khoản', value: '987-654-321'},
-        {key: 'Ngày đến hạn', value: '15/08/2024'},
+        {key: `${t("save.originalAmount")}`, value: '300.000.000 đ'},
+        {key: `${t("save.accountNumber")}`, value: '987-654-321'},
+        {key: `${t("save.dueDate")}`, value: '15/08/2024'},
       ],
     },
   ];
@@ -54,15 +57,15 @@ const Save = ({navigation}) => {
           showsVerticalScrollIndicator={false}>
           <View style={styles.body}>
             <BoxAdd
-              title="Tổng số tiền tiết kiệm"
+              title={t("save.totalAssets")}
               number="100.000.000 đ"
               navigation={navigation}
               add="SentSave"
-              addText="Mở thêm"
+              addText={t("save.add")}
             />
 
             <View style={styles.listSaves}>
-              <Text style={styles.headingList}>Danh sách sổ tiết kiệm</Text>
+              <Text style={styles.headingList}>{t("save.savingsList")}</Text>
 
               <Table
                 name="save"

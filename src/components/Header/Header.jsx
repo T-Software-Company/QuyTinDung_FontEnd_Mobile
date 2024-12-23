@@ -1,7 +1,9 @@
 import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
+import {useTranslation} from 'react-i18next';
 
 const Header = ({Navbar, navigation}) => {
+  const {t} = useTranslation();
   return (
     <>
       {/* Render header when navbar name home */}
@@ -17,8 +19,8 @@ const Header = ({Navbar, navigation}) => {
             />
           </TouchableOpacity>
           <View style={{flex: 1, marginLeft: 16, gap: 8}}>
-            <Text>Chào bạn,</Text>
-            <Text style={styles.heading}>Nguyễn Văn A</Text>
+            <Text>{t('home.welcome')}</Text>
+            <Text style={styles.heading}>{t("home.name")}</Text>
           </View>
           <TouchableOpacity
             style={styles.borderArrow}
@@ -39,7 +41,7 @@ const Header = ({Navbar, navigation}) => {
             <Image source={require('../../../assets/images/add-icon.png')} />
           </TouchableOpacity>
           <View>
-            <Text style={styles.heading}>Số tiết kiệm</Text>
+            <Text style={styles.heading}>{t("save.title")}</Text>
           </View>
           <TouchableOpacity
             style={styles.borderArrow}
@@ -60,7 +62,7 @@ const Header = ({Navbar, navigation}) => {
             <Image source={require('../../../assets/images/add-icon.png')} />
           </TouchableOpacity>
           <View>
-            <Text style={styles.heading}>Khoản vay</Text>
+            <Text style={styles.heading}>{t("loan.title")}</Text>
           </View>
           <TouchableOpacity
             style={styles.borderArrow}
@@ -90,7 +92,7 @@ const Header = ({Navbar, navigation}) => {
             <Image source={require('../../../assets/images/logout-icon.png')} />
           </TouchableOpacity>
           <View>
-            <Text style={styles.heading}>Cài đặt</Text>
+            <Text style={styles.heading}>{t('settings.title')}</Text>
           </View>
           <TouchableOpacity
             style={styles.borderArrow}
@@ -130,7 +132,7 @@ const Header = ({Navbar, navigation}) => {
             <Image source={require('../../../assets/images/arrow-left.png')} />
           </TouchableOpacity>
           <View>
-            <Text style={styles.heading}>Ngôn ngữ</Text>
+            <Text style={styles.heading}>{t('languageSettings.title')}</Text>
           </View>
           <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
             <Image
@@ -198,7 +200,7 @@ const Header = ({Navbar, navigation}) => {
             <Image source={require('../../../assets/images/arrow-left.png')} />
           </TouchableOpacity>
           <View>
-            <Text style={styles.heading}>Tạo khoản vay</Text>
+            <Text style={styles.heading}>{t("formCreateLoan.title")}</Text>
           </View>
           <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
             <Image
@@ -217,7 +219,7 @@ const Header = ({Navbar, navigation}) => {
             <Image source={require('../../../assets/images/arrow-left.png')} />
           </TouchableOpacity>
           <View>
-            <Text style={styles.heading}>Gửi tiết kiệm</Text>
+            <Text style={styles.heading}>{t("formCreateSave.title")}</Text>
           </View>
           <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
             <Image
@@ -277,6 +279,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     alignItems: 'center',
+    paddingTop: 8,
   },
   containHeadingHome: {
     display: 'flex',
@@ -292,6 +295,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 4,
+    paddingTop: 8,
   },
   containHeadingOneValue: {
     display: 'flex',
@@ -299,7 +303,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 20,
     alignItems: 'center',
-    height: 42,
+    height: 50, //height + px padding top = 50 = 42 + 8
+    paddingTop: 8,
   },
   heading: {
     fontSize: 18,

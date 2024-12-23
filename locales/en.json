@@ -1,0 +1,91 @@
+{
+    "welcome": "Welcome to the app",
+    "navbar": {
+        "home": "Home",
+        "save": "Save",
+        "loan": "Loan",
+        "rate": "Rate",
+        "setting": "Setting"
+    },
+    "home" : {
+        "welcome": "Welcome back,",
+        "name": "Nguyen Van A",
+        "boxTitle": "Total assets",
+        "showButton": "Show",
+        "hideButton": "Hide",
+        "deposit": "Deposit",
+        "withdraw": "Withdraw",
+        "makeADeposit": "Make a deposit",
+        "createLoan": "Apply for a loan",
+        "loanProduct": "Loan product",
+        "help": "How can I help you?",
+        "titleLoanProduct": "Loan for life",
+        "descLoanProduct": "A loan to pay expenses for personal and family consumption and living purposes.",
+        "descQuestion1": "Deposit/withdrawal instructions",
+        "descQuestion2": "Chat with staff"
+    },
+    "save": {
+        "title": "Saving",
+        "totalAssets": "Total savings",
+        "add": "Create another",
+        "savingsList": "Savings account list",
+        "originalAmount": "Original amount",
+        "accountNumber": "Account number",
+        "dueDate": "Due date",
+        "status": "Status"
+    },
+    "loan": {
+        "title": "Loan",
+        "totalAssets": "Total loan amount",
+        "add": "Borrow more",
+        "loanList": "Loans list",
+        "loanAmount": "Loan amount",
+        "contractNumber": "Contract number",
+        "dueDate": "Due date",
+        "status": "Status"
+    },
+    "rate": {
+        "title": "Interest rate",
+        "tabSave": "Saving",
+        "tabLoan": "Loan",
+        "term": "Term",
+        "rate": "Rate",
+        "day": "days",
+        "month": "months"
+    },
+    "settings": {
+      "title": "Setting",
+      "generalInformation": "General Information",
+      "personalInformation": "Personal Information",
+      "language": "Language",
+      "languageSelected":  "English",
+      "hotline": "Hotline",
+      "security": "Security",
+      "changePassword": "Change Password",
+      "privacyPolicy": "Privacy Policy"
+    },
+    "languageSettings": {
+        "title": "Language",
+        "button": "Confirm",
+        "languageVietnam": "Vietnamese",
+        "languageEnglish": "English"
+    },
+    "formCreateSave": {
+        "title": "Deposit savings",
+        "depositAmount": "Deposit amount",
+        "depositRange": "Minimum deposit of 1 million, maximum 10 billion",
+        "termRate": "Term and rate",
+        "selectTermRate": "Select term and rate",
+        "renewalMethod": "Renewal method",
+        "renewalOptions": "Renewal options",
+        "paymentMethod": "Payment method",
+        "selectPaymentMethod": "Select payment method",
+        "submit": "Send",
+        "month": "months",
+        "staff": "On-site"   
+    },
+    "formCreateLoan": {
+        "title": "Create loan"
+    }
+  }
+  

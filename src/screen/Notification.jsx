@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import Header from '../components/Header/Header';
+import ContentButton from '../components/ContentButton/ContentButton';
 
 const Notification = ({navigation}) => {
   const notifications = [
@@ -49,27 +50,7 @@ const Notification = ({navigation}) => {
         <ScrollView style={styles.body}>
           <View style={styles.wrapNotification}>
             {notifications.map(notification => (
-              <TouchableOpacity
-                key={notification.id}
-                style={[
-                  styles.boxNotification,
-                  !notification.seen ? styles.boxActive : '',
-                ]}>
-                <View style={styles.boxHeader}>
-                  <Text style={styles.headerNotification}>
-                    {notification.title}
-                  </Text>
-                  {!notification.seen ? (
-                    <View style={styles.circleHeader}></View>
-                  ) : (
-                    <></>
-                  )}
-                </View>
-                <Text style={styles.descriptionNotification}>
-                  {notification.desc}
-                </Text>
-                <Text style={styles.timeNotification}>{notification.time}</Text>
-              </TouchableOpacity>
+              <ContentButton data={notification} key={notification.id} />
             ))}
           </View>
         </ScrollView>
@@ -90,25 +71,6 @@ const styles = StyleSheet.create({
     height: '100%',
   },
 
-  containHeading: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    alignItems: 'center',
-  },
-  heading: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#1e1e2d',
-  },
-  borderArrow: {
-    width: 42,
-    height: 42,
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-  },
-
   body: {
     paddingTop: 20,
     marginTop: 12,
@@ -121,46 +83,5 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     gap: 16,
     paddingBottom: Platform.OS === 'ios' ? 20 : 50,
-  },
-  boxNotification: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 20,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 8,
-    backgroundColor: '#efffff',
-
-    shadowColor: '#171717',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    elevation: 3,
-  },
-
-  boxActive: {
-    backgroundColor: '#c4eeff',
-  },
-  boxHeader: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  circleHeader: {
-    width: 8,
-    height: 8,
-    backgroundColor: '#007BFF',
-    borderRadius: 9999,
-  },
-  headerNotification: {
-    fontWeight: 'bold',
-  },
-  descriptionNotification: {
-    lineHeight: 22,
-  },
-  timeNotification: {
-    color: '#aaa',
-    fontSize: 12,
   },
 });

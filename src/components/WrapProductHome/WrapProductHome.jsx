@@ -1,26 +1,31 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import ProductHome from '../ProductHome/ProductHome';
+import { useTranslation } from 'react-i18next';
 
 const WrapProductHome = ({name}) => {
+  const {t} = useTranslation()
   return (
     <View style={styles.product}>
       <Text style={styles.headingTitle}>{name}</Text>
 
       <View style={styles.wrapProduct}>
         <ProductHome
-          header="Vay phục vụ đời sống"
-          desc="Là khoản vay để thanh toán các chi phí cho mục đích tiêu dùng, sinh hoạt của cá nhân, gia đình."
+          header={t("home.titleLoanProduct")}
+          desc={t("home.descLoanProduct")}
+          
         />
 
         <ProductHome
-          header="Vay phục vụ đời sống"
-          desc="Là khoản vay để thanh toán các chi phí cho mục đích tiêu dùng, sinh hoạt của cá nhân, gia đình."
+          header={t("home.titleLoanProduct")}
+          desc={t("home.descLoanProduct")}
+          
         />
 
         <ProductHome
-          header="Vay phục vụ đời sống"
-          desc="Là khoản vay để thanh toán các chi phí cho mục đích tiêu dùng, sinh hoạt của cá nhân, gia đình."
+          header={t("home.titleLoanProduct")}
+          desc={t("home.descLoanProduct")}
+          
         />
       </View>
     </View>

@@ -1,30 +1,32 @@
 import {StyleSheet, Text, View, Image} from 'react-native';
 import React from 'react';
 import QuestionHome from '../QuestionHome/QuestionHome';
+import { useTranslation } from 'react-i18next';
 
 const WrapQuestionHome = ({name}) => {
+  const {t} = useTranslation()
   return (
     <View style={styles.questions}>
       <Text style={styles.headingTitle}>{name}</Text>
 
       <View style={styles.wrapBox}>
         <QuestionHome
-          question="Hướng dẫn nạp/rút tiền"
+          question={t("home.descQuestion1")}
           urlIcon={require('../../../assets/images/add-icon.png')}
         />
 
         <QuestionHome
-          question="Chat với nhân viên"
+          question={t("home.descQuestion2")}
           urlIcon={require('../../../assets/images/message-icon.png')}
         />
 
         <QuestionHome
-          question="Hướng dẫn nạp/rút tiền"
+          question={t("home.descQuestion1")}
           urlIcon={require('../../../assets/images/add-icon.png')}
         />
 
         <QuestionHome
-          question="Chat với nhân viên"
+          question={t("home.descQuestion2")}
           urlIcon={require('../../../assets/images/message-icon.png')}
         />
       </View>

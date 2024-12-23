@@ -1,31 +1,30 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity, Alert} from 'react-native';
 import React, {useState} from 'react';
-import {Dropdown} from 'react-native-element-dropdown';
+import DropdownComponent from '../DropdownComponent/DropdownComponent';
 import InputBackground from '../InputBackground/InputBackground';
+import {useTranslation} from 'react-i18next';
+import i18n from '../../../i18n';
 
 const FormCreateSave = () => {
+  const currentLanguage = i18n.language;
+
   const [value, setValue] = useState(null);
+  const {t} = useTranslation();
   const rates = [
     {
       value: '1',
-      lable: '5 tháng',
+      label: `5 ${t('formCreateSave.month')}`,
       rate: '4%',
     },
     {
       value: '2',
-      lable: '8 tháng',
+      label: `8  ${t('formCreateSave.month')}`,
       rate: '5%',
     },
 
     {
       value: '3',
-      lable: '12 tháng',
+      label: `12  ${t('formCreateSave.month')}`,
       rate: '5.5%',
     },
   ];
@@ -33,27 +32,27 @@ const FormCreateSave = () => {
   const method_extend = [
     {
       value: '1',
-      lable: 'Gộp cả lãi',
+      label: 'Gộp cả lãi',
     },
     {
       value: '2',
-      lable: 'Trả lãi gốc',
+      label: 'Trả lãi gốc',
     },
 
     {
       value: '3',
-      lable: 'Trả lãi hàng tháng',
+      label: 'Trả lãi hàng tháng',
     },
   ];
 
   const method_pay = [
     {
       value: '1',
-      lable: 'Online',
+      label: 'Online',
     },
     {
       value: '2',
-      lable: 'Tại quầy',
+      label: `${t('formCreateSave.staff')}`,
     },
   ];
 
@@ -64,31 +63,23 @@ const FormCreateSave = () => {
   return (
     <View style={styles.form}>
       <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>Số tiền cần gửi</Text>
+        <Text style={styles.headingTitle}>
+          {t('formCreateSave.depositAmount')}
+        </Text>
         <InputBackground
           value={value}
-          onValue={setValue}
-          placeholder="Tối thiểu 1 triệu, tối đa 10 tỷ"
+          onChange={setValue}
+          placeholder={t('formCreateSave.depositRange')}
           keyboardType="numeric"
         />
       </View>
 
       <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>Kỳ hạn và lãi suất</Text>
-        <Dropdown
-          style={styles.textInput}
-          selectedTextStyle={styles.selectedTextStyle}
-          placeholderStyle={styles.placeholderStyle}
-          imageStyle={styles.imageStyle}
-          iconStyle={styles.iconStyle}
-          maxHeight={200}
-          value={selectedRate?.value}
+        <Text style={styles.headingTitle}>{t('formCreateSave.termRate')}</Text>
+        <DropdownComponent
           data={rates}
-          valueField="value"
-          labelField="lable"
-          imageField="false"
-          placeholder="Chọn kỳ hạn và lãi suất"
-          searchPlaceholder="Search..."
+          placeholder={t('formCreateSave.selectTermRate')}
+          value={selectedRate?.value}
           onChange={value => {
             setSelectedRate(value);
           }}
@@ -96,7 +87,9 @@ const FormCreateSave = () => {
 
         {selectedRate ? (
           <Text style={styles.rateText}>
-            Lãi suất của kỳ hạn {selectedRate.lable} là {selectedRate.rate}
+           {currentLanguage === "vi" ? `Lãi suất của kỳ hạn ${selectedRate.label} là ${selectedRate.rate}` : 
+           `Interest rate for ${selectedRate.label} is ${selectedRate.rate}`
+           }
           </Text>
         ) : (
           <></>
@@ -104,45 +97,30 @@ const FormCreateSave = () => {
       </View>
 
       <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>Hình thức gia hạn</Text>
-        <Dropdown
-          style={styles.textInput}
-          selectedTextStyle={styles.selectedTextStyle}
-          placeholderStyle={styles.placeholderStyle}
-          imageStyle={styles.imageStyle}
-          iconStyle={styles.iconStyle}
-          maxHeight={200}
-          value={methodExtend}
+        <Text style={styles.headingTitle}>
+          {t('formCreateSave.renewalMethod')}
+        </Text>
+
+        <DropdownComponent
           data={method_extend}
-          valueField="value"
-          labelField="lable"
-          imageField="false"
-          placeholder="Chọn hình thức gia hạn"
-          searchPlaceholder="Search..."
-          onChange={e => {
-            setMethodExtend(e.value);
+          placeholder={t('formCreateSave.renewalOptions')}
+          value={methodExtend?.value}
+          onChange={value => {
+            setMethodExtend(value);
           }}
         />
       </View>
 
       <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>Phương thức thanh toán</Text>
-        <Dropdown
-          style={styles.textInput}
-          selectedTextStyle={styles.selectedTextStyle}
-          placeholderStyle={styles.placeholderStyle}
-          imageStyle={styles.imageStyle}
-          iconStyle={styles.iconStyle}
-          maxHeight={200}
-          value={method}
+        <Text style={styles.headingTitle}>
+          {t('formCreateSave.paymentMethod')}
+        </Text>
+        <DropdownComponent
           data={method_pay}
-          valueField="value"
-          labelField="lable"
-          imageField="false"
-          placeholder="Chọn phương thức thanh toán"
-          searchPlaceholder="Search..."
-          onChange={e => {
-            setMethod(e.value);
+          placeholder={t('formCreateSave.selectPaymentMethod')}
+          value={method}
+          onChange={value => {
+            setMethod(value);
           }}
         />
       </View>
@@ -151,7 +129,7 @@ const FormCreateSave = () => {
         onPress={() => Alert.alert('Thông báo', 'Bạn đã gửi thành công')}>
         <Text
           style={[styles.textWhite, {fontWeight: 'bold', textAlign: 'center'}]}>
-          Gửi
+          {t('formCreateSave.submit')}
         </Text>
       </TouchableOpacity>
     </View>
@@ -169,28 +147,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 8,
   },
-  textInput: {
-    backgroundColor: '#f4f4f4',
-    borderRadius: 8,
-    height: 40,
-    paddingLeft: 15,
-    paddingRight: 15,
-    paddingTop: 10,
-    paddingBottom: 10,
-    color: '#000',
-    paddingVertical: 0,
-    textAlignVertical: 'center',
-  },
-
-  placeholderStyle: {
-    color: '#aaa',
-    fontSize: 14,
-  },
-
-  selectedTextStyle: {
-    color: '#000',
-    fontSize: 14,
-  },
 
   btn: {
     width: '100%',
@@ -205,25 +161,11 @@ const styles = StyleSheet.create({
     pointerEvents: 'none',
   },
 
-  dropdown: {
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 5,
-    height: 50,
-    zIndex: 5000,
-  },
-  dropdownContainer: {
-    borderColor: '#ccc',
-    zIndex: 5000,
-    position: 'absolute',
-  },
-
   rateText: {
     marginTop: 12,
     fontSize: 14,
     color: '#007BFF',
   },
-
   textWhite: {
     color: 'white',
   },

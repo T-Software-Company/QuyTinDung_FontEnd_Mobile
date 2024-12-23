@@ -11,31 +11,34 @@ import React from 'react';
 import Header from '../components/Header/Header';
 import Table from '../components/Table/Table';
 import BoxAdd from '../components/BoxAdd/BoxAdd';
+import { useTranslation } from 'react-i18next';
 
 const Save = ({navigation}) => {
+
+  const {t} = useTranslation()
   const data = [
     {
       id: 1,
       boxes: [
-        {key: 'Số tiền vay', value: '100.000.000 đ'},
-        {key: 'Số hợp đồng', value: '123-456-789'},
-        {key: 'Ngày đến hạn', value: '22/07/2024'},
+        {key: `${t("loan.loanAmount")}`, value: '100.000.000 đ'},
+        {key: `${t("loan.contractNumber")}`, value: '123-456-789'},
+        {key: `${t("loan.dueDate")}`, value: '22/07/2024'},
       ],
     },
     {
       id: 2,
       boxes: [
-        {key: 'Số tiền vay', value: '200.000.000 đ'},
-        {key: 'Số hợp đồng', value: '987-654-321'},
-        {key: 'Ngày đến hạn', value: '15/08/2024'},
+        {key: `${t("loan.loanAmount")}`, value: '200.000.000 đ'},
+        {key: `${t("loan.contractNumber")}`, value: '987-654-321'},
+        {key: `${t("loan.dueDate")}`, value: '15/08/2024'},
       ],
     },
     {
       id: 3,
       boxes: [
-        {key: 'Số tiền vay', value: '300.000.000 đ'},
-        {key: 'Số hợp đồng', value: '987-654-321'},
-        {key: 'Ngày đến hạn', value: '15/08/2024'},
+        {key: `${t("loan.loanAmount")}`, value: '300.000.000 đ'},
+        {key: `${t("loan.contractNumber")}`, value: '987-654-321'},
+        {key: `${t("loan.dueDate")}`, value: '15/08/2024'},
       ],
     },
   ];
@@ -54,15 +57,15 @@ const Save = ({navigation}) => {
           showsVerticalScrollIndicator={false}>
           <View style={styles.body}>
             <BoxAdd
-              title="Tổng số tiền vay"
+              title={t("loan.totalAssets")}
               number="100.000.000 đ"
               navigation={navigation}
               add="CreateLoan"
-              addText="Vay thêm"
+              addText={t("loan.add")}
             />
 
             <View style={styles.listSaves}>
-              <Text style={styles.headingList}>Danh sách khoản vay</Text>
+              <Text style={styles.headingList}>{t("loan.loanList")}</Text>
 
               <Table
                 name="loan"

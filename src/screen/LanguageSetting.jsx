@@ -11,16 +11,37 @@ import {
 
 import React, {useState} from 'react';
 import Header from '../components/Header/Header';
+import {useLanguage} from '../../context/LanguageContext';
+import i18n from '../../i18n';
+import { useTranslation } from 'react-i18next';
 
 const LanguageSetting = ({navigation}) => {
-  const [selectedLanguage, setSelectedLanguage] = useState('vi');
+  const currentLanguage = i18n.language;
+
+  const [selectedLanguage, setSelectedLanguage] = useState(currentLanguage);
+  const {changeLanguage} = useLanguage();
+  const {t} = useTranslation()
+
+  const submitLanguage = () => {
+    changeLanguage(selectedLanguage);
+    Alert.alert(
+      `${selectedLanguage === 'vi' ? 'Thông báo' : 'Notification'}`,
+      `${
+        selectedLanguage === 'vi'
+          ? 'Bạn đã chọn ngôn ngữ Tiếng Việt'
+          : 'You have selected English language.'
+      }`,
+    );
+  };
+
+  console.log(currentLanguage);
 
   return (
     <SafeAreaView style={styles.view}>
       <View style={styles.container}>
         {/* Heading */}
 
-        <Header Navbar="LanguageSetting" navigation={navigation}/>
+        <Header Navbar="LanguageSetting" navigation={navigation} />
 
         {/* Body */}
 
@@ -39,7 +60,7 @@ const LanguageSetting = ({navigation}) => {
                       <View style={styles.radioFill} />
                     )}
                   </View>
-                  <Text style={styles.label}>Tiếng Việt</Text>
+                  <Text style={styles.label}>{t("languageSettings.languageVietnam")}</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
@@ -50,30 +71,17 @@ const LanguageSetting = ({navigation}) => {
                       <View style={styles.radioFill} />
                     )}
                   </View>
-                  <Text style={styles.label}>English</Text>
+                  <Text style={styles.label}>{t("languageSettings.languageEnglish")}</Text>
                 </TouchableOpacity>
               </View>
 
-              <TouchableOpacity
-                style={styles.btn}
-                onPress={() =>
-                  Alert.alert(
-                    `${
-                      selectedLanguage === 'vi' ? 'Thông báo' : 'Notification'
-                    }`,
-                    `${
-                      selectedLanguage === 'vi'
-                        ? 'Bạn đã chọn ngôn ngữ Tiếng Việt'
-                        : 'You have selected English language.'
-                    }`,
-                  )
-                }>
+              <TouchableOpacity style={styles.btn} onPress={submitLanguage}>
                 <Text
                   style={[
                     styles.textWhite,
                     {fontWeight: 'bold', textAlign: 'center'},
                   ]}>
-                  Xác nhận
+                  {t("languageSettings.button")}
                 </Text>
               </TouchableOpacity>
             </View>

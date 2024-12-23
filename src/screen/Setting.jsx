@@ -1,19 +1,19 @@
 import {
-  Image,
   Linking,
   SafeAreaView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
-  Button,
   Alert,
 } from 'react-native';
 import React, {useRef} from 'react';
 import Header from '../components/Header/Header';
+import ButtonSetting from '../components/ButtonSetting/ButtonSetting';
+import { useTranslation } from 'react-i18next';
 // import { Modalize } from 'react-native-modalize';
 
 const Setting = ({navigation}) => {
+  const {t} = useTranslation()
   // const modalizeRef = useRef(null);
 
   // const openBottomSheet = () => {
@@ -59,77 +59,44 @@ const Setting = ({navigation}) => {
 
         <View style={styles.containBody}>
           <View style={styles.boxContent}>
-            <Text style={styles.title}>THÔNG TIN CHUNG</Text>
+            <Text style={styles.title}>{t("settings.generalInformation")}</Text>
             <View style={styles.wrapContent}>
-              <TouchableOpacity
-                style={styles.wrapButton}
-                onPress={() => navigation.navigate('InfoPerson')}>
-                <Text style={styles.textButton}>Thông tin cá nhân</Text>
-                <View style={styles.wrapText}>
-                  <View style={styles.wrapIcon}>
-                    <Image
-                      source={require('../../assets/images/arrow-right.png')}
-                    />
-                  </View>
-                </View>
-              </TouchableOpacity>
+              <ButtonSetting
+                title={t("settings.personalInformation")}
+                icon={require('../../assets/images/arrow-right.png')}
+                onPress={() => navigation.navigate('InfoPerson')}
+              />
 
-              <TouchableOpacity
-                style={styles.wrapButton}
-                onPress={() => navigation.navigate('LanguageSetting')}>
-                <Text style={styles.textButton}>Ngôn ngữ</Text>
-                <View style={styles.wrapText}>
-                  <Text style={styles.textOption}>Tiếng Việt</Text>
-                  <View style={styles.wrapIcon}>
-                    <Image
-                      source={require('../../assets/images/arrow-right.png')}
-                    />
-                  </View>
-                </View>
-              </TouchableOpacity>
+              <ButtonSetting
+                title={t("settings.language")}
+                icon={require('../../assets/images/arrow-right.png')}
+                onPress={() => navigation.navigate('LanguageSetting')}
+                optionText={t("settings.languageSelected")}
+              />
 
-              <TouchableOpacity
-                style={styles.wrapButton}
-                onPress={confirmAndMakeCall}>
-                <Text style={styles.textButton}>Hotline</Text>
-                <View style={styles.wrapText}>
-                  <Text style={styles.textOption}>{phoneNumber}</Text>
-                  <View style={styles.wrapIcon}>
-                    <Image
-                      source={require('../../assets/images/arrow-right.png')}
-                    />
-                  </View>
-                </View>
-              </TouchableOpacity>
+              <ButtonSetting
+                title={t("settings.hotline")}
+                icon={require('../../assets/images/arrow-right.png')}
+                onPress={confirmAndMakeCall}
+                optionText={phoneNumber}
+              />
             </View>
           </View>
 
           <View style={styles.boxContent}>
-            <Text style={styles.title}>BẢO MẬT</Text>
+            <Text style={styles.title}>{t("settings.security")}</Text>
             <View style={styles.wrapContent}>
-              <TouchableOpacity
-                style={styles.wrapButton}
-                onPress={() => navigation.navigate('ChangePassword')}>
-                <Text style={styles.textButton}>Thay đổi mật khẩu</Text>
-                <View style={styles.wrapText}>
-                  <View style={styles.wrapIcon}>
-                    <Image
-                      source={require('../../assets/images/arrow-right.png')}
-                    />
-                  </View>
-                </View>
-              </TouchableOpacity>
+              <ButtonSetting
+                title={t("settings.changePassword")}
+                icon={require('../../assets/images/arrow-right.png')}
+                onPress={() => navigation.navigate('ChangePassword')}
+              />
 
-              <TouchableOpacity style={styles.wrapButton}>
-                <Text style={styles.textButton}>Chính sách quyền riêng tư</Text>
-                <View style={styles.wrapText}>
-                  <View style={styles.wrapIcon}>
-                    <Image
-                      source={require('../../assets/images/arrow-right.png')}
-                    />
-                  </View>
-                </View>
-              </TouchableOpacity>
+              <ButtonSetting
+                title={t("settings.privacyPolicy")}
+                icon={require('../../assets/images/arrow-right.png')}
+              />
+
             </View>
           </View>
           {/* <Modalize
@@ -160,7 +127,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  
+
   containBody: {
     paddingHorizontal: 20,
     marginTop: 32,
@@ -171,40 +138,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 14,
     color: '#a2a2a7',
+    textTransform: "uppercase"
   },
   wrapContent: {
     display: 'flex',
     flexDirection: 'column',
     marginTop: 16,
-  },
-  wrapButton: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingTop: 22,
-    paddingBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f4f4f4',
-  },
-  textButton: {
-    fontSize: 15,
-    color: '#1e1e2d',
-  },
-  wrapText: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  wrapIcon: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 24,
-    height: 24,
-    marginLeft: 16,
-  },
-  textOption: {
-    fontSize: 14,
-    color: '#a2a2a7',
   },
 });

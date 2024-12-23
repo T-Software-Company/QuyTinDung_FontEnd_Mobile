@@ -25,10 +25,12 @@ import ForgetPasswordScreen from '../screen/ForgetPassword';
 import RegisterScreen from '../screen/Register';
 
 import Footer from '../components/Footer/Footer';
+import { useTranslation } from 'react-i18next';
 
 const Tab = createBottomTabNavigator();
 // const RootStack = createStackNavigator<RootStackParams>();
 const MyTabs = () => {
+  const {t} = useTranslation()
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
@@ -39,19 +41,19 @@ const MyTabs = () => {
 
           // Gán biểu tượng tùy vào tên route
           switch (route.name) {
-            case 'Trang chủ':
+            case t("navbar.home"):
               iconSource = require('../../assets/images/home-icon.png');
               break;
-            case 'Tiết kiệm':
+            case t("navbar.save"):
               iconSource = require('../../assets/images/save-icon.png');
               break;
-            case 'Khoản vay':
+            case t("navbar.loan"):
               iconSource = require('../../assets/images/loan-icon.png');
               break;
-            case 'Lãi suất':
+            case t("navbar.rate"):
               iconSource = require('../../assets/images/rate-icon.png');
               break;
-            case 'Cài đặt':
+            case t("navbar.setting"):
               iconSource = require('../../assets/images/setting-icon.png');
               break;
             default:
@@ -84,11 +86,11 @@ const MyTabs = () => {
           backgroundColor: '#fff',
         },
       })}>
-      <Tab.Screen name="Trang chủ" component={HomeScreen} />
-      <Tab.Screen name="Tiết kiệm" component={SaveScreen} />
-      <Tab.Screen name="Khoản vay" component={LoanScreen} />
-      <Tab.Screen name="Lãi suất" component={RateScreen} />
-      <Tab.Screen name="Cài đặt" component={SettingScreen} />
+      <Tab.Screen name={t("navbar.home")} value="Trang chủ" component={HomeScreen} />
+      <Tab.Screen name={t("navbar.save")} value="Tiết kiệm" component={SaveScreen} />
+      <Tab.Screen name={t("navbar.loan")} value="Khoản vay" component={LoanScreen} />
+      <Tab.Screen name={t("navbar.rate")} value="Lãi suất" component={RateScreen} />
+      <Tab.Screen name={t("navbar.setting")} value="Cài đặt" component={SettingScreen} />
     </Tab.Navigator>
   );
 };
@@ -97,7 +99,7 @@ const Stack = createNativeStackNavigator();
 
 export default RootComponent = function () {
   return (
-    <NavigationContainer>
+    <NavigationContainer >
       <Stack.Navigator
         initialRouteName="HomeTabs"
         screenOptions={{headerShown: false}}>

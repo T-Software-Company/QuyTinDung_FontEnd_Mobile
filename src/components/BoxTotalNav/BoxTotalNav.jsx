@@ -1,13 +1,15 @@
 import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
+import { useTranslation } from 'react-i18next';
 
 const BoxTotalNav = () => {
   const [hide, setHide] = useState(true);
+  const {t} = useTranslation()
 
   return (
     <View style={styles.boxShow}>
       <View style={styles.wrapTitle}>
-        <Text>Tổng tài sản</Text>
+        <Text>{t("home.boxTitle")}</Text>
 
         <TouchableOpacity
           style={styles.wrapOption}
@@ -18,7 +20,7 @@ const BoxTotalNav = () => {
                 style={styles.icon}
                 source={require('../../../assets/images/eyes-icon.png')}
               />
-              <Text>Hiện</Text>
+              <Text>{t("home.showButton")}</Text>
             </>
           ) : (
             <>
@@ -26,7 +28,7 @@ const BoxTotalNav = () => {
                 style={styles.iconClose}
                 source={require('../../../assets/images/eyesclose-icon.png')}
               />
-              <Text>Ẩn</Text>
+              <Text>{t("home.hideButton")}</Text>
             </>
           )}
         </TouchableOpacity>

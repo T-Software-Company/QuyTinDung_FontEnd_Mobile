@@ -6,12 +6,13 @@
  */
 // import 'react-native-gesture-handler'; // Đảm bảo import trước bất kỳ thư viện nào khác
 
-
 import React from 'react';
-import {StyleSheet, useColorScheme} from 'react-native';
+import {StyleSheet, useColorScheme, View} from 'react-native';
 
 import RootNavigator from './src/navigators/RootNavigator';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {LanguageProvider} from './context/LanguageContext';
+import './i18n';
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -21,8 +22,10 @@ function App(): React.JSX.Element {
   // };
 
   return (
-    <SafeAreaProvider style={{flex: 1, paddingTop: 12}}>
-      <RootNavigator />
+    <SafeAreaProvider style={{flex: 1}}>
+      <LanguageProvider>
+        <RootNavigator />
+      </LanguageProvider>
     </SafeAreaProvider>
   );
 }

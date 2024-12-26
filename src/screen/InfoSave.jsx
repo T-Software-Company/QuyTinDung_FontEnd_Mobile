@@ -10,9 +10,15 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import Header from '../components/Header/Header';
+import i18n from '../../i18n';
+import { useTranslation } from 'react-i18next';
+
 
 const InfoSave = ({navigation}) => {
-  const data = [
+  const currentLanguage = i18n.language;
+  const {t} = useTranslation()
+
+  const dataVietnam = [
     {key: 'Số tài khoản', value: '123-456-789'},
     {key: 'Số tiền gốc', value: '100.000.000 đ'},
     {key: 'Lãi dự kiến', value: '3.000.000 đ'},
@@ -26,6 +32,23 @@ const InfoSave = ({navigation}) => {
     {key: 'Ngày mở', value: '22/04/2024'},
     {key: 'Ngày đến hạn', value: '22/07/2024'},
   ];
+
+  const dataEnglish = [
+    {key: 'Account Number', value: '123-456-789'},
+    {key: 'Principal Amount', value: '100,000,000 VND'},
+    {key: 'Expected Interest', value: '3,000,000 VND'},
+
+    {key: 'Term', value: '3 months'},
+    {key: 'Interest Rate', value: '3.6%/year'},
+
+    {key: 'Interest Payment Method', value: 'End-of-term payment'},
+    {key: 'Interest Receipt Method', value: 'Compound interest'},
+
+    {key: 'Opening Date', value: '22/04/2024'},
+    {key: 'Maturity Date', value: '22/07/2024'},
+  ];
+
+  const data = currentLanguage === "vi" ? dataVietnam : dataEnglish
 
   return (
     <SafeAreaView style={styles.view}>
@@ -75,7 +98,7 @@ const InfoSave = ({navigation}) => {
                     styles.textWhite,
                     {fontWeight: 'bold', textAlign: 'center'},
                   ]}>
-                  Tất toán
+                  {t("infoSave.submit")}
                 </Text>
               </TouchableOpacity>
             </View>

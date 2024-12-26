@@ -10,6 +10,8 @@ import {
   Alert,
 } from 'react-native';
 import React, {useState} from 'react';
+import {AppIcons} from '../icons';
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -89,10 +91,7 @@ const Register = ({navigation}) => {
             <View style={{marginBottom: 20}}>
               <Text style={styles.heading}>Họ và tên</Text>
               <View>
-                <Image
-                  source={require('../../assets/images/email-icon.png')}
-                  style={styles.icon}
-                />
+                <Image source={AppIcons.email} style={styles.icon} />
                 <TextInput
                   placeholder="Họ và tên"
                   placeholderTextColor="#aaa"
@@ -125,10 +124,7 @@ const Register = ({navigation}) => {
             <View style={{marginBottom: 20}}>
               <Text style={styles.heading}>Email</Text>
               <View>
-                <Image
-                  source={require('../../assets/images/email-icon.png')}
-                  style={styles.icon}
-                />
+                <Image source={AppIcons.email} style={styles.icon} />
                 <TextInput
                   placeholder="Email"
                   placeholderTextColor="#aaa"
@@ -143,10 +139,7 @@ const Register = ({navigation}) => {
             <View style={{marginBottom: 20}}>
               <Text style={styles.heading}>Mật khẩu</Text>
               <View>
-                <Image
-                  source={require('../../assets/images/password-icon.png')}
-                  style={styles.icon}
-                />
+                <Image source={AppIcons.password} style={styles.icon} />
                 <TextInput
                   placeholder="Mật khẩu"
                   placeholderTextColor="#aaa"
@@ -159,9 +152,7 @@ const Register = ({navigation}) => {
                   style={styles.iconEyes}
                   onPress={() => setInvisible(!invisible)}>
                   {invisible ? (
-                    <Image
-                      source={require('../../assets/images/eyes-icon.png')}
-                    />
+                    <Image source={AppIcons.eyesOpen} />
                   ) : (
                     <Image
                       style={{
@@ -169,7 +160,7 @@ const Register = ({navigation}) => {
                         paddingVertical: 0,
                         textAlignVertical: 'center',
                       }}
-                      source={require('../../assets/images/eyesclose-icon.png')}
+                      source={AppIcons.eyesClose}
                     />
                   )}
                 </TouchableOpacity>
@@ -178,10 +169,7 @@ const Register = ({navigation}) => {
             <View style={{marginBottom: 20}}>
               <Text style={styles.heading}>Xác nhận mật khẩu</Text>
               <View>
-                <Image
-                  source={require('../../assets/images/password-icon.png')}
-                  style={styles.icon}
-                />
+                <Image source={AppIcons.password} style={styles.icon} />
                 <TextInput
                   placeholder="Xác nhận mật khẩu"
                   placeholderTextColor="#aaa"
@@ -194,9 +182,7 @@ const Register = ({navigation}) => {
                   style={styles.iconEyes}
                   onPress={() => setInvisibleConfirm(!invisibleConfirm)}>
                   {invisibleConfirm ? (
-                    <Image
-                      source={require('../../assets/images/eyes-icon.png')}
-                    />
+                    <Image source={AppIcons.eyesOpen} />
                   ) : (
                     <Image
                       style={{
@@ -204,7 +190,7 @@ const Register = ({navigation}) => {
                         paddingVertical: 0,
                         textAlignVertical: 'center',
                       }}
-                      source={require('../../assets/images/eyesclose-icon.png')}
+                      source={AppIcons.eyesClose}
                     />
                   )}
                 </TouchableOpacity>

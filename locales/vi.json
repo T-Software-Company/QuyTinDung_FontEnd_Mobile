@@ -85,8 +85,34 @@
         "staff": "Tại quầy"   
     },
     "formCreateLoan": {
-        "title": "Tạo khoản vay"
+        "title": "Tạo khoản vay",
+        "loanAmount": "Số tiền cần vay",
+        "loanRange": "Tối thiểu 1 triệu, tối đa 100 tỷ",
+        "termRate": "Kỳ hạn và lãi suất",
+        "selectTermRate": "Chọn kỳ hạn và lãi suất",
+        "purpose": "Mục đích vay",
+        "selectPurpose": "Chọn mục đích vay",
+        "paymentFrequency": "Tần suất trả lãi",
+        "selectPaymentFrequency": "Chọn tần suất trả lãi",
+        "submit": "Tạo"
+    },
+    "infoSave": {
+        "title": "Thông tin sổ tiết kiệm",
+        "submit": "Tất toán"
+    },
+    "infoLoan": {
+        "title": "Thông tin khoản vay"
+    },
+    "deposit": {
+        "title": "Nạp tiền",
+        "depositAmount": "Số tiền cần nạp",
+        "depositRange": "Nhập số tiền cần nạp",
+        "submit": "Nạp tiền"
+    },
+    "notification": {
+        "title": "Thông báo",
+        "seen": "Đã xem hết",
+        "time": "phút trước"
     }
-    
   }
   

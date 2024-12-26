@@ -11,6 +11,8 @@ import {
   Platform,
 } from 'react-native';
 import React, {useState} from 'react';
+import {AppIcons} from '../icons';
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -60,10 +62,7 @@ const Login = ({navigation}) => {
             <View style={{marginBottom: 20}}>
               <Text style={styles.heading}>Email / Số điện thoại</Text>
               <View>
-                <Image
-                  source={require('../../assets/images/email-icon.png')}
-                  style={styles.icon}
-                />
+                <Image source={AppIcons.email} style={styles.icon} />
                 <TextInput
                   placeholder="Email"
                   placeholderTextColor="#aaa"
@@ -78,10 +77,7 @@ const Login = ({navigation}) => {
             <View style={{marginBottom: 20}}>
               <Text style={styles.heading}>Mật khẩu</Text>
               <View>
-                <Image
-                  source={require('../../assets/images/password-icon.png')}
-                  style={styles.icon}
-                />
+                <Image source={AppIcons.password} style={styles.icon} />
                 <TextInput
                   placeholder="Mật khẩu"
                   placeholderTextColor="#aaa"
@@ -94,9 +90,7 @@ const Login = ({navigation}) => {
                   style={styles.iconEyes}
                   onPress={() => setInvisible(!invisible)}>
                   {invisible ? (
-                    <Image
-                      source={require('../../assets/images/eyes-icon.png')}
-                    />
+                    <Image source={AppIcons.eyesOpen} />
                   ) : (
                     <Image
                       style={{
@@ -104,7 +98,7 @@ const Login = ({navigation}) => {
                         paddingVertical: 0,
                         textAlignVertical: 'center',
                       }}
-                      source={require('../../assets/images/eyesclose-icon.png')}
+                      source={AppIcons.eyesClose}
                     />
                   )}
                 </TouchableOpacity>
@@ -134,20 +128,20 @@ const Login = ({navigation}) => {
               </TouchableOpacity>
             </View>
             <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('ForgetPassword');
+              onPress={() => {
+                navigation.navigate('ForgetPassword');
+              }}>
+              <Text
+                style={{
+                  color: '#0066ff',
+                  fontWeight: 'semibold',
+                  fontSize: 14,
+                  textAlign: 'center',
+                  marginTop: 20,
                 }}>
-                <Text
-                  style={{
-                    color: '#0066ff',
-                    fontWeight: 'semibold',
-                    fontSize: 14,
-                    textAlign: "center",
-                    marginTop: 20
-                  }}>
-                  Quên mật khẩu
-                </Text>
-              </TouchableOpacity>
+                Quên mật khẩu
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>

@@ -2,28 +2,31 @@ import {StyleSheet, Text, View, Alert, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
 import DropdownComponent from '../DropdownComponent/DropdownComponent';
 import InputBackground from '../InputBackground/InputBackground';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
+import i18n from '../../../i18n';
 
 const FormCreateLoan = () => {
+  const currentLanguage = i18n.language;
+
   const [number, setNumber] = useState(null);
 
-  const {t} = useTranslation()
+  const {t} = useTranslation();
 
   const rates = [
     {
       value: '1',
-      lable: '1 tháng',
+      label: '1 tháng',
       rate: '12%',
     },
     {
       value: '2',
-      lable: '3 tháng',
+      label: '3 tháng',
       rate: '10.5%',
     },
 
     {
       value: '3',
-      lable: '12 tháng',
+      label: '12 tháng',
       rate: '8%',
     },
   ];
@@ -31,31 +34,31 @@ const FormCreateLoan = () => {
   const target_loan = [
     {
       value: '1',
-      lable: 'Mua nhà',
+      label: 'Mua nhà',
     },
     {
       value: '2',
-      lable: 'Mua ô tô',
+      label: 'Mua ô tô',
     },
 
     {
       value: '3',
-      lable: 'Vay tiêu dùng',
+      label: 'Vay tiêu dùng',
     },
   ];
 
   const frequency_pay = [
     {
       value: '1',
-      lable: 'Hàng tuần',
+      label: 'Hàng tuần',
     },
     {
       value: '2',
-      lable: 'Hàng tháng',
+      label: 'Hàng tháng',
     },
     {
       value: '3',
-      lable: '2 tháng',
+      label: '2 tháng',
     },
   ];
 
@@ -65,9 +68,11 @@ const FormCreateLoan = () => {
   return (
     <View style={styles.form}>
       <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>Số tiền cần vay</Text>
+        <Text style={styles.headingTitle}>
+          {t('formCreateLoan.loanAmount')}
+        </Text>
         <InputBackground
-          placeholder="Tối thiểu 1 triệu, tối đa 100 tỷ"
+          placeholder={t('formCreateLoan.loanRange')}
           keyboardType="numeric"
           onChange={setNumber}
           value={number}
@@ -75,11 +80,11 @@ const FormCreateLoan = () => {
       </View>
 
       <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>Kỳ hạn và lãi suất</Text>
+        <Text style={styles.headingTitle}>{t('formCreateLoan.termRate')}</Text>
         <DropdownComponent
           value={selectedRate?.value}
           data={rates}
-          placeholder="Chọn kỳ hạn và lãi suất"
+          placeholder={t('formCreateLoan.selectTermRate')}
           onChange={value => {
             setSelectedRate(value);
           }}
@@ -87,7 +92,9 @@ const FormCreateLoan = () => {
 
         {selectedRate ? (
           <Text style={styles.rateText}>
-            Lãi suất của kỳ hạn {selectedRate.lable} là {selectedRate.rate}
+            {currentLanguage === 'vi'
+              ? `Lãi suất của kỳ hạn ${selectedRate.label} là ${selectedRate.rate}`
+              : `Interest rate for ${selectedRate.label} is ${selectedRate.rate}`}
           </Text>
         ) : (
           <></>
@@ -95,11 +102,11 @@ const FormCreateLoan = () => {
       </View>
 
       <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>Mục đích vay</Text>
+        <Text style={styles.headingTitle}>{t('formCreateLoan.purpose')}</Text>
         <DropdownComponent
           value={methodExtend}
           data={target_loan}
-          placeholder="Chọn mục đích vay"
+          placeholder={t('formCreateLoan.selectPurpose')}
           onChange={value => {
             setMethodExtend(value);
           }}
@@ -107,11 +114,13 @@ const FormCreateLoan = () => {
       </View>
 
       <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>Tần suất trả lãi</Text>
+        <Text style={styles.headingTitle}>
+          {t('formCreateLoan.paymentFrequency')}
+        </Text>
         <DropdownComponent
           value={method}
           data={frequency_pay}
-          placeholder="Chọn tần suất trả lãi"
+          placeholder={t('formCreateLoan.selectPaymentFrequency')}
           onChange={value => {
             setMethod(value);
           }}
@@ -127,7 +136,7 @@ const FormCreateLoan = () => {
         }>
         <Text
           style={[styles.textWhite, {fontWeight: 'bold', textAlign: 'center'}]}>
-          Tạo
+          {t('formCreateLoan.submit')}
         </Text>
       </TouchableOpacity>
     </View>

@@ -73,7 +73,7 @@
     "formCreateSave": {
         "title": "Deposit savings",
         "depositAmount": "Deposit amount",
-        "depositRange": "Minimum deposit of 1 million, maximum 10 billion",
+        "depositRange": "Minimum 1 million, maximum 10 billion",
         "termRate": "Term and rate",
         "selectTermRate": "Select term and rate",
         "renewalMethod": "Renewal method",
@@ -85,7 +85,28 @@
         "staff": "On-site"   
     },
     "formCreateLoan": {
-        "title": "Create loan"
+        "title": "Create loan",
+        "loanAmount": "Loan amount",
+        "loanRange": "Minimum 1 million, maximum 100 billion",
+        "termRate": "Term and rate",
+        "selectTermRate": "Select term and rate",
+        "purpose": "Purpose",
+        "selectPurpose": "Select purpose",
+        "paymentFrequency": "Payment frequency",
+        "selectPaymentFrequency": "Select payment frequency",
+        "submit": "Create"
+    },
+    "infoSave": {
+        "title": "Savings account information",
+        "submit": "Closure"
+    },
+    "infoLoan": {
+        "title": "Loan information"
+    },
+    "notification": {
+        "title": "Notification",
+        "seen": "Seen",
+        "time": "min ago"
     }
   }
   

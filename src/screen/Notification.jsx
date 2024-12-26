@@ -11,9 +11,14 @@ import {
 import React, {useState} from 'react';
 import Header from '../components/Header/Header';
 import ContentButton from '../components/ContentButton/ContentButton';
+import i18n from '../../i18n';
+import {useTranslation} from 'react-i18next';
 
 const Notification = ({navigation}) => {
-  const notifications = [
+  const currentLanguage = i18n.language;
+  const {t} = useTranslation();
+
+  const notificationsVietnam = [
     {
       id: 1,
       title: 'Số dư tài khoản',
@@ -38,6 +43,35 @@ const Notification = ({navigation}) => {
       seen: true,
     },
   ];
+
+  const notificationsEnglish = [
+    {
+      id: 1,
+      title: 'Account Balance',
+      desc: 'Your account has been credited with 5,000,000 VND. The current balance is 100,000,000 VND.',
+      time: '1 minute ago',
+      seen: false,
+    },
+
+    {
+      id: 2,
+      title: 'Account Balance',
+      desc: 'Your account has been credited with 10,000,000 VND. The current balance is 90,000,000 VND.',
+      time: '3 minutes ago',
+      seen: true,
+    },
+
+    {
+      id: 3,
+      title: 'Information Update',
+      desc: 'Your information has been fully updated. You can now enjoy all features.',
+      time: '50 minutes ago',
+      seen: true,
+    },
+  ];
+
+  const notifications =
+    currentLanguage === 'vi' ? notificationsVietnam : notificationsEnglish;
 
   return (
     <SafeAreaView style={styles.view}>

@@ -1,6 +1,7 @@
 import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
+import {AppIcons} from '../../icons';
 
 const Header = ({Navbar, navigation}) => {
   const {t} = useTranslation();
@@ -13,21 +14,16 @@ const Header = ({Navbar, navigation}) => {
           <TouchableOpacity
             style={styles.borderAvatar}
             onPress={() => navigation.navigate('InfoPerson')}>
-            <Image
-              source={require('../../../assets/images/avatar.jpg')}
-              style={styles.avatar}
-            />
+            <Image source={AppIcons.avatar} style={styles.avatar} />
           </TouchableOpacity>
           <View style={{flex: 1, marginLeft: 16, gap: 8}}>
             <Text>{t('home.welcome')}</Text>
-            <Text style={styles.heading}>{t("home.name")}</Text>
+            <Text style={styles.heading}>{t('home.name')}</Text>
           </View>
           <TouchableOpacity
             style={styles.borderArrow}
             onPress={() => navigation.navigate('Notification')}>
-            <Image
-              source={require('../../../assets/images/notification-icon.png')}
-            />
+            <Image source={AppIcons.notification} />
           </TouchableOpacity>
         </View>
       )}
@@ -41,14 +37,12 @@ const Header = ({Navbar, navigation}) => {
             <Image source={require('../../../assets/images/add-icon.png')} />
           </TouchableOpacity>
           <View>
-            <Text style={styles.heading}>{t("save.title")}</Text>
+            <Text style={styles.heading}>{t('save.title')}</Text>
           </View>
           <TouchableOpacity
             style={styles.borderArrow}
             onPress={() => navigation.navigate('Notification')}>
-            <Image
-              source={require('../../../assets/images/notification-icon.png')}
-            />
+            <Image source={AppIcons.notification} />
           </TouchableOpacity>
         </View>
       )}
@@ -62,14 +56,12 @@ const Header = ({Navbar, navigation}) => {
             <Image source={require('../../../assets/images/add-icon.png')} />
           </TouchableOpacity>
           <View>
-            <Text style={styles.heading}>{t("loan.title")}</Text>
+            <Text style={styles.heading}>{t('loan.title')}</Text>
           </View>
           <TouchableOpacity
             style={styles.borderArrow}
             onPress={() => navigation.navigate('Notification')}>
-            <Image
-              source={require('../../../assets/images/notification-icon.png')}
-            />
+            <Image source={AppIcons.notification} />
           </TouchableOpacity>
         </View>
       )}
@@ -78,7 +70,7 @@ const Header = ({Navbar, navigation}) => {
       {Navbar === 'Rate' && (
         <View style={styles.containHeadingOneValue}>
           <View>
-            <Text style={styles.heading}>Lãi suất</Text>
+            <Text style={styles.heading}>{t('rate.title')}</Text>
           </View>
         </View>
       )}
@@ -97,9 +89,7 @@ const Header = ({Navbar, navigation}) => {
           <TouchableOpacity
             style={styles.borderArrow}
             onPress={() => navigation.navigate('Notification')}>
-            <Image
-              source={require('../../../assets/images/notification-icon.png')}
-            />
+            <Image source={AppIcons.notification} />
           </TouchableOpacity>
         </View>
       )}
@@ -110,15 +100,13 @@ const Header = ({Navbar, navigation}) => {
           <TouchableOpacity
             style={styles.noBorderArrow}
             onPress={() => navigation.goBack()}>
-            <Image source={require('../../../assets/images/arrow-left.png')} />
+            <Image source={AppIcons.back} />
           </TouchableOpacity>
           <View>
             <Text style={styles.heading}>Thay đổi mật khẩu</Text>
           </View>
           <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
-            <Image
-              source={require('../../../assets/images/notification-icon.png')}
-            />
+            <Image source={AppIcons.notification} />
           </TouchableOpacity>
         </View>
       )}
@@ -129,15 +117,13 @@ const Header = ({Navbar, navigation}) => {
           <TouchableOpacity
             style={styles.noBorderArrow}
             onPress={() => navigation.goBack()}>
-            <Image source={require('../../../assets/images/arrow-left.png')} />
+            <Image source={AppIcons.back} />
           </TouchableOpacity>
           <View>
             <Text style={styles.heading}>{t('languageSettings.title')}</Text>
           </View>
           <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
-            <Image
-              source={require('../../../assets/images/notification-icon.png')}
-            />
+            <Image source={AppIcons.notification} />
           </TouchableOpacity>
         </View>
       )}
@@ -148,15 +134,13 @@ const Header = ({Navbar, navigation}) => {
           <TouchableOpacity
             style={styles.noBorderArrow}
             onPress={() => navigation.goBack()}>
-            <Image source={require('../../../assets/images/arrow-left.png')} />
+            <Image source={AppIcons.back} />
           </TouchableOpacity>
           <View>
             <Text style={styles.heading}>Thông tin cá nhân</Text>
           </View>
           <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
-            <Image
-              source={require('../../../assets/images/notification-icon.png')}
-            />
+            <Image source={AppIcons.notification} />
           </TouchableOpacity>
         </View>
       )}
@@ -167,10 +151,10 @@ const Header = ({Navbar, navigation}) => {
           <TouchableOpacity
             style={[styles.noBorderArrow]}
             onPress={() => navigation.goBack()}>
-            <Image source={require('../../../assets/images/arrow-left.png')} />
+            <Image source={AppIcons.back} />
           </TouchableOpacity>
           <View>
-            <Text style={styles.heading}>Thông báo</Text>
+            <Text style={styles.heading}>{t('notification.title')}</Text>
           </View>
           <TouchableOpacity style={[styles.noBorderArrow]}>
             <Text
@@ -185,7 +169,7 @@ const Header = ({Navbar, navigation}) => {
                 color: '#007BFF',
                 fontSize: 14,
               }}>
-              Đã xem hết
+              {t('notification.seen')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -197,15 +181,13 @@ const Header = ({Navbar, navigation}) => {
           <TouchableOpacity
             style={styles.noBorderArrow}
             onPress={() => navigation.goBack()}>
-            <Image source={require('../../../assets/images/arrow-left.png')} />
+            <Image source={AppIcons.back} />
           </TouchableOpacity>
           <View>
-            <Text style={styles.heading}>{t("formCreateLoan.title")}</Text>
+            <Text style={styles.heading}>{t('formCreateLoan.title')}</Text>
           </View>
           <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
-            <Image
-              source={require('../../../assets/images/notification-icon.png')}
-            />
+            <Image source={AppIcons.notification} />
           </TouchableOpacity>
         </View>
       )}
@@ -216,15 +198,30 @@ const Header = ({Navbar, navigation}) => {
           <TouchableOpacity
             style={styles.noBorderArrow}
             onPress={() => navigation.goBack()}>
-            <Image source={require('../../../assets/images/arrow-left.png')} />
+            <Image source={AppIcons.back} />
           </TouchableOpacity>
           <View>
-            <Text style={styles.heading}>{t("formCreateSave.title")}</Text>
+            <Text style={styles.heading}>{t('formCreateSave.title')}</Text>
           </View>
           <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
-            <Image
-              source={require('../../../assets/images/notification-icon.png')}
-            />
+            <Image source={AppIcons.notification} />
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {/* Render header when navbar name Deposit */}
+      {Navbar === 'Deposit' && (
+        <View style={styles.containHeading}>
+          <TouchableOpacity
+            style={styles.noBorderArrow}
+            onPress={() => navigation.goBack()}>
+            <Image source={AppIcons.back} />
+          </TouchableOpacity>
+          <View>
+            <Text style={styles.heading}>{t('deposit.title')}</Text>
+          </View>
+          <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
+            <Image source={AppIcons.notification} />
           </TouchableOpacity>
         </View>
       )}
@@ -235,15 +232,13 @@ const Header = ({Navbar, navigation}) => {
           <TouchableOpacity
             style={styles.noBorderArrow}
             onPress={() => navigation.goBack()}>
-            <Image source={require('../../../assets/images/arrow-left.png')} />
+            <Image source={AppIcons.back} />
           </TouchableOpacity>
           <View>
-            <Text style={styles.heading}>Thông tin sổ tiết kiệm</Text>
+            <Text style={styles.heading}>{t('infoSave.title')}</Text>
           </View>
           <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
-            <Image
-              source={require('../../../assets/images/notification-icon.png')}
-            />
+            <Image source={AppIcons.notification} />
           </TouchableOpacity>
         </View>
       )}
@@ -254,15 +249,13 @@ const Header = ({Navbar, navigation}) => {
           <TouchableOpacity
             style={styles.noBorderArrow}
             onPress={() => navigation.goBack()}>
-            <Image source={require('../../../assets/images/arrow-left.png')} />
+            <Image source={AppIcons.back} />
           </TouchableOpacity>
           <View>
-            <Text style={styles.heading}>Thông tin khoản vay</Text>
+            <Text style={styles.heading}>{t('infoLoan.title')}</Text>
           </View>
           <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
-            <Image
-              source={require('../../../assets/images/notification-icon.png')}
-            />
+            <Image source={AppIcons.notification} />
           </TouchableOpacity>
         </View>
       )}

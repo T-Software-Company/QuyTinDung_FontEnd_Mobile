@@ -6,6 +6,7 @@ import WrapProductHome from '../components/WrapProductHome/WrapProductHome';
 import WrapQuestionHome from '../components/WrapQuestionHome/WrapQuestionHome';
 import BoxTotalNav from '../components/BoxTotalNav/BoxTotalNav';
 import {useTranslation} from 'react-i18next';
+import {AppIcons} from '../icons';
 
 const Home = ({navigation}) => {
   const {t} = useTranslation();
@@ -27,24 +28,24 @@ const Home = ({navigation}) => {
             <View style={styles.wrapFunction}>
               <ButtonShortCut
                 name={t('home.deposit')}
-                urlIcon={require('../../assets/images/sent-icon.png')}
+                urlIcon={AppIcons.sent}
                 styleCustom={{transform: [{rotate: '-90deg'}]}}
-                onPress={() => Alert.alert('Thông báo', 'Comming soon!')}
+                onPress={() => navigation.navigate('Deposit')}
               />
               <ButtonShortCut
                 name={t('home.withdraw')}
-                urlIcon={require('../../assets/images/sent-icon.png')}
+                urlIcon={AppIcons.sent}
                 styleCustom={{transform: [{rotate: '90deg'}]}}
                 onPress={() => Alert.alert('Thông báo', 'Comming soon!')}
               />
               <ButtonShortCut
                 name={t('home.makeADeposit')}
-                urlIcon={require('../../assets/images/save-sent-icon.png')}
+                urlIcon={AppIcons.saveSent}
                 onPress={() => navigation.navigate('SentSave')}
               />
               <ButtonShortCut
                 name={t('home.createLoan')}
-                urlIcon={require('../../assets/images/loan-icon.png')}
+                urlIcon={AppIcons.loan}
                 onPress={() => navigation.navigate('CreateLoan')}
               />
             </View>

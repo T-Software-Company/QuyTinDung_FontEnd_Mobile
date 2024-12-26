@@ -12,25 +12,25 @@ import RateScreen from '../screen/Rate';
 import InfoSaveScreen from '../screen/InfoSave';
 import InfoLoanScreen from '../screen/InfoLoan';
 import SentSaveScreen from '../screen/SentSave';
+import DepositScreen from '../screen/Deposit';
 import CreateLoanScreen from '../screen/CreateLoan';
 import NotificationScreen from '../screen/Notification';
 import InfoPersonScreen from '../screen/InfoPerson';
 import LanguageSettingScreen from '../screen/LanguageSetting';
 import ChangePasswordScreen from '../screen/ChangePassword';
 
-
-
 import LoginScreen from '../screen/Login';
 import ForgetPasswordScreen from '../screen/ForgetPassword';
 import RegisterScreen from '../screen/Register';
 
 import Footer from '../components/Footer/Footer';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
+import {AppIcons} from '../icons';
 
 const Tab = createBottomTabNavigator();
 // const RootStack = createStackNavigator<RootStackParams>();
 const MyTabs = () => {
-  const {t} = useTranslation()
+  const {t} = useTranslation();
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
@@ -41,20 +41,20 @@ const MyTabs = () => {
 
           // Gán biểu tượng tùy vào tên route
           switch (route.name) {
-            case t("navbar.home"):
-              iconSource = require('../../assets/images/home-icon.png');
+            case t('navbar.home'):
+              iconSource = AppIcons.home;
               break;
-            case t("navbar.save"):
-              iconSource = require('../../assets/images/save-icon.png');
+            case t('navbar.save'):
+              iconSource = AppIcons.save;
               break;
-            case t("navbar.loan"):
-              iconSource = require('../../assets/images/loan-icon.png');
+            case t('navbar.loan'):
+              iconSource = AppIcons.loan;
               break;
-            case t("navbar.rate"):
-              iconSource = require('../../assets/images/rate-icon.png');
+            case t('navbar.rate'):
+              iconSource = AppIcons.rate;
               break;
-            case t("navbar.setting"):
-              iconSource = require('../../assets/images/setting-icon.png');
+            case t('navbar.setting'):
+              iconSource = AppIcons.settings;
               break;
             default:
               break;
@@ -86,11 +86,31 @@ const MyTabs = () => {
           backgroundColor: '#fff',
         },
       })}>
-      <Tab.Screen name={t("navbar.home")} value="Trang chủ" component={HomeScreen} />
-      <Tab.Screen name={t("navbar.save")} value="Tiết kiệm" component={SaveScreen} />
-      <Tab.Screen name={t("navbar.loan")} value="Khoản vay" component={LoanScreen} />
-      <Tab.Screen name={t("navbar.rate")} value="Lãi suất" component={RateScreen} />
-      <Tab.Screen name={t("navbar.setting")} value="Cài đặt" component={SettingScreen} />
+      <Tab.Screen
+        name={t('navbar.home')}
+        value="Trang chủ"
+        component={HomeScreen}
+      />
+      <Tab.Screen
+        name={t('navbar.save')}
+        value="Tiết kiệm"
+        component={SaveScreen}
+      />
+      <Tab.Screen
+        name={t('navbar.loan')}
+        value="Khoản vay"
+        component={LoanScreen}
+      />
+      <Tab.Screen
+        name={t('navbar.rate')}
+        value="Lãi suất"
+        component={RateScreen}
+      />
+      <Tab.Screen
+        name={t('navbar.setting')}
+        value="Cài đặt"
+        component={SettingScreen}
+      />
     </Tab.Navigator>
   );
 };
@@ -99,11 +119,10 @@ const Stack = createNativeStackNavigator();
 
 export default RootComponent = function () {
   return (
-    <NavigationContainer >
+    <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="HomeTabs"
+        initialRouteName="Login"
         screenOptions={{headerShown: false}}>
-
         <Stack.Screen name="HomeTabs" component={MyTabs} />
 
         <Stack.Screen name="Login" component={LoginScreen} />
@@ -113,11 +132,14 @@ export default RootComponent = function () {
         <Stack.Screen name="InfoSave" component={InfoSaveScreen} />
         <Stack.Screen name="InfoLoan" component={InfoLoanScreen} />
         <Stack.Screen name="InfoPerson" component={InfoPersonScreen} />
+        <Stack.Screen name="Deposit" component={DepositScreen} />
         <Stack.Screen name="SentSave" component={SentSaveScreen} />
         <Stack.Screen name="CreateLoan" component={CreateLoanScreen} />
-        <Stack.Screen name="LanguageSetting" component={LanguageSettingScreen} />
+        <Stack.Screen
+          name="LanguageSetting"
+          component={LanguageSettingScreen}
+        />
         <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
-
 
         <Stack.Screen
           name="Notification"

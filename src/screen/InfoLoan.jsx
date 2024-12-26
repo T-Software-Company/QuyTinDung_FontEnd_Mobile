@@ -10,9 +10,12 @@ import {
 } from 'react-native';
 import React from 'react';
 import Header from '../components/Header/Header';
+import i18n from '../../i18n';
 
 const InfoLoan = ({navigation}) => {
-  const data = [
+  const currentLanguage = i18n.language;
+
+  const dataVietnam = [
     {key: 'Số hợp đồng', value: '123-456-789'},
     {key: 'Số tiền vay', value: '100.000.000 đ'},
     {key: 'Mục đích vay', value: 'Mua nhà'},
@@ -26,6 +29,23 @@ const InfoLoan = ({navigation}) => {
     {key: 'Ngày có hiệu lực', value: '22/04/2024'},
     {key: 'Ngày đến hạn', value: '22/10/2024'},
   ];
+
+  const dataEnglish = [
+    {key: 'Contract Number', value: '123-456-789'},
+    {key: 'Loan Amount', value: '100,000,000 VND'},
+    {key: 'Loan Purpose', value: 'Buying a house'},
+
+    {key: 'Term', value: '12 months'},
+    {key: 'Interest Rate', value: '12%/year'},
+
+    {key: 'Principal Payment Cycle', value: '6 months'},
+    {key: 'Interest Payment Cycle', value: '6 months'},
+
+    {key: 'Effective Date', value: '22/04/2024'},
+    {key: 'Maturity Date', value: '22/10/2024'},
+  ];
+
+  const data = currentLanguage === 'vi' ? dataVietnam : dataEnglish;
 
   return (
     <SafeAreaView style={styles.view}>

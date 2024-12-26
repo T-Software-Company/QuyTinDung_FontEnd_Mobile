@@ -13,6 +13,7 @@ import {
 import React, {useState} from 'react';
 import Header from '../components/Header/Header';
 import SelectedTabs from '../components/SelectedTabs/SelectedTabs';
+import {AppIcons} from '../icons';
 
 const InfoPerson = ({navigation}) => {
   const [number, setNumber] = useState(null);
@@ -61,10 +62,7 @@ const InfoPerson = ({navigation}) => {
           <View style={styles.body}>
             <View style={styles.form}>
               <View style={styles.boxAvatar}>
-                <Image
-                  style={styles.avatar}
-                  source={require('../../assets/images/avatar.jpg')}
-                />
+                <Image style={styles.avatar} source={AppIcons.avatar} />
                 <Text style={styles.name}>Nguyễn Văn A</Text>
                 <Text style={styles.nameTitle}>Quỹ TDND Châu Đức</Text>
               </View>

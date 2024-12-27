@@ -13,6 +13,7 @@ import InfoSaveScreen from '../screen/InfoSave';
 import InfoLoanScreen from '../screen/InfoLoan';
 import SentSaveScreen from '../screen/SentSave';
 import DepositScreen from '../screen/Deposit';
+import TransferScreen from '../screen/Transfer';
 import CreateLoanScreen from '../screen/CreateLoan';
 import NotificationScreen from '../screen/Notification';
 import InfoPersonScreen from '../screen/InfoPerson';
@@ -121,7 +122,7 @@ export default RootComponent = function () {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Login"
+        initialRouteName="Transfer"
         screenOptions={{headerShown: false}}>
         <Stack.Screen name="HomeTabs" component={MyTabs} />
 
@@ -133,6 +134,7 @@ export default RootComponent = function () {
         <Stack.Screen name="InfoLoan" component={InfoLoanScreen} />
         <Stack.Screen name="InfoPerson" component={InfoPersonScreen} />
         <Stack.Screen name="Deposit" component={DepositScreen} />
+        <Stack.Screen name="Transfer" component={TransferScreen} />
         <Stack.Screen name="SentSave" component={SentSaveScreen} />
         <Stack.Screen name="CreateLoan" component={CreateLoanScreen} />
         <Stack.Screen

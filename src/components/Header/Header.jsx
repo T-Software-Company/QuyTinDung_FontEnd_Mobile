@@ -226,6 +226,23 @@ const Header = ({Navbar, navigation}) => {
         </View>
       )}
 
+      {/* Render header when navbar name Deposit */}
+      {Navbar === 'Transfer' && (
+        <View style={styles.containHeading}>
+          <TouchableOpacity
+            style={styles.noBorderArrow}
+            onPress={() => navigation.goBack()}>
+            <Image source={AppIcons.back} />
+          </TouchableOpacity>
+          <View>
+            <Text style={styles.heading}>{t('transfer.title')}</Text>
+          </View>
+          <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
+            <Image source={AppIcons.notification} />
+          </TouchableOpacity>
+        </View>
+      )}
+
       {/* Render header when navbar name InfoSave */}
       {Navbar === 'InfoSave' && (
         <View style={styles.containHeading}>
@@ -273,6 +290,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     alignItems: 'center',
     paddingTop: 8,
+    backgroundColor: 'white',
   },
   containHeadingHome: {
     display: 'flex',

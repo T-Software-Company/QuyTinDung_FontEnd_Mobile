@@ -119,7 +119,7 @@ const FormDeposit = () => {
 
   const handleCopy = (text) => {
     Clipboard.setString(text);
-    Alert.alert('Thông báo', 'Đã sao chép thành công!', [
+    Alert.alert('Thông báo', 'Sao chép thành công!', [
       {
         text: 'OK',
         style: 'cancel',

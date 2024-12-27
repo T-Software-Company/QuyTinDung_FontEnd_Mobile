@@ -109,6 +109,13 @@
         "depositRange": "Nhập số tiền cần nạp",
         "submit": "Nạp tiền"
     },
+    "transfer": {
+        "title": "Chuyển tiền",
+        "transferAmount": "Số tiền cần chuyển",
+        "transferRange": "Nhập số tiền cần chuyển",
+        "accountNumber": "Số tài khoản",
+        "submit": "Chuyển tiền"
+    },
     "notification": {
         "title": "Thông báo",
         "seen": "Đã xem hết",

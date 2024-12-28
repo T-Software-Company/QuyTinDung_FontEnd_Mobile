@@ -1,16 +1,13 @@
 import {StyleSheet, Text, View, Image} from 'react-native';
 import React from 'react';
 
-const QuestionHome = ({question, urlIcon}) => {
+const QuestionHome = ({question, urlIcon, theme}) => {
   return (
-    <View style={styles.boxContent}>
+    <View style={[styles.boxContent, {backgroundColor: theme.backgroundBox}]}>
       <View>
-        <Image
-          style={styles.imgQuestion}
-          source={urlIcon}
-        />
+        <Image style={{tintColor: theme.iconColor}} source={urlIcon} />
       </View>
-      <Text style={styles.textQuestion}>{question}</Text>
+      <Text style={[styles.textQuestion, {color: theme.text}]}>{question}</Text>
     </View>
   );
 };
@@ -22,7 +19,6 @@ const styles = StyleSheet.create({
     width: '48%',
     paddingHorizontal: 20,
     paddingVertical: 24,
-    backgroundColor: '#f4f4f4',
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',

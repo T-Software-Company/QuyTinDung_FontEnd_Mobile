@@ -11,9 +11,11 @@ import Header from '../components/Header/Header';
 import Table from '../components/Table/Table';
 import SelectedTabs from '../components/SelectedTabs/SelectedTabs';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '../context/ThemeContext';
 
 const Rate = ({navigation}) => {
-  const {t} = useTranslation()
+  const {t} = useTranslation();
+  const { theme } = useTheme();
   const [selectedTab, setSelectedTab] = useState('saving');
 
   const tabs = [
@@ -46,7 +48,7 @@ const Rate = ({navigation}) => {
   const data = selectedTab === 'saving' ? saveRates : loanRates;
 
   return (
-    <SafeAreaView style={styles.view}>
+    <SafeAreaView style={[styles.view, { backgroundColor: theme.background }]}>
       <View style={styles.container}>
         {/* Heading */}
 
@@ -58,10 +60,14 @@ const Rate = ({navigation}) => {
             tabs={tabs}
             selectedTab={selectedTab}
             onSelectTab={setSelectedTab}
+            theme={theme}
           />
 
           {/* View data */}
-          <View style={styles.boxList}>
+          <View style={[styles.boxList, {
+            backgroundColor: theme.background,
+            shadowColor: theme.headerShadow,
+          }]}>
             <Table name="rate" data={data} />
           </View>
         </View>
@@ -75,7 +81,6 @@ export default Rate;
 const styles = StyleSheet.create({
   view: {
     flex: 1,
-    backgroundColor: 'white',
   },
   container: {
     width: '100%',
@@ -90,16 +95,11 @@ const styles = StyleSheet.create({
 
   boxList: {
     marginVertical: 12,
-    backgroundColor: '#fff',
     borderRadius: 12,
-
-    // Shadow for iOS
-    shadowColor: '#171717', // Màu bóng
-    shadowOffset: {width: 0, height: 2}, // Độ lệch bóng
-    shadowOpacity: 0.2, // Độ trong suốt
-    shadowRadius: 5, // Bán kính làm mờ bóng
-    // Shadow for Android
-    elevation: 5, // Mức độ nổi
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 5,
     display: 'flex',
     flexDirection: 'column',
     height: 'auto',

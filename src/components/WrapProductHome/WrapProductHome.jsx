@@ -1,31 +1,31 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import ProductHome from '../ProductHome/ProductHome';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 
-const WrapProductHome = ({name}) => {
-  const {t} = useTranslation()
+const WrapProductHome = ({name, theme}) => {
+  const {t} = useTranslation();
   return (
     <View style={styles.product}>
-      <Text style={styles.headingTitle}>{name}</Text>
+      <Text style={[styles.headingTitle, {color: theme.text}]}>{name}</Text>
 
       <View style={styles.wrapProduct}>
         <ProductHome
-          header={t("home.titleLoanProduct")}
-          desc={t("home.descLoanProduct")}
-          
+          header={t('home.titleLoanProduct')}
+          desc={t('home.descLoanProduct')}
+          theme={theme}
         />
 
         <ProductHome
-          header={t("home.titleLoanProduct")}
-          desc={t("home.descLoanProduct")}
-          
+          header={t('home.titleLoanProduct')}
+          desc={t('home.descLoanProduct')}
+          theme={theme}
         />
 
         <ProductHome
-          header={t("home.titleLoanProduct")}
-          desc={t("home.descLoanProduct")}
-          
+          header={t('home.titleLoanProduct')}
+          desc={t('home.descLoanProduct')}
+          theme={theme}
         />
       </View>
     </View>
@@ -48,5 +48,4 @@ const styles = StyleSheet.create({
     gap: 16,
     marginTop: 16,
   },
-  
 });

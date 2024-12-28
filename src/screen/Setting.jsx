@@ -9,11 +9,16 @@ import {
 import React, {useRef} from 'react';
 import Header from '../components/Header/Header';
 import ButtonSetting from '../components/ButtonSetting/ButtonSetting';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
+import {useTheme} from '../context/ThemeContext';
+import i18n from '../../i18n';
 // import { Modalize } from 'react-native-modalize';
 
 const Setting = ({navigation}) => {
-  const {t} = useTranslation()
+  const {t} = useTranslation();
+  const {theme} = useTheme();
+  const {isDarkMode} = useTheme();
+  const currentLanguage = i18n.language;
   // const modalizeRef = useRef(null);
 
   // const openBottomSheet = () => {
@@ -24,7 +29,7 @@ const Setting = ({navigation}) => {
   //   modalizeRef.current?.close();
   // };
   const phoneNumber = '1234567890'; // Thay bằng số điện thoại bạn muốn
-
+  console.log(currentLanguage)
   const confirmAndMakeCall = () => {
     Alert.alert(
       'Xác nhận cuộc gọi',
@@ -48,8 +53,38 @@ const Setting = ({navigation}) => {
       console.error('Failed to make a call', err);
     });
   };
+
+  // Move StyleSheet inside component to access theme
+  const styles = StyleSheet.create({
+    view: {
+      flex: 1,
+      backgroundColor: theme.background,
+    },
+    container: {
+      width: '100%',
+      height: '100%',
+    },
+    containBody: {
+      paddingHorizontal: 20,
+      marginTop: 32,
+    },
+    boxContent: {
+      marginBottom: 31,
+    },
+    title: {
+      fontSize: 14,
+      color: theme.noteText,
+      textTransform: 'uppercase',
+    },
+    wrapContent: {
+      display: 'flex',
+      flexDirection: 'column',
+      marginTop: 16,
+    },
+  });
+
   return (
-    <SafeAreaView style={styles.view}>
+    <SafeAreaView style={[styles.view, {backgroundColor: theme.background}]}>
       <View style={styles.container}>
         {/* Heading */}
 
@@ -59,23 +94,30 @@ const Setting = ({navigation}) => {
 
         <View style={styles.containBody}>
           <View style={styles.boxContent}>
-            <Text style={styles.title}>{t("settings.generalInformation")}</Text>
+            <Text style={styles.title}>{t('settings.generalInformation')}</Text>
             <View style={styles.wrapContent}>
               <ButtonSetting
-                title={t("settings.personalInformation")}
+                title={t('settings.personalInformation')}
                 icon={require('../../assets/images/arrow-right.png')}
                 onPress={() => navigation.navigate('InfoPerson')}
               />
 
               <ButtonSetting
-                title={t("settings.language")}
+                title={t('settings.language')}
                 icon={require('../../assets/images/arrow-right.png')}
                 onPress={() => navigation.navigate('LanguageSetting')}
-                optionText={t("settings.languageSelected")}
+                optionText={t('settings.languageSelected')}
               />
 
               <ButtonSetting
-                title={t("settings.hotline")}
+                title={t('settings.screenMode')}
+                icon={require('../../assets/images/arrow-right.png')}
+                onPress={() => navigation.navigate('DarkModeSetting')}
+                optionText={currentLanguage === "vi" ? (isDarkMode ? 'Tối' : 'Sáng') : (isDarkMode ? 'Dark' : 'Light')}  
+              />
+
+              <ButtonSetting
+                title={t('settings.hotline')}
                 icon={require('../../assets/images/arrow-right.png')}
                 onPress={confirmAndMakeCall}
                 optionText={phoneNumber}
@@ -84,19 +126,18 @@ const Setting = ({navigation}) => {
           </View>
 
           <View style={styles.boxContent}>
-            <Text style={styles.title}>{t("settings.security")}</Text>
+            <Text style={styles.title}>{t('settings.security')}</Text>
             <View style={styles.wrapContent}>
               <ButtonSetting
-                title={t("settings.changePassword")}
+                title={t('settings.changePassword')}
                 icon={require('../../assets/images/arrow-right.png')}
                 onPress={() => navigation.navigate('ChangePassword')}
               />
 
               <ButtonSetting
-                title={t("settings.privacyPolicy")}
+                title={t('settings.privacyPolicy')}
                 icon={require('../../assets/images/arrow-right.png')}
               />
-
             </View>
           </View>
           {/* <Modalize
@@ -117,32 +158,3 @@ const Setting = ({navigation}) => {
 };
 
 export default Setting;
-
-const styles = StyleSheet.create({
-  view: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  container: {
-    width: '100%',
-    height: '100%',
-  },
-
-  containBody: {
-    paddingHorizontal: 20,
-    marginTop: 32,
-  },
-  boxContent: {
-    marginBottom: 31,
-  },
-  title: {
-    fontSize: 14,
-    color: '#a2a2a7',
-    textTransform: "uppercase"
-  },
-  wrapContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    marginTop: 16,
-  },
-});

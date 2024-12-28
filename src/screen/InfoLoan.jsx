@@ -11,9 +11,11 @@ import {
 import React from 'react';
 import Header from '../components/Header/Header';
 import i18n from '../../i18n';
+import {useTheme} from '../context/ThemeContext';
 
 const InfoLoan = ({navigation}) => {
   const currentLanguage = i18n.language;
+  const {theme} = useTheme();
 
   const dataVietnam = [
     {key: 'Số hợp đồng', value: '123-456-789'},
@@ -47,8 +49,103 @@ const InfoLoan = ({navigation}) => {
 
   const data = currentLanguage === 'vi' ? dataVietnam : dataEnglish;
 
+
+  const styles = StyleSheet.create({
+    view: {
+      flex: 1,
+    },
+    container: {
+      width: '100%',
+      height: '100%',
+    },
+  
+    containHeading: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingHorizontal: 20,
+      alignItems: 'center',
+    },
+    heading: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      color: '#1e1e2d',
+    },
+    borderArrow: {
+      width: 42,
+      height: 42,
+      alignItems: 'flex-start',
+      justifyContent: 'center',
+    },
+  
+    body: {
+      marginTop: 16,
+      paddingHorizontal: 20,
+    },
+  
+    textWhite: {
+      color: 'white',
+    },
+    textPrimary: {
+      color: '#007BFF',
+    },
+    iconPrimary: {
+      tintColor: '#007BFF',
+    },
+  
+    boxList: {
+      marginVertical: 12,
+      backgroundColor: theme.tableChildBackground,
+      borderRadius: 12,
+  
+      // Shadow for iOS
+      shadowColor: theme.headerShadow, // Màu bóng
+      shadowOffset: {width: 0, height: 2}, // Độ lệch bóng
+      shadowOpacity: 0.2, // Độ trong suốt
+      shadowRadius: 5, // Bán kính làm mờ bóng
+      // Shadow for Android
+      elevation: 5, // Mức độ nổi
+      display: 'flex',
+      flexDirection: 'column',
+      height: 'auto',
+    },
+  
+    boxWrap: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: 12,
+    },
+  
+    firstChild: {
+      backgroundColor: theme.tableHeaderBackground,
+      borderTopLeftRadius: 12,
+      borderTopRightRadius: 12,
+    },
+    middleChild: {
+      borderBottomColor: theme.tableBorderColor,
+      borderBottomWidth: 1,
+    },
+  
+    textKeyRow: {
+      fontWeight: 'bold',
+      color: theme.text,
+    },
+    textRow: {
+      fontWeight: 'regular',
+      color: theme.text,
+    },
+  
+    hidden: {
+      opacity: 0,
+      pointerEvents: 'none',
+    },
+  });
+
+
   return (
-    <SafeAreaView style={styles.view}>
+    <SafeAreaView style={[styles.view, {backgroundColor: theme.background}]}>
       <View style={styles.container}>
         {/* Heading */}
 
@@ -73,14 +170,14 @@ const InfoLoan = ({navigation}) => {
                     <Text
                       style={[
                         idx === 0 && styles.textKeyRow,
-                        idx > 0 && idx < data.length - 1 && styles.textRow,
+                        idx > 0 && idx < data.length  && styles.textRow,
                       ]}>
                       {box.key}
                     </Text>
                     <Text
                       style={[
                         idx === 0 && styles.textKeyRow,
-                        idx > 0 && idx < data.length - 1 && styles.textRow,
+                        idx > 0 && idx < data.length  && styles.textRow,
                       ]}>
                       {box.value}
                     </Text>
@@ -97,94 +194,4 @@ const InfoLoan = ({navigation}) => {
 
 export default InfoLoan;
 
-const styles = StyleSheet.create({
-  view: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  container: {
-    width: '100%',
-    height: '100%',
-  },
 
-  containHeading: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    alignItems: 'center',
-  },
-  heading: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#1e1e2d',
-  },
-  borderArrow: {
-    width: 42,
-    height: 42,
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-  },
-
-  body: {
-    marginTop: 16,
-    paddingHorizontal: 20,
-  },
-
-  textWhite: {
-    color: 'white',
-  },
-  textPrimary: {
-    color: '#007BFF',
-  },
-  iconPrimary: {
-    tintColor: '#007BFF',
-  },
-
-  boxList: {
-    marginVertical: 12,
-    backgroundColor: '#fff',
-    borderRadius: 12,
-
-    // Shadow for iOS
-    shadowColor: '#171717', // Màu bóng
-    shadowOffset: {width: 0, height: 2}, // Độ lệch bóng
-    shadowOpacity: 0.2, // Độ trong suốt
-    shadowRadius: 5, // Bán kính làm mờ bóng
-    // Shadow for Android
-    elevation: 5, // Mức độ nổi
-    display: 'flex',
-    flexDirection: 'column',
-    height: 'auto',
-  },
-
-  boxWrap: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 12,
-  },
-
-  firstChild: {
-    backgroundColor: '#f4f4f4',
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
-  },
-  middleChild: {
-    borderBottomColor: '#f4f4f4',
-    borderBottomWidth: 1,
-  },
-
-  textKeyRow: {
-    fontWeight: 'bold',
-  },
-  textRow: {
-    fontWeight: 'regular',
-  },
-
-  hidden: {
-    opacity: 0,
-    pointerEvents: 'none',
-  },
-});

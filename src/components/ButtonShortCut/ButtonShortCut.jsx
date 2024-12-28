@@ -1,18 +1,25 @@
-import {StyleSheet, Text, View, TouchableOpacity, Image, Alert} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  Alert,
+} from 'react-native';
 import React from 'react';
 
-const ButtonShortCut = ({name, urlIcon, styleCustom, onPress}) => {
+const ButtonShortCut = ({name, urlIcon, styleCustom, onPress, theme}) => {
   return (
     <View style={styles.wrapButton}>
       <TouchableOpacity
-        style={styles.borderButton}
+        style={[styles.borderButton, {backgroundColor: theme.backgroundIcon}]}
         onPress={onPress}>
         <Image
-          style={styleCustom}
+          style={[styleCustom, {tintColor: theme.iconColor}]}
           source={urlIcon}
         />
       </TouchableOpacity>
-      <Text style={styles.textButton}>{name}</Text>
+      <Text style={[styles.textButton, {color: theme.text}]}>{name}</Text>
     </View>
   );
 };

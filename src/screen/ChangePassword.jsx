@@ -12,6 +12,7 @@ import {
 
 import React, {useState} from 'react';
 import Header from '../components/Header/Header';
+import {useTheme} from '../context/ThemeContext';
 
 const ChangePassword = ({navigation}) => {
   const [currentPassword, setCurrentPassword] = useState('12345678');
@@ -20,9 +21,94 @@ const ChangePassword = ({navigation}) => {
   const [invisibleCurrent, setInvisibleCurrent] = useState(true);
   const [invisible, setInvisible] = useState(true);
   const [invisibleConfirm, setInvisibleConfirm] = useState(true);
+  const {theme} = useTheme();
+
+  const styles = StyleSheet.create({
+    view: {
+      flex: 1,
+      backgroundColor: 'white',
+    },
+    container: {
+      width: '100%',
+      height: '100%',
+    },
+
+    body: {
+      marginTop: 16,
+      paddingHorizontal: 20,
+    },
+
+    textWhite: {
+      color: 'white',
+    },
+    textPrimary: {
+      color: '#007BFF',
+    },
+    iconPrimary: {
+      tintColor: '#007BFF',
+    },
+
+    boxInput: {
+      marginBottom: 12,
+    },
+
+    headingTitle: {
+      fontWeight: 'bold',
+      marginBottom: 8,
+      color: theme.text,
+    },
+    textInput: {
+      backgroundColor: '#f4f4f4',
+      borderRadius: 8,
+      height: 40,
+      paddingLeft: 15,
+      paddingRight: 50,
+      paddingTop: 10,
+      paddingBottom: 10,
+      color: '#1e1e2d',
+      paddingVertical: 0,
+      textAlignVertical: 'center',
+    },
+
+    btn: {
+      width: '100%',
+      backgroundColor: '#007BFF',
+      padding: 12,
+      borderRadius: 12,
+      marginTop: 8,
+    },
+
+    note: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 12,
+      marginBottom: 12,
+    },
+
+    listItem: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'baseline',
+    },
+    bullet: {
+      color: '#888',
+      fontSize: 24,
+      marginRight: 8,
+    },
+    textNote: {
+      color: '#888',
+      letterSpacing: 0.5,
+      lineHeight: 24,
+    },
+    iconEyes: {
+      position: 'absolute',
+      right: 16,
+      top: 12,
+    },
+  });
 
   return (
-    <SafeAreaView style={styles.view}>
+    <SafeAreaView style={[styles.view, {backgroundColor: theme.background}]}>
       <View style={styles.container}>
         {/* Heading */}
 
@@ -178,87 +264,3 @@ const ChangePassword = ({navigation}) => {
 };
 
 export default ChangePassword;
-
-const styles = StyleSheet.create({
-  view: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  container: {
-    width: '100%',
-    height: '100%',
-  },
-
-  body: {
-    marginTop: 16,
-    paddingHorizontal: 20,
-  },
-
-  textWhite: {
-    color: 'white',
-  },
-  textPrimary: {
-    color: '#007BFF',
-  },
-  iconPrimary: {
-    tintColor: '#007BFF',
-  },
-
-  boxInput: {
-    marginBottom: 12,
-  },
-
-  headingTitle: {
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  textInput: {
-    backgroundColor: '#f4f4f4',
-    borderRadius: 8,
-    height: 40,
-    paddingLeft: 15,
-    paddingRight: 50,
-    paddingTop: 10,
-    paddingBottom: 10,
-    color: '#1e1e2d',
-    paddingVertical: 0,
-    textAlignVertical: 'center',
-  },
-
-  btn: {
-    width: '100%',
-    backgroundColor: '#007BFF',
-    padding: 12,
-    borderRadius: 12,
-    marginTop: 8,
-  },
-
-  note: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 12,
-    marginBottom: 12,
-  },
-
-  listItem: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    
-  },
-  bullet: {
-    color: '#888',
-    fontSize: 24,
-    marginRight: 8,
-  },
-  textNote: {
-    color: '#888',
-    letterSpacing: 0.5,
-    lineHeight: 24,
-  },
-  iconEyes: {
-    position: 'absolute',
-    right: 16,
-    top: 12,
-  },
-});

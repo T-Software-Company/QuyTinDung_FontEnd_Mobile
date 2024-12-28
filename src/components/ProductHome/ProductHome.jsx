@@ -1,11 +1,13 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 
-const ProductHome = ({header, desc}) => {
+const ProductHome = ({header, desc, theme}) => {
   return (
-    <View style={styles.boxProduct}>
-      <Text style={styles.headerProduct}>{header}</Text>
-      <Text style={styles.descriptionProduct}>{desc}</Text>
+    <View style={[styles.boxProduct, {backgroundColor: theme.backgroundBox}]}>
+      <Text style={[styles.headerProduct, {color: theme.text}]}>{header}</Text>
+      <Text style={[styles.descriptionProduct, {color: theme.text}]}>
+        {desc}
+      </Text>
     </View>
   );
 };

@@ -9,7 +9,7 @@ import {
   Animated,
   // Clipboard,  // Add this import
 } from 'react-native';
-import  Clipboard  from '@react-native-clipboard/clipboard'; // Add this import
+import Clipboard from '@react-native-clipboard/clipboard'; // Add this import
 import React, {useState, useRef} from 'react';
 import DropdownComponent from '../DropdownComponent/DropdownComponent';
 import InputBackground from '../InputBackground/InputBackground';
@@ -18,7 +18,7 @@ import {useTranslation} from 'react-i18next';
 import i18n from '../../../i18n';
 import {AppIcons} from '../../icons';
 
-const FormDeposit = () => {
+const FormDeposit = ({theme}) => {
   const currentLanguage = i18n.language;
 
   const [value, setValue] = useState(null);
@@ -117,7 +117,7 @@ const FormDeposit = () => {
     },
   };
 
-  const handleCopy = (text) => {
+  const handleCopy = text => {
     Clipboard.setString(text);
     Alert.alert('Thông báo', 'Sao chép thành công!', [
       {
@@ -126,6 +126,203 @@ const FormDeposit = () => {
       },
     ]);
   };
+
+  const styles = StyleSheet.create({
+    form: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+    },
+
+    wrapFunction: {
+      paddingHorizontal: 20,
+      borderTopColor: '#bbb',
+      borderTopWidth: 1,
+      paddingBottom: 16,
+    },
+    hidden: {
+      opacity: 0,
+      pointerEvents: 'none',
+    },
+
+    icon: {
+      tintColor: theme.iconColor,
+    },
+
+    toggleButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingVertical: 10,
+      borderRadius: 5,
+      paddingBottom: 12,
+    },
+    buttonText: {
+      color: theme.text,
+      fontSize: 16,
+      fontWeight: 'bold',
+    },
+
+    content: {
+      overflow: 'hidden', // Đảm bảo nội dung không tràn ra ngoài
+      marginVertical: 0,
+      width: '100%',
+    },
+    contentText: {
+      color: theme.text,
+      fontSize: 14,
+      fontWeight: 'bold',
+      textAlign: 'center',
+    },
+    wrapQr: {
+      display: 'flex',
+      backgroundColor: theme.backgroundBox,
+      paddingHorizontal: 10, // Đệm ngang cho nội dung
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingVertical: 20,
+      gap: 24,
+      borderRadius: 8,
+    },
+    qr: {
+      width: 100,
+      height: 100,
+      padding: 4,
+      backgroundColor: 'white',
+      borderRadius: 8,
+    },
+    wrapDownload: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+    },
+    iconDownload: {
+      tintColor: theme.iconColor,
+      width: 15,
+      height: 15,
+    },
+
+    textDownload: {
+      color: theme.text,
+    },
+
+    wrapTransfer: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingHorizontal: 12,
+      paddingVertical: 10,
+      borderWidth: 1,
+      borderColor: 'orange',
+      marginTop: 12,
+      borderRadius: 8,
+    },
+    wrapQrText: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'flex-start',
+      gap: 6,
+    },
+    wrapTextTransfer: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
+    },
+    textTitle: {
+      fontSize: 12,
+      color: theme.noteText,
+    },
+    compulsory: {
+      color: 'red',
+    },
+    descTransfer: {
+      fontSize: 14,
+      color: theme.text,
+      fontWeight: 'bold',
+    },
+
+    wrapTransferBank: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 24,
+    },
+
+    noteTransfer: {
+      fontSize: 12,
+      color: theme.noteText,
+      lineHeight: 18,
+    },
+
+    wrapBank: {
+      display: 'flex',
+      flexDirection: 'row',
+      gap: 8,
+      justifyContent: 'space-between',
+    },
+
+    borderBank: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 12,
+      padding: 12,
+      borderWidth: 1,
+      borderColor: '#ccc',
+      borderRadius: 8,
+      width: '48%',
+      backgroundColor: theme.background,
+    },
+    activeBank: {
+      borderColor: 'orange',
+      borderWidth: 2,
+    },
+
+    iconBank: {
+      width: 24,
+      height: 24,
+    },
+
+    textBank: {
+       color: theme.text, 
+    },
+
+    wrapBankTransfer: {
+      display: 'flex',
+      backgroundColor: theme.backgroundBox,
+      flexDirection: 'column',
+      paddingHorizontal: 16, // Đệm ngang cho nội dung
+      paddingVertical: 12,
+      gap: 20,
+      borderRadius: 8,
+    },
+
+    wrapField: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    wrapTitleBank: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 4,
+    },
+    titleBank: {
+      fontSize: 12,
+      color: theme.noteText,
+    },
+    descBank: {
+      fontSize: 14,
+      color: theme.text,
+      fontWeight: 'bold',
+    },
+  });
 
   const BankField = ({label, value, icon}) => (
     <View style={styles.wrapField}>
@@ -168,7 +365,7 @@ const FormDeposit = () => {
                     style={styles.iconDownload}
                     source={AppIcons.downLoad}
                   />
-                  <Text style={styles.download}>Tải về</Text>
+                  <Text style={styles.textDownload}>Tải về</Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.wrapTransfer}>
@@ -183,7 +380,8 @@ const FormDeposit = () => {
                     Pham Minh Quang 99MC9999
                   </Text>
                 </View>
-                <TouchableOpacity onPress={() => handleCopy('Pham Minh Quang 99MC9999')}>
+                <TouchableOpacity
+                  onPress={() => handleCopy('Pham Minh Quang 99MC9999')}>
                   <Image style={styles.iconDownload} source={AppIcons.copy} />
                 </TouchableOpacity>
               </View>
@@ -222,7 +420,7 @@ const FormDeposit = () => {
                   ]}
                   onPress={() => setSelectedBank('TPBank')}>
                   <Image style={styles.iconBank} source={AppIcons.tpBank} />
-                  <Text>TPBank</Text>
+                  <Text style={styles.textBank}>TPBank</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[
@@ -231,7 +429,7 @@ const FormDeposit = () => {
                   ]}
                   onPress={() => setSelectedBank('BIDV')}>
                   <Image style={styles.iconBank} source={AppIcons.tpBIDV} />
-                  <Text>BIDV</Text>
+                  <Text style={styles.textBank}>BIDV</Text>
                 </TouchableOpacity>
               </View>
 
@@ -254,244 +452,3 @@ const FormDeposit = () => {
 };
 
 export default FormDeposit;
-
-const styles = StyleSheet.create({
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-  },
-
-  wrapFunction: {
-    paddingHorizontal: 20,
-    borderTopColor: '#bbb',
-    borderTopWidth: 1,
-    paddingBottom: 16,
-  },
-
-  boxInput: {
-    marginBottom: 12,
-  },
-
-  sourceBanking: {
-    marginTop: 12,
-    borderTopColor: '#aaa',
-    borderTopWidth: 1,
-    paddingTop: 20,
-  },
-
-  boxBanking: {
-    backgroundColor: '#f4f4f4',
-  },
-
-  headingTitle: {
-    fontWeight: 'bold',
-    marginBottom: 12,
-  },
-  hidden: {
-    opacity: 0,
-    pointerEvents: 'none',
-  },
-
-  rateText: {
-    marginTop: 12,
-    fontSize: 14,
-    color: '#007BFF',
-  },
-  textWhite: {
-    color: 'white',
-  },
-
-  wrapIcon: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 20,
-    backgroundColor: '#f4f4f4',
-    paddingHorizontal: 20,
-    paddingVertical: 18,
-    borderRadius: 8,
-    // marginTop: 12
-  },
-  headingBanking: {
-    fontWeight: 'bold',
-  },
-  noteBanking: {
-    fontSize: 12,
-    color: '#aaa',
-  },
-
-  icon: {
-    tintColor: '#000',
-  },
-
-  toggleButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    // backgroundColor: '#007bff',
-    paddingVertical: 10,
-    borderRadius: 5,
-    paddingBottom: 12,
-  },
-  buttonText: {
-    color: '#000',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  arrow: {
-    color: '#fff',
-    fontSize: 16,
-    marginLeft: 5,
-  },
-  content: {
-    overflow: 'hidden', // Đảm bảo nội dung không tràn ra ngoài
-    marginVertical: 0,
-    width: '100%',
-  },
-  contentText: {
-    color: '#000',
-    fontSize: 14,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  wrapQr: {
-    display: 'flex',
-    backgroundColor: '#f4f4f4',
-    paddingHorizontal: 10, // Đệm ngang cho nội dung
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 20,
-    gap: 24,
-    borderRadius: 8,
-  },
-  qr: {
-    width: 100,
-    height: 100,
-    padding: 4,
-    backgroundColor: 'white',
-    borderRadius: 8,
-  },
-  wrapDownload: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    // marginTop: 10,
-  },
-  iconDownload: {
-    tintColor: '#000',
-    width: 15,
-    height: 15,
-  },
-  wrapTransfer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderWidth: 1,
-    borderColor: 'orange',
-    marginTop: 12,
-    borderRadius: 8,
-  },
-  wrapQrText: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    gap: 6,
-  },
-  wrapTextTransfer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  textTitle: {
-    fontSize: 12,
-    color: '#aaa',
-  },
-  compulsory: {
-    color: 'red',
-  },
-  descTransfer: {
-    fontSize: 14,
-    color: '#000',
-    fontWeight: 'bold',
-  },
-
-  wrapTransferBank: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 24,
-  },
-
-  noteTransfer: {
-    fontSize: 12,
-    color: '#aaa',
-    lineHeight: 18,
-  },
-
-  wrapBank: {
-    display: 'flex',
-    flexDirection: 'row',
-    gap: 8,
-    justifyContent: 'space-between',
-  },
-
-  borderBank: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 12,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    width: '48%',
-  },
-  activeBank: {
-    borderColor: 'orange',
-    borderWidth: 2,
-  },
-
-  iconBank: {
-    width: 24,
-    height: 24,
-  },
-
-  wrapBankTransfer: {
-    display: 'flex',
-    backgroundColor: '#f4f4f4',
-    flexDirection: 'column',
-    paddingHorizontal: 16, // Đệm ngang cho nội dung
-    paddingVertical: 12,
-    gap: 20,
-    borderRadius: 8,
-  },
-
-  wrapField: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  wrapTitleBank: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 4,
-  },
-  titleBank: {
-    fontSize: 12,
-    color: '#aaa',
-  },
-  descBank: {
-    fontSize: 14,
-    color: '#000',
-    fontWeight: 'bold',
-  },
-});

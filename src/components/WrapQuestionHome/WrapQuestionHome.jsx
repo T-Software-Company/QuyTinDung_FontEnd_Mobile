@@ -3,31 +3,35 @@ import React from 'react';
 import QuestionHome from '../QuestionHome/QuestionHome';
 import { useTranslation } from 'react-i18next';
 
-const WrapQuestionHome = ({name}) => {
+const WrapQuestionHome = ({name, theme}) => {
   const {t} = useTranslation()
   return (
     <View style={styles.questions}>
-      <Text style={styles.headingTitle}>{name}</Text>
+      <Text style={[styles.headingTitle, {color: theme.text}]}>{name}</Text>
 
       <View style={styles.wrapBox}>
         <QuestionHome
           question={t("home.descQuestion1")}
           urlIcon={require('../../../assets/images/add-icon.png')}
+          theme={theme}
         />
 
         <QuestionHome
           question={t("home.descQuestion2")}
           urlIcon={require('../../../assets/images/message-icon.png')}
+          theme={theme}
         />
 
         <QuestionHome
           question={t("home.descQuestion1")}
           urlIcon={require('../../../assets/images/add-icon.png')}
+          theme={theme}
         />
 
         <QuestionHome
           question={t("home.descQuestion2")}
           urlIcon={require('../../../assets/images/message-icon.png')}
+          theme={theme}
         />
       </View>
     </View>

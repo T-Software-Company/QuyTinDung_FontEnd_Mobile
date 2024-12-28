@@ -14,7 +14,7 @@
         "showButton": "Show",
         "hideButton": "Hide",
         "deposit": "Deposit",
-        "withdraw": "Withdraw",
+        "transfer": "Transfer",
         "makeADeposit": "Make a deposit",
         "createLoan": "Apply for a loan",
         "loanProduct": "Loan product",
@@ -58,6 +58,7 @@
       "generalInformation": "General Information",
       "personalInformation": "Personal Information",
       "language": "Language",
+      "screenMode": "Screen Mode",
       "languageSelected":  "English",
       "hotline": "Hotline",
       "security": "Security",
@@ -107,6 +108,11 @@
         "title": "Notification",
         "seen": "Seen",
         "time": "min ago"
+    },
+    "screen": {
+        "title": "Screen",
+        "light": "Light mode",
+        "dark": "Dark mode"
     }
   }
   

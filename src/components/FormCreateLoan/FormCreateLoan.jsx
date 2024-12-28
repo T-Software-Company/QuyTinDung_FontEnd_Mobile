@@ -5,7 +5,7 @@ import InputBackground from '../InputBackground/InputBackground';
 import {useTranslation} from 'react-i18next';
 import i18n from '../../../i18n';
 
-const FormCreateLoan = () => {
+const FormCreateLoan = ({theme}) => {
   const currentLanguage = i18n.language;
 
   const [number, setNumber] = useState(null);
@@ -65,6 +65,78 @@ const FormCreateLoan = () => {
   const [selectedRate, setSelectedRate] = useState(null);
   const [methodExtend, setMethodExtend] = useState(null);
   const [method, setMethod] = useState(null);
+
+  const styles = StyleSheet.create({
+    boxInput: {
+      marginBottom: 12,
+    },
+  
+    headingTitle: {
+      fontWeight: 'bold',
+      marginBottom: 8,
+      color: theme.text,
+    },
+    textInput: {
+      backgroundColor: '#f4f4f4',
+      borderRadius: 8,
+      height: 40,
+      paddingLeft: 15,
+      paddingRight: 15,
+      paddingTop: 10,
+      paddingBottom: 10,
+      color: '#000',
+      paddingVertical: 0,
+      textAlignVertical: 'center',
+    },
+  
+    placeholderStyle: {
+      color: '#aaa',
+      fontSize: 14,
+    },
+  
+    selectedTextStyle: {
+      color: '#000',
+      fontSize: 14,
+    },
+  
+    btn: {
+      width: '100%',
+      backgroundColor: '#007BFF',
+      padding: 12,
+      borderRadius: 12,
+      marginTop: 8,
+    },
+  
+    hidden: {
+      opacity: 0,
+      pointerEvents: 'none',
+    },
+  
+    dropdown: {
+      borderColor: '#ccc',
+      borderWidth: 1,
+      borderRadius: 5,
+      height: 50,
+      zIndex: 5000,
+    },
+    dropdownContainer: {
+      borderColor: '#ccc',
+      zIndex: 5000,
+      position: 'absolute',
+    },
+  
+    rateText: {
+      marginTop: 12,
+      fontSize: 14,
+      color: '#007BFF',
+    },
+    textWhite: {
+      color: 'white',
+    },
+  });
+
+
+
   return (
     <View style={styles.form}>
       <View style={styles.boxInput}>
@@ -145,70 +217,4 @@ const FormCreateLoan = () => {
 
 export default FormCreateLoan;
 
-const styles = StyleSheet.create({
-  boxInput: {
-    marginBottom: 12,
-  },
 
-  headingTitle: {
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  textInput: {
-    backgroundColor: '#f4f4f4',
-    borderRadius: 8,
-    height: 40,
-    paddingLeft: 15,
-    paddingRight: 15,
-    paddingTop: 10,
-    paddingBottom: 10,
-    color: '#000',
-    paddingVertical: 0,
-    textAlignVertical: 'center',
-  },
-
-  placeholderStyle: {
-    color: '#aaa',
-    fontSize: 14,
-  },
-
-  selectedTextStyle: {
-    color: '#000',
-    fontSize: 14,
-  },
-
-  btn: {
-    width: '100%',
-    backgroundColor: '#007BFF',
-    padding: 12,
-    borderRadius: 12,
-    marginTop: 8,
-  },
-
-  hidden: {
-    opacity: 0,
-    pointerEvents: 'none',
-  },
-
-  dropdown: {
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 5,
-    height: 50,
-    zIndex: 5000,
-  },
-  dropdownContainer: {
-    borderColor: '#ccc',
-    zIndex: 5000,
-    position: 'absolute',
-  },
-
-  rateText: {
-    marginTop: 12,
-    fontSize: 14,
-    color: '#007BFF',
-  },
-  textWhite: {
-    color: 'white',
-  },
-});

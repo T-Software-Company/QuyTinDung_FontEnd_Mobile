@@ -13,10 +13,12 @@ import Header from '../components/Header/Header';
 import ContentButton from '../components/ContentButton/ContentButton';
 import i18n from '../../i18n';
 import {useTranslation} from 'react-i18next';
+import {useTheme} from '../context/ThemeContext';
 
 const Notification = ({navigation}) => {
   const currentLanguage = i18n.language;
   const {t} = useTranslation();
+  const {theme} = useTheme();
 
   const notificationsVietnam = [
     {
@@ -74,7 +76,7 @@ const Notification = ({navigation}) => {
     currentLanguage === 'vi' ? notificationsVietnam : notificationsEnglish;
 
   return (
-    <SafeAreaView style={styles.view}>
+    <SafeAreaView style={[styles.view, {backgroundColor: theme.background}]}>
       <View style={styles.container}>
         {/* Heading */}
 

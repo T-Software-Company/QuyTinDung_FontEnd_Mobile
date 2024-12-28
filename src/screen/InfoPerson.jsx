@@ -14,11 +14,13 @@ import React, {useState} from 'react';
 import Header from '../components/Header/Header';
 import SelectedTabs from '../components/SelectedTabs/SelectedTabs';
 import {AppIcons} from '../icons';
+import {useTheme} from '../context/ThemeContext';
 
 const InfoPerson = ({navigation}) => {
   const [number, setNumber] = useState(null);
   const [selectedTab, setSelectedTab] = useState('info');
   const [isEditable, setIsEditable] = useState(false);
+  const {theme} = useTheme();
 
   const tabs = [
     {key: 'info', label: 'THÔNG TIN LIÊN HỆ'},
@@ -46,8 +48,117 @@ const InfoPerson = ({navigation}) => {
     setIsEditable(false);
   };
 
+
+  const styles = StyleSheet.create({
+    view: {
+      flex: 1,
+      backgroundColor: 'white',
+    },
+    container: {
+      width: '100%',
+      height: '100%',
+    },
+  
+    body: {
+      marginTop: 16,
+      paddingHorizontal: 20,
+    },
+    boxAvatar: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: 16,
+    },
+    avatar: {
+      width: 100,
+      height: 100,
+      resizeMode: 'cover',
+      borderRadius: 9999,
+    },
+    name: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      marginTop: 24,
+    },
+    nameTitle: {
+      marginTop: 4,
+      fontSize: 14,
+      color: '#aaa',
+    },
+  
+    textWhite: {
+      color: 'white',
+    },
+    textPrimary: {
+      color: '#007BFF',
+    },
+    iconPrimary: {
+      tintColor: '#007BFF',
+    },
+  
+    boxInput: {
+      marginBottom: 12,
+    },
+  
+    headingTitle: {
+      fontWeight: 'bold',
+      fontSize: 12,
+      marginBottom: 8,
+      color: theme.text,
+    },
+    textInput: {
+      backgroundColor: theme.backgroundBox,
+      borderRadius: 8,
+      height: 40,
+      paddingLeft: 15,
+      paddingRight: 15,
+      paddingTop: 10,
+      paddingBottom: 10,
+      color: '#888',
+      paddingVertical: 0,
+      textAlignVertical: 'center',
+    },
+    textEdit: {
+      color: theme.text,
+    },
+  
+    placeholderStyle: {
+      color: '#aaa',
+      fontSize: 14,
+    },
+  
+    selectedTextStyle: {
+      color: '#000',
+      fontSize: 14,
+    },
+  
+    wrapBtn: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      gap: 12,
+    },
+  
+    btn: {
+      // flex: '1',
+      width: '48%',
+      padding: 12,
+      borderRadius: 12,
+      marginTop: 8,
+    },
+  
+    btnPrimary: {
+      backgroundColor: '#007BFF',
+    },
+  
+    btnNormal: {
+      backgroundColor: '#ddd',
+    },
+  });
+
   return (
-    <SafeAreaView style={styles.view}>
+    <SafeAreaView style={[styles.view, {backgroundColor: theme.background}]}>
       <View style={styles.container}>
         {/* Heading */}
 
@@ -63,7 +174,7 @@ const InfoPerson = ({navigation}) => {
             <View style={styles.form}>
               <View style={styles.boxAvatar}>
                 <Image style={styles.avatar} source={AppIcons.avatar} />
-                <Text style={styles.name}>Nguyễn Văn A</Text>
+                <Text style={[styles.name, {color: theme.text}]}>Nguyễn Văn A</Text>
                 <Text style={styles.nameTitle}>Quỹ TDND Châu Đức</Text>
               </View>
 
@@ -267,110 +378,4 @@ const InfoPerson = ({navigation}) => {
 
 export default InfoPerson;
 
-const styles = StyleSheet.create({
-  view: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  container: {
-    width: '100%',
-    height: '100%',
-  },
 
-  body: {
-    marginTop: 16,
-    paddingHorizontal: 20,
-  },
-  boxAvatar: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 16,
-  },
-  avatar: {
-    width: 100,
-    height: 100,
-    resizeMode: 'cover',
-    borderRadius: 9999,
-  },
-  name: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginTop: 24,
-  },
-  nameTitle: {
-    marginTop: 4,
-    fontSize: 14,
-    color: '#aaa',
-  },
-
-  textWhite: {
-    color: 'white',
-  },
-  textPrimary: {
-    color: '#007BFF',
-  },
-  iconPrimary: {
-    tintColor: '#007BFF',
-  },
-
-  boxInput: {
-    marginBottom: 12,
-  },
-
-  headingTitle: {
-    fontWeight: 'bold',
-    fontSize: 12,
-    marginBottom: 8,
-    color: '#888',
-  },
-  textInput: {
-    backgroundColor: '#f4f4f4',
-    borderRadius: 8,
-    height: 40,
-    paddingLeft: 15,
-    paddingRight: 15,
-    paddingTop: 10,
-    paddingBottom: 10,
-    color: '#888',
-    paddingVertical: 0,
-    textAlignVertical: 'center',
-  },
-  textEdit: {
-    color: '#000',
-  },
-
-  placeholderStyle: {
-    color: '#aaa',
-    fontSize: 14,
-  },
-
-  selectedTextStyle: {
-    color: '#000',
-    fontSize: 14,
-  },
-
-  wrapBtn: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 12,
-  },
-
-  btn: {
-    // flex: '1',
-    width: '48%',
-    padding: 12,
-    borderRadius: 12,
-    marginTop: 8,
-  },
-
-  btnPrimary: {
-    backgroundColor: '#007BFF',
-  },
-
-  btnNormal: {
-    backgroundColor: '#ddd',
-  },
-});

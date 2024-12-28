@@ -4,8 +4,11 @@ import DropdownComponent from '../DropdownComponent/DropdownComponent';
 import InputBackground from '../InputBackground/InputBackground';
 import {useTranslation} from 'react-i18next';
 import i18n from '../../../i18n';
+import {useTheme} from '../../context/ThemeContext';
+
 
 const FormCreateSave = () => {
+  const {theme} = useTheme();
   const currentLanguage = i18n.language;
 
   const [value, setValue] = useState(null);
@@ -59,6 +62,40 @@ const FormCreateSave = () => {
   const [selectedRate, setSelectedRate] = useState(null);
   const [methodExtend, setMethodExtend] = useState(null);
   const [method, setMethod] = useState(null);
+
+  const styles = StyleSheet.create({
+    boxInput: {
+      marginBottom: 12,
+    },
+  
+    headingTitle: {
+      fontWeight: 'bold',
+      marginBottom: 8,
+      color: theme.text,
+    },
+  
+    btn: {
+      width: '100%',
+      backgroundColor: '#007BFF',
+      padding: 12,
+      borderRadius: 12,
+      marginTop: 8,
+    },
+  
+    hidden: {
+      opacity: 0,
+      pointerEvents: 'none',
+    },
+  
+    rateText: {
+      marginTop: 12,
+      fontSize: 14,
+      color: '#007BFF',
+    },
+    textWhite: {
+      color: 'white',
+    },
+  });
 
   return (
     <View style={styles.form}>
@@ -138,35 +175,4 @@ const FormCreateSave = () => {
 
 export default FormCreateSave;
 
-const styles = StyleSheet.create({
-  boxInput: {
-    marginBottom: 12,
-  },
 
-  headingTitle: {
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-
-  btn: {
-    width: '100%',
-    backgroundColor: '#007BFF',
-    padding: 12,
-    borderRadius: 12,
-    marginTop: 8,
-  },
-
-  hidden: {
-    opacity: 0,
-    pointerEvents: 'none',
-  },
-
-  rateText: {
-    marginTop: 12,
-    fontSize: 14,
-    color: '#007BFF',
-  },
-  textWhite: {
-    color: 'white',
-  },
-});

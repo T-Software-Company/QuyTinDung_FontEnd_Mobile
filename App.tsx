@@ -11,8 +11,9 @@ import {StyleSheet, useColorScheme, View} from 'react-native';
 
 import RootNavigator from './src/navigators/RootNavigator';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {LanguageProvider} from './context/LanguageContext';
+import {LanguageProvider} from './src/context/LanguageContext';
 import './i18n';
+import ThemeProvider from './src/context/ThemeContext';
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -23,9 +24,11 @@ function App(): React.JSX.Element {
 
   return (
     <SafeAreaProvider style={{flex: 1}}>
-      <LanguageProvider>
-        <RootNavigator />
-      </LanguageProvider>
+      <ThemeProvider>
+        <LanguageProvider>
+          <RootNavigator />
+        </LanguageProvider>
+      </ThemeProvider>
     </SafeAreaProvider>
   );
 }

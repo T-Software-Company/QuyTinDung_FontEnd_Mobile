@@ -18,6 +18,7 @@ import CreateLoanScreen from '../screen/CreateLoan';
 import NotificationScreen from '../screen/Notification';
 import InfoPersonScreen from '../screen/InfoPerson';
 import LanguageSettingScreen from '../screen/LanguageSetting';
+import DarkModeSettingScreen from '../screen/DarkModeSetting';
 import ChangePasswordScreen from '../screen/ChangePassword';
 
 import LoginScreen from '../screen/Login';
@@ -27,11 +28,14 @@ import RegisterScreen from '../screen/Register';
 import Footer from '../components/Footer/Footer';
 import {useTranslation} from 'react-i18next';
 import {AppIcons} from '../icons';
+import {useTheme} from '../context/ThemeContext';
 
 const Tab = createBottomTabNavigator();
 // const RootStack = createStackNavigator<RootStackParams>();
 const MyTabs = () => {
   const {t} = useTranslation();
+  const {theme} = useTheme();
+  
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
@@ -67,13 +71,16 @@ const MyTabs = () => {
                 source={iconSource}
                 style={[
                   styles.icon,
-                  {tintColor: focused ? '#007BFF' : '#888'}, // Đổi màu icon khi active
+                  {tintColor: focused ? theme.iconColorActive : theme.iconColor},
                 ]}
               />
               <Text
                 style={[
                   styles.tabLabel,
-                  {color: focused ? '#007BFF' : '#888', fontSize: 10},
+                  {
+                    color: focused ? theme.iconColorActive : theme.iconColor,
+                    fontSize: 10
+                  },
                 ]}>
                 {route.name}
               </Text>
@@ -84,7 +91,7 @@ const MyTabs = () => {
           height: 75, // Tăng chiều cao thanh điều hướng
           paddingBottom: 20,
           paddingTop: 15,
-          backgroundColor: '#fff',
+          backgroundColor: theme.tabBarBackground,
         },
       })}>
       <Tab.Screen
@@ -122,7 +129,7 @@ export default RootComponent = function () {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Transfer"
+        initialRouteName="HomeTabs"
         screenOptions={{headerShown: false}}>
         <Stack.Screen name="HomeTabs" component={MyTabs} />
 
@@ -140,6 +147,10 @@ export default RootComponent = function () {
         <Stack.Screen
           name="LanguageSetting"
           component={LanguageSettingScreen}
+        />
+        <Stack.Screen
+          name="DarkModeSetting"
+          component={DarkModeSettingScreen}
         />
         <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
 

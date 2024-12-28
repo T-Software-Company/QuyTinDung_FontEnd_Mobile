@@ -14,7 +14,7 @@
         "showButton": "Hiện",
         "hideButton": "Ẩn",
         "deposit": "Nạp tiền",
-        "withdraw": "Rút tiền",
+        "transfer": "Chuyển tiền",
         "makeADeposit": "Gửi tiết kiệm",
         "createLoan": "Tạo khoản vay",
         "loanProduct": "Sản phẩm vay",
@@ -58,11 +58,13 @@
       "generalInformation": "Thông tin chung",
       "personalInformation": "Thông tin cá nhân",
       "language": "Ngôn ngữ",
+      "screenMode": "Giao diện",
       "languageSelected":  "Tiếng Việt",
       "hotline": "Hotline",
       "security": "Bảo mật",
       "changePassword": "Thay đổi mật khẩu",
       "privacyPolicy": "Chính sách quyền riêng tư"
+
     },
     "languageSettings": {
         "title": "Ngôn ngữ",
@@ -120,6 +122,11 @@
         "title": "Thông báo",
         "seen": "Đã xem hết",
         "time": "phút trước"
+    },
+    "screen": {
+        "title": "Giao diện",
+        "light": "Giao diện sáng",
+        "dark": "Giao diện tối"
     }
+    
   }
-  

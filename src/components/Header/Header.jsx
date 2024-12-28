@@ -2,9 +2,85 @@ import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {AppIcons} from '../../icons';
+import {useTheme} from '../../context/ThemeContext';
 
 const Header = ({Navbar, navigation}) => {
   const {t} = useTranslation();
+  const {theme} = useTheme();
+
+  const styles = StyleSheet.create({
+    containHeading: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingHorizontal: 20,
+      alignItems: 'center',
+      paddingTop: 8,
+      backgroundColor: theme.background,
+    },
+    containHeadingHome: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      paddingHorizontal: 20,
+      alignItems: 'center',
+      paddingBottom: 8,
+      backgroundColor: theme.background,
+
+      shadowColor: '#171717',
+      shadowOffset: {width: 0, height: 2},
+      shadowOpacity: 0.1,
+      shadowRadius: 3,
+      elevation: 4,
+      paddingTop: 8,
+    },
+    containHeadingOneValue: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      paddingHorizontal: 20,
+      alignItems: 'center',
+      height: 50, //height + px padding top = 50 = 42 + 8
+      paddingTop: 8,
+      backgroundColor: theme.background,
+    },
+    heading: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      color: theme.text,
+    },
+    borderAvatar: {
+      width: 50,
+      height: 50,
+    },
+    avatar: {
+      width: '100%',
+      height: '100%',
+      borderRadius: 9999,
+    },
+    borderArrow: {
+      width: 42,
+      height: 42,
+      backgroundColor: theme.backgroundIcon,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 9999,
+    },
+    icon: {
+      tintColor: theme.iconColor,
+    },
+    noBorderArrow: {
+      width: 42,
+      height: 42,
+      alignItems: 'flex-start',
+      justifyContent: 'center',
+    },
+    hidden: {
+      opacity: 0,
+      pointerEvents: 'none',
+    },
+  });
+
   return (
     <>
       {/* Render header when navbar name home */}
@@ -17,13 +93,13 @@ const Header = ({Navbar, navigation}) => {
             <Image source={AppIcons.avatar} style={styles.avatar} />
           </TouchableOpacity>
           <View style={{flex: 1, marginLeft: 16, gap: 8}}>
-            <Text>{t('home.welcome')}</Text>
+            <Text style={{color: theme.text}}>{t('home.welcome')}</Text>
             <Text style={styles.heading}>{t('home.name')}</Text>
           </View>
           <TouchableOpacity
             style={styles.borderArrow}
             onPress={() => navigation.navigate('Notification')}>
-            <Image source={AppIcons.notification} />
+            <Image source={AppIcons.notification} style={styles.icon} />
           </TouchableOpacity>
         </View>
       )}
@@ -34,7 +110,10 @@ const Header = ({Navbar, navigation}) => {
           <TouchableOpacity
             style={styles.borderArrow}
             onPress={() => navigation.navigate('SentSave')}>
-            <Image source={require('../../../assets/images/add-icon.png')} />
+            <Image
+              source={require('../../../assets/images/add-icon.png')}
+              style={styles.icon}
+            />
           </TouchableOpacity>
           <View>
             <Text style={styles.heading}>{t('save.title')}</Text>
@@ -42,7 +121,7 @@ const Header = ({Navbar, navigation}) => {
           <TouchableOpacity
             style={styles.borderArrow}
             onPress={() => navigation.navigate('Notification')}>
-            <Image source={AppIcons.notification} />
+            <Image source={AppIcons.notification} style={styles.icon} />
           </TouchableOpacity>
         </View>
       )}
@@ -53,7 +132,10 @@ const Header = ({Navbar, navigation}) => {
           <TouchableOpacity
             style={styles.borderArrow}
             onPress={() => navigation.navigate('CreateLoan')}>
-            <Image source={require('../../../assets/images/add-icon.png')} />
+            <Image
+              source={require('../../../assets/images/add-icon.png')}
+              style={styles.icon}
+            />
           </TouchableOpacity>
           <View>
             <Text style={styles.heading}>{t('loan.title')}</Text>
@@ -61,7 +143,7 @@ const Header = ({Navbar, navigation}) => {
           <TouchableOpacity
             style={styles.borderArrow}
             onPress={() => navigation.navigate('Notification')}>
-            <Image source={AppIcons.notification} />
+            <Image source={AppIcons.notification} style={styles.icon} />
           </TouchableOpacity>
         </View>
       )}
@@ -81,7 +163,10 @@ const Header = ({Navbar, navigation}) => {
           <TouchableOpacity
             style={styles.borderArrow}
             onPress={() => navigation.navigate('Login')}>
-            <Image source={require('../../../assets/images/logout-icon.png')} />
+            <Image
+              source={require('../../../assets/images/logout-icon.png')}
+              style={styles.icon}
+            />
           </TouchableOpacity>
           <View>
             <Text style={styles.heading}>{t('settings.title')}</Text>
@@ -89,7 +174,7 @@ const Header = ({Navbar, navigation}) => {
           <TouchableOpacity
             style={styles.borderArrow}
             onPress={() => navigation.navigate('Notification')}>
-            <Image source={AppIcons.notification} />
+            <Image source={AppIcons.notification} style={styles.icon} />
           </TouchableOpacity>
         </View>
       )}
@@ -100,13 +185,13 @@ const Header = ({Navbar, navigation}) => {
           <TouchableOpacity
             style={styles.noBorderArrow}
             onPress={() => navigation.goBack()}>
-            <Image source={AppIcons.back} />
+            <Image source={AppIcons.back} style={styles.icon} />
           </TouchableOpacity>
           <View>
             <Text style={styles.heading}>Thay đổi mật khẩu</Text>
           </View>
           <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
-            <Image source={AppIcons.notification} />
+            <Image source={AppIcons.notification} style={styles.icon} />
           </TouchableOpacity>
         </View>
       )}
@@ -117,13 +202,30 @@ const Header = ({Navbar, navigation}) => {
           <TouchableOpacity
             style={styles.noBorderArrow}
             onPress={() => navigation.goBack()}>
-            <Image source={AppIcons.back} />
+            <Image source={AppIcons.back} style={styles.icon} />
           </TouchableOpacity>
           <View>
             <Text style={styles.heading}>{t('languageSettings.title')}</Text>
           </View>
           <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
-            <Image source={AppIcons.notification} />
+            <Image source={AppIcons.notification} style={styles.icon} />
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {/* Render header when navbar name DarkModeSetting */}
+      {Navbar === 'DarkModeSetting' && (
+        <View style={styles.containHeading}>
+          <TouchableOpacity
+            style={styles.noBorderArrow}
+            onPress={() => navigation.goBack()}>
+            <Image source={AppIcons.back} style={styles.icon} />
+          </TouchableOpacity>
+          <View>
+            <Text style={styles.heading}>{t('screen.title')}</Text>
+          </View>
+          <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
+            <Image source={AppIcons.notification} style={styles.icon} />
           </TouchableOpacity>
         </View>
       )}
@@ -134,13 +236,13 @@ const Header = ({Navbar, navigation}) => {
           <TouchableOpacity
             style={styles.noBorderArrow}
             onPress={() => navigation.goBack()}>
-            <Image source={AppIcons.back} />
+            <Image source={AppIcons.back} style={styles.icon} />
           </TouchableOpacity>
           <View>
             <Text style={styles.heading}>Thông tin cá nhân</Text>
           </View>
           <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
-            <Image source={AppIcons.notification} />
+            <Image source={AppIcons.notification} style={styles.icon} />
           </TouchableOpacity>
         </View>
       )}
@@ -151,7 +253,7 @@ const Header = ({Navbar, navigation}) => {
           <TouchableOpacity
             style={[styles.noBorderArrow]}
             onPress={() => navigation.goBack()}>
-            <Image source={AppIcons.back} />
+            <Image source={AppIcons.back} style={styles.icon} />
           </TouchableOpacity>
           <View>
             <Text style={styles.heading}>{t('notification.title')}</Text>
@@ -181,13 +283,13 @@ const Header = ({Navbar, navigation}) => {
           <TouchableOpacity
             style={styles.noBorderArrow}
             onPress={() => navigation.goBack()}>
-            <Image source={AppIcons.back} />
+            <Image source={AppIcons.back} style={styles.icon} />
           </TouchableOpacity>
           <View>
             <Text style={styles.heading}>{t('formCreateLoan.title')}</Text>
           </View>
           <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
-            <Image source={AppIcons.notification} />
+            <Image source={AppIcons.notification} style={styles.icon} />
           </TouchableOpacity>
         </View>
       )}
@@ -198,13 +300,13 @@ const Header = ({Navbar, navigation}) => {
           <TouchableOpacity
             style={styles.noBorderArrow}
             onPress={() => navigation.goBack()}>
-            <Image source={AppIcons.back} />
+            <Image source={AppIcons.back} style={styles.icon} />
           </TouchableOpacity>
           <View>
             <Text style={styles.heading}>{t('formCreateSave.title')}</Text>
           </View>
           <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
-            <Image source={AppIcons.notification} />
+            <Image source={AppIcons.notification} style={styles.icon} />
           </TouchableOpacity>
         </View>
       )}
@@ -215,13 +317,13 @@ const Header = ({Navbar, navigation}) => {
           <TouchableOpacity
             style={styles.noBorderArrow}
             onPress={() => navigation.goBack()}>
-            <Image source={AppIcons.back} />
+            <Image source={AppIcons.back} style={styles.icon} />
           </TouchableOpacity>
           <View>
             <Text style={styles.heading}>{t('deposit.title')}</Text>
           </View>
           <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
-            <Image source={AppIcons.notification} />
+            <Image source={AppIcons.notification} style={styles.icon} />
           </TouchableOpacity>
         </View>
       )}
@@ -232,13 +334,13 @@ const Header = ({Navbar, navigation}) => {
           <TouchableOpacity
             style={styles.noBorderArrow}
             onPress={() => navigation.goBack()}>
-            <Image source={AppIcons.back} />
+            <Image source={AppIcons.back} style={styles.icon} />
           </TouchableOpacity>
           <View>
             <Text style={styles.heading}>{t('transfer.title')}</Text>
           </View>
           <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
-            <Image source={AppIcons.notification} />
+            <Image source={AppIcons.notification} style={styles.icon} />
           </TouchableOpacity>
         </View>
       )}
@@ -249,13 +351,13 @@ const Header = ({Navbar, navigation}) => {
           <TouchableOpacity
             style={styles.noBorderArrow}
             onPress={() => navigation.goBack()}>
-            <Image source={AppIcons.back} />
+            <Image source={AppIcons.back} style={styles.icon} />
           </TouchableOpacity>
           <View>
             <Text style={styles.heading}>{t('infoSave.title')}</Text>
           </View>
           <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
-            <Image source={AppIcons.notification} />
+            <Image source={AppIcons.notification} style={styles.icon} />
           </TouchableOpacity>
         </View>
       )}
@@ -266,13 +368,13 @@ const Header = ({Navbar, navigation}) => {
           <TouchableOpacity
             style={styles.noBorderArrow}
             onPress={() => navigation.goBack()}>
-            <Image source={AppIcons.back} />
+            <Image source={AppIcons.back} style={styles.icon} />
           </TouchableOpacity>
           <View>
             <Text style={styles.heading}>{t('infoLoan.title')}</Text>
           </View>
           <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
-            <Image source={AppIcons.notification} />
+            <Image source={AppIcons.notification} style={styles.icon} />
           </TouchableOpacity>
         </View>
       )}
@@ -281,72 +383,3 @@ const Header = ({Navbar, navigation}) => {
 };
 
 export default Header;
-
-const styles = StyleSheet.create({
-  containHeading: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    alignItems: 'center',
-    paddingTop: 8,
-    backgroundColor: 'white',
-  },
-  containHeadingHome: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingHorizontal: 20,
-    alignItems: 'center',
-    paddingBottom: 8,
-    backgroundColor: 'white',
-
-    shadowColor: '#171717',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 4,
-    paddingTop: 8,
-  },
-  containHeadingOneValue: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-    alignItems: 'center',
-    height: 50, //height + px padding top = 50 = 42 + 8
-    paddingTop: 8,
-  },
-  heading: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#1e1e2d',
-  },
-  borderAvatar: {
-    width: 50,
-    height: 50,
-  },
-  avatar: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 9999,
-  },
-  borderArrow: {
-    width: 42,
-    height: 42,
-    backgroundColor: '#f4f4f4',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 9999,
-  },
-  noBorderArrow: {
-    width: 42,
-    height: 42,
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-  },
-  hidden: {
-    opacity: 0,
-    pointerEvents: 'none',
-  },
-});

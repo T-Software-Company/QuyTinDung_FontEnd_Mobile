@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import BankBottomSheetPicker from '../BankBottomSheetPicker/BankBottomSheetPicker';
+import {useTheme} from '../../context/ThemeContext';
 
 const FormTransfer = () => {
   const [selectedBank, setSelectedBank] = useState('');
@@ -18,7 +19,8 @@ const FormTransfer = () => {
   const [content, setContent] = useState('');
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
-
+  const {theme} = useTheme();
+  
   const getBankName = value => {
     if (!value) return 'Chọn ngân hàng';
 
@@ -40,17 +42,107 @@ const FormTransfer = () => {
     return banks[value] || value;
   };
 
+  const styles = StyleSheet.create({
+    box: {
+      marginBottom: 80,
+    },
+    sourceMoney: {
+      backgroundColor: theme.background,
+      marginTop: 20,
+      marginHorizontal: 20,
+      borderRadius: 12,
+      padding: 12,
+      display: 'flex',
+      flexDirection: 'column',
+    },
+    heading: {
+      fontSize: 14,
+      fontWeight: 'bold',
+      color: theme.text,
+    },
+    boxWrapMoney: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginTop: 12,
+    },
+    titleMoney: {
+      color: theme.noteText,
+      fontSize: 12,
+    },
+  
+    boxTransfer: {
+      backgroundColor: theme.background,
+      marginTop: 20,
+      marginHorizontal: 20,
+      borderRadius: 12,
+      padding: 12,
+      display: 'flex',
+      flexDirection: 'column',
+    },
+    formGroup: {
+      marginTop: 12,
+    },
+    label: {
+      fontSize: 12,
+      color: theme.text,
+      marginBottom: 8,
+    },
+    bankSelector: {
+      borderWidth: 1,
+      borderColor: '#aaa',
+      borderRadius: 8,
+      padding: 12,
+      marginBottom: 12,
+      backgroundColor: '#fff',
+    },
+    input: {
+      borderWidth: 1,
+      borderColor: '#aaa',
+      borderRadius: 8,
+      padding: 12,
+      marginBottom: 12,
+      backgroundColor: '#fff',
+      color: '#000', // Changed from 'red' to '#000' for consistency
+    },
+    contentInput: {
+      height: 100,
+      textAlignVertical: 'top',
+    },
+    charCount: {
+      fontSize: 12,
+      color: '#aaa',
+      textAlign: 'right',
+      marginTop: -8,
+      marginBottom: 12,
+    },
+    wrapToggle: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      // height: 32,  // Adjust this value based on your label height
+    },
+    labelToggle: {
+      fontSize: 12,
+      color: theme.text,
+    },
+    switch: {
+      transform: [{scaleX: 0.6}, {scaleY: 0.6}],
+    },
+  });
+
   return (
     <View style={styles.box}>
       <View style={styles.sourceMoney}>
         <Text style={styles.heading}>Nguồn tiền</Text>
         <View style={styles.boxWrapMoney}>
           <Text style={styles.titleMoney}>Tiền mặt khả dụng</Text>
-          <Text>500.000đ</Text>
+          <Text style={styles.heading}>500.000đ</Text>
         </View>
         <View style={styles.boxWrapMoney}>
           <Text style={styles.titleMoney}>Tiền hạn mức khả dụng</Text>
-          <Text>500.000đ</Text>
+          <Text style={styles.heading}>500.000đ</Text>
         </View>
       </View>
 
@@ -129,94 +221,4 @@ const FormTransfer = () => {
 
 export default FormTransfer;
 
-const styles = StyleSheet.create({
-  box: {
-    // height: 1000,
-    // backgroundColor: '#f4f4f4',
-    marginBottom: 80,
-  },
-  sourceMoney: {
-    backgroundColor: '#fff',
-    marginTop: 20,
-    marginHorizontal: 20,
-    borderRadius: 12,
-    padding: 12,
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  heading: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#000',
-  },
-  boxWrapMoney: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 12,
-  },
-  titleMoney: {
-    color: '#aaa',
-    fontSize: 12,
-  },
 
-  boxTransfer: {
-    backgroundColor: '#fff',
-    marginTop: 20,
-    marginHorizontal: 20,
-    borderRadius: 12,
-    padding: 12,
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  formGroup: {
-    marginTop: 12,
-  },
-  label: {
-    fontSize: 12,
-    color: '#000',
-    marginBottom: 8,
-  },
-  bankSelector: {
-    borderWidth: 1,
-    borderColor: '#aaa',
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 12,
-    backgroundColor: '#fff',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#aaa',
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 12,
-    backgroundColor: '#fff',
-    color: '#000', // Changed from 'red' to '#000' for consistency
-  },
-  contentInput: {
-    height: 100,
-    textAlignVertical: 'top',
-  },
-  charCount: {
-    fontSize: 12,
-    color: '#aaa',
-    textAlign: 'right',
-    marginTop: -8,
-    marginBottom: 12,
-  },
-  wrapToggle: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    // height: 32,  // Adjust this value based on your label height
-  },
-  labelToggle: {
-    fontSize: 12,
-    color: '#000',
-  },
-  switch: {
-    transform: [{scaleX: 0.6}, {scaleY: 0.6}],
-  },
-});

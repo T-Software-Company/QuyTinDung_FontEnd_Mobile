@@ -7,11 +7,13 @@ import WrapQuestionHome from '../components/WrapQuestionHome/WrapQuestionHome';
 import BoxTotalNav from '../components/BoxTotalNav/BoxTotalNav';
 import {useTranslation} from 'react-i18next';
 import {AppIcons} from '../icons';
+import {useTheme} from '../context/ThemeContext';
 
 const Home = ({navigation}) => {
+  const {theme} = useTheme();
   const {t} = useTranslation();
   return (
-    <SafeAreaView style={styles.view}>
+    <SafeAreaView style={[styles.view, {backgroundColor: theme.background}]}>
       <View style={styles.container}>
         {/* Heading */}
 
@@ -31,30 +33,34 @@ const Home = ({navigation}) => {
                 urlIcon={AppIcons.sent}
                 styleCustom={{transform: [{rotate: '-90deg'}]}}
                 onPress={() => navigation.navigate('Deposit')}
+                theme={theme}
               />
               <ButtonShortCut
-                name={t('home.withdraw')}
+                name={t('home.transfer')}
                 urlIcon={AppIcons.sent}
                 styleCustom={{transform: [{rotate: '90deg'}]}}
-                onPress={() => Alert.alert('Thông báo', 'Comming soon!')}
+                onPress={() => navigation.navigate('Transfer')}
+                theme={theme}
               />
               <ButtonShortCut
                 name={t('home.makeADeposit')}
                 urlIcon={AppIcons.saveSent}
                 onPress={() => navigation.navigate('SentSave')}
+                theme={theme}
               />
               <ButtonShortCut
                 name={t('home.createLoan')}
                 urlIcon={AppIcons.loan}
                 onPress={() => navigation.navigate('CreateLoan')}
+                theme={theme}
               />
             </View>
 
             {/* Product Home */}
-            <WrapProductHome name={t('home.loanProduct')} />
+            <WrapProductHome name={t('home.loanProduct')} theme={theme} />
 
             {/* Question Home */}
-            <WrapQuestionHome name={t('home.help')} />
+            <WrapQuestionHome name={t('home.help')} theme={theme} />
           </View>
         </ScrollView>
       </View>

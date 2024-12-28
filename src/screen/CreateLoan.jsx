@@ -8,12 +8,13 @@ import {
 import React, {useState} from 'react';
 import Header from '../components/Header/Header';
 import FormCreateLoan from '../components/FormCreateLoan/FormCreateLoan';
+import {useTheme} from '../context/ThemeContext';
 
 const CreateLoan = ({navigation}) => {
-  
+  const {theme} = useTheme();
 
   return (
-    <SafeAreaView style={styles.view}>
+    <SafeAreaView style={[styles.view, {backgroundColor: theme.background}]}>
       <View style={styles.container}>
         {/* Heading */}
 
@@ -26,7 +27,7 @@ const CreateLoan = ({navigation}) => {
           nestedScrollEnabled={true}
           showsVerticalScrollIndicator={false}>
           <View style={styles.body}>
-            <FormCreateLoan />
+            <FormCreateLoan theme={theme} />
           </View>
         </ScrollView>
       </View>
@@ -39,7 +40,7 @@ export default CreateLoan;
 const styles = StyleSheet.create({
   view: {
     flex: 1,
-    backgroundColor: 'white',
+    
   },
   container: {
     width: '100%',

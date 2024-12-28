@@ -1,15 +1,17 @@
 import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
+import {useTheme} from '../../context/ThemeContext';
 
 const BoxTotalNav = () => {
   const [hide, setHide] = useState(true);
-  const {t} = useTranslation()
+  const {t} = useTranslation();
+  const {theme} = useTheme();
 
   return (
-    <View style={styles.boxShow}>
+    <View style={[styles.boxShow, {backgroundColor: theme.backgroundBox}]}>
       <View style={styles.wrapTitle}>
-        <Text>{t("home.boxTitle")}</Text>
+        <Text style={{color: theme.text}}>{t('home.boxTitle')}</Text>
 
         <TouchableOpacity
           style={styles.wrapOption}
@@ -17,18 +19,18 @@ const BoxTotalNav = () => {
           {hide ? (
             <>
               <Image
-                style={styles.icon}
+                style={[styles.icon, {tintColor: theme.iconColor}]}
                 source={require('../../../assets/images/eyes-icon.png')}
               />
-              <Text>{t("home.showButton")}</Text>
+              <Text style={{color: theme.text}}>{t('home.showButton')}</Text>
             </>
           ) : (
             <>
               <Image
-                style={styles.iconClose}
+                style={[styles.iconClose, {tintColor: theme.iconColor}]}
                 source={require('../../../assets/images/eyesclose-icon.png')}
               />
-              <Text>{t("home.hideButton")}</Text>
+              <Text style={{color: theme.text}}>{t('home.hideButton')}</Text>
             </>
           )}
         </TouchableOpacity>
@@ -39,23 +41,27 @@ const BoxTotalNav = () => {
           <View>
             {/* <Text style={styles.money}>100.100.000 đ</Text> */}
             {hide ? (
-              <Text style={styles.money}>*** *** ***</Text>
+              <Text style={[styles.money, {color: theme.text}]}>
+                *** *** ***
+              </Text>
             ) : (
-              <Text style={styles.money}>100.100.000 đ</Text>
+              <Text style={[styles.money, {color: theme.text}]}>
+                100.100.000 đ
+              </Text>
             )}
           </View>
           <View style={styles.borderArrowHandle}>
             <Image
-              // style={{width: 16, height: 16}}
+              style={{tintColor: theme.iconColor}}
               source={require('../../../assets/images/arrow-right.png')}
             />
           </View>
         </View>
         {/* <Text style={styles.profit}>+100.000 đ</Text> */}
         {hide ? (
-          <Text style={styles.hide}>*** ***</Text>
+          <Text style={[styles.hide, {color: theme.text}]}>*** ***</Text>
         ) : (
-          <Text style={styles.profit}>+100.000 đ</Text>
+          <Text style={{color: theme.profit}}>+100.000 đ</Text>
         )}
       </View>
     </View>
@@ -123,7 +129,7 @@ const styles = StyleSheet.create({
     borderRadius: 9999,
   },
   profit: {
-    color: 'green',
+    color: '#76FA39',
   },
   hide: {
     color: '#1e1e2d',

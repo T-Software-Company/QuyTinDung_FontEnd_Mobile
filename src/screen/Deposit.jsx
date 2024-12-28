@@ -12,12 +12,14 @@ import React from 'react';
 import Header from '../components/Header/Header';
 import FormDeposit from '../components/FormDeposit/FormDeposit';
 import {useTranslation} from 'react-i18next';
+import {useTheme} from '../context/ThemeContext';
 
 const Deposit = ({navigation}) => {
   const {t} = useTranslation();
+  const {theme} = useTheme();
 
   return (
-    <SafeAreaView style={styles.view}>
+    <SafeAreaView style={[styles.view, {backgroundColor: theme.background}]}>
       <View style={styles.container}>
         {/* Heading */}
 
@@ -29,7 +31,7 @@ const Deposit = ({navigation}) => {
             contentInsetAdjustmentBehavior="automatic"
             nestedScrollEnabled={true}
             showsVerticalScrollIndicator={false}>
-            <FormDeposit />
+            <FormDeposit theme={theme}/>
           </ScrollView>
           
         </View>
@@ -43,7 +45,6 @@ export default Deposit;
 const styles = StyleSheet.create({
   view: {
     flex: 1,
-    backgroundColor: 'white',
   },
   container: {
     width: '100%',
@@ -55,15 +56,5 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between',
     flex: 1,
-  },
-  btn: {
-    width: '100%',
-    backgroundColor: '#007BFF',
-    padding: 12,
-    borderRadius: 12,
-    marginTop: 20,
-  },
-  textWhite: {
-    color: 'white',
   },
 });

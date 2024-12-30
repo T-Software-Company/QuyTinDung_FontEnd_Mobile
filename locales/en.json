@@ -113,6 +113,30 @@
         "title": "Screen",
         "light": "Light mode",
         "dark": "Dark mode"
+    },
+    "info": {
+        "title": "Personal Information",
+        "phone": "Phone Number",
+        "email": "Email",
+        "gender": "Gender",
+        "address": "Current Address",
+        "identityNumber": "Identity Card Number",
+        "identityAddress": "Place of Issue",
+        "identitySupplyDay": "Date of Issue",
+        "identityDueDay": "Expiry Date",
+        "identityHome": "Permanent Address",
+        "dateOfBirth": "Date of Birth",
+        "infoContact": "CONTACT INFORMATION",
+        "identityDocument": "IDENTITY DOCUMENTS",
+        "edit": "Edit",
+        "update": "Update"
+
+    },
+    "changePassword": {
+        "title": "Change Password",
+        "oldPassword": "Current password",
+        "newPassword": "New password",
+        "confirmPassword": "Confirm password",
+        "submit": "Change"
     }
   }
-  

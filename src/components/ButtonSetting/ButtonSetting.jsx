@@ -46,7 +46,7 @@ const ButtonSetting = ({title, icon, onPress, optionText}) => {
         <View style={styles.wrapText}>
           {optionText && <Text style={styles.textOption}>{optionText}</Text>}
           <View style={styles.wrapIcon}>
-            <Image source={icon} />
+            <Image source={icon} style={{tintColor: theme.iconColor}} />
           </View>
         </View>
       </TouchableOpacity>

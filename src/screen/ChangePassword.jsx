@@ -13,6 +13,7 @@ import {
 import React, {useState} from 'react';
 import Header from '../components/Header/Header';
 import {useTheme} from '../context/ThemeContext';
+import {useTranslation} from 'react-i18next';
 
 const ChangePassword = ({navigation}) => {
   const [currentPassword, setCurrentPassword] = useState('12345678');
@@ -22,6 +23,27 @@ const ChangePassword = ({navigation}) => {
   const [invisible, setInvisible] = useState(true);
   const [invisibleConfirm, setInvisibleConfirm] = useState(true);
   const {theme} = useTheme();
+  const {t, i18n} = useTranslation();
+
+  const getPasswordNotes = () => {
+    if (i18n.language === 'vi') {
+      return {
+        mainNote: 'Để bảo vệ thông tin và ngăn ngừa người khác xâm nhập vào tài khoản của bạn, hãy sử dụng mật khẩu mạnh và thay đổi mật khẩu 3 - 6 tháng/lần',
+        subTitle: 'Một số điểm cần lưu ý để có mật khẩu mạnh:',
+        note1: 'Không sử dụng dẫy dễ đoán (dãy số tăng giảm, trùng nhau hoặc ngày sinh).',
+        note2: 'Không dùng lại các mật khẩu đã sử dụng trước đó.'
+      };
+    } else {
+      return {
+        mainNote: 'To protect your information and prevent others from accessing your account, use a strong password and change it every 3-6 months',
+        subTitle: 'Some notes for a strong password:',
+        note1: 'Do not use predictable sequences (increasing/decreasing numbers, repeated numbers, or birthdates).',
+        note2: 'Do not reuse passwords that have been used before.'
+      };
+    }
+  };
+
+  const notes = getPasswordNotes();
 
   const styles = StyleSheet.create({
     view: {
@@ -91,19 +113,19 @@ const ChangePassword = ({navigation}) => {
       alignItems: 'baseline',
     },
     bullet: {
-      color: '#888',
+      color: theme.noteText,
       fontSize: 24,
       marginRight: 8,
     },
     textNote: {
-      color: '#888',
+      color: theme.noteText,
       letterSpacing: 0.5,
       lineHeight: 24,
     },
     iconEyes: {
       position: 'absolute',
       right: 16,
-      top: 12,
+      top: 10,
     },
   });
 
@@ -123,35 +145,26 @@ const ChangePassword = ({navigation}) => {
           <View style={styles.body}>
             <View style={styles.form}>
               <View style={styles.note}>
-                <Text style={styles.textNote}>
-                  Để bảo vệ thông tin và ngăn ngừa người khác xâm nhập vào tài
-                  khoản của bạn, hãy sử dụng mật khẩu mạnh và thay đổi mật khẩu
-                  3 - 6 tháng/lần
-                </Text>
+                <Text style={styles.textNote}>{notes.mainNote}</Text>
                 <View>
-                  <Text style={styles.textNote}>
-                    Một số điểm cần lưu ý để có mật khẩu mạnh:
-                  </Text>
+                  <Text style={styles.textNote}>{notes.subTitle}</Text>
                   <View style={styles.listItem}>
                     <Text style={styles.bullet}>•</Text>
-                    <Text style={styles.textNote}>
-                      Không sử dụng dẫy dễ đoán (dãy số tăng giảm, trùng nhau
-                      hoặc ngày sinh).
-                    </Text>
+                    <Text style={styles.textNote}>{notes.note1}</Text>
                   </View>
                   <View style={styles.listItem}>
                     <Text style={styles.bullet}>•</Text>
-                    <Text style={styles.textNote}>
-                      Không dùng lại các mật khẩu đã sử dụng trước đó.
-                    </Text>
+                    <Text style={styles.textNote}>{notes.note2}</Text>
                   </View>
                 </View>
               </View>
               <View style={styles.boxInput}>
-                <Text style={styles.headingTitle}>Mật khẩu hiện tại</Text>
+                <Text style={styles.headingTitle}>
+                  {t('changePassword.oldPassword')}
+                </Text>
                 <View>
                   <TextInput
-                    placeholder="Nhập mật khẩu hiện tại"
+                    placeholder={i18n.language === 'vi' ? "Nhập mật khẩu hiện tại" : "Enter current password"}
                     placeholderTextColor="#aaa"
                     secureTextEntry={invisibleCurrent}
                     onChangeText={setCurrentPassword}
@@ -180,10 +193,12 @@ const ChangePassword = ({navigation}) => {
               </View>
 
               <View style={styles.boxInput}>
-                <Text style={styles.headingTitle}>Mật khẩu mới</Text>
+                <Text style={styles.headingTitle}>
+                  {t('changePassword.newPassword')}
+                </Text>
                 <View>
                   <TextInput
-                    placeholder="Nhập mật khẩu mới"
+                    placeholder={i18n.language === 'vi' ? "Nhập mật khẩu mới" : "Enter new password"}
                     placeholderTextColor="#aaa"
                     secureTextEntry={invisible}
                     onChangeText={setPassword}
@@ -212,10 +227,12 @@ const ChangePassword = ({navigation}) => {
               </View>
 
               <View style={styles.boxInput}>
-                <Text style={styles.headingTitle}>Xác nhận mật khẩu mới</Text>
+                <Text style={styles.headingTitle}>
+                  {t('changePassword.confirmPassword')}
+                </Text>
                 <View>
                   <TextInput
-                    placeholder="Nhập lại mật khẩu mới"
+                    placeholder={i18n.language === 'vi' ? "Nhập lại mật khẩu mới" : "Confirm new password"}
                     placeholderTextColor="#aaa"
                     secureTextEntry={invisibleConfirm}
                     onChangeText={setConfirmPassword}
@@ -245,14 +262,19 @@ const ChangePassword = ({navigation}) => {
               <TouchableOpacity
                 style={styles.btn}
                 onPress={() =>
-                  Alert.alert('Thông báo', 'Thay đổi mật khẩu thành công')
+                  Alert.alert(
+                    i18n.language === 'vi' ? 'Thông báo' : 'Notification',
+                    i18n.language === 'vi'
+                      ? 'Thay đổi mật khẩu thành công'
+                      : 'Password changed successfully'
+                  )
                 }>
                 <Text
                   style={[
                     styles.textWhite,
                     {fontWeight: 'bold', textAlign: 'center'},
                   ]}>
-                  Thay đổi
+                  {t('changePassword.submit')}
                 </Text>
               </TouchableOpacity>
             </View>

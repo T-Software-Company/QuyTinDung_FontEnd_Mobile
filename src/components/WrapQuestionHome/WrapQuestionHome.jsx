@@ -2,6 +2,7 @@ import {StyleSheet, Text, View, Image} from 'react-native';
 import React from 'react';
 import QuestionHome from '../QuestionHome/QuestionHome';
 import { useTranslation } from 'react-i18next';
+import { AppIcons } from '../../icons';
 
 const WrapQuestionHome = ({name, theme}) => {
   const {t} = useTranslation()
@@ -12,25 +13,25 @@ const WrapQuestionHome = ({name, theme}) => {
       <View style={styles.wrapBox}>
         <QuestionHome
           question={t("home.descQuestion1")}
-          urlIcon={require('../../../assets/images/add-icon.png')}
+          urlIcon={AppIcons.add}
           theme={theme}
         />
 
         <QuestionHome
           question={t("home.descQuestion2")}
-          urlIcon={require('../../../assets/images/message-icon.png')}
+          urlIcon={AppIcons.message}
           theme={theme}
         />
 
         <QuestionHome
           question={t("home.descQuestion1")}
-          urlIcon={require('../../../assets/images/add-icon.png')}
+          urlIcon={AppIcons.add}
           theme={theme}
         />
 
         <QuestionHome
           question={t("home.descQuestion2")}
-          urlIcon={require('../../../assets/images/message-icon.png')}
+          urlIcon={AppIcons.message}
           theme={theme}
         />
       </View>

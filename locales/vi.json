@@ -127,6 +127,30 @@
         "title": "Giao diện",
         "light": "Giao diện sáng",
         "dark": "Giao diện tối"
+    },
+    "info": {
+        "title": "Thông tin cá nhân",
+        "phone": "Số điện thoại",
+        "email": "Email",
+        "address": "Địa chỉ hiện tại",
+        "identityNumber": "Số CCCD",
+        "identityAddress": "Nơi cấp",
+        "identitySupplyDay": "Ngày cấp",
+        "identityDueDay": "Ngày hết hạn",
+        "identityHome": "Địa chỉ thường trú",
+        "dateOfBirth": "Ngày sinh",
+        "infoContact": "Thông tin liên hệ",
+        "gender": "Giới tính",
+        "identityDocument": "Giấy tờ tùy thân",
+        "edit"  : "Chỉnh sửa",
+        "update": "Cập nhật"
+    },
+    "changePassword": {
+        "title": "Thay đổi mật khẩu",
+        "oldPassword": "Mật khẩu hiện tại",
+        "newPassword": "Mật khẩu mới",
+        "confirmPassword": "Xác nhận mật khẩu",
+        "submit": "Thay đổi"
     }
     
   }

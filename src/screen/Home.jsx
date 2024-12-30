@@ -31,14 +31,14 @@ const Home = ({navigation}) => {
               <ButtonShortCut
                 name={t('home.deposit')}
                 urlIcon={AppIcons.sent}
-                styleCustom={{transform: [{rotate: '-90deg'}]}}
+                styleCustom={{transform: [{rotate: '0deg'}]}}
                 onPress={() => navigation.navigate('Deposit')}
                 theme={theme}
               />
               <ButtonShortCut
                 name={t('home.transfer')}
                 urlIcon={AppIcons.sent}
-                styleCustom={{transform: [{rotate: '90deg'}]}}
+                styleCustom={{transform: [{rotate: '180deg'}]}}
                 onPress={() => navigation.navigate('Transfer')}
                 theme={theme}
               />

@@ -9,22 +9,26 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 import React, {useState} from 'react';
 import Header from '../components/Header/Header';
 import SelectedTabs from '../components/SelectedTabs/SelectedTabs';
 import {AppIcons} from '../icons';
 import {useTheme} from '../context/ThemeContext';
+import i18n from '../../i18n';
 
 const InfoPerson = ({navigation}) => {
+  const currentLanguage = i18n.language;
+  const {t} = useTranslation();
   const [number, setNumber] = useState(null);
   const [selectedTab, setSelectedTab] = useState('info');
   const [isEditable, setIsEditable] = useState(false);
   const {theme} = useTheme();
 
   const tabs = [
-    {key: 'info', label: 'THÔNG TIN LIÊN HỆ'},
-    {key: 'paper', label: 'GIẤY TỜ TÙY THÂN'},
+    {key: 'info', label: t('info.infoContact').toUpperCase()},
+    {key: 'paper', label: t('info.identityDocument').toUpperCase()},
   ];
 
   const infoPerson = {
@@ -44,10 +48,12 @@ const InfoPerson = ({navigation}) => {
   };
 
   const handleSubmit = () => {
-    Alert.alert('Thông báo', 'Cập nhật thành công');
+    Alert.alert(
+      currentLanguage === 'vi' ? 'Thông báo' : 'Notification',
+      currentLanguage === "vi" ? 'Cập nhật thành công' : "Update successfully",
+    );
     setIsEditable(false);
   };
-
 
   const styles = StyleSheet.create({
     view: {
@@ -58,7 +64,7 @@ const InfoPerson = ({navigation}) => {
       width: '100%',
       height: '100%',
     },
-  
+
     body: {
       marginTop: 16,
       paddingHorizontal: 20,
@@ -86,7 +92,7 @@ const InfoPerson = ({navigation}) => {
       fontSize: 14,
       color: '#aaa',
     },
-  
+
     textWhite: {
       color: 'white',
     },
@@ -96,11 +102,11 @@ const InfoPerson = ({navigation}) => {
     iconPrimary: {
       tintColor: '#007BFF',
     },
-  
+
     boxInput: {
       marginBottom: 12,
     },
-  
+
     headingTitle: {
       fontWeight: 'bold',
       fontSize: 12,
@@ -122,24 +128,24 @@ const InfoPerson = ({navigation}) => {
     textEdit: {
       color: theme.text,
     },
-  
+
     placeholderStyle: {
       color: '#aaa',
       fontSize: 14,
     },
-  
+
     selectedTextStyle: {
       color: '#000',
       fontSize: 14,
     },
-  
+
     wrapBtn: {
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
       gap: 12,
     },
-  
+
     btn: {
       // flex: '1',
       width: '48%',
@@ -147,11 +153,11 @@ const InfoPerson = ({navigation}) => {
       borderRadius: 12,
       marginTop: 8,
     },
-  
+
     btnPrimary: {
       backgroundColor: '#007BFF',
     },
-  
+
     btnNormal: {
       backgroundColor: '#ddd',
     },
@@ -174,7 +180,9 @@ const InfoPerson = ({navigation}) => {
             <View style={styles.form}>
               <View style={styles.boxAvatar}>
                 <Image style={styles.avatar} source={AppIcons.avatar} />
-                <Text style={[styles.name, {color: theme.text}]}>Nguyễn Văn A</Text>
+                <Text style={[styles.name, {color: theme.text}]}>
+                  Nguyễn Văn A
+                </Text>
                 <Text style={styles.nameTitle}>Quỹ TDND Châu Đức</Text>
               </View>
 
@@ -188,7 +196,7 @@ const InfoPerson = ({navigation}) => {
               {selectedTab === 'info' ? (
                 <View>
                   <View style={styles.boxInput}>
-                    <Text style={styles.headingTitle}>SỐ ĐIỆN THOẠI</Text>
+                    <Text style={styles.headingTitle}>{t('info.phone')}</Text>
                     <TextInput
                       placeholder="Nhập số điện thoại của bạn"
                       placeholderTextColor="#aaa"
@@ -204,7 +212,7 @@ const InfoPerson = ({navigation}) => {
                   </View>
 
                   <View style={styles.boxInput}>
-                    <Text style={styles.headingTitle}>EMAIL</Text>
+                    <Text style={styles.headingTitle}>{t('info.email')}</Text>
                     <TextInput
                       placeholder="Nhập email của bạn"
                       placeholderTextColor="#aaa"
@@ -220,7 +228,7 @@ const InfoPerson = ({navigation}) => {
                   </View>
 
                   <View style={styles.boxInput}>
-                    <Text style={styles.headingTitle}>GIỚI TÍNH</Text>
+                    <Text style={styles.headingTitle}>{t('info.gender')}</Text>
                     <TextInput
                       placeholder="Chọn giới tính của bạn"
                       placeholderTextColor="#aaa"
@@ -235,7 +243,9 @@ const InfoPerson = ({navigation}) => {
                   </View>
 
                   <View style={styles.boxInput}>
-                    <Text style={styles.headingTitle}>NGÀY SINH</Text>
+                    <Text style={styles.headingTitle}>
+                      {t('info.dateOfBirth')}
+                    </Text>
                     <TextInput
                       placeholder="Chọn ngày sinh của bạn"
                       placeholderTextColor="#aaa"
@@ -250,7 +260,7 @@ const InfoPerson = ({navigation}) => {
                   </View>
 
                   <View style={styles.boxInput}>
-                    <Text style={styles.headingTitle}>ĐỊA CHỈ HIỆN TẠI</Text>
+                    <Text style={styles.headingTitle}>{t('info.address')}</Text>
                     <TextInput
                       placeholder="Nhập địa chỉ hiện tại"
                       placeholderTextColor="#aaa"
@@ -268,7 +278,9 @@ const InfoPerson = ({navigation}) => {
               ) : (
                 <View>
                   <View style={styles.boxInput}>
-                    <Text style={styles.headingTitle}>SỐ CCCD</Text>
+                    <Text style={styles.headingTitle}>
+                      {t('info.identityNumber')}
+                    </Text>
                     <TextInput
                       placeholder="Nhập số CCCD"
                       placeholderTextColor="#aaa"
@@ -284,7 +296,9 @@ const InfoPerson = ({navigation}) => {
                   </View>
 
                   <View style={styles.boxInput}>
-                    <Text style={styles.headingTitle}>NƠI CẤP</Text>
+                    <Text style={styles.headingTitle}>
+                      {t('info.identityAddress')}
+                    </Text>
                     <TextInput
                       placeholder="Nhập nơi cấp CCCD"
                       placeholderTextColor="#aaa"
@@ -299,7 +313,9 @@ const InfoPerson = ({navigation}) => {
                   </View>
 
                   <View style={styles.boxInput}>
-                    <Text style={styles.headingTitle}>NGÀY CẤP</Text>
+                    <Text style={styles.headingTitle}>
+                      {t('info.identitySupplyDay')}
+                    </Text>
                     <TextInput
                       placeholder="Chọn ngày cấp CCCD"
                       placeholderTextColor="#aaa"
@@ -314,7 +330,9 @@ const InfoPerson = ({navigation}) => {
                   </View>
 
                   <View style={styles.boxInput}>
-                    <Text style={styles.headingTitle}>NGÀY HẾT HẠN</Text>
+                    <Text style={styles.headingTitle}>
+                      {t('info.identityDueDay')}
+                    </Text>
                     <TextInput
                       placeholder="Chọn ngày hết hạn CCCD"
                       placeholderTextColor="#aaa"
@@ -329,7 +347,9 @@ const InfoPerson = ({navigation}) => {
                   </View>
 
                   <View style={styles.boxInput}>
-                    <Text style={styles.headingTitle}>ĐỊA CHỈ THƯỜNG TRÚ</Text>
+                    <Text style={styles.headingTitle}>
+                      {t('info.identityHome')}
+                    </Text>
                     <TextInput
                       placeholder="Nhập địa chỉ thường trú của bạn"
                       placeholderTextColor="#aaa"
@@ -353,7 +373,7 @@ const InfoPerson = ({navigation}) => {
                       styles.textWhite,
                       {fontWeight: 'bold', textAlign: 'center', color: '#000'},
                     ]}>
-                    Chỉnh sửa
+                    {t('info.edit')}
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -364,7 +384,7 @@ const InfoPerson = ({navigation}) => {
                       styles.textWhite,
                       {fontWeight: 'bold', textAlign: 'center'},
                     ]}>
-                    Cập nhật
+                    {t('info.update')}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -377,5 +397,3 @@ const InfoPerson = ({navigation}) => {
 };
 
 export default InfoPerson;
-
-

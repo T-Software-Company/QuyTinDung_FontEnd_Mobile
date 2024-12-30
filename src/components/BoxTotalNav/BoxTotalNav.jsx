@@ -2,6 +2,7 @@ import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useTheme} from '../../context/ThemeContext';
+import { AppIcons } from '../../icons';
 
 const BoxTotalNav = () => {
   const [hide, setHide] = useState(true);
@@ -20,7 +21,7 @@ const BoxTotalNav = () => {
             <>
               <Image
                 style={[styles.icon, {tintColor: theme.iconColor}]}
-                source={require('../../../assets/images/eyes-icon.png')}
+                source={AppIcons.eyesOpen}
               />
               <Text style={{color: theme.text}}>{t('home.showButton')}</Text>
             </>
@@ -28,7 +29,7 @@ const BoxTotalNav = () => {
             <>
               <Image
                 style={[styles.iconClose, {tintColor: theme.iconColor}]}
-                source={require('../../../assets/images/eyesclose-icon.png')}
+                source={AppIcons.eyesClose}
               />
               <Text style={{color: theme.text}}>{t('home.hideButton')}</Text>
             </>
@@ -90,7 +91,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     width: 15,
-    height: 10,
+    height: 15,
     resizeMode: 'stretch',
   },
   iconClose: {
@@ -103,7 +104,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 4,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
+    minWidth: 50,
   },
   wrapMoney: {
     marginTop: 12,

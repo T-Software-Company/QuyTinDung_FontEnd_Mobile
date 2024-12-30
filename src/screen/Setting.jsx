@@ -12,6 +12,7 @@ import ButtonSetting from '../components/ButtonSetting/ButtonSetting';
 import {useTranslation} from 'react-i18next';
 import {useTheme} from '../context/ThemeContext';
 import i18n from '../../i18n';
+import { AppIcons } from '../icons';
 // import { Modalize } from 'react-native-modalize';
 
 const Setting = ({navigation}) => {
@@ -98,27 +99,27 @@ const Setting = ({navigation}) => {
             <View style={styles.wrapContent}>
               <ButtonSetting
                 title={t('settings.personalInformation')}
-                icon={require('../../assets/images/arrow-right.png')}
+                icon={AppIcons.next}
                 onPress={() => navigation.navigate('InfoPerson')}
               />
 
               <ButtonSetting
                 title={t('settings.language')}
-                icon={require('../../assets/images/arrow-right.png')}
+                icon={AppIcons.next}
                 onPress={() => navigation.navigate('LanguageSetting')}
                 optionText={t('settings.languageSelected')}
               />
 
               <ButtonSetting
                 title={t('settings.screenMode')}
-                icon={require('../../assets/images/arrow-right.png')}
+                icon={AppIcons.next}
                 onPress={() => navigation.navigate('DarkModeSetting')}
                 optionText={currentLanguage === "vi" ? (isDarkMode ? 'Tối' : 'Sáng') : (isDarkMode ? 'Dark' : 'Light')}  
               />
 
               <ButtonSetting
                 title={t('settings.hotline')}
-                icon={require('../../assets/images/arrow-right.png')}
+                icon={AppIcons.next}
                 onPress={confirmAndMakeCall}
                 optionText={phoneNumber}
               />
@@ -130,13 +131,13 @@ const Setting = ({navigation}) => {
             <View style={styles.wrapContent}>
               <ButtonSetting
                 title={t('settings.changePassword')}
-                icon={require('../../assets/images/arrow-right.png')}
+                icon={AppIcons.next}
                 onPress={() => navigation.navigate('ChangePassword')}
               />
 
               <ButtonSetting
                 title={t('settings.privacyPolicy')}
-                icon={require('../../assets/images/arrow-right.png')}
+                icon={AppIcons.next}
               />
             </View>
           </View>

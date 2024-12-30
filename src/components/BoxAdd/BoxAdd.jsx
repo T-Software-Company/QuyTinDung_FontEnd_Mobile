@@ -1,5 +1,6 @@
 import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
+import { AppIcons } from '../../icons';
 
 const BoxAdd = ({title, number, navigation, add, addText}) => {
   return (
@@ -15,8 +16,8 @@ const BoxAdd = ({title, number, navigation, add, addText}) => {
           style={styles.wrapOption}
           onPress={() => navigation.navigate(add)}>
           <Image
-            style={[styles.iconPrimary, {width: 12, height: 12}]}
-            source={require('../../../assets/images/add-icon.png')}
+            style={[styles.iconPrimary, {width: 16, height: 16}]}
+            source={AppIcons.add}
           />
           <Text style={[styles.textPrimary, {fontWeight: 'bold'}]}>
             {addText}

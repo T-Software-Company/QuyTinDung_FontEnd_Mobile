@@ -27,7 +27,7 @@ const Header = ({Navbar, navigation}) => {
       paddingBottom: 8,
       backgroundColor: theme.background,
 
-      shadowColor: '#171717',
+      shadowColor: theme.headerShadow,
       shadowOffset: {width: 0, height: 2},
       shadowOpacity: 0.1,
       shadowRadius: 3,
@@ -50,8 +50,8 @@ const Header = ({Navbar, navigation}) => {
       color: theme.text,
     },
     borderAvatar: {
-      width: 50,
-      height: 50,
+      width: 40,
+      height: 40,
     },
     avatar: {
       width: '100%',
@@ -92,7 +92,7 @@ const Header = ({Navbar, navigation}) => {
             onPress={() => navigation.navigate('InfoPerson')}>
             <Image source={AppIcons.avatar} style={styles.avatar} />
           </TouchableOpacity>
-          <View style={{flex: 1, marginLeft: 16, gap: 8}}>
+          <View style={{flex: 1, marginLeft: 16, gap: 4}}>
             <Text style={{color: theme.text}}>{t('home.welcome')}</Text>
             <Text style={styles.heading}>{t('home.name')}</Text>
           </View>
@@ -110,10 +110,7 @@ const Header = ({Navbar, navigation}) => {
           <TouchableOpacity
             style={styles.borderArrow}
             onPress={() => navigation.navigate('SentSave')}>
-            <Image
-              source={require('../../../assets/images/add-icon.png')}
-              style={styles.icon}
-            />
+            <Image source={AppIcons.add} style={styles.icon} />
           </TouchableOpacity>
           <View>
             <Text style={styles.heading}>{t('save.title')}</Text>
@@ -132,10 +129,7 @@ const Header = ({Navbar, navigation}) => {
           <TouchableOpacity
             style={styles.borderArrow}
             onPress={() => navigation.navigate('CreateLoan')}>
-            <Image
-              source={require('../../../assets/images/add-icon.png')}
-              style={styles.icon}
-            />
+            <Image source={AppIcons.add} style={styles.icon} />
           </TouchableOpacity>
           <View>
             <Text style={styles.heading}>{t('loan.title')}</Text>
@@ -164,7 +158,7 @@ const Header = ({Navbar, navigation}) => {
             style={styles.borderArrow}
             onPress={() => navigation.navigate('Login')}>
             <Image
-              source={require('../../../assets/images/logout-icon.png')}
+              source={AppIcons.logOut}
               style={styles.icon}
             />
           </TouchableOpacity>
@@ -239,7 +233,7 @@ const Header = ({Navbar, navigation}) => {
             <Image source={AppIcons.back} style={styles.icon} />
           </TouchableOpacity>
           <View>
-            <Text style={styles.heading}>Thông tin cá nhân</Text>
+            <Text style={styles.heading}>{t("info.title")}</Text>
           </View>
           <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
             <Image source={AppIcons.notification} style={styles.icon} />

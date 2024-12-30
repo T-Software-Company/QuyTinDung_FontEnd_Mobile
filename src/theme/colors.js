@@ -9,6 +9,7 @@ export const lightTheme = {
   iconColor: '#888',
   iconColorActive: '#007BFF',
   backgroundBox: '#f4f4f4',
+  textActive: '#007BFF',
 
   //profit
   profit: '#18DD12',
@@ -36,6 +37,7 @@ export const darkTheme = {
   iconColor: '#fff',
   iconColorActive: '#007BFF',
   backgroundBox: '#444950',
+  textActive: '#ffffff',
 
   //profit
   profit: '#76FA39',

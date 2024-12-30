@@ -11,12 +11,16 @@ import {
   Platform,
 } from 'react-native';
 import React, {useState} from 'react';
+import {AppIcons} from '../icons';
+import {useTheme} from '../context/ThemeContext';
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const ForgetPassword = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [idCccd, setIdCccd] = useState('');
+  const {theme} = useTheme();
 
   // Hàm kiểm tra định dạng email
   const isValidEmail = email => {
@@ -27,6 +31,68 @@ const ForgetPassword = ({navigation}) => {
   const handleSubmit = () => {
     Alert.alert('Thông báo', 'Chúng tôi đã gửi OTP về số điện thoại của bạn');
   };
+
+  const styles = StyleSheet.create({
+    view: {
+      flex: 1,
+      backgroundColor: theme.background,
+    },
+    container: {
+      width: '100%',
+      height: '100%',
+    },
+    button: {
+      backgroundColor: '#0066ff',
+      padding: 20,
+      alignItems: 'center',
+      borderRadius: 16,
+      marginTop: 20,
+    },
+    title: {
+      color: theme.text,
+      fontSize: 32,
+      lineHeight: 48,
+      marginBottom: 38,
+    },
+    icon: {
+      position: 'absolute',
+      left: 0,
+      top: 0,
+      tintColor: theme.iconColor,
+    },
+    iconEyes: {
+      position: 'absolute',
+      right: 0,
+    },
+    heading: {
+      fontSize: 14,
+      marginBottom: 16,
+      color: theme.noteText,
+    },
+    textInput: {
+      borderBottomColor: theme.noteText,
+      borderBottomWidth: 1,
+      height: 32,
+      paddingLeft: 40,
+      paddingRight: 30,
+      paddingBottom: 10,
+      color: theme.text,
+      paddingVertical: 0,
+      textAlignVertical: 'center',
+    },
+    textButton: {
+      color: '#fff',
+      fontSize: 14,
+      fontWeight: 'bold',
+    },
+    optionsNew: {
+      marginTop: 28,
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+  });
 
   return (
     <SafeAreaView style={styles.view}>
@@ -82,7 +148,7 @@ const ForgetPassword = ({navigation}) => {
               <Text style={styles.textButton}>Quên mật khẩu</Text>
             </TouchableOpacity>
             <View style={styles.optionsNew}>
-              <Text style={{color: '#a2a2a7', fontSize: 14}}>
+              <Text style={{color: theme.noteText, fontSize: 14}}>
                 Bạn đã nhớ lại mật khẩu.{' '}
               </Text>
               <TouchableOpacity
@@ -91,8 +157,8 @@ const ForgetPassword = ({navigation}) => {
                 }}>
                 <Text
                   style={{
-                    color: '#0066ff',
-                    fontWeight: 'semibold',
+                    color: theme.textActive,
+                    fontWeight: 'bold',
                     fontSize: 14,
                   }}>
                   Đăng nhập
@@ -107,64 +173,3 @@ const ForgetPassword = ({navigation}) => {
 };
 
 export default ForgetPassword;
-
-const styles = StyleSheet.create({
-  view: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  container: {
-    width: '100%',
-    height: '100%',
-  },
-  button: {
-    backgroundColor: '#0066ff',
-    padding: 20,
-    alignItems: 'center',
-    borderRadius: 16,
-    marginTop: 20,
-  },
-  title: {
-    color: '#1e1e2d',
-    fontSize: 32,
-    lineHeight: 48,
-    marginBottom: 38,
-  },
-  icon: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-  },
-  iconEyes: {
-    position: 'absolute',
-    right: 0,
-  },
-  heading: {
-    fontSize: 14,
-    marginBottom: 16,
-    color: '#707070',
-  },
-  textInput: {
-    borderBottomColor: '#f4f4f4',
-    borderBottomWidth: 1,
-    height: 32,
-    paddingLeft: 40,
-    paddingRight: 30,
-    paddingBottom: 10,
-    color: '#1e1e2d',
-    paddingVertical: 0,
-    textAlignVertical: 'center',
-  },
-  textButton: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  optionsNew: {
-    marginTop: 28,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});

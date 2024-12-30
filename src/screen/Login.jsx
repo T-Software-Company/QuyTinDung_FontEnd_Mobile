@@ -13,15 +13,25 @@ import {
 import React, {useState} from 'react';
 import {AppIcons} from '../icons';
 import {useTheme} from '../context/ThemeContext';
+import FieldInputLogin from '../components/FieldInputLogin/FieldInputLogin';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const Login = ({navigation}) => {
-  const [email, setEmail] = useState('demo@gmail.com');
-  const [password, setPassword] = useState('123456789');
+  const [formData, setFormData] = useState({
+    email: 'demo@gmail.com',
+    password: '123456789',
+  });
   const [invisible, setInvisible] = useState(true);
   const {theme} = useTheme();
+
+  const handleChange = (field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
 
   // Hàm kiểm tra định dạng email
   const isValidEmail = email => {
@@ -30,6 +40,9 @@ const Login = ({navigation}) => {
   };
 
   const handleSubmit = () => {
+    const {email, password} = formData;
+    console.log("formData", formData);
+
     if (!email || !password) {
       Alert.alert('Thông báo', 'Vui lòng nhập đầy đủ thông tin!');
       return;
@@ -70,32 +83,7 @@ const Login = ({navigation}) => {
       lineHeight: 32,
       marginBottom: 38,
     },
-    icon: {
-      position: 'absolute',
-      left: 0,
-      top: 0,
-      tintColor: theme.iconColor
-    },
-    iconEyes: {
-      position: 'absolute',
-      right: 0,
-    },
-    heading: {
-      fontSize: 14,
-      marginBottom: 16,
-      color: theme.noteText,
-    },
-    textInput: {
-      borderBottomColor: '#f4f4f4',
-      borderBottomWidth: 1,
-      height: 32,
-      paddingLeft: 40,
-      paddingRight: 30,
-      paddingBottom: 10,
-      color: theme.text,
-      paddingVertical: 0,
-      textAlignVertical: 'center',
-    },
+
     textButton: {
       color: '#fff',
       fontSize: 14,
@@ -123,52 +111,27 @@ const Login = ({navigation}) => {
           <Text style={styles.title}>Đăng nhập</Text>
 
           <View>
-            <View style={{marginBottom: 20}}>
-              <Text style={styles.heading}>Email / Số điện thoại</Text>
-              <View>
-                <Image source={AppIcons.email} style={styles.icon} />
-                <TextInput
-                  placeholder="Email"
-                  placeholderTextColor={theme.noteText}
-                  keyboardType="email-address"
-                  onChangeText={setEmail}
-                  value={email}
-                  style={styles.textInput}
-                  autoCapitalize="none"
-                />
-              </View>
-            </View>
-            <View style={{marginBottom: 20}}>
-              <Text style={styles.heading}>Mật khẩu</Text>
-              <View>
-                <Image source={AppIcons.password} style={styles.icon} />
-                <TextInput
-                  placeholder="Mật khẩu"
-                  placeholderTextColor={theme.noteText}
-                  secureTextEntry={invisible}
-                  onChangeText={setPassword}
-                  value={password}
-                  style={styles.textInput}
-                />
-                <TouchableOpacity
-                  style={styles.iconEyes}
-                  onPress={() => setInvisible(!invisible)}>
-                  {invisible ? (
-                    <Image source={AppIcons.eyesOpen} style={{tintColor: theme.iconColor}} />
-                  ) : (
-                    <Image
-                      style={{
-                        bottom: Platform.OS === 'ios' ? 4 : 4,
-                        paddingVertical: 0,
-                        textAlignVertical: 'center',
-                        tintColor: theme.iconColor
-                      }}
-                      source={AppIcons.eyesClose}
-                    />
-                  )}
-                </TouchableOpacity>
-              </View>
-            </View>
+            <FieldInputLogin
+              name="Email / Số điện thoại"
+              iconSource={AppIcons.email}
+              placeholder="Email"
+              keyboardType="email-address"
+              onSetValue={value => handleChange('email', value)}
+              value={formData.email}
+              theme={theme}
+            />
+
+            <FieldInputLogin
+              name="Mật khẩu"
+              iconSource={AppIcons.password}
+              placeholder="Mật khẩu"
+              secureVisible={invisible}
+              onSetValue={value => handleChange('password', value)}
+              value={formData.password}
+              theme={theme}
+              touchEyes={true}
+              onPressIcon={() => setInvisible(!invisible)}
+            />
           </View>
           <View>
             <TouchableOpacity style={styles.button} onPress={handleSubmit}>
@@ -215,5 +178,3 @@ const Login = ({navigation}) => {
 };
 
 export default Login;
-
-

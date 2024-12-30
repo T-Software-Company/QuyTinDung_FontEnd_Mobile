@@ -182,7 +182,7 @@ const Header = ({Navbar, navigation}) => {
             <Image source={AppIcons.back} style={styles.icon} />
           </TouchableOpacity>
           <View>
-            <Text style={styles.heading}>Thay đổi mật khẩu</Text>
+            <Text style={styles.heading}>{t("changePassword.title")}</Text>
           </View>
           <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
             <Image source={AppIcons.notification} style={styles.icon} />

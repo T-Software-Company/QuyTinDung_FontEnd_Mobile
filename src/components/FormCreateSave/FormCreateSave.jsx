@@ -1,17 +1,24 @@
-import {StyleSheet, Text, View, TouchableOpacity, Alert} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
 import React, {useState} from 'react';
 import DropdownComponent from '../DropdownComponent/DropdownComponent';
 import InputBackground from '../InputBackground/InputBackground';
 import {useTranslation} from 'react-i18next';
 import i18n from '../../../i18n';
 import {useTheme} from '../../context/ThemeContext';
-
+import {useQuery} from '@tanstack/react-query';
+import {getUser, getUsers} from '../../api/User';
 
 const FormCreateSave = () => {
   const {theme} = useTheme();
   const currentLanguage = i18n.language;
 
-  const [value, setValue] = useState(null);
   const {t} = useTranslation();
   const rates = [
     {
@@ -59,21 +66,57 @@ const FormCreateSave = () => {
     },
   ];
 
-  const [selectedRate, setSelectedRate] = useState(null);
-  const [methodExtend, setMethodExtend] = useState(null);
-  const [method, setMethod] = useState(null);
+  const [formData, setFormData] = useState({
+    value: null,
+    selectedRate: null,
+    methodExtend: null,
+    method: null,
+  });
+
+  const handleOnchange = (field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+  // console.log('Form data:', formData);
+
+  // react query call api
+
+  // const userId = 1;
+  // const {data, status, error, isLoading} = useQuery({
+  //   queryKey: ['users'],
+  //   queryFn: () => getUsers(),
+  //   onSuccess: data => {
+  //     console.log('Successfully fetched users:', data);
+  //   },
+  //   onError: error => {
+  //     Alert.alert('Error', 'Failed to fetch data. Please try again later.', [
+  //       {text: 'OK'},
+  //     ]);
+  //   },
+  //   retry: 2,
+  //   staleTime: 5 * 60 * 1000, // Consider data fresh for 5 minutes
+  // });
+
+  // console.log('Data:', data);
+
+  const submit = e => {
+    e.preventDefault();
+    console.log('Form data:', formData);
+  };
 
   const styles = StyleSheet.create({
     boxInput: {
       marginBottom: 12,
     },
-  
+
     headingTitle: {
       fontWeight: 'bold',
       marginBottom: 8,
       color: theme.text,
     },
-  
+
     btn: {
       width: '100%',
       backgroundColor: '#007BFF',
@@ -81,12 +124,12 @@ const FormCreateSave = () => {
       borderRadius: 12,
       marginTop: 8,
     },
-  
+
     hidden: {
       opacity: 0,
       pointerEvents: 'none',
     },
-  
+
     rateText: {
       marginTop: 12,
       fontSize: 14,
@@ -94,6 +137,16 @@ const FormCreateSave = () => {
     },
     textWhite: {
       color: 'white',
+    },
+    loadingContainer: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(255,255,255,0.7)',
     },
   });
 
@@ -104,8 +157,8 @@ const FormCreateSave = () => {
           {t('formCreateSave.depositAmount')}
         </Text>
         <InputBackground
-          value={value}
-          onChange={setValue}
+          value={formData.value}
+          onChange={value => handleOnchange('value', value)}
           placeholder={t('formCreateSave.depositRange')}
           keyboardType="numeric"
         />
@@ -116,17 +169,15 @@ const FormCreateSave = () => {
         <DropdownComponent
           data={rates}
           placeholder={t('formCreateSave.selectTermRate')}
-          value={selectedRate?.value}
-          onChange={value => {
-            setSelectedRate(value);
-          }}
+          value={formData.selectedRate?.value}
+          onChange={value => handleOnchange('selectedRate', value)}
         />
 
-        {selectedRate ? (
+        {formData.selectedRate ? (
           <Text style={styles.rateText}>
-           {currentLanguage === "vi" ? `Lãi suất của kỳ hạn ${selectedRate.label} là ${selectedRate.rate}` : 
-           `Interest rate for ${selectedRate.label} is ${selectedRate.rate}`
-           }
+            {currentLanguage === 'vi'
+              ? `Lãi suất của kỳ hạn ${formData.selectedRate.label} là ${formData.selectedRate.rate}`
+              : `Interest rate for ${formData.selectedRate.label} is ${formData.selectedRate.rate}`}
           </Text>
         ) : (
           <></>
@@ -141,10 +192,8 @@ const FormCreateSave = () => {
         <DropdownComponent
           data={method_extend}
           placeholder={t('formCreateSave.renewalOptions')}
-          value={methodExtend?.value}
-          onChange={value => {
-            setMethodExtend(value);
-          }}
+          value={formData.methodExtend?.value}
+          onChange={value => handleOnchange('methodExtend', value)}
         />
       </View>
 
@@ -155,15 +204,11 @@ const FormCreateSave = () => {
         <DropdownComponent
           data={method_pay}
           placeholder={t('formCreateSave.selectPaymentMethod')}
-          value={method}
-          onChange={value => {
-            setMethod(value);
-          }}
+          value={formData.method}
+          onChange={value => handleOnchange('method', value)}
         />
       </View>
-      <TouchableOpacity
-        style={styles.btn}
-        onPress={() => Alert.alert('Thông báo', 'Bạn đã gửi thành công')}>
+      <TouchableOpacity style={styles.btn} onPress={submit}>
         <Text
           style={[styles.textWhite, {fontWeight: 'bold', textAlign: 'center'}]}>
           {t('formCreateSave.submit')}
@@ -174,5 +219,3 @@ const FormCreateSave = () => {
 };
 
 export default FormCreateSave;
-
-

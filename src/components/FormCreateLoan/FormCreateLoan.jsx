@@ -8,8 +8,6 @@ import i18n from '../../../i18n';
 const FormCreateLoan = ({theme}) => {
   const currentLanguage = i18n.language;
 
-  const [number, setNumber] = useState(null);
-
   const {t} = useTranslation();
 
   const rates = [
@@ -62,15 +60,27 @@ const FormCreateLoan = ({theme}) => {
     },
   ];
 
-  const [selectedRate, setSelectedRate] = useState(null);
-  const [methodExtend, setMethodExtend] = useState(null);
-  const [method, setMethod] = useState(null);
+  const [formData, setFormData] = useState({
+    value: null,
+    selectedRate: null,
+    methodExtend: null,
+    method: null,
+  });
+
+  const handleOnchange = (field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  // console.log('Form data:', formData);
 
   const styles = StyleSheet.create({
     boxInput: {
       marginBottom: 12,
     },
-  
+
     headingTitle: {
       fontWeight: 'bold',
       marginBottom: 8,
@@ -88,17 +98,17 @@ const FormCreateLoan = ({theme}) => {
       paddingVertical: 0,
       textAlignVertical: 'center',
     },
-  
+
     placeholderStyle: {
       color: '#aaa',
       fontSize: 14,
     },
-  
+
     selectedTextStyle: {
       color: '#000',
       fontSize: 14,
     },
-  
+
     btn: {
       width: '100%',
       backgroundColor: '#007BFF',
@@ -106,12 +116,12 @@ const FormCreateLoan = ({theme}) => {
       borderRadius: 12,
       marginTop: 8,
     },
-  
+
     hidden: {
       opacity: 0,
       pointerEvents: 'none',
     },
-  
+
     dropdown: {
       borderColor: '#ccc',
       borderWidth: 1,
@@ -124,7 +134,7 @@ const FormCreateLoan = ({theme}) => {
       zIndex: 5000,
       position: 'absolute',
     },
-  
+
     rateText: {
       marginTop: 12,
       fontSize: 14,
@@ -135,8 +145,6 @@ const FormCreateLoan = ({theme}) => {
     },
   });
 
-
-
   return (
     <View style={styles.form}>
       <View style={styles.boxInput}>
@@ -146,27 +154,25 @@ const FormCreateLoan = ({theme}) => {
         <InputBackground
           placeholder={t('formCreateLoan.loanRange')}
           keyboardType="numeric"
-          onChange={setNumber}
-          value={number}
+          onChange={value => handleOnchange('value', value)}
+          value={formData.value}
         />
       </View>
 
       <View style={styles.boxInput}>
         <Text style={styles.headingTitle}>{t('formCreateLoan.termRate')}</Text>
         <DropdownComponent
-          value={selectedRate?.value}
+          value={formData.selectedRate?.value}
           data={rates}
           placeholder={t('formCreateLoan.selectTermRate')}
-          onChange={value => {
-            setSelectedRate(value);
-          }}
+          onChange={value => handleOnchange('selectedRate', value)}
         />
 
-        {selectedRate ? (
+        {formData.selectedRate ? (
           <Text style={styles.rateText}>
             {currentLanguage === 'vi'
-              ? `Lãi suất của kỳ hạn ${selectedRate.label} là ${selectedRate.rate}`
-              : `Interest rate for ${selectedRate.label} is ${selectedRate.rate}`}
+              ? `Lãi suất của kỳ hạn ${formData.selectedRate.label} là ${formData.selectedRate.rate}`
+              : `Interest rate for ${formData.selectedRate.label} is ${formData.selectedRate.rate}`}
           </Text>
         ) : (
           <></>
@@ -176,12 +182,10 @@ const FormCreateLoan = ({theme}) => {
       <View style={styles.boxInput}>
         <Text style={styles.headingTitle}>{t('formCreateLoan.purpose')}</Text>
         <DropdownComponent
-          value={methodExtend}
+          value={formData.methodExtend}
           data={target_loan}
           placeholder={t('formCreateLoan.selectPurpose')}
-          onChange={value => {
-            setMethodExtend(value);
-          }}
+          onChange={value => handleOnchange('methodExtend', value)}
         />
       </View>
 
@@ -190,12 +194,10 @@ const FormCreateLoan = ({theme}) => {
           {t('formCreateLoan.paymentFrequency')}
         </Text>
         <DropdownComponent
-          value={method}
+          value={formData.method}
           data={frequency_pay}
           placeholder={t('formCreateLoan.selectPaymentFrequency')}
-          onChange={value => {
-            setMethod(value);
-          }}
+          onChange={value => handleOnchange('method', value)}
         />
       </View>
       <TouchableOpacity
@@ -216,5 +218,3 @@ const FormCreateLoan = ({theme}) => {
 };
 
 export default FormCreateLoan;
-
-

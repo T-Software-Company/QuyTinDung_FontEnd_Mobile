@@ -11,9 +11,11 @@ import {StyleSheet, useColorScheme, View} from 'react-native';
 
 import RootNavigator from './src/navigators/RootNavigator';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {LanguageProvider} from './src/context/LanguageContext';
 import './i18n';
 import ThemeProvider from './src/context/ThemeContext';
+
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -22,13 +24,17 @@ function App(): React.JSX.Element {
   //   backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   // };
 
+  const queryClient = new QueryClient();
+
   return (
     <SafeAreaProvider style={{flex: 1}}>
-      <ThemeProvider>
-        <LanguageProvider>
-          <RootNavigator />
-        </LanguageProvider>
-      </ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <LanguageProvider>
+            <RootNavigator />
+          </LanguageProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
     </SafeAreaProvider>
   );
 }

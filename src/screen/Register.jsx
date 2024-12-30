@@ -12,19 +12,29 @@ import {
 import React, {useState} from 'react';
 import {AppIcons} from '../icons';
 import {useTheme} from '../context/ThemeContext';
+import FieldInputLogin from '../components/FieldInputLogin/FieldInputLogin';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const Register = ({navigation}) => {
-  const [name, setName] = useState('demo');
-  const [phone, setPhone] = useState('0123456789');
-  const [email, setEmail] = useState('demo@gmail.com');
-  const [password, setPassword] = useState('123456789');
-  const [confirmPassword, setConfirmPassword] = useState('123456789');
+  const [formData, setFormData] = useState({
+    name: 'demo',
+    phone: '0123456789',
+    email: 'demo@gmail.com',
+    password: '123456789',
+    confirmPassword: '123456789',
+  });
   const [invisible, setInvisible] = useState(true);
   const [invisibleConfirm, setInvisibleConfirm] = useState(true);
   const {theme} = useTheme();
+
+  const handleChange = (field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
 
   // Hàm kiểm tra định dạng email
   const isValidEmail = email => {
@@ -39,6 +49,8 @@ const Register = ({navigation}) => {
   };
 
   const handleSubmit = () => {
+    const {name, phone, email, password, confirmPassword} = formData;
+
     if (!name || !phone || !email || !password || !confirmPassword) {
       Alert.alert('Thông báo', 'Vui lòng nhập đầy đủ thông tin!');
       return;
@@ -99,35 +111,7 @@ const Register = ({navigation}) => {
       lineHeight: 32,
       marginBottom: 38,
     },
-    icon: {
-      position: 'absolute',
-      left: 0,
-      top: 0,
-      tintColor: theme.iconColor,
-    },
-    iconEyesBtn: {
-      position: 'absolute',
-      right: 0,
-    },
-    iconEyes: {
-      tintColor: theme.iconColor,
-    },
-    heading: {
-      fontSize: 14,
-      marginBottom: 16,
-      color: theme.noteText,
-    },
-    textInput: {
-      borderBottomColor: theme.noteText,
-      borderBottomWidth: 1,
-      height: 32,
-      paddingLeft: 40,
-      paddingRight: 30,
-      paddingBottom: 10,
-      color: theme.text,
-      paddingVertical: 0,
-      textAlignVertical: 'center',
-    },
+
     textButton: {
       color: '#fff',
       fontSize: 14,
@@ -155,120 +139,56 @@ const Register = ({navigation}) => {
           <Text style={styles.title}>Đăng Ký</Text>
 
           <View>
-            <View style={{marginBottom: 20}}>
-              <Text style={styles.heading}>Họ và tên</Text>
-              <View>
-                <Image source={AppIcons.email} style={styles.icon} />
-                <TextInput
-                  placeholder="Họ và tên"
-                  placeholderTextColor="#aaa"
-                  keyboardType="email-address"
-                  onChangeText={setName}
-                  value={name}
-                  style={styles.textInput}
-                  autoCapitalize="none"
-                />
-              </View>
-            </View>
-            <View style={{marginBottom: 20}}>
-              <Text style={styles.heading}>Số điện thoại</Text>
-              <View>
-                <Image
-                  source={require('../../assets/images/phone-icon.png')}
-                  style={styles.icon}
-                />
-                <TextInput
-                  placeholder="Số điện thoại"
-                  placeholderTextColor="#aaa"
-                  keyboardType="numeric"
-                  onChangeText={setPhone}
-                  value={phone}
-                  style={styles.textInput}
-                  autoCapitalize="none"
-                />
-              </View>
-            </View>
-            <View style={{marginBottom: 20}}>
-              <Text style={styles.heading}>Email</Text>
-              <View>
-                <Image source={AppIcons.email} style={styles.icon} />
-                <TextInput
-                  placeholder="Email"
-                  placeholderTextColor="#aaa"
-                  keyboardType="email-address"
-                  onChangeText={setEmail}
-                  value={email}
-                  style={styles.textInput}
-                  autoCapitalize="none"
-                />
-              </View>
-            </View>
-            <View style={{marginBottom: 20}}>
-              <Text style={styles.heading}>Mật khẩu</Text>
-              <View>
-                <Image source={AppIcons.password} style={styles.icon} />
-                <TextInput
-                  placeholder="Mật khẩu"
-                  placeholderTextColor="#aaa"
-                  secureTextEntry={invisible}
-                  onChangeText={setPassword}
-                  value={password}
-                  style={styles.textInput}
-                />
-                <TouchableOpacity
-                  style={styles.iconEyesBtn}
-                  onPress={() => setInvisible(!invisible)}>
-                  {invisible ? (
-                    <Image source={AppIcons.eyesOpen} style={styles.iconEyes} />
-                  ) : (
-                    <Image
-                      style={[
-                        styles.iconEyes,
-                        {
-                          bottom: Platform.OS === 'ios' ? 4 : 4,
-                          paddingVertical: 0,
-                          textAlignVertical: 'center',
-                        },
-                      ]}
-                      source={AppIcons.eyesClose}
-                    />
-                  )}
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View style={{marginBottom: 20}}>
-              <Text style={styles.heading}>Xác nhận mật khẩu</Text>
-              <View>
-                <Image source={AppIcons.password} style={styles.icon} />
-                <TextInput
-                  placeholder="Xác nhận mật khẩu"
-                  placeholderTextColor="#aaa"
-                  secureTextEntry={invisibleConfirm}
-                  onChangeText={setConfirmPassword}
-                  value={confirmPassword}
-                  style={styles.textInput}
-                />
-                <TouchableOpacity
-                  style={styles.iconEyesBtn}
-                  onPress={() => setInvisibleConfirm(!invisibleConfirm)}>
-                  {invisibleConfirm ? (
-                    <Image source={AppIcons.eyesOpen} style={styles.iconEyes} />
-                  ) : (
-                    <Image
-                      style={[
-                        styles.iconEyes,
-                        {
-                          bottom: Platform.OS === 'ios' ? 4 : 4,
-                          paddingVertical: 0,
-                          textAlignVertical: 'center',
-                        },
-                      ]}
-                      source={AppIcons.eyesClose}
-                    />
-                  )}
-                </TouchableOpacity>
-              </View>
-            </View>
+            <FieldInputLogin
+              name={'Họ và tên'}
+              iconSource={AppIcons.email}
+              placeholder={'Họ và tên'}
+              onSetValue={value => handleChange('name', value)}
+              value={formData.name}
+              theme={theme}
+            />
+
+            <FieldInputLogin
+              name={'Số điện thoại'}
+              iconSource={AppIcons.phone}
+              placeholder={'Số điện thoại'}
+              onSetValue={value => handleChange('phone', value)}
+              value={formData.phone}
+              theme={theme}
+              keyboardType={'numeric'}
+            />
+
+            <FieldInputLogin
+              name={'Email'}
+              iconSource={AppIcons.email}
+              placeholder={'Email'}
+              onSetValue={value => handleChange('email', value)}
+              value={formData.email}
+              theme={theme}
+              keyboardType={'email-address'}
+            />
+            <FieldInputLogin
+              name={'Mật khẩu'}
+              iconSource={AppIcons.password}
+              placeholder={'Mật khẩu'}
+              onSetValue={value => handleChange('password', value)}
+              value={formData.password}
+              theme={theme}
+              secureVisible={invisible}
+              onPressIcon={() => setInvisible(!invisible)}
+              touchEyes={true}
+            />
+            <FieldInputLogin
+              name={'Xác nhận mật khẩu'}
+              iconSource={AppIcons.password}
+              placeholder={'Xác nhận mật khẩu'}
+              onSetValue={value => handleChange('confirmPassword', value)}
+              value={formData.confirmPassword}
+              theme={theme}
+              secureVisible={invisibleConfirm}
+              onPressIcon={() => setInvisibleConfirm(!invisibleConfirm)}
+              touchEyes={true}
+            />
           </View>
           <View>
             <TouchableOpacity style={styles.button} onPress={handleSubmit}>

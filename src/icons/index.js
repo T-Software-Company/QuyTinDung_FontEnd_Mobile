@@ -25,6 +25,7 @@ export const AppIcons = {
   // Form icons
   email: require('../../assets/images/email-icon.png'),
   password: require('../../assets/images/password-icon.png'),
+  phone: require('../../assets/images/phone-icon.png'),
   eyesOpen: require('../../assets/images/eyes-icon.png'),
   eyesClose: require('../../assets/images/eyesclose-icon.png'),
 

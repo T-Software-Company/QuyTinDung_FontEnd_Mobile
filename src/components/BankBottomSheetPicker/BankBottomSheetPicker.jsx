@@ -13,8 +13,13 @@ import {
   Easing,
 } from 'react-native';
 import {useTheme} from '../../context/ThemeContext';
+import {useTranslation} from 'react-i18next';
+import i18n from '../../../i18n';
 
 const BankBottomSheetPicker = ({visible, onClose, onSelect, selectedValue}) => {
+  const currentLanguage = i18n.language;
+  const {t} = useTranslation();
+  
   const [localVisible, setLocalVisible] = useState(visible);
   const [searchText, setSearchText] = useState('');
   const slideAnim = React.useRef(new Animated.Value(0)).current;
@@ -183,7 +188,7 @@ const BankBottomSheetPicker = ({visible, onClose, onSelect, selectedValue}) => {
           ]}>
           <View style={styles.bottomSheet}>
             <View style={styles.header}>
-              <Text style={styles.headerText}>Chọn ngân hàng</Text>
+              <Text style={styles.headerText}>{t('transfer.selectBank')}</Text>
               <TouchableOpacity onPress={handleClose}>
                 <Text style={styles.closeButton}>✕</Text>
               </TouchableOpacity>
@@ -191,7 +196,7 @@ const BankBottomSheetPicker = ({visible, onClose, onSelect, selectedValue}) => {
 
             <TextInput
               style={styles.searchInput}
-              placeholder="Tìm kiếm ngân hàng..."
+              placeholder={t('transfer.searchBank')}
               value={searchText}
               keyboardType="default"
               onChangeText={setSearchText}
@@ -222,7 +227,7 @@ const BankBottomSheetPicker = ({visible, onClose, onSelect, selectedValue}) => {
               ) : (
                 <View style={styles.noResults}>
                   <Text style={styles.noResultsText}>
-                    Không tìm thấy kết quả
+                    {t('transfer.noResults')}
                   </Text>
                 </View>
               )}

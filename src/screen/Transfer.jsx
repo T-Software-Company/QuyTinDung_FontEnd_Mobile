@@ -12,10 +12,11 @@ import React from 'react';
 import Header from '../components/Header/Header';
 import FormTransfer from '../components/FormTransfer/FormTransfer';
 import {useTranslation} from 'react-i18next';
-import {t} from 'i18next';
+import i18n from '../../i18n';
 import {useTheme} from '../context/ThemeContext'; // Import ThemeContext
 
 const Transfer = ({navigation}) => {
+  const currentLanguage = i18n.language;
   const {t} = useTranslation();
   const {theme} = useTheme(); // Use ThemeContext
 
@@ -96,12 +97,12 @@ const Transfer = ({navigation}) => {
           <View style={styles.fixedBox}>
             <View style={styles.wrap}>
               <View style={styles.wrapTotal}>
-                <Text style={styles.totalTitle}>Tổng tiền</Text>
+                <Text style={styles.totalTitle}>{t('transfer.total')}</Text>
                 <Text style={styles.totalMoney}>0 VND</Text>
               </View>
               <View>
                 <TouchableOpacity style={styles.btnTotal}>
-                  <Text style={styles.textBtn}>Tiếp tục</Text>
+                  <Text style={styles.textBtn}>{t('transfer.continue')}</Text>
                 </TouchableOpacity>
               </View>
             </View>

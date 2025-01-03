@@ -83,7 +83,16 @@
         "selectPaymentMethod": "Select payment method",
         "submit": "Send",
         "month": "months",
-        "staff": "On-site"   
+        "staff": "On-site",
+        "renewalMethods": {
+            "includeInterest": "Include interest",
+            "principalOnly": "Principal only",
+            "monthlyInterest": "Monthly interest"
+        },
+        "paymentMethods": {
+            "online": "Online",
+            "counter": "At counter"
+        }
     },
     "formCreateLoan": {
         "title": "Create loan",
@@ -138,5 +147,84 @@
         "newPassword": "New password",
         "confirmPassword": "Confirm password",
         "submit": "Change"
+    },
+    "login": {
+        "title": "Login",
+        "username": "Email / Phone number",
+        "password": "Password",
+        "submit": "Login",
+        "forgotPassword": "Forgot Password?",
+        "register": "Register",
+        "newUser": "New to the app?",
+        "errors": {
+            "missingFields": "Please fill in all fields!",
+            "invalidEmail": "Invalid email!",
+            "passwordLength": "Password must be at least 6 characters!"
+        }
+    },
+    "register": {
+        "title": "Register",
+        "name": "Full name",
+        "email": "Email",
+        "phone": "Phone number",
+        "password": "Password",
+        "confirmPassword": "Confirm password",
+        "submit": "Register",
+        "login": "Login",
+        "haveAccount": "Already have an account.",
+        "errors": {
+            "missingFields": "Please fill in all fields!",
+            "invalidEmail": "Invalid email!",
+            "invalidPhone": "Invalid phone number!",
+            "passwordLength": "Password must be at least 6 characters!",
+            "passwordMismatch": "Passwords do not match!"
+        },
+        "success": "Registration successful!"
+    },
+    "forgetPassword": {
+        "title": "Forgot Password",
+        "email": "Email / Phone number",
+        "identityNumber": "Your Identity Card Number",
+        "submit": "Forgot Password",
+        "remember": "Remember your password?",
+        "login": "Login",
+        "notification": "Notification",
+        "otpSent": "We have sent OTP to your phone number"
+    },
+    "deposit": {
+        "title": "Deposit",
+        "scanQR": "Scan QR Code",
+        "transferFromBank": "Bank Transfer",
+        "downloadQR": "Download",
+        "transferContent": "Transfer Content",
+        "required": "(Required exactly)",
+        "transferNote": "Transfer money from any bank to deposit into the Credit Fund.",
+        "accountFields": {
+            "accountNumber": "Account Number",
+            "accountName": "Account Name",
+            "branch": "Branch",
+            "content": "Content"
+        }
+    },
+    "transfer": {
+        "title": "Transfer",
+        "source": "Source",
+        "availableCash": "Available Cash",
+        "availableLimit": "Available Limit",
+        "transferInfo": "Transfer Information",
+        "receivingBank": "Receiving Bank",
+        "accountNumber": "Account/Card Number",
+        "accountPlaceholder": "Enter account/card number",
+        "receiverName": "Receiver Name",
+        "amount": "Transfer Amount",
+        "amountPlaceholder": "Enter transfer amount",
+        "content": "Transfer Content",
+        "contentPlaceholder": "Enter transfer content",
+        "saveReceiver": "Save Receiver",
+        "continue": "Continue",
+        "total": "Total",
+        "selectBank": "Select Bank",
+        "searchBank": "Search bank...",
+        "noResults": "No results found"
     }
-  }
+}

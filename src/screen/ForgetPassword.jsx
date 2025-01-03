@@ -13,6 +13,8 @@ import {
 import React, {useState} from 'react';
 import {AppIcons} from '../icons';
 import {useTheme} from '../context/ThemeContext';
+import {useTranslation} from 'react-i18next';
+import FieldInputLogin from '../components/FieldInputLogin/FieldInputLogin';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -21,6 +23,18 @@ const ForgetPassword = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [idCccd, setIdCccd] = useState('');
   const {theme} = useTheme();
+  const {t} = useTranslation();
+  const [formData, setFormData] = useState({
+    email: '',
+    idCccd: '',
+  });
+
+  const handleChange = (field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
 
   // Hàm kiểm tra định dạng email
   const isValidEmail = email => {
@@ -29,7 +43,7 @@ const ForgetPassword = ({navigation}) => {
   };
 
   const handleSubmit = () => {
-    Alert.alert('Thông báo', 'Chúng tôi đã gửi OTP về số điện thoại của bạn');
+    Alert.alert(t('forgetPassword.notification'), t('forgetPassword.otpSent'));
   };
 
   const styles = StyleSheet.create({
@@ -104,52 +118,37 @@ const ForgetPassword = ({navigation}) => {
             paddingHorizontal: 20,
             marginTop: 0.1 * windowHeight,
           }}>
-          <Text style={styles.title}>Quên mật khẩu</Text>
+          <Text style={styles.title}>{t('forgetPassword.title')}</Text>
 
           <View>
-            <View style={{marginBottom: 20}}>
-              <Text style={styles.heading}>Email / Số điện thoại</Text>
-              <View>
-                <Image
-                  source={require('../../assets/images/email-icon.png')}
-                  style={styles.icon}
-                />
-                <TextInput
-                  placeholder="Email / Số điện thoại"
-                  placeholderTextColor="#aaa"
-                  keyboardType="email-address"
-                  onChangeText={setEmail}
-                  value={email}
-                  style={styles.textInput}
-                  autoCapitalize="none"
-                />
-              </View>
-            </View>
-            <View style={{marginBottom: 20}}>
-              <Text style={styles.heading}>Số CCCD của bạn</Text>
-              <View>
-                <Image
-                  source={require('../../assets/images/password-icon.png')}
-                  style={styles.icon}
-                />
-                <TextInput
-                  placeholder="Nhập CCCD"
-                  placeholderTextColor="#aaa"
-                  keyboardType="numeric"
-                  onChangeText={setIdCccd}
-                  value={idCccd}
-                  style={styles.textInput}
-                />
-              </View>
-            </View>
+            <FieldInputLogin
+              name={t('forgetPassword.email')}
+              iconSource={AppIcons.email}
+              placeholder={t('forgetPassword.email')}
+              onSetValue={value => handleChange('email', value)}
+              value={formData.email}
+              theme={theme}
+              keyboardType={'email-address'}
+            />
+            <FieldInputLogin
+              name={t('forgetPassword.identityNumber')}
+              iconSource={AppIcons.password}
+              placeholder={t('forgetPassword.identityNumber')}
+              onSetValue={value => handleChange('idCccd', value)}
+              value={formData.idCccd}
+              theme={theme}
+              keyboardType={'numeric'}
+            />
           </View>
           <View>
             <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-              <Text style={styles.textButton}>Quên mật khẩu</Text>
+              <Text style={styles.textButton}>
+                {t('forgetPassword.submit')}
+              </Text>
             </TouchableOpacity>
             <View style={styles.optionsNew}>
               <Text style={{color: theme.noteText, fontSize: 14}}>
-                Bạn đã nhớ lại mật khẩu.{' '}
+                {t('forgetPassword.remember')}{' '}
               </Text>
               <TouchableOpacity
                 onPress={() => {
@@ -161,7 +160,7 @@ const ForgetPassword = ({navigation}) => {
                     fontWeight: 'bold',
                     fontSize: 14,
                   }}>
-                  Đăng nhập
+                  {t('forgetPassword.login')}
                 </Text>
               </TouchableOpacity>
             </View>

@@ -7,6 +7,7 @@ import {
   Image,
   Switch,
   Animated,
+  Platform,
   // Clipboard,  // Add this import
 } from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard'; // Add this import
@@ -20,10 +21,9 @@ import {AppIcons} from '../../icons';
 
 const FormDeposit = ({theme}) => {
   const currentLanguage = i18n.language;
-
-  const [value, setValue] = useState(null);
   const {t} = useTranslation();
 
+  const [value, setValue] = useState(null);
   const [isVisibleQR, setIsVisibleQR] = useState(false); // Trạng thái toggle
   const [isVisibleBank, setIsVisibleBank] = useState(true); // Trạng thái toggle
   const [selectedBank, setSelectedBank] = useState('TPBank'); // Add new state for active bank
@@ -77,40 +77,40 @@ const FormDeposit = ({theme}) => {
   const bankInfo = {
     TPBank: {
       accountNumber: {
-        label: 'Số tài khoản',
+        label: t('deposit.accountFields.accountNumber'),
         value: '888888888888',
         icon: true,
       },
       accountName: {
-        label: 'Tên tài khoản',
+        label: t('deposit.accountFields.accountName'),
         value: 'Pham Minh Quang',
       },
       branch: {
-        label: 'Chi nhánh',
+        label: t('deposit.accountFields.branch'),
         value: 'TPBank Saigon',
       },
       desc: {
-        label: 'Nội dung',
+        label: t('deposit.accountFields.content'),
         value: 'Pham Minh Quang 99MC9999',
         icon: true,
       },
     },
     BIDV: {
       accountNumber: {
-        label: 'Số tài khoản',
+        label: t('deposit.accountFields.accountNumber'),
         value: '888888888888',
         icon: true,
       },
       accountName: {
-        label: 'Tên tài khoản',
+        label: t('deposit.accountFields.accountName'),
         value: 'Pham Minh Quang',
       },
       branch: {
-        label: 'Chi nhánh',
+        label: t('deposit.accountFields.branch'),
         value: 'BIDV Saigon',
       },
       desc: {
-        label: 'Nội dung',
+        label: t('deposit.accountFields.content'),
         value: 'Pham Minh Quang 99MC9999',
         icon: true,
       },
@@ -119,12 +119,16 @@ const FormDeposit = ({theme}) => {
 
   const handleCopy = text => {
     Clipboard.setString(text);
-    Alert.alert('Thông báo', 'Sao chép thành công!', [
-      {
-        text: 'OK',
-        style: 'cancel',
-      },
-    ]);
+    Alert.alert(
+      currentLanguage === 'vi' ? 'Thông báo' : 'Notification',
+      currentLanguage === 'vi' ? 'Sao chép thành công!' : 'Copied successfully',
+      [
+        {
+          text: 'OK',
+          style: 'cancel',
+        },
+      ],
+    );
   };
 
   const styles = StyleSheet.create({
@@ -185,11 +189,21 @@ const FormDeposit = ({theme}) => {
       gap: 24,
       borderRadius: 8,
     },
+    wrapImageQr: {
+      width: 110,
+      height: 110,
+      alignItems: 'center',
+      justifyContent: 'center',
+      flex: 1,
+      backgroundColor: 'white',
+      borderRadius: 8,
+    },
     qr: {
       width: 100,
       height: 100,
-      padding: 4,
+      padding: Platform.OS === 'ios' ? 0 : 0,
       backgroundColor: 'white',
+      resizeMode: 'contain',
       borderRadius: 8,
     },
     wrapDownload: {
@@ -289,7 +303,7 @@ const FormDeposit = ({theme}) => {
     },
 
     textBank: {
-       color: theme.text, 
+      color: theme.text,
     },
 
     wrapBankTransfer: {
@@ -325,17 +339,19 @@ const FormDeposit = ({theme}) => {
   });
 
   const BankField = ({label, value, icon}) => (
-    <View style={styles.wrapField}>
+    <TouchableOpacity
+      style={styles.wrapField}
+      onPress={() => handleCopy(value)}>
       <View style={styles.wrapTitleBank}>
         <Text style={styles.titleBank}>{label}</Text>
         <Text style={styles.descBank}>{value}</Text>
       </View>
       {icon && (
-        <TouchableOpacity onPress={() => handleCopy(value)}>
+        <View onPress={() => handleCopy(value)}>
           <Image style={styles.iconDownload} source={AppIcons.copy} />
-        </TouchableOpacity>
+        </View>
       )}
-    </View>
+    </TouchableOpacity>
   );
 
   return (
@@ -343,7 +359,7 @@ const FormDeposit = ({theme}) => {
       <View style={styles.wrapFunction}>
         {/* Nút bấm để toggle */}
         <TouchableOpacity onPress={toggleQRContent} style={styles.toggleButton}>
-          <Text style={styles.buttonText}>Quét mã QR</Text>
+          <Text style={styles.buttonText}>{t('deposit.scanQR')}</Text>
           {activeSection === 'qr' ? (
             <Image style={styles.icon} source={AppIcons.chevronUp} />
           ) : (
@@ -359,21 +375,29 @@ const FormDeposit = ({theme}) => {
                 <Text style={styles.contentText}>
                   Pham Minh Quang - 99MC9999
                 </Text>
-                <Image style={styles.qr} source={AppIcons.qr} />
+                <View style={styles.wrapImageQr}>
+                  <Image style={styles.qr} source={AppIcons.qr} />
+                </View>
                 <TouchableOpacity style={styles.wrapDownload}>
                   <Image
                     style={styles.iconDownload}
                     source={AppIcons.downLoad}
                   />
-                  <Text style={styles.textDownload}>Tải về</Text>
+                  <Text style={styles.textDownload}>
+                    {t('deposit.downloadQR')}
+                  </Text>
                 </TouchableOpacity>
               </View>
-              <View style={styles.wrapTransfer}>
+              <TouchableOpacity
+                style={styles.wrapTransfer}
+                onPress={() => handleCopy('Pham Minh Quang 99MC9999')}>
                 <View style={styles.wrapQrText}>
                   <View style={styles.wrapTextTransfer}>
-                    <Text style={styles.textTitle}>Nội dung chuyển tiền</Text>
+                    <Text style={styles.textTitle}>
+                      {t('deposit.transferContent')}
+                    </Text>
                     <Text style={[styles.textTitle, styles.compulsory]}>
-                      (Bắt buộc chính xác)
+                      {t('deposit.required')}
                     </Text>
                   </View>
                   <Text style={styles.descTransfer}>
@@ -384,7 +408,7 @@ const FormDeposit = ({theme}) => {
                   onPress={() => handleCopy('Pham Minh Quang 99MC9999')}>
                   <Image style={styles.iconDownload} source={AppIcons.copy} />
                 </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
             </>
           )}
         </Animated.View>
@@ -395,7 +419,7 @@ const FormDeposit = ({theme}) => {
         <TouchableOpacity
           onPress={toggleBankContent}
           style={styles.toggleButton}>
-          <Text style={styles.buttonText}>Chuyển khoản từ ngân hàng</Text>
+          <Text style={styles.buttonText}>{t('deposit.transferFromBank')}</Text>
           {activeSection === 'bank' ? (
             <Image style={styles.icon} source={AppIcons.chevronUp} />
           ) : (
@@ -408,8 +432,7 @@ const FormDeposit = ({theme}) => {
           {activeSection === 'bank' && (
             <View style={styles.wrapTransferBank}>
               <Text style={styles.noteTransfer}>
-                Chuyển khoản tiền từ bất kỳ ngân hàng nào để nộp vào Quỹ tín
-                dụng.
+                {t('deposit.transferNote')}
               </Text>
 
               <View style={styles.wrapBank}>

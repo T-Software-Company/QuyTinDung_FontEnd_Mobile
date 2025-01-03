@@ -5,12 +5,18 @@ import {
   TextInput,
   TouchableOpacity,
   Switch,
+  Platform,
 } from 'react-native';
 import React, {useState} from 'react';
 import BankBottomSheetPicker from '../BankBottomSheetPicker/BankBottomSheetPicker';
 import {useTheme} from '../../context/ThemeContext';
+import i18n from '../../../i18n';
+import {useTranslation} from 'react-i18next';
 
 const FormTransfer = () => {
+  const currentLanguage = i18n.language;
+  const {t} = useTranslation();
+
   const [selectedBank, setSelectedBank] = useState('');
   const [showPicker, setShowPicker] = useState(false);
   const [accountNumber, setAccountNumber] = useState('');
@@ -22,24 +28,24 @@ const FormTransfer = () => {
   const {theme} = useTheme();
   
   const getBankName = value => {
-    if (!value) return 'Chọn ngân hàng';
+    if (!value) return currentLanguage === 'vi' ? 'Chọn ngân hàng' : 'Select bank';
 
     const banks = {
-      vcb: 'Vietcombank',
-      tcb: 'Techcombank',
-      tpb: 'TPBank',
-      bidv: 'BIDV',
-      agr: 'Agribank',
-      mb: 'MBBank',
-      vtb: 'VietinBank',
-      acb: 'ACB',
-      vpb: 'VPBank',
-      scb: 'SacomBank',
-      hdb: 'HDBank',
-      ocb: 'OCB',
-      seab: 'SeABank',
+      vcb: {vi: 'Vietcombank', en: 'Vietcombank'},
+      tcb: {vi: 'Techcombank', en: 'Techcombank'},
+      tpb: {vi: 'TPBank', en: 'TPBank'},
+      bidv: {vi: 'BIDV', en: 'BIDV'},
+      agr: {vi: 'Agribank', en: 'Agribank'},
+      mb: {vi: 'MBBank', en: 'MBBank'},
+      vtb: {vi: 'VietinBank', en: 'VietinBank'},
+      acb: {vi: 'ACB', en: 'ACB'},
+      vpb: {vi: 'VPBank', en: 'VPBank'},
+      scb: {vi: 'SacomBank', en: 'SacomBank'},
+      hdb: {vi: 'HDBank', en: 'HDBank'},
+      ocb: {vi: 'OCB', en: 'OCB'},
+      seab: {vi: 'SeABank', en: 'SeABank'},
     };
-    return banks[value] || value;
+    return banks[value]?.[currentLanguage] || value;
   };
 
   const styles = StyleSheet.create({
@@ -128,28 +134,28 @@ const FormTransfer = () => {
       color: theme.text,
     },
     switch: {
-      transform: [{scaleX: 0.6}, {scaleY: 0.6}],
+      transform: Platform.OS === "ios" ? [{scaleX: 0.6}, {scaleY: 0.6}] : [{scaleX: 1}, {scaleY: 1}],
     },
   });
 
   return (
     <View style={styles.box}>
       <View style={styles.sourceMoney}>
-        <Text style={styles.heading}>Nguồn tiền</Text>
+        <Text style={styles.heading}>{t('transfer.source')}</Text>
         <View style={styles.boxWrapMoney}>
-          <Text style={styles.titleMoney}>Tiền mặt khả dụng</Text>
+          <Text style={styles.titleMoney}>{t('transfer.availableCash')}</Text>
           <Text style={styles.heading}>500.000đ</Text>
         </View>
         <View style={styles.boxWrapMoney}>
-          <Text style={styles.titleMoney}>Tiền hạn mức khả dụng</Text>
+          <Text style={styles.titleMoney}>{t('transfer.availableLimit')}</Text>
           <Text style={styles.heading}>500.000đ</Text>
         </View>
       </View>
 
       <View style={styles.boxTransfer}>
-        <Text style={styles.heading}>Chuyển tiền</Text>
+        <Text style={styles.heading}>{t('transfer.transferInfo')}</Text>
         <View style={styles.formGroup}>
-          <Text style={styles.label}>Ngân hàng nhận</Text>
+          <Text style={styles.label}>{t('transfer.receivingBank')}</Text>
           <TouchableOpacity
             style={styles.bankSelector}
             onPress={() => setShowPicker(true)}>
@@ -163,18 +169,18 @@ const FormTransfer = () => {
             selectedValue={selectedBank}
           />
 
-          <Text style={styles.label}>Số tài khoản/Số thẻ</Text>
+          <Text style={styles.label}>{t('transfer.accountNumber')}</Text>
           <TextInput
             style={styles.input}
             value={accountNumber}
             onChangeText={setAccountNumber}
             keyboardType="numeric"
-            placeholder="Nhập số tài khoản/số thẻ"
+            placeholder={t('transfer.accountPlaceholder')}
           />
 
           {accountNumber.length > 5 && (
             <>
-              <Text style={styles.label}>Tên người nhận</Text>
+              <Text style={styles.label}>{t('transfer.receiverName')}</Text>
               <TextInput
                 style={[styles.input, {color: '#000'}]}
                 value={'NGUYEN VAN A'}
@@ -183,27 +189,27 @@ const FormTransfer = () => {
             </>
           )}
 
-          <Text style={styles.label}>Số tiền chuyển</Text>
+          <Text style={styles.label}>{t('transfer.amount')}</Text>
           <TextInput
             style={styles.input}
             value={amount}
             onChangeText={setAmount}
             keyboardType="numeric"
-            placeholder="Nhập số tiền chuyển"
+            placeholder={t('transfer.amountPlaceholder')}
           />
 
-          <Text style={styles.label}>Nội dung chuyển khoản</Text>
+          <Text style={styles.label}>{t('transfer.content')}</Text>
           <TextInput
             style={[styles.input, styles.contentInput]}
             value={content}
             onChangeText={setContent}
             multiline
             maxLength={160}
-            placeholder="Nhập nội dung chuyển khoản"
+            placeholder={t('transfer.contentPlaceholder')}
           />
           <Text style={styles.charCount}>{content.length}/160</Text>
           <View style={styles.wrapToggle}>
-            <Text style={styles.labelToggle}>Lưu người nhận</Text>
+            <Text style={styles.labelToggle}>{t('transfer.saveReceiver')}</Text>
             <Switch
               style={styles.switch}
               trackColor={{false: '#E0E0E0', true: '#007BFF'}}

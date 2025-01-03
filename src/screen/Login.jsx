@@ -9,22 +9,27 @@ import {
   Image,
   Alert,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useState} from 'react';
 import {AppIcons} from '../icons';
 import {useTheme} from '../context/ThemeContext';
 import FieldInputLogin from '../components/FieldInputLogin/FieldInputLogin';
+import {useTranslation} from 'react-i18next';
+import { useAuth } from '../context/AuthContext';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const Login = ({navigation}) => {
   const [formData, setFormData] = useState({
-    email: 'demo@gmail.com',
+    email: 'admin@gmail.com',
     password: '123456789',
   });
   const [invisible, setInvisible] = useState(true);
   const {theme} = useTheme();
+  const {t} = useTranslation();
+  const { login, loading, error } = useAuth();
 
   const handleChange = (field, value) => {
     setFormData(prev => ({
@@ -39,26 +44,33 @@ const Login = ({navigation}) => {
     return emailRegex.test(email);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const {email, password} = formData;
-    console.log("formData", formData);
 
+    // Validation checks
     if (!email || !password) {
-      Alert.alert('Thông báo', 'Vui lòng nhập đầy đủ thông tin!');
+      Alert.alert(t('notification.title'), t('login.errors.missingFields'));
       return;
     }
 
-    if (!isValidEmail(email)) {
-      Alert.alert('Thông báo', 'Email không hợp lệ!');
-      return;
-    }
+    // if (!isValidEmail(email)) {
+    //   Alert.alert(t('notification.title'), t('login.errors.invalidEmail'));
+    //   return;
+    // }
 
-    if (password.length < 6) {
-      Alert.alert('Thông báo', 'Mật khẩu phải có ít nhất 6 ký tự!');
-      return;
-    }
+    // if (password.length < 6) {
+    //   Alert.alert(t('notification.title'), t('login.errors.passwordLength'));
+    //   return;
+    // }
 
-    navigation.navigate('HomeTabs');
+    const result = await login(email, password);
+    
+    
+    if (result === true) {
+      navigation.navigate('HomeTabs');
+    } else if (error) {
+      Alert.alert(t('notification.title'), "sai");
+    }
   };
 
   const styles = StyleSheet.create({
@@ -96,6 +108,9 @@ const Login = ({navigation}) => {
       justifyContent: 'center',
       alignItems: 'center',
     },
+    buttonDisabled: {
+      opacity: 0.7,
+    },
   });
 
   return (
@@ -108,13 +123,13 @@ const Login = ({navigation}) => {
             paddingHorizontal: 20,
             marginTop: 0.1 * windowHeight,
           }}>
-          <Text style={styles.title}>Đăng nhập</Text>
+          <Text style={styles.title}>{t('login.title')}</Text>
 
           <View>
             <FieldInputLogin
-              name="Email / Số điện thoại"
+              name={t('login.username')}
               iconSource={AppIcons.email}
-              placeholder="Email"
+              placeholder={t('login.username')}
               keyboardType="email-address"
               onSetValue={value => handleChange('email', value)}
               value={formData.email}
@@ -122,9 +137,9 @@ const Login = ({navigation}) => {
             />
 
             <FieldInputLogin
-              name="Mật khẩu"
+              name={t('login.password')}
               iconSource={AppIcons.password}
-              placeholder="Mật khẩu"
+              placeholder={t('login.password')}
               secureVisible={invisible}
               onSetValue={value => handleChange('password', value)}
               value={formData.password}
@@ -134,12 +149,19 @@ const Login = ({navigation}) => {
             />
           </View>
           <View>
-            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-              <Text style={styles.textButton}>Đăng nhập</Text>
+            <TouchableOpacity 
+              style={[styles.button, loading && styles.buttonDisabled]} 
+              onPress={handleSubmit}
+              disabled={loading}>
+              {loading ? (
+                <ActivityIndicator color="#fff" size="small" />
+              ) : (
+                <Text style={styles.textButton}>{t('login.submit')}</Text>
+              )}
             </TouchableOpacity>
             <View style={styles.optionsNew}>
               <Text style={{color: theme.noteText, fontSize: 14}}>
-                Bạn đang là người mới.{' '}
+                {t('login.newUser')}{' '}
               </Text>
               <TouchableOpacity
                 onPress={() => {
@@ -151,7 +173,7 @@ const Login = ({navigation}) => {
                     fontWeight: 'bold',
                     fontSize: 14,
                   }}>
-                  Đăng ký
+                  {t('login.register')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -167,7 +189,7 @@ const Login = ({navigation}) => {
                   textAlign: 'center',
                   marginTop: 20,
                 }}>
-                Quên mật khẩu
+                {t("login.forgotPassword")}
               </Text>
             </TouchableOpacity>
           </View>

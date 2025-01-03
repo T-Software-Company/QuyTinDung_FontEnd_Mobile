@@ -48,25 +48,6 @@ const LanguageSetting = ({navigation}) => {
       height: '100%',
     },
 
-    containHeading: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      paddingHorizontal: 20,
-      alignItems: 'center',
-    },
-    heading: {
-      fontSize: 18,
-      fontWeight: 'bold',
-      color: '#1e1e2d',
-    },
-    borderArrow: {
-      width: 42,
-      height: 42,
-      alignItems: 'flex-start',
-      justifyContent: 'center',
-    },
-
     body: {
       marginTop: 16,
       paddingHorizontal: 20,
@@ -113,7 +94,7 @@ const LanguageSetting = ({navigation}) => {
       alignItems: 'center',
       justifyContent: 'center',
       marginRight: 10,
-      padding: 3,
+      padding: 4,
     },
     radioFill: {
       width: '100%',
@@ -122,16 +103,11 @@ const LanguageSetting = ({navigation}) => {
       borderRadius: 7,
     },
 
-    radioSelected: {},
     label: {
       fontSize: 16,
       color: theme.text,
     },
-    selectedText: {
-      marginTop: 20,
-      fontSize: 16,
-      fontStyle: 'italic',
-    },
+
   });
 
   return (

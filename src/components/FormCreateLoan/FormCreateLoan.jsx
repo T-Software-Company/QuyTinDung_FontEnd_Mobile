@@ -10,21 +10,25 @@ const FormCreateLoan = ({theme}) => {
 
   const {t} = useTranslation();
 
+  const notification = {
+    vi: 'Bạn đã tạo khoản vay thành công.\nVui lòng chờ nhân viên hỗ trợ tư vấn và xác nhận.',
+    en: 'Your loan has been created successfully.\nPlease wait for staff support and confirmation.'
+  };
+
   const rates = [
     {
       value: '1',
-      label: '1 tháng',
+      label: currentLanguage === 'vi' ? '1 tháng' : '1 month',
       rate: '12%',
     },
     {
       value: '2',
-      label: '3 tháng',
+      label: currentLanguage === 'vi' ? '3 tháng' : '3 months',
       rate: '10.5%',
     },
-
     {
       value: '3',
-      label: '12 tháng',
+      label: currentLanguage === 'vi' ? '12 tháng' : '12 months',
       rate: '8%',
     },
   ];
@@ -32,31 +36,30 @@ const FormCreateLoan = ({theme}) => {
   const target_loan = [
     {
       value: '1',
-      label: 'Mua nhà',
+      label: currentLanguage === 'vi' ? 'Mua nhà' : 'Buy house',
     },
     {
       value: '2',
-      label: 'Mua ô tô',
+      label: currentLanguage === 'vi' ? 'Mua ô tô' : 'Buy car',
     },
-
     {
       value: '3',
-      label: 'Vay tiêu dùng',
+      label: currentLanguage === 'vi' ? 'Vay tiêu dùng' : 'Consumer loan',
     },
   ];
 
   const frequency_pay = [
     {
       value: '1',
-      label: 'Hàng tuần',
+      label: currentLanguage === 'vi' ? 'Hàng tuần' : 'Weekly',
     },
     {
       value: '2',
-      label: 'Hàng tháng',
+      label: currentLanguage === 'vi' ? 'Hàng tháng' : 'Monthly',
     },
     {
       value: '3',
-      label: '2 tháng',
+      label: currentLanguage === 'vi' ? '2 tháng' : '2 months',
     },
   ];
 
@@ -202,12 +205,11 @@ const FormCreateLoan = ({theme}) => {
       </View>
       <TouchableOpacity
         style={styles.btn}
-        onPress={() =>
-          Alert.alert(
-            'Thông báo',
-            'Bạn đã tạo khoản vay thành công.\nVui lòng chờ nhân viên hỗ trợ tư vấn và xác nhận.',
-          )
-        }>
+        onPress={() => {
+          const message = currentLanguage === 'vi' ? notification.vi : notification.en;
+          // Handle showing notification message here
+          Alert.alert(currentLanguage === "vi" ? 'Thông báo': "Notification", message);
+        }}>
         <Text
           style={[styles.textWhite, {fontWeight: 'bold', textAlign: 'center'}]}>
           {t('formCreateLoan.submit')}

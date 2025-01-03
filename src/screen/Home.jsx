@@ -1,5 +1,5 @@
 import {SafeAreaView, StyleSheet, View, ScrollView, Alert} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Header from '../components/Header/Header';
 import ButtonShortCut from '../components/ButtonShortCut/ButtonShortCut';
 import WrapProductHome from '../components/WrapProductHome/WrapProductHome';
@@ -8,10 +8,34 @@ import BoxTotalNav from '../components/BoxTotalNav/BoxTotalNav';
 import {useTranslation} from 'react-i18next';
 import {AppIcons} from '../icons';
 import {useTheme} from '../context/ThemeContext';
+import {fetchProtectedData} from '../api/apiService';
+import {useAuth} from '../context/AuthContext';
 
 const Home = ({navigation}) => {
   const {theme} = useTheme();
   const {t} = useTranslation();
+  const {isAuthenticated, login} = useAuth();
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigation.replace('Login');
+      return;
+    }
+    loadData();
+  }, [isAuthenticated]);
+
+  const loadData = async () => {
+    const result = await fetchProtectedData('userinfo');
+    if (result) {
+      setData(result);
+    } else {
+      Alert.alert('Error', 'Failed to fetch data');
+    }
+  };
+  console.log('HomePage: ', isAuthenticated);
+  console.log('Data: ', data);
+
   return (
     <SafeAreaView style={[styles.view, {backgroundColor: theme.background}]}>
       <View style={styles.container}>

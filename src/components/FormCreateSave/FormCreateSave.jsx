@@ -42,27 +42,26 @@ const FormCreateSave = () => {
   const method_extend = [
     {
       value: '1',
-      label: 'Gộp cả lãi',
+      label: t('formCreateSave.renewalMethods.includeInterest'),
     },
     {
       value: '2',
-      label: 'Trả lãi gốc',
+      label: t('formCreateSave.renewalMethods.principalOnly'),
     },
-
     {
       value: '3',
-      label: 'Trả lãi hàng tháng',
+      label: t('formCreateSave.renewalMethods.monthlyInterest'),
     },
   ];
 
   const method_pay = [
     {
       value: '1',
-      label: 'Online',
+      label: t('formCreateSave.paymentMethods.online'),
     },
     {
       value: '2',
-      label: `${t('formCreateSave.staff')}`,
+      label: t('formCreateSave.paymentMethods.counter'),
     },
   ];
 

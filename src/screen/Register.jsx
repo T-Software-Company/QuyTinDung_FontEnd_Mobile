@@ -13,6 +13,7 @@ import React, {useState} from 'react';
 import {AppIcons} from '../icons';
 import {useTheme} from '../context/ThemeContext';
 import FieldInputLogin from '../components/FieldInputLogin/FieldInputLogin';
+import {useTranslation} from 'react-i18next';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -28,6 +29,8 @@ const Register = ({navigation}) => {
   const [invisible, setInvisible] = useState(true);
   const [invisibleConfirm, setInvisibleConfirm] = useState(true);
   const {theme} = useTheme();
+  const {t} = useTranslation();
+
 
   const handleChange = (field, value) => {
     setFormData(prev => ({
@@ -52,33 +55,33 @@ const Register = ({navigation}) => {
     const {name, phone, email, password, confirmPassword} = formData;
 
     if (!name || !phone || !email || !password || !confirmPassword) {
-      Alert.alert('Thông báo', 'Vui lòng nhập đầy đủ thông tin!');
+      Alert.alert(t('notification.title'), t('register.errors.missingFields'));
       return;
     }
 
     if (!isValidEmail(email)) {
-      Alert.alert('Thông báo', 'Email không hợp lệ!');
+      Alert.alert(t('notification.title'), t('register.errors.invalidEmail'));
       return;
     }
 
     if (!isValidPhoneNumber(phone)) {
-      Alert.alert('Thông báo', 'Số điện thoại không hợp lệ!');
+      Alert.alert(t('notification.title'), t('register.errors.invalidPhone'));
       return;
     }
 
     if (password.length < 6) {
-      Alert.alert('Thông báo', 'Mật khẩu phải có ít nhất 6 ký tự!');
+      Alert.alert(t('notification.title'), t('register.errors.passwordLength'));
       return;
     }
 
     if (password !== confirmPassword) {
-      Alert.alert('Thông báo', 'Mật khẩu và xác nhận mật khẩu không khớp!');
+      Alert.alert(t('notification.title'), t('register.errors.passwordMismatch'));
       return;
     }
 
     Alert.alert(
-      'Thông báo',
-      'Đăng ký thành công!',
+      t('notification.title'),
+      t('register.success'),
       [
         {
           text: 'OK',
@@ -136,22 +139,22 @@ const Register = ({navigation}) => {
             paddingHorizontal: 20,
             marginTop: 0.1 * windowHeight,
           }}>
-          <Text style={styles.title}>Đăng Ký</Text>
+          <Text style={styles.title}>{t('register.title')}</Text>
 
           <View>
             <FieldInputLogin
-              name={'Họ và tên'}
+              name={t('register.name')}
               iconSource={AppIcons.email}
-              placeholder={'Họ và tên'}
+              placeholder={t('register.name')}
               onSetValue={value => handleChange('name', value)}
               value={formData.name}
               theme={theme}
             />
 
             <FieldInputLogin
-              name={'Số điện thoại'}
+              name={t('register.phone')}
               iconSource={AppIcons.phone}
-              placeholder={'Số điện thoại'}
+              placeholder={t('register.phone')}
               onSetValue={value => handleChange('phone', value)}
               value={formData.phone}
               theme={theme}
@@ -159,18 +162,18 @@ const Register = ({navigation}) => {
             />
 
             <FieldInputLogin
-              name={'Email'}
+              name={t('register.email')}
               iconSource={AppIcons.email}
-              placeholder={'Email'}
+              placeholder={t('register.email')}
               onSetValue={value => handleChange('email', value)}
               value={formData.email}
               theme={theme}
               keyboardType={'email-address'}
             />
             <FieldInputLogin
-              name={'Mật khẩu'}
+              name={t('register.password')}
               iconSource={AppIcons.password}
-              placeholder={'Mật khẩu'}
+              placeholder={t('register.password')}
               onSetValue={value => handleChange('password', value)}
               value={formData.password}
               theme={theme}
@@ -179,9 +182,9 @@ const Register = ({navigation}) => {
               touchEyes={true}
             />
             <FieldInputLogin
-              name={'Xác nhận mật khẩu'}
+              name={t('register.confirmPassword')}
               iconSource={AppIcons.password}
-              placeholder={'Xác nhận mật khẩu'}
+              placeholder={t('register.confirmPassword')}
               onSetValue={value => handleChange('confirmPassword', value)}
               value={formData.confirmPassword}
               theme={theme}
@@ -192,11 +195,11 @@ const Register = ({navigation}) => {
           </View>
           <View>
             <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-              <Text style={styles.textButton}>Đăng Ký</Text>
+              <Text style={styles.textButton}>{t("register.submit")}</Text>
             </TouchableOpacity>
             <View style={styles.optionsNew}>
               <Text style={{color: theme.noteText, fontSize: 14}}>
-                Bạn đã có tài khoản.{' '}
+                {t("register.haveAccount")}{' '}
               </Text>
               <TouchableOpacity
                 onPress={() => {
@@ -208,7 +211,7 @@ const Register = ({navigation}) => {
                     fontWeight: 'bold',
                     fontSize: 14,
                   }}>
-                  Đăng nhập
+                  {t("register.login")}
                 </Text>
               </TouchableOpacity>
             </View>

@@ -13,10 +13,14 @@ import Header from '../components/Header/Header';
 import FormDeposit from '../components/FormDeposit/FormDeposit';
 import {useTranslation} from 'react-i18next';
 import {useTheme} from '../context/ThemeContext';
+import i18n from '../../i18n';
+
 
 const Deposit = ({navigation}) => {
   const {t} = useTranslation();
   const {theme} = useTheme();
+  const currentLanguage = i18n.language;
+
 
   return (
     <SafeAreaView style={[styles.view, {backgroundColor: theme.background}]}>

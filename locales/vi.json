@@ -1,5 +1,48 @@
 {
     "welcome": "Chào mừng đến với ứng dụng",
+    "login": {
+        "title": "Đăng nhập",
+        "username": "Email / Số điện thoại",
+        "password": "Mật khẩu",
+        "submit": "Đăng nhập",
+        "forgotPassword": "Quên mật khẩu?",
+        "register": "Đăng ký",
+        "newUser": "Bạn đang là người mới.",
+        "errors": {
+            "missingFields": "Vui lòng nhập đầy đủ thông tin!",
+            "invalidEmail": "Email không hợp lệ!",
+            "passwordLength": "Mật khẩu phải có ít nhất 6 ký tự!"
+        }
+    },
+    "register": {
+        "title": "Đăng ký",
+        "name":"Họ và tên",
+        "email": "Email",
+        "phone": "Số điện thoại",
+        "password": "Mật khẩu",
+        "confirmPassword": "Xác nhận mật khẩu",
+        "submit": "Đăng ký",
+        "login": "Đăng nhập",
+        "haveAccount": "Bạn đã có tài khoản.",
+        "errors": {
+            "missingFields": "Vui lòng nhập đầy đủ thông tin!",
+            "invalidEmail": "Email không hợp lệ!",
+            "invalidPhone": "Số điện thoại không hợp lệ!",
+            "passwordLength": "Mật khẩu phải có ít nhất 6 ký tự!",
+            "passwordMismatch": "Mật khẩu và xác nhận mật khẩu không khớp!"
+        },
+        "success": "Đăng ký thành công!"
+    },
+    "forgetPassword": {
+        "title": "Quên mật khẩu",
+        "email": "Email / Số điện thoại",
+        "identityNumber": "Số CCCD của bạn",
+        "submit": "Quên mật khẩu",
+        "remember": "Bạn đã nhớ lại mật khẩu.",
+        "login": "Đăng nhập",
+        "notification": "Thông báo",
+        "otpSent": "Chúng tôi đã gửi OTP về số điện thoại của bạn"
+    },
     "navbar": {
         "home": "Trang chủ",
         "save": "Tiết kiệm",
@@ -84,7 +127,16 @@
         "selectPaymentMethod": "Chọn phương thức thanh toán",
         "submit": "Gửi",
         "month": "tháng",
-        "staff": "Tại quầy"   
+        "staff": "Tại quầy",
+        "renewalMethods": {
+            "includeInterest": "Gộp cả lãi",
+            "principalOnly": "Trả lãi gốc",
+            "monthlyInterest": "Trả lãi hàng tháng"
+        },
+        "paymentMethods": {
+            "online": "Online",
+            "counter": "Tại quầy"
+        }
     },
     "formCreateLoan": {
         "title": "Tạo khoản vay",
@@ -107,16 +159,39 @@
     },
     "deposit": {
         "title": "Nạp tiền",
-        "depositAmount": "Số tiền cần nạp",
-        "depositRange": "Nhập số tiền cần nạp",
-        "submit": "Nạp tiền"
+        "scanQR": "Quét mã QR",
+        "transferFromBank": "Chuyển khoản từ ngân hàng",
+        "downloadQR": "Tải về",
+        "transferContent": "Nội dung chuyển tiền",
+        "required": "(Bắt buộc chính xác)",
+        "transferNote": "Chuyển khoản tiền từ bất kỳ ngân hàng nào để nộp vào Quỹ tín dụng.",
+        "accountFields": {
+            "accountNumber": "Số tài khoản",
+            "accountName": "Tên tài khoản", 
+            "branch": "Chi nhánh",
+            "content": "Nội dung"
+        }
     },
     "transfer": {
         "title": "Chuyển tiền",
-        "transferAmount": "Số tiền cần chuyển",
-        "transferRange": "Nhập số tiền cần chuyển",
-        "accountNumber": "Số tài khoản",
-        "submit": "Chuyển tiền"
+        "source": "Nguồn tiền",
+        "availableCash": "Tiền mặt khả dụng",
+        "availableLimit": "Tiền hạn mức khả dụng",
+        "transferInfo": "Chuyển tiền",
+        "receivingBank": "Ngân hàng nhận",
+        "accountNumber": "Số tài khoản/Số thẻ",
+        "accountPlaceholder": "Nhập số tài khoản/số thẻ",
+        "receiverName": "Tên người nhận",
+        "amount": "Số tiền chuyển",
+        "amountPlaceholder": "Nhập số tiền chuyển",
+        "content": "Nội dung chuyển khoản",
+        "contentPlaceholder": "Nhập nội dung chuyển khoản",
+        "saveReceiver": "Lưu người nhận",
+        "continue": "Tiếp tục",
+        "total": "Tổng tiền",
+        "selectBank": "Chọn ngân hàng",
+        "searchBank": "Tìm kiếm ngân hàng...",
+        "noResults": "Không tìm thấy kết quả"
     },
     "notification": {
         "title": "Thông báo",
@@ -152,5 +227,4 @@
         "confirmPassword": "Xác nhận mật khẩu",
         "submit": "Thay đổi"
     }
-    
-  }
+}

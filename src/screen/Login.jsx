@@ -23,8 +23,8 @@ const windowHeight = Dimensions.get('window').height;
 
 const Login = ({navigation}) => {
   const [formData, setFormData] = useState({
-    email: 'admin@gmail.com',
-    password: '123456789',
+    email: 'febif@mailinator.com',
+    password: '123456',
   });
   const [invisible, setInvisible] = useState(true);
   const {theme} = useTheme();
@@ -65,7 +65,7 @@ const Login = ({navigation}) => {
 
     const result = await login(email, password);
     
-    
+    console.log('Result: ', result);
     if (result === true) {
       navigation.navigate('HomeTabs');
     } else if (error) {

@@ -3,10 +3,16 @@ import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {AppIcons} from '../../icons';
 import {useTheme} from '../../context/ThemeContext';
+import {useAuth} from '../../context/AuthContext';
 
 const Header = ({Navbar, navigation}) => {
   const {t} = useTranslation();
   const {theme} = useTheme();
+  const {logout} = useAuth();
+
+  const handleLogout = async () => {
+    await logout();
+  };
 
   const styles = StyleSheet.create({
     containHeading: {
@@ -154,13 +160,8 @@ const Header = ({Navbar, navigation}) => {
       {/* Render header when navbar name setting */}
       {Navbar === 'Setting' && (
         <View style={styles.containHeading}>
-          <TouchableOpacity
-            style={styles.borderArrow}
-            onPress={() => navigation.navigate('Login')}>
-            <Image
-              source={AppIcons.logOut}
-              style={styles.icon}
-            />
+          <TouchableOpacity style={styles.borderArrow} onPress={handleLogout}>
+            <Image source={AppIcons.logOut} style={styles.icon} />
           </TouchableOpacity>
           <View>
             <Text style={styles.heading}>{t('settings.title')}</Text>
@@ -182,7 +183,7 @@ const Header = ({Navbar, navigation}) => {
             <Image source={AppIcons.back} style={styles.icon} />
           </TouchableOpacity>
           <View>
-            <Text style={styles.heading}>{t("changePassword.title")}</Text>
+            <Text style={styles.heading}>{t('changePassword.title')}</Text>
           </View>
           <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
             <Image source={AppIcons.notification} style={styles.icon} />
@@ -233,7 +234,7 @@ const Header = ({Navbar, navigation}) => {
             <Image source={AppIcons.back} style={styles.icon} />
           </TouchableOpacity>
           <View>
-            <Text style={styles.heading}>{t("info.title")}</Text>
+            <Text style={styles.heading}>{t('info.title')}</Text>
           </View>
           <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
             <Image source={AppIcons.notification} style={styles.icon} />

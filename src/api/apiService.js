@@ -1,6 +1,7 @@
 import { getAccessToken } from '../../tokenStorage';
+import keycloakConfig from '../../keycloakConfig';
 
-const API_BASE_URL = 'http://localhost:8080/realms/MyAppRealm/protocol/openid-connect';
+const API_BASE_URL = `${keycloakConfig.url}/realms/${keycloakConfig.realm}/protocol/openid-connect`;
 
 export const fetchProtectedData = async (endpoint) => {
   try {

@@ -88,7 +88,7 @@ export const AuthProvider = ({children}) => {
         data: params.toString(),
       });
 
-      // console.log('Login response:', response);
+      console.log('Login response:', response);
       if (response.data.access_token) {
         await saveAccessToken(response.data.access_token);
         await saveRefreshToken(response.data.refresh_token);
@@ -106,9 +106,9 @@ export const AuthProvider = ({children}) => {
       }
       throw new Error('No access token in response');
     } catch (error) {
-      // console.log('Login error:', error);
+      console.log('Login error:', error.response);
       setError(error);
-      // console.log(error.response.data);
+      console.log(error.response.data);
       if (error.response?.data?.error === 'invalid_grant') {
         if (error.response?.data?.error_description === 'Account is not fully set up') {
           setNeedsAccountSetup(true);

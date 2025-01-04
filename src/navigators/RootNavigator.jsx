@@ -24,8 +24,6 @@ import QRScannerApp from '../screen/QRpage';
 import ResultQRApp from '../screen/ResultQR';
 import NotificationScanScreen from '../screen/NotificationScan';
 
-
-
 import LoginScreen from '../screen/Login';
 import ForgetPasswordScreen from '../screen/ForgetPassword';
 import RegisterScreen from '../screen/Register';
@@ -40,7 +38,7 @@ const Tab = createBottomTabNavigator();
 const MyTabs = () => {
   const {t} = useTranslation();
   const {theme} = useTheme();
-  
+
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
@@ -76,7 +74,11 @@ const MyTabs = () => {
                 source={iconSource}
                 style={[
                   styles.icon,
-                  {tintColor: focused ? theme.iconColorActive : theme.iconColor},
+                  {
+                    tintColor: focused
+                      ? theme.iconColorActive
+                      : theme.iconColor,
+                  },
                 ]}
               />
               <Text
@@ -84,7 +86,7 @@ const MyTabs = () => {
                   styles.tabLabel,
                   {
                     color: focused ? theme.iconColorActive : theme.iconColor,
-                    fontSize: 10
+                    fontSize: 10,
                   },
                 ]}>
                 {route.name}
@@ -134,7 +136,7 @@ export default RootComponent = function () {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Register"
+        initialRouteName="Login"
         screenOptions={{headerShown: false}}>
         <Stack.Screen name="HomeTabs" component={MyTabs} />
 
@@ -143,8 +145,10 @@ export default RootComponent = function () {
         <Stack.Screen name="ForgetPassword" component={ForgetPasswordScreen} />
         <Stack.Screen name="QrScreen" component={QRScannerApp} />
         <Stack.Screen name="ResultQR" component={ResultQRApp} />
-        <Stack.Screen name="NotificationScan" component={NotificationScanScreen} />
-
+        <Stack.Screen
+          name="NotificationScan"
+          component={NotificationScanScreen}
+        />
 
         <Stack.Screen name="InfoSave" component={InfoSaveScreen} />
         <Stack.Screen name="InfoLoan" component={InfoLoanScreen} />

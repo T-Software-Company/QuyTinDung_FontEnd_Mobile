@@ -79,18 +79,8 @@ const Register = ({navigation}) => {
       return;
     }
 
-    // Alert.alert(
-    //   t('notification.title'),
-    //   t('register.success'),
-    //   [
-    //     {
-    //       text: 'OK',
-    //       onPress: () => navigation.navigate('QrScreen'), // Chuyển hướng đến trang Success
-    //     },
-    //   ],
-    //   {cancelable: false},
-    // );
-    navigation.navigate('QrScreen')
+    // Thay đổi cách navigate để truyền formData
+    navigation.navigate('NotificationScan', { formData });
   };
 
   const styles = StyleSheet.create({

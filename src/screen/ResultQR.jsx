@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -10,75 +10,150 @@ import {
 } from 'react-native';
 import {useRoute} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
+import Header from '../components/Header/Header';
+import FieldInputLogin from '../components/FieldInputLogin/FieldInputLogin';
+import {useTranslation} from 'react-i18next';
+import {useTheme} from '../context/ThemeContext';
+import {AppIcons} from '../icons';
 
 const ResultQR = () => {
+  const {theme} = useTheme();
+  const {t} = useTranslation();
   const route = useRoute();
   const navigation = useNavigation();
-  const {qrData} = route.params;
+  const [form, setForm] = useState({});
+  const {formData, qrData} = route.params;
+
+  useEffect(() => {
+    setForm({
+      ...form,
+      phone: formData.phone,
+      email: formData.email,
+      idCccd: qrData[0],
+      name: qrData[1],
+      birthday: qrData[2],
+      gender: qrData[3],
+      address: qrData[4],
+      dateSupply: qrData[5],
+    });
+  }, [formData]);
+  console.log('FORM DATA: ', formData);
+  console.log('QR DATA: ', qrData);
+
+  const styles = StyleSheet.create({
+    view: {
+      flex: 1,
+      backgroundColor: theme.background,
+    },
+    container: {
+      width: '100%',
+      height: '100%',
+    },
+
+    body: {
+      paddingTop: 8,
+      marginTop: 12,
+      paddingHorizontal: 20,
+      paddingBottom: 8,
+    },
+
+    inputContainer: {
+      marginBottom: 16,
+    },
+    label: {
+      fontSize: 16,
+      marginBottom: 8,
+      color: '#333',
+    },
+    input: {
+      borderWidth: 1,
+      borderColor: '#ddd',
+      borderRadius: 8,
+      padding: 12,
+      fontSize: 16,
+      backgroundColor: '#f5f5f5',
+    },
+    backButton: {
+      padding: 10,
+      marginBottom: 20,
+    },
+    backText: {
+      fontSize: 16,
+      color: '#007AFF',
+    },
+  });
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView>
-        <Text style={styles.header}>QR Code Result</Text>
-        <TouchableOpacity 
-          style={styles.backButton} 
-          onPress={() => navigation.goBack()}
-        >
-          <Text style={styles.backText}>Back</Text>
-        </TouchableOpacity>
+    <SafeAreaView style={styles.view}>
+      <View style={styles.container}>
+        <Header Navbar="ConfirmInfo" navigation={navigation} />
+        <ScrollView style={styles.body}>
+          {/* Form data fields */}
+          <FieldInputLogin
+            name="Email"
+            iconSource={AppIcons.email}
+            value={form.email}
+            editable={false}
+            theme={theme}
+          />
+          <FieldInputLogin
+            name="Số điện thoại"
+            iconSource={AppIcons.phone}
+            value={form.phone}
+            editable={false}
+            theme={theme}
+          />
+          <FieldInputLogin
+            name="Số CCCD"
+            iconSource={AppIcons.email}
+            value={form.idCccd}
+            editable={false}
+            theme={theme}
+          />
 
-        {qrData.map((item, index) => (
-          <View key={index} style={styles.inputContainer}>
-            <Text style={styles.label}>Item {index + 1}</Text>
-            <TextInput
-              style={styles.input}
-              value={item}
-              editable={false}
-              multiline
-            />
-          </View>
-        ))}
-      </ScrollView>
+          <FieldInputLogin
+            name="Họ và tên"
+            iconSource={AppIcons.email}
+            value={form.name}
+            editable={false}
+            theme={theme}
+          />
+
+          <FieldInputLogin
+            name="Ngày sinh"
+            iconSource={AppIcons.email}
+            value={form.birthday}
+            editable={false}
+            theme={theme}
+          />
+
+          <FieldInputLogin
+            name="Giới tính"
+            iconSource={AppIcons.email}
+            value={form.gender}
+            editable={false}
+            theme={theme}
+          />
+
+          <FieldInputLogin
+            name="Địa chỉ"
+            iconSource={AppIcons.email}
+            value={form.address}
+            editable={false}
+            theme={theme}
+          />
+
+          <FieldInputLogin
+            name="Ngày cấp"
+            iconSource={AppIcons.email}
+            value={form.dateSupply}
+            editable={false}
+            theme={theme}
+          />
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    padding: 16,
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  inputContainer: {
-    marginBottom: 16,
-  },
-  label: {
-    fontSize: 16,
-    marginBottom: 8,
-    color: '#333',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    backgroundColor: '#f5f5f5',
-  },
-  backButton: {
-    padding: 10,
-    marginBottom: 20,
-  },
-  backText: {
-    fontSize: 16,
-    color: '#007AFF',
-  },
-});
 
 export default ResultQR;

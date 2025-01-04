@@ -15,13 +15,15 @@ import i18n from '../../i18n';
 import {useTranslation} from 'react-i18next';
 import {useTheme} from '../context/ThemeContext';
 import {AppIcons} from '../icons';
+import {useRoute} from '@react-navigation/native';
 
 const Notification = ({navigation}) => {
   const currentLanguage = i18n.language;
+  const route = useRoute();
+  const {formData} = route.params; // Lấy formData từ Register
   const {t} = useTranslation();
   const {theme} = useTheme();
 
-  
   return (
     <SafeAreaView style={[styles.view, {backgroundColor: theme.background}]}>
       <View style={styles.container}>
@@ -38,10 +40,15 @@ const Notification = ({navigation}) => {
 
             <View>
               <Text style={{color: theme.text, lineHeight: 24, fontSize: 13}}>
-                Bạn sẽ chịu trách nhiệm trước pháp luật về việc cung cấp  
-                <Text style={{fontWeight: 600}}> CCCD gắn chip là bản gốc, chính chủ, còn hiệu lực</Text>
+                Bạn sẽ chịu trách nhiệm trước pháp luật về việc cung cấp
+                <Text style={{fontWeight: 600}}>
+                  CCCD gắn chip là bản gốc, chính chủ, còn hiệu lực
+                </Text>
               </Text>
-              <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("QrScreen")}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => navigation.navigate('QrScreen', {formData})}>
+                {/* Sửa cách truyền params */}
                 <Text style={styles.textButton}>
                   {t('notificationScan.button')}
                 </Text>

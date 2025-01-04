@@ -14,7 +14,7 @@ import {
   useCameraDevice,
   useCameraPermission,
 } from 'react-native-vision-camera';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import Header from '../components/Header/Header';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -23,6 +23,11 @@ const scanAreaSize = SCREEN_WIDTH * 0.7; // Scanner area is 70% of screen width
 
 const QRScannerApp = () => {
   const navigation = useNavigation();
+  const route = useRoute();
+  const { formData } = route.params; // Lấy formData từ NotificationScan
+  
+  console.log("QR Screen formData:", formData); // Debug log
+
   const [scannedItems, setScannedItems] = useState([]);
   const [lastScannedCode, setLastScannedCode] = useState(null);
   const [isScanning, setIsScanning] = useState(true);
@@ -60,16 +65,19 @@ const QRScannerApp = () => {
   const handleCodeScanned = codes => {
     if (!isScanning || codes.length === 0) return;
 
-    console.log('Scanned codes:', codes);
     const currentCode = codes[0].value;
-    console.log(currentCode)
-    
     if (currentCode === lastScannedCode) return;
 
     try {
-      const processedData = processQRData(currentCode);
+      const qrData = processQRData(currentCode);
       setIsScanning(false);
-      navigation.navigate('ResultQR', { qrData: processedData });
+      
+      console.log("Navigating to ResultQR with:", { formData, qrData }); // Debug log
+      
+      navigation.navigate('ResultQR', { 
+        formData: formData, // Đảm bảo truyền đúng formData
+        qrData: qrData 
+      });
       
       setTimeout(() => {
         setIsScanning(true);

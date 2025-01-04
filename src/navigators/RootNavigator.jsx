@@ -134,7 +134,7 @@ export default RootComponent = function () {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="NotificationScan"
+        initialRouteName="Register"
         screenOptions={{headerShown: false}}>
         <Stack.Screen name="HomeTabs" component={MyTabs} />
 

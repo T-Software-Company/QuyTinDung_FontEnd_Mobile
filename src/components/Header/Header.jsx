@@ -407,6 +407,23 @@ const Header = ({Navbar, navigation}) => {
           </TouchableOpacity>
         </View>
       )}
+
+      {/* Render header when navbar name ConfirmInfo */}
+      {Navbar === 'ConfirmInfo' && (
+        <View style={[styles.containHeading]}>
+          <TouchableOpacity
+            style={[styles.noBorderArrow]}
+            onPress={() => navigation.goBack()}>
+            <Image source={AppIcons.back} style={styles.icon} />
+          </TouchableOpacity>
+          <View>
+            <Text style={styles.heading}>Xác thực thông tin</Text>
+          </View>
+          <TouchableOpacity style={[styles.noBorderArrow, styles.hidden]}>
+            
+          </TouchableOpacity>
+        </View>
+      )}
     </>
   );
 };

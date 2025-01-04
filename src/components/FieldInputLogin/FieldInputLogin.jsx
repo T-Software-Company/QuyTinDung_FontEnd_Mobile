@@ -21,6 +21,8 @@ const FieldInputLogin = ({
   secureVisible,
   onPressIcon,
   touchEyes,
+  editable
+
 }) => {
   const styles = StyleSheet.create({
     heading: {
@@ -66,6 +68,8 @@ const FieldInputLogin = ({
           value={value}
           style={styles.textInput}
           autoCapitalize="none"
+          editable={editable}
+
         />
         {touchEyes && (
           <TouchableOpacity style={styles.iconEyes} onPress={onPressIcon}>

@@ -169,7 +169,7 @@
         "phone": "Phone number",
         "password": "Password",
         "confirmPassword": "Confirm password",
-        "submit": "Register",
+        "submit": "Next",
         "login": "Login",
         "haveAccount": "Already have an account.",
         "errors": {

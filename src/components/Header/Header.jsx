@@ -373,6 +373,40 @@ const Header = ({Navbar, navigation}) => {
           </TouchableOpacity>
         </View>
       )}
+
+      {/* Render header when navbar name NotificationScan */}
+      {Navbar === 'NotificationScan' && (
+        <View style={styles.containHeading}>
+          <TouchableOpacity
+            style={[styles.noBorderArrow]}
+            onPress={() => navigation.goBack()}>
+            <Image source={AppIcons.back} style={styles.icon} />
+          </TouchableOpacity>
+          <View>
+            <Text style={styles.heading}>{t('notificationScan.title')}</Text>
+          </View>
+          <TouchableOpacity style={[styles.noBorderArrow, styles.hidden]}>
+            
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {/* Render header when navbar name ScanQR */}
+      {Navbar === 'ScanQR' && (
+        <View style={[styles.containHeading, {paddingTop: 50, backgroundColor: "rgba(0,0,0,0.6)"}]}>
+          <TouchableOpacity
+            style={[styles.noBorderArrow]}
+            onPress={() => navigation.goBack()}>
+            <Image source={AppIcons.back} style={styles.icon} />
+          </TouchableOpacity>
+          <View>
+            <Text style={styles.heading}>{t('notificationScan.title')}</Text>
+          </View>
+          <TouchableOpacity style={[styles.noBorderArrow, styles.hidden]}>
+            
+          </TouchableOpacity>
+        </View>
+      )}
     </>
   );
 };

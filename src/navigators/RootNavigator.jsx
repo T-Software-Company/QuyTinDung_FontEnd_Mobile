@@ -20,6 +20,11 @@ import InfoPersonScreen from '../screen/InfoPerson';
 import LanguageSettingScreen from '../screen/LanguageSetting';
 import DarkModeSettingScreen from '../screen/DarkModeSetting';
 import ChangePasswordScreen from '../screen/ChangePassword';
+import QRScannerApp from '../screen/QRpage';
+import ResultQRApp from '../screen/ResultQR';
+import NotificationScanScreen from '../screen/NotificationScan';
+
+
 
 import LoginScreen from '../screen/Login';
 import ForgetPasswordScreen from '../screen/ForgetPassword';
@@ -129,13 +134,17 @@ export default RootComponent = function () {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="HomeTabs"
+        initialRouteName="NotificationScan"
         screenOptions={{headerShown: false}}>
         <Stack.Screen name="HomeTabs" component={MyTabs} />
 
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="ForgetPassword" component={ForgetPasswordScreen} />
+        <Stack.Screen name="QrScreen" component={QRScannerApp} />
+        <Stack.Screen name="ResultQR" component={ResultQRApp} />
+        <Stack.Screen name="NotificationScan" component={NotificationScanScreen} />
+
 
         <Stack.Screen name="InfoSave" component={InfoSaveScreen} />
         <Stack.Screen name="InfoLoan" component={InfoLoanScreen} />

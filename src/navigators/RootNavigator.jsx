@@ -27,6 +27,7 @@ import NotificationScanScreen from '../screen/NotificationScan';
 import LoginScreen from '../screen/Login';
 import ForgetPasswordScreen from '../screen/ForgetPassword';
 import RegisterScreen from '../screen/Register';
+import RegisterAddressScreen from '../screen/RegisterAddress';
 
 import Footer from '../components/Footer/Footer';
 import {useTranslation} from 'react-i18next';
@@ -136,12 +137,13 @@ export default RootComponent = function () {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Login"
+        initialRouteName="RegisterAddress"
         screenOptions={{headerShown: false}}>
         <Stack.Screen name="HomeTabs" component={MyTabs} />
 
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
+        <Stack.Screen name="RegisterAddress" component={RegisterAddressScreen} />
         <Stack.Screen name="ForgetPassword" component={ForgetPasswordScreen} />
         <Stack.Screen name="QrScreen" component={QRScannerApp} />
         <Stack.Screen name="ResultQR" component={ResultQRApp} />

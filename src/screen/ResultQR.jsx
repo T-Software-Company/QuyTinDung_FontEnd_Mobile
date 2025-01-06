@@ -15,30 +15,86 @@ import FieldInputLogin from '../components/FieldInputLogin/FieldInputLogin';
 import {useTranslation} from 'react-i18next';
 import {useTheme} from '../context/ThemeContext';
 import {AppIcons} from '../icons';
+import {useAuth} from '../context/AuthContext';
 
 const ResultQR = () => {
   const {theme} = useTheme();
   const {t} = useTranslation();
   const route = useRoute();
   const navigation = useNavigation();
-  const [form, setForm] = useState({});
-  const {formData, qrData} = route.params;
+  const [form, setForm] = useState({
+    firstName: 'Duc',
+    lastName: 'Pham',
+    fullName: '',
+    // phone: '0123456789',
+    // email: 'demo@gmail.com',
+    // password: '123456789',
+    address: 'Hà Nội',
+    identifyId: '123456789',
+    dateSupply: '01/01/2021',
+    
+    // info
+    gender: 'Nam',
+    ethnicity: 'Kinh',
+    religion: 'Không',
+    dateOfBirth: '01/01/1990',
+    nationality: 'Việt Nam',
+    placeOfBirth: 'Hà Nội',
+    permanentAddress: 'Hà Nội',
+    issueDate: '01/01/2021',
+    expirationDate: '01/01/2026',
+    issuingAuthority: 'Công an Hà Nội',
+    frontPhotoUrl: "https://i.imgur",
+    backPhotoUrl: "https://i.imgur",
+    legalDocType: "CCCD",
 
+
+    //address
+    country: "Việt Nam",
+    cityProvince: "Hà Nội",
+    district: "Cầu Giấy",
+    wardOrCommune: "Dịch Vọng",
+    streetAddress: "Số 1, Phố Dịch Vọng",
+
+  });
+  // const {formData, qrData} = route.params;
+  const {register, loading, error} = useAuth();
   useEffect(() => {
-    setForm({
+    setForm(prev => ({
+      ...prev,
+      username: prev.phone,
+      fullName: `${prev.firstName} ${prev.lastName}`.trim(),
+    }));
+  }, [form.firstName, form.lastName]);
+
+  // useEffect(() => {
+  //   setForm({
+  //     ...form,
+  //     phone: formData.phone,
+  //     email: formData.email,
+  //     idCccd: qrData[0],
+  //     name: qrData[1],
+  //     birthday: qrData[2],
+  //     gender: qrData[3],
+  //     address: qrData[4],
+  //     dateSupply: qrData[5],
+  //     password: formData.password,
+  //   });
+  // }, [formData]);
+  // console.log('FORM DATA: ', formData);
+  // console.log('QR DATA: ', qrData);
+
+  const handleRegister = async () => {
+    const userData = {
       ...form,
-      phone: formData.phone,
-      email: formData.email,
-      idCccd: qrData[0],
-      name: qrData[1],
-      birthday: qrData[2],
-      gender: qrData[3],
-      address: qrData[4],
-      dateSupply: qrData[5],
-    });
-  }, [formData]);
-  console.log('FORM DATA: ', formData);
-  console.log('QR DATA: ', qrData);
+    };
+
+    const result = await register(userData);
+    console.log('Result:', result);
+    // if (result) {
+    //   navigation.navigate('Login'); // Navigate to home on success
+    // }
+  };
 
   const styles = StyleSheet.create({
     view: {
@@ -50,7 +106,7 @@ const ResultQR = () => {
       height: '100%',
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: "space-between"
+      justifyContent: 'space-between',
     },
 
     body: {
@@ -96,7 +152,15 @@ const ResultQR = () => {
       color: '#fff',
       fontSize: 14,
       fontWeight: 'bold',
-    }
+    },
+    errorText: {
+      color: 'red',
+      marginBottom: 10,
+      textAlign: 'center',
+    },
+    buttonDisabled: {
+      opacity: 0.7,
+    },
   });
 
   return (
@@ -105,6 +169,20 @@ const ResultQR = () => {
         <Header Navbar="ConfirmInfo" navigation={navigation} />
         <ScrollView style={styles.body}>
           {/* Form data fields */}
+          <FieldInputLogin
+            name="Họ"
+            iconSource={AppIcons.email}
+            value={form.lastName}
+            editable={false}
+            theme={theme}
+          />
+          <FieldInputLogin
+            name="Tên"
+            iconSource={AppIcons.email}
+            value={form.firstName}
+            editable={false}
+            theme={theme}
+          />
           <FieldInputLogin
             name="Email"
             iconSource={AppIcons.email}
@@ -122,7 +200,7 @@ const ResultQR = () => {
           <FieldInputLogin
             name="Số CCCD"
             iconSource={AppIcons.email}
-            value={form.idCccd}
+            value={form.identifyId}
             editable={false}
             theme={theme}
           />
@@ -130,7 +208,7 @@ const ResultQR = () => {
           <FieldInputLogin
             name="Họ và tên"
             iconSource={AppIcons.email}
-            value={form.name}
+            value={form.fullName}
             editable={false}
             theme={theme}
           />
@@ -138,7 +216,7 @@ const ResultQR = () => {
           <FieldInputLogin
             name="Ngày sinh"
             iconSource={AppIcons.email}
-            value={form.birthday}
+            value={form.dateOfBirth}
             editable={false}
             theme={theme}
           />
@@ -166,9 +244,16 @@ const ResultQR = () => {
             editable={false}
             theme={theme}
           />
+
+          {error && <Text style={styles.errorText}>{error}</Text>}
         </ScrollView>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Tiếp tục</Text>
+        <TouchableOpacity
+          style={[styles.button, loading && styles.buttonDisabled]}
+          onPress={handleRegister}
+          disabled={loading}>
+          <Text style={styles.buttonText}>
+            {loading ? 'Đang xử lý...' : 'Đăng ký'}
+          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

@@ -20,7 +20,7 @@ const windowHeight = Dimensions.get('window').height;
 
 const Register = ({navigation}) => {
   const [formData, setFormData] = useState({
-    name: 'demo',
+    username: 'demo',
     phone: '0123456789',
     email: 'demo@gmail.com',
     password: '123456789',
@@ -52,9 +52,9 @@ const Register = ({navigation}) => {
   };
 
   const handleSubmit = () => {
-    const {name, phone, email, password, confirmPassword} = formData;
+    const {username, phone, email, password, confirmPassword} = formData;
 
-    if (!name || !phone || !email || !password || !confirmPassword) {
+    if (!username || !phone || !email || !password || !confirmPassword) {
       Alert.alert(t('notification.title'), t('register.errors.missingFields'));
       return;
     }
@@ -80,7 +80,7 @@ const Register = ({navigation}) => {
     }
 
     // Thay đổi cách navigate để truyền formData
-    navigation.navigate('NotificationScan', { formData });
+    navigation.navigate('RegisterAddress', { formData });
   };
 
   const styles = StyleSheet.create({
@@ -137,8 +137,8 @@ const Register = ({navigation}) => {
               name={t('register.name')}
               iconSource={AppIcons.email}
               placeholder={t('register.name')}
-              onSetValue={value => handleChange('name', value)}
-              value={formData.name}
+              onSetValue={value => handleChange('username', value)}
+              value={formData.username}
               theme={theme}
             />
 

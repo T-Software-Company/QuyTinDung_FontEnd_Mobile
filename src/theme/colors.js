@@ -10,6 +10,7 @@ export const lightTheme = {
   iconColorActive: '#007BFF',
   backgroundBox: '#f4f4f4',
   textActive: '#007BFF',
+  buttonSubmit: '#007BFF',
 
   //profit
   profit: '#18DD12',
@@ -38,6 +39,7 @@ export const darkTheme = {
   iconColorActive: '#007BFF',
   backgroundBox: '#444950',
   textActive: '#ffffff',
+  buttonSubmit: '#007BFF',
 
   //profit
   profit: '#76FA39',

@@ -48,6 +48,9 @@ const ResultQR = () => {
     container: {
       width: '100%',
       height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: "space-between"
     },
 
     body: {
@@ -81,6 +84,19 @@ const ResultQR = () => {
       fontSize: 16,
       color: '#007AFF',
     },
+    button: {
+      backgroundColor: theme.buttonSubmit,
+      padding: 20,
+      borderRadius: 16,
+      alignItems: 'center',
+      marginHorizontal: 20,
+      marginBottom: 16,
+    },
+    buttonText: {
+      color: '#fff',
+      fontSize: 14,
+      fontWeight: 'bold',
+    }
   });
 
   return (
@@ -151,6 +167,9 @@ const ResultQR = () => {
             theme={theme}
           />
         </ScrollView>
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonText}>Tiếp tục</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );

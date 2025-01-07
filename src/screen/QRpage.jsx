@@ -93,7 +93,7 @@ const QRScannerApp = () => {
       .map(item => item.trim()) // loại bỏ khoảng trắng đầu cuối
       .filter(item => item !== ''); // loại bỏ phần tử rỗng
 
-    console.log('QR Data Array:', dataArray); // Debug log
+    // console.log('QR Data Array:', dataArray); // Debug log
     // Format lại date ở index 2 (ngày sinh) và 5 (ngày cấp)
     if (dataArray.length > 5) {
       dataArray[2] = formatDate(dataArray[2]);
@@ -114,7 +114,7 @@ const QRScannerApp = () => {
       setIsScanning(false);
       setIsCameraActive(false); // Deactivate camera before navigation
 
-      console.log('Navigating to ResultQR with:', {formData, qrData}); // Debug log
+      // console.log('Navigating to ResultQR with:', {formData, qrData}); // Debug log
 
       navigation.navigate('ResultQR', {
         formData: formData,

@@ -25,14 +25,9 @@ const ResultQR = () => {
   const [form, setForm] = useState({
     firstName: 'Duc',
     lastName: 'Pham',
-    fullName: '',
-    // phone: '0123456789',
-    // email: 'demo@gmail.com',
-    // password: '123456789',
-    address: 'Hà Nội',
+    fullName: 'Pham Duc',
     identifyId: '123456789',
-    dateSupply: '01/01/2021',
-    
+
     // info
     gender: 'Nam',
     ethnicity: 'Kinh',
@@ -44,50 +39,49 @@ const ResultQR = () => {
     issueDate: '01/01/2021',
     expirationDate: '01/01/2026',
     issuingAuthority: 'Công an Hà Nội',
-    frontPhotoUrl: "https://i.imgur",
-    backPhotoUrl: "https://i.imgur",
-    legalDocType: "CCCD",
-
-
-    //address
-    country: "Việt Nam",
-    cityProvince: "Hà Nội",
-    district: "Cầu Giấy",
-    wardOrCommune: "Dịch Vọng",
-    streetAddress: "Số 1, Phố Dịch Vọng",
-
+    frontPhotoUrl: 'https://i.imgur',
+    backPhotoUrl: 'https://i.imgur',
+    legalDocType: 'CCCD',
   });
-  // const {formData, qrData} = route.params;
+  const {formData, qrData} = route.params;
   const {register, loading, error} = useAuth();
   useEffect(() => {
-    setForm(prev => ({
-      ...prev,
-      username: prev.phone,
-      fullName: `${prev.firstName} ${prev.lastName}`.trim(),
-    }));
-  }, [form.firstName, form.lastName]);
+    if (form.fullName) {
+      const nameParts = form.fullName.split(' ');
+      const lastName = nameParts[0];
+      const firstName = nameParts.slice(1).join(' ');
 
-  // useEffect(() => {
-  //   setForm({
-  //     ...form,
-  //     phone: formData.phone,
-  //     email: formData.email,
-  //     idCccd: qrData[0],
-  //     name: qrData[1],
-  //     birthday: qrData[2],
-  //     gender: qrData[3],
-  //     address: qrData[4],
-  //     dateSupply: qrData[5],
-  //     password: formData.password,
-  //   });
-  // }, [formData]);
-  // console.log('FORM DATA: ', formData);
-  // console.log('QR DATA: ', qrData);
+      setForm(prev => ({
+        ...prev,
+        firstName,
+        lastName,
+      }));
+    }
+  }, [form.fullName]);
+
+  console.log('FORM: ', form);
+
+  useEffect(() => {
+    setForm({
+      ...form,
+      username: formData.phone,
+      password: formData.password,
+      identifyId: qrData[0],
+      fullName: qrData[1],
+      dateOfBirth: qrData[2],
+      gender: qrData[3],
+      permanentAddress: qrData[4],
+      issueDate: qrData[5],
+    });
+  }, [formData]);
+  console.log('FORM DATA: ', formData);
+  console.log('QR DATA: ', qrData);
 
   const handleRegister = async () => {
     const userData = {
       ...form,
     };
+    console.log('User data:', userData);
 
     const result = await register(userData);
     console.log('Result:', result);
@@ -169,34 +163,7 @@ const ResultQR = () => {
         <Header Navbar="ConfirmInfo" navigation={navigation} />
         <ScrollView style={styles.body}>
           {/* Form data fields */}
-          <FieldInputLogin
-            name="Họ"
-            iconSource={AppIcons.email}
-            value={form.lastName}
-            editable={false}
-            theme={theme}
-          />
-          <FieldInputLogin
-            name="Tên"
-            iconSource={AppIcons.email}
-            value={form.firstName}
-            editable={false}
-            theme={theme}
-          />
-          <FieldInputLogin
-            name="Email"
-            iconSource={AppIcons.email}
-            value={form.email}
-            editable={false}
-            theme={theme}
-          />
-          <FieldInputLogin
-            name="Số điện thoại"
-            iconSource={AppIcons.phone}
-            value={form.phone}
-            editable={false}
-            theme={theme}
-          />
+
           <FieldInputLogin
             name="Số CCCD"
             iconSource={AppIcons.email}
@@ -222,6 +189,14 @@ const ResultQR = () => {
           />
 
           <FieldInputLogin
+            name="Nơi sinh"
+            iconSource={AppIcons.email}
+            value={form.placeOfBirth}
+            editable={true}
+            theme={theme}
+          />
+
+          <FieldInputLogin
             name="Giới tính"
             iconSource={AppIcons.email}
             value={form.gender}
@@ -230,9 +205,9 @@ const ResultQR = () => {
           />
 
           <FieldInputLogin
-            name="Địa chỉ"
+            name="Địa chỉ thường trú"
             iconSource={AppIcons.email}
-            value={form.address}
+            value={form.permanentAddress}
             editable={false}
             theme={theme}
           />
@@ -240,8 +215,48 @@ const ResultQR = () => {
           <FieldInputLogin
             name="Ngày cấp"
             iconSource={AppIcons.email}
-            value={form.dateSupply}
+            value={form.issueDate}
             editable={false}
+            theme={theme}
+          />
+
+          <FieldInputLogin
+            name="Ngày hết hạn"
+            iconSource={AppIcons.email}
+            value={form.expirationDate}
+            editable={true}
+            theme={theme}
+          />
+
+          <FieldInputLogin
+            name="Nơi cấp"
+            iconSource={AppIcons.email}
+            value={form.issuingAuthority}
+            editable={true}
+            theme={theme}
+          />
+
+          <FieldInputLogin
+            name="Tôn giáo"
+            iconSource={AppIcons.email}
+            value={form.religion}
+            editable={true}
+            theme={theme}
+          />
+
+          <FieldInputLogin
+            name="Dân tộc"
+            iconSource={AppIcons.email}
+            value={form.ethnicity}
+            editable={true}
+            theme={theme}
+          />
+
+          <FieldInputLogin
+            name="Quốc tịch"
+            iconSource={AppIcons.email}
+            value={form.nationality}
+            editable={true}
             theme={theme}
           />
 

@@ -137,7 +137,7 @@ export default RootComponent = function () {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="RegisterAddress"
+        initialRouteName="Register"
         screenOptions={{headerShown: false}}>
         <Stack.Screen name="HomeTabs" component={MyTabs} />
 

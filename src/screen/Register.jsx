@@ -20,7 +20,6 @@ const windowHeight = Dimensions.get('window').height;
 
 const Register = ({navigation}) => {
   const [formData, setFormData] = useState({
-    username: 'demo',
     phone: '0123456789',
     email: 'demo@gmail.com',
     password: '123456789',
@@ -30,7 +29,6 @@ const Register = ({navigation}) => {
   const [invisibleConfirm, setInvisibleConfirm] = useState(true);
   const {theme} = useTheme();
   const {t} = useTranslation();
-
 
   const handleChange = (field, value) => {
     setFormData(prev => ({
@@ -52,9 +50,9 @@ const Register = ({navigation}) => {
   };
 
   const handleSubmit = () => {
-    const {username, phone, email, password, confirmPassword} = formData;
+    const { phone, email, password, confirmPassword} = formData;
 
-    if (!username || !phone || !email || !password || !confirmPassword) {
+    if ( !phone || !email || !password || !confirmPassword) {
       Alert.alert(t('notification.title'), t('register.errors.missingFields'));
       return;
     }
@@ -75,12 +73,15 @@ const Register = ({navigation}) => {
     }
 
     if (password !== confirmPassword) {
-      Alert.alert(t('notification.title'), t('register.errors.passwordMismatch'));
+      Alert.alert(
+        t('notification.title'),
+        t('register.errors.passwordMismatch'),
+      );
       return;
     }
 
     // Thay đổi cách navigate để truyền formData
-    navigation.navigate('RegisterAddress', { formData });
+    navigation.navigate('RegisterAddress', {formData});
   };
 
   const styles = StyleSheet.create({
@@ -134,15 +135,6 @@ const Register = ({navigation}) => {
 
           <View>
             <FieldInputLogin
-              name={t('register.name')}
-              iconSource={AppIcons.email}
-              placeholder={t('register.name')}
-              onSetValue={value => handleChange('username', value)}
-              value={formData.username}
-              theme={theme}
-            />
-
-            <FieldInputLogin
               name={t('register.phone')}
               iconSource={AppIcons.phone}
               placeholder={t('register.phone')}
@@ -186,11 +178,11 @@ const Register = ({navigation}) => {
           </View>
           <View>
             <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-              <Text style={styles.textButton}>{t("register.submit")}</Text>
+              <Text style={styles.textButton}>{t('register.submit')}</Text>
             </TouchableOpacity>
             <View style={styles.optionsNew}>
               <Text style={{color: theme.noteText, fontSize: 14}}>
-                {t("register.haveAccount")}{' '}
+                {t('register.haveAccount')}{' '}
               </Text>
               <TouchableOpacity
                 onPress={() => {
@@ -202,7 +194,7 @@ const Register = ({navigation}) => {
                     fontWeight: 'bold',
                     fontSize: 14,
                   }}>
-                  {t("register.login")}
+                  {t('register.login')}
                 </Text>
               </TouchableOpacity>
             </View>

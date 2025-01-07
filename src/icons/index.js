@@ -28,6 +28,7 @@ export const AppIcons = {
   phone: require('../../assets/images/phone-icon.png'),
   eyesOpen: require('../../assets/images/eyes-icon.png'),
   eyesClose: require('../../assets/images/eyesclose-icon.png'),
+  location: require('../../assets/images/location-icon.png'),
 
   // Feature icons
   saveSent: require('../../assets/images/save-sent-icon.png'),

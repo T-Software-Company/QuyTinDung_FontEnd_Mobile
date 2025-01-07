@@ -106,7 +106,7 @@ const RegisterAddress = ({navigation, route}) => {
   return (
     <SafeAreaView style={styles.view}>
       <View style={styles.container}>
-        <Header Navbar="ConfirmInfo" navigation={navigation} />
+        <Header Navbar="ConfirmAddress" navigation={navigation} />
 
         <ScrollView style={styles.body}>
           <View>

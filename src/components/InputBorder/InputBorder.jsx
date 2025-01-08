@@ -10,7 +10,7 @@ import {
 import React from 'react';
 import {AppIcons} from '../../icons';
 
-const FieldInputLogin = ({
+const InputBorder = ({
   name,
   iconSource,
   placeholder,
@@ -21,8 +21,10 @@ const FieldInputLogin = ({
   secureVisible,
   onPressIcon,
   touchEyes,
-  editable
-
+  editable,
+  textContentType,
+  onPress,
+  pointerEvents
 }) => {
   const styles = StyleSheet.create({
     heading: {
@@ -48,29 +50,50 @@ const FieldInputLogin = ({
       paddingLeft: 40,
       paddingRight: 30,
       paddingBottom: 10,
-      color: theme.text,
+      color: editable ? theme.text : theme.noteText,
       paddingVertical: 0,
       textAlignVertical: 'center',
     },
+    inputContainer: {
+      position: 'relative',
+    },
+    touchableContainer: {
+      width: '100%',
+    }
   });
+
+  const inputElement = (
+    <TextInput
+      placeholder={placeholder}
+      placeholderTextColor={theme.noteText}
+      keyboardType={keyboardType}
+      onChangeText={onSetValue}
+      secureTextEntry={secureVisible}
+      value={value}
+      style={styles.textInput}
+      autoCapitalize="none"
+      editable={editable}
+      textContentType={textContentType}
+      pointerEvents={pointerEvents}
+    />
+  );
 
   return (
     <View style={{marginBottom: 20}}>
       <Text style={styles.heading}>{name}</Text>
-      <View>
+      <View style={styles.inputContainer}>
         <Image source={iconSource} style={styles.icon} />
-        <TextInput
-          placeholder={placeholder}
-          placeholderTextColor={theme.noteText}
-          keyboardType={keyboardType}
-          onChangeText={onSetValue}
-          secureTextEntry={secureVisible}
-          value={value}
-          style={styles.textInput}
-          autoCapitalize="none"
-          editable={editable}
-
-        />
+        {onPress ? (
+          <TouchableOpacity 
+            onPress={onPress} 
+            activeOpacity={0.7}
+            style={styles.touchableContainer}
+          >
+            {inputElement}
+          </TouchableOpacity>
+        ) : (
+          inputElement
+        )}
         {touchEyes && (
           <TouchableOpacity style={styles.iconEyes} onPress={onPressIcon}>
             {secureVisible ? (
@@ -96,4 +119,4 @@ const FieldInputLogin = ({
   );
 };
 
-export default FieldInputLogin;
+export default InputBorder;

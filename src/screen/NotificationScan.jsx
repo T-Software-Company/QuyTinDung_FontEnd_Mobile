@@ -23,6 +23,7 @@ const Notification = ({navigation}) => {
   const {formData} = route.params; // Lấy formData từ Register
   const {t} = useTranslation();
   const {theme} = useTheme();
+  console.log('Notification formData:', formData); // Debug log
 
   return (
     <SafeAreaView style={[styles.view, {backgroundColor: theme.background}]}>
@@ -40,7 +41,7 @@ const Notification = ({navigation}) => {
 
             <View>
               <Text style={{color: theme.text, lineHeight: 24, fontSize: 13}}>
-                Bạn sẽ chịu trách nhiệm trước pháp luật về việc cung cấp
+                Bạn sẽ chịu trách nhiệm trước pháp luật về việc cung cấp{' '}
                 <Text style={{fontWeight: 600}}>
                   CCCD gắn chip là bản gốc, chính chủ, còn hiệu lực
                 </Text>

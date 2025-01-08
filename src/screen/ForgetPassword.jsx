@@ -14,7 +14,7 @@ import React, {useState} from 'react';
 import {AppIcons} from '../icons';
 import {useTheme} from '../context/ThemeContext';
 import {useTranslation} from 'react-i18next';
-import FieldInputLogin from '../components/FieldInputLogin/FieldInputLogin';
+import InputBorder from '../components/InputBorder/InputBorder';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -121,7 +121,7 @@ const ForgetPassword = ({navigation}) => {
           <Text style={styles.title}>{t('forgetPassword.title')}</Text>
 
           <View>
-            <FieldInputLogin
+            <InputBorder
               name={t('forgetPassword.email')}
               iconSource={AppIcons.email}
               placeholder={t('forgetPassword.email')}
@@ -130,7 +130,7 @@ const ForgetPassword = ({navigation}) => {
               theme={theme}
               keyboardType={'email-address'}
             />
-            <FieldInputLogin
+            <InputBorder
               name={t('forgetPassword.identityNumber')}
               iconSource={AppIcons.password}
               placeholder={t('forgetPassword.identityNumber')}

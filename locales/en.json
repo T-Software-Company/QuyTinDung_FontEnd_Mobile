@@ -181,6 +181,19 @@
         },
         "success": "Registration successful!"
     },
+    "registerAddress": {
+        "title": "Address",
+        "submit": "Continue",
+        "submitting": "Processing...",
+        "errors": {
+            "title": "Input Error",
+            "country": "Please enter your country",
+            "cityProvince": "Please enter your city/province",
+            "district": "Please enter your district",
+            "wardOrCommune": "Please enter your ward/commune",
+            "streetAddress": "Please enter your street address"
+        }
+    },
     "forgetPassword": {
         "title": "Forgot Password",
         "email": "Email / Phone number",

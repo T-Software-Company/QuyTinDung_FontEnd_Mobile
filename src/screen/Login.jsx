@@ -14,9 +14,9 @@ import {
 import React, {useState} from 'react';
 import {AppIcons} from '../icons';
 import {useTheme} from '../context/ThemeContext';
-import FieldInputLogin from '../components/FieldInputLogin/FieldInputLogin';
+import InputBorder from '../components/InputBorder/InputBorder';
 import {useTranslation} from 'react-i18next';
-import { useAuth } from '../context/AuthContext';
+import {useAuth} from '../context/AuthContext';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -29,7 +29,7 @@ const Login = ({navigation}) => {
   const [invisible, setInvisible] = useState(true);
   const {theme} = useTheme();
   const {t} = useTranslation();
-  const { login, loading, error } = useAuth();
+  const {login, loading, error} = useAuth();
 
   const handleChange = (field, value) => {
     setFormData(prev => ({
@@ -64,12 +64,12 @@ const Login = ({navigation}) => {
     // }
 
     const result = await login(email, password);
-    
+
     console.log('Result: ', result);
     if (result === true) {
       navigation.navigate('HomeTabs');
     } else if (error) {
-      Alert.alert(t('notification.title'), "sai");
+      Alert.alert(t('notification.title'), 'sai');
     }
   };
 
@@ -126,7 +126,7 @@ const Login = ({navigation}) => {
           <Text style={styles.title}>{t('login.title')}</Text>
 
           <View>
-            <FieldInputLogin
+            <InputBorder
               name={t('login.username')}
               iconSource={AppIcons.email}
               placeholder={t('login.username')}
@@ -136,7 +136,7 @@ const Login = ({navigation}) => {
               theme={theme}
             />
 
-            <FieldInputLogin
+            <InputBorder
               name={t('login.password')}
               iconSource={AppIcons.password}
               placeholder={t('login.password')}
@@ -149,8 +149,8 @@ const Login = ({navigation}) => {
             />
           </View>
           <View>
-            <TouchableOpacity 
-              style={[styles.button, loading && styles.buttonDisabled]} 
+            <TouchableOpacity
+              style={[styles.button, loading && styles.buttonDisabled]}
               onPress={handleSubmit}
               disabled={loading}>
               {loading ? (
@@ -189,7 +189,7 @@ const Login = ({navigation}) => {
                   textAlign: 'center',
                   marginTop: 20,
                 }}>
-                {t("login.forgotPassword")}
+                {t('login.forgotPassword')}
               </Text>
             </TouchableOpacity>
           </View>

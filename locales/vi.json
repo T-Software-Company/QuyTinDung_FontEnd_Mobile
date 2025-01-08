@@ -33,6 +33,19 @@
         },
         "success": "Đăng ký thành công!"
     },
+    "registerAddress": {
+        "title": "Địa chỉ",
+        "submit": "Tiếp tục",
+        "submitting": "Đang xử lý...",
+        "errors": {
+            "title": "Lỗi nhập liệu",
+            "country": "Vui lòng nhập quốc gia",
+            "cityProvince": "Vui lòng nhập tỉnh/thành phố",
+            "district": "Vui lòng nhập quận/huyện",
+            "wardOrCommune": "Vui lòng nhập phường/xã",
+            "streetAddress": "Vui lòng nhập số nhà, tên đường"
+        }
+    },
     "forgetPassword": {
         "title": "Quên mật khẩu",
         "email": "Email / Số điện thoại",

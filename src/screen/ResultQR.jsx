@@ -33,7 +33,7 @@ const ResultQR = () => {
   const {t} = useTranslation();
   const route = useRoute();
   const navigation = useNavigation();
-  const {formData, qrData} = route.params;
+  const {formDataAddress, formDataUser, qrData} = route.params;
   const {register, loading, error} = useAuth();
   const [isDatePickerVisible, setDatePickerVisible] = useState(false);
   const [selectedField, setSelectedField] = useState(null);
@@ -60,38 +60,37 @@ const ResultQR = () => {
       {
         name: 'identifyId',
         label: 'Số CCCD',
-        editable: false,
+        notChange: true,
       },
       {
         name: 'fullName',
         label: 'Họ và tên',
-        editable: false,
+        notChange: true,
       },
       {
         name: 'dateOfBirth',
         label: 'Ngày sinh',
-        editable: false,
+        notChange: true,
       },
 
       {
         name: 'gender',
         label: 'Giới tính',
-        editable: false,
+        notChange: true,
       },
       {
         name: 'permanentAddress',
         label: 'Địa chỉ thường trú',
-        editable: false,
+        notChange: true,
       },
       {
         name: 'issueDate',
         label: 'Ngày cấp',
-        editable: false,
+        notChange: true,
       },
       {
         name: 'expirationDate',
         label: 'Ngày hết hạn',
-        editable: false,
         isDate: true,
         iconSource: AppIcons.email, // Add calendar icon if you have one
         onPress: () => {
@@ -99,32 +98,26 @@ const ResultQR = () => {
           showDatePicker('expirationDate');
         },
         pointerEvents: 'none',
-        editable: true,
       },
       {
         name: 'issuingAuthority',
         label: 'Nơi cấp',
-        editable: true,
       },
       {
         name: 'placeOfBirth',
         label: 'Nơi sinh',
-        editable: true,
       },
       {
         name: 'religion',
         label: 'Tôn giáo',
-        editable: true,
       },
       {
         name: 'ethnicity',
         label: 'Dân tộc',
-        editable: true,
       },
       {
         name: 'nationality',
         label: 'Quốc tịch',
-        editable: true,
       },
     ],
     [],
@@ -156,27 +149,31 @@ const ResultQR = () => {
   const initialValues = useMemo(() => {
     const {lastName, firstName} = splitName(qrData[1]);
     return {
+      address: {
+        ...formDataAddress,
+      },
       firstName,
       lastName,
-      fullName: qrData[1] || '',
+      fullName: qrData[2] || '',
       identifyId: qrData[0] || '',
-      gender: qrData[3] || '',
+      gender: qrData[4] || '',
       ethnicity: 'Kinh',
       religion: 'Không',
-      dateOfBirth: qrData[2] || '',
+      dateOfBirth: qrData[3] || '',
       nationality: 'Việt Nam',
       placeOfBirth: '',
-      permanentAddress: qrData[4] || '',
-      issueDate: qrData[5] || '',
+      permanentAddress: qrData[5] || '',
+      issueDate: qrData[6] || '',
       expirationDate: '',
       issuingAuthority: '',
-      username: formData?.phone || '',
-      password: formData?.password || '',
+      username: formDataUser?.phone || '',
+      password: formDataUser?.password || '',
       legalDocType: 'CCCD',
       frontImage: '',
       backImage: '',
+      ...formDataUser,
     };
-  }, [qrData, formData, splitName]);
+  }, [qrData, formDataUser, formDataAddress, splitName]);
 
   const handleSubmit = useCallback(
     async (values, {setSubmitting}) => {
@@ -395,15 +392,15 @@ const ResultQR = () => {
                           : values[field.name]
                       }
                       onSetValue={value => {
-                        if (field.editable) {
+                        if (!field.notChange) {
                           setFieldValue(field.name, value);
                         }
                       }}
                       error={touched[field.name] && errors[field.name]}
-                      editable={field.editable}
                       theme={theme}
                       onPress={field.onPress}
                       pointerEvents={field.pointerEvents}
+                      notChange={field.notChange}
                     />
                   ))}
 

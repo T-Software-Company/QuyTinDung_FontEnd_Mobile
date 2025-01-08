@@ -46,7 +46,7 @@ const Register = ({ navigation }) => {
   // Handle Form Submission
   const handleSubmit = useCallback(
     (values) => {
-      navigation.navigate('RegisterAddress', { formData: values });
+      navigation.navigate('RegisterAddress', { formDataUser: values });
     },
     [navigation]
   );

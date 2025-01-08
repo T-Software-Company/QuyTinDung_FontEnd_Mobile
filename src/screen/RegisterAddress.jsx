@@ -25,7 +25,7 @@ const windowHeight = Dimensions.get('window').height;
 const RegisterAddress = ({navigation, route}) => {
   const {theme} = useTheme();
   const {t} = useTranslation();
-  const previousFormData = route.params?.formData || {};
+  const previousFormData = route.params?.formDataUser || {};
 
   // Validation Schema
   const validationSchema = useMemo(
@@ -54,10 +54,10 @@ const RegisterAddress = ({navigation, route}) => {
   const handleSubmit = useCallback(
     values => {
       navigation.navigate('NotificationScan', {
-        formData: {
-          ...previousFormData,
+        formDataAddress: {
           ...values,
         },
+        formDataUser: previousFormData,
       });
     },
     [navigation, previousFormData, validationSchema, t],

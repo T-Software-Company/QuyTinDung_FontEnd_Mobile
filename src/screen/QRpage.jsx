@@ -24,9 +24,9 @@ const scanAreaSize = SCREEN_WIDTH * 0.7; // Scanner area is 70% of screen width
 const QRScannerApp = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const {formData} = route.params; // Lấy formData từ NotificationScan
+  const {formDataAddress, formDataUser} = route.params; // Lấy formData từ NotificationScan
 
-  console.log('QR Screen formData:', formData); // Debug log
+  console.log('QR Screen formData:', formDataAddress); // Debug log
 
   const [scannedItems, setScannedItems] = useState([]);
   const [lastScannedCode, setLastScannedCode] = useState(null);
@@ -91,13 +91,13 @@ const QRScannerApp = () => {
     const dataArray = cleanData
       .split('|')
       .map(item => item.trim()) // loại bỏ khoảng trắng đầu cuối
-      .filter(item => item !== ''); // loại bỏ phần tử rỗng
+      // .filter(item => item !== ''); // loại bỏ phần tử rỗng
 
-    // console.log('QR Data Array:', dataArray); // Debug log
+    console.log('QR Data Array:', dataArray); // Debug log
     // Format lại date ở index 2 (ngày sinh) và 5 (ngày cấp)
-    if (dataArray.length > 5) {
-      dataArray[2] = formatDate(dataArray[2]);
-      dataArray[5] = formatDate(dataArray[5]);
+    if (dataArray.length > 6) {
+      dataArray[3] = formatDate(dataArray[3]);
+      dataArray[6] = formatDate(dataArray[6]);
     }
 
     return dataArray;
@@ -117,7 +117,8 @@ const QRScannerApp = () => {
       // console.log('Navigating to ResultQR with:', {formData, qrData}); // Debug log
 
       navigation.navigate('ResultQR', {
-        formData: formData,
+        formDataUser: formDataUser,
+        formDataAddress: formDataAddress,
         qrData: qrData,
       });
     } catch (error) {

@@ -20,10 +20,10 @@ import {useRoute} from '@react-navigation/native';
 const Notification = ({navigation}) => {
   const currentLanguage = i18n.language;
   const route = useRoute();
-  const {formData} = route.params; // Lấy formData từ Register
+  const {formDataAddress, formDataUser} = route.params; // Lấy formData từ Register
   const {t} = useTranslation();
   const {theme} = useTheme();
-  console.log('Notification formData:', formData); // Debug log
+  console.log('Notification formData:', formDataAddress); // Debug log
 
   return (
     <SafeAreaView style={[styles.view, {backgroundColor: theme.background}]}>
@@ -48,7 +48,7 @@ const Notification = ({navigation}) => {
               </Text>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigation.navigate('QrScreen', {formData})}>
+                onPress={() => navigation.navigate('QrScreen', {formDataAddress, formDataUser})}>
                 {/* Sửa cách truyền params */}
                 <Text style={styles.textButton}>
                   {t('notificationScan.button')}

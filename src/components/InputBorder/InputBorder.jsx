@@ -24,7 +24,8 @@ const InputBorder = ({
   editable,
   textContentType,
   onPress,
-  pointerEvents
+  pointerEvents,
+  notChange,
 }) => {
   const styles = StyleSheet.create({
     heading: {
@@ -50,7 +51,7 @@ const InputBorder = ({
       paddingLeft: 40,
       paddingRight: 30,
       paddingBottom: 10,
-      color: editable ? theme.text : theme.noteText,
+      color: notChange ? theme.noteText : theme.text,
       paddingVertical: 0,
       textAlignVertical: 'center',
     },
@@ -59,7 +60,7 @@ const InputBorder = ({
     },
     touchableContainer: {
       width: '100%',
-    }
+    },
   });
 
   const inputElement = (
@@ -72,7 +73,7 @@ const InputBorder = ({
       value={value}
       style={styles.textInput}
       autoCapitalize="none"
-      editable={editable}
+      editable={!notChange}
       textContentType={textContentType}
       pointerEvents={pointerEvents}
     />
@@ -84,11 +85,10 @@ const InputBorder = ({
       <View style={styles.inputContainer}>
         <Image source={iconSource} style={styles.icon} />
         {onPress ? (
-          <TouchableOpacity 
-            onPress={onPress} 
+          <TouchableOpacity
+            onPress={onPress}
             activeOpacity={0.7}
-            style={styles.touchableContainer}
-          >
+            style={styles.touchableContainer}>
             {inputElement}
           </TouchableOpacity>
         ) : (

@@ -37,6 +37,7 @@ const ResultQR = () => {
   const {register, loading, error} = useAuth();
   const [isDatePickerVisible, setDatePickerVisible] = useState(false);
   const [selectedField, setSelectedField] = useState(null);
+  const [signatureImage, setSignatureImage] = useState(null);
   const [frontImage, setFrontImage] = useState(null);
   const [backImage, setBackImage] = useState(null);
 
@@ -132,6 +133,7 @@ const ResultQR = () => {
         religion: Yup.string().required('Vui lòng nhập tôn giáo'),
         ethnicity: Yup.string().required('Vui lòng nhập dân tộc'),
         nationality: Yup.string().required('Vui lòng nhập quốc tịch'),
+        signatureImage: Yup.string().required('Vui lòng chọn ảnh chữ ký'),
         frontImage: Yup.string().required('Vui lòng chọn ảnh mặt trước CCCD'),
         backImage: Yup.string().required('Vui lòng chọn ảnh mặt sau CCCD'),
       }),
@@ -166,14 +168,16 @@ const ResultQR = () => {
       placeOfBirth: '',
       permanentAddress: qrData[5] || '',
       issueDate: qrData[6] || '',
-      expirationDate: '25/10/2001',
+      expirationDate: '',
       issuingAuthority: '',
       legalDocType: 'CCCD',
+      signatureImage: '',
       frontImage: '',
       backImage: '',
     };
   }, [qrData, formDataUser, formDataAddress, splitName]);
 
+  console.log('Initial values:', initialValues); // Debug log
   const handleSubmit = useCallback(
     async (values, {setSubmitting}) => {
       try {
@@ -363,12 +367,19 @@ const ResultQR = () => {
 
                 if (response.assets && response.assets[0]) {
                   const image = response.assets[0];
-                  if (type === 'front') {
-                    setFrontImage(image);
-                    setFieldValue('frontImage', image.uri);
-                  } else {
-                    setBackImage(image);
-                    setFieldValue('backImage', image.uri);
+                  switch(type) {
+                    case 'signature':
+                      setSignatureImage(image);
+                      setFieldValue('signatureImage', image.uri);
+                      break;
+                    case 'front':
+                      setFrontImage(image);
+                      setFieldValue('frontImage', image.uri);
+                      break;
+                    case 'back':
+                      setBackImage(image);
+                      setFieldValue('backImage', image.uri);
+                      break;
                   }
                 }
               } catch (error) {
@@ -402,6 +413,28 @@ const ResultQR = () => {
                       notChange={field.notChange}
                     />
                   ))}
+                  <View style={styles.imagePickerContainer}>
+                    <Text style={styles.imagePickerLabel}>
+                      Ảnh chữ ký chính chủ
+                    </Text>
+                    <TouchableOpacity
+                      style={styles.imagePickerButton}
+                      onPress={() => selectImage('signature')}>
+                      <Text style={{color: theme.text}}>
+                        {signatureImage ? 'Thay đổi ảnh' : 'Chọn ảnh'}
+                      </Text>
+                    </TouchableOpacity>
+                    {signatureImage && (
+                      <Image
+                        source={{uri: signatureImage.uri}}
+                        style={styles.selectedImage}
+                        resizeMode="cover"
+                      />
+                    )}
+                    {touched.signatureImage && errors.signatureImage && (
+                      <Text style={styles.errorText}>{errors.signatureImage}</Text>
+                    )}
+                  </View>
 
                   <View style={styles.imagePickerContainer}>
                     <Text style={styles.imagePickerLabel}>
@@ -465,10 +498,10 @@ const ResultQR = () => {
                             display="spinner"
                             onChange={(event, date) => {
                               if (date) {
-                                setFieldValue(
-                                  selectedField,
-                                  date.toISOString(),
-                                );
+                                const formattedDate = date
+                                  .toISOString()
+                                  .split('T')[0];
+                                setFieldValue(selectedField, formattedDate);
                               }
                             }}
                             minimumDate={new Date()}
@@ -486,10 +519,10 @@ const ResultQR = () => {
                             display="default"
                             onChange={(event, date) => {
                               if (event.type === 'set' && date) {
-                                setFieldValue(
-                                  selectedField,
-                                  date.toISOString(),
-                                );
+                                const formattedDate = date
+                                  .toISOString()
+                                  .split('T')[0];
+                                setFieldValue(selectedField, formattedDate);
                                 setDatePickerVisible(false);
                               } else {
                                 setDatePickerVisible(false);

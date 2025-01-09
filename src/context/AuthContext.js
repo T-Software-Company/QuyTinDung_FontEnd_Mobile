@@ -32,8 +32,25 @@ const validateToken = async token => {
 // Add this helper function before AuthProvider
 const convertDateFormat = (dateStr) => {
   if (!dateStr) return "";
-  const [day, month, year] = dateStr.split('/');
-  return `${year}-${month}-${day}T00:00:00Z`;
+  
+  // If the date is already in ISO format (YYYY-MM-DD)
+  if (dateStr.includes('-')) {
+    return `${dateStr}T00:00:00Z`;
+  }
+  
+  // If the date is in DD/MM/YYYY format
+  try {
+    const [day, month, year] = dateStr.split('/');
+    if (!day || !month || !year) return dateStr;
+    
+    const paddedMonth = month.padStart(2, '0');
+    const paddedDay = day.padStart(2, '0');
+    
+    return `${year}-${paddedMonth}-${paddedDay}T00:00:00Z`;
+  } catch (error) {
+    console.error('Date conversion error:', error);
+    return dateStr;
+  }
 };
 
 export const AuthProvider = ({children}) => {
@@ -149,7 +166,7 @@ export const AuthProvider = ({children}) => {
         firstName: userData.firstName,
         lastName: userData.lastName,
         address: userData.address,
-        signaturePhoto: "ok",
+        signaturePhoto: userData.signatureImage,
         identityInfo: {
           identifyId: userData.identifyId,
           fullName: `${userData.firstName} ${userData.lastName}`, // Combine first and last name

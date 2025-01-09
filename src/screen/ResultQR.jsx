@@ -147,31 +147,30 @@ const ResultQR = () => {
   }, []);
 
   const initialValues = useMemo(() => {
-    const {lastName, firstName} = splitName(qrData[1]);
+    const {lastName, firstName} = splitName(qrData[2]);
     return {
       address: {
         ...formDataAddress,
       },
+      ...formDataUser,
       firstName,
       lastName,
-      fullName: qrData[2] || '',
+
       identifyId: qrData[0] || '',
-      gender: qrData[4] || '',
+      fullName: qrData[2] || '',
       ethnicity: 'Kinh',
       religion: 'Không',
+      gender: qrData[4] || '',
       dateOfBirth: qrData[3] || '',
       nationality: 'Việt Nam',
       placeOfBirth: '',
       permanentAddress: qrData[5] || '',
       issueDate: qrData[6] || '',
-      expirationDate: '',
+      expirationDate: '25/10/2001',
       issuingAuthority: '',
-      username: formDataUser?.phone || '',
-      password: formDataUser?.password || '',
       legalDocType: 'CCCD',
       frontImage: '',
       backImage: '',
-      ...formDataUser,
     };
   }, [qrData, formDataUser, formDataAddress, splitName]);
 

@@ -29,6 +29,13 @@ const validateToken = async token => {
   }
 };
 
+// Add this helper function before AuthProvider
+const convertDateFormat = (dateStr) => {
+  if (!dateStr) return "";
+  const [day, month, year] = dateStr.split('/');
+  return `${year}-${month}-${day}T00:00:00Z`;
+};
+
 export const AuthProvider = ({children}) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -110,15 +117,83 @@ export const AuthProvider = ({children}) => {
       setError(error);
       console.log(error.response.data);
       if (error.response?.data?.error === 'invalid_grant') {
-        if (error.response?.data?.error_description === 'Account is not fully set up') {
+        if (
+          error.response?.data?.error_description ===
+          'Account is not fully set up'
+        ) {
           setNeedsAccountSetup(true);
           setIsAuthenticated(true);
-          return { needsSetup: true };
+          return {needsSetup: true};
         }
       }
 
       setError(error.response?.data?.error_description || error.message);
       setIsAuthenticated(false);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const register = async userData => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Transform data to match API requirements
+      const transformedData = {
+        username: "admin12345",
+        password: userData.password,
+        email: userData.email,
+        phone: userData.phone,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        address: userData.address,
+        signaturePhoto: "ok",
+        identityInfo: {
+          identifyId: userData.identifyId,
+          fullName: `${userData.firstName} ${userData.lastName}`, // Combine first and last name
+          ethnicity: userData.ethnicity || "",
+          religion: userData.religion || "",
+          gender: "MALE",
+          dateOfBirth: convertDateFormat(userData.dateOfBirth),
+          nationality: userData.nationality || "VN",
+          placeOfBirth: userData.placeOfBirth || "",
+          permanentAddress: userData.permanentAddress || "",
+          issueDate: convertDateFormat(userData.issueDate),
+          expirationDate: convertDateFormat(userData.expirationDate),
+          issuingAuthority: userData.issuingAuthority || "",
+          legalDocType: userData.legalDocType || "CCCD",
+          frontPhotoUrl: userData.frontImage || "",
+          backPhotoUrl: userData.backImage || "",
+        },
+      };
+
+      // Debug log
+      console.log(transformedData);
+
+      const response = await axios({
+        method: 'post',
+        url: `https://tsoftware.store/api/v1/customers`,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        data: transformedData,
+      });
+
+      console.log('Registration response:', response.data);
+
+      if (response.status === 201) {
+        const loginResult = await login(userData.username, userData.password);
+        return loginResult;
+      }
+
+      throw new Error('Registration failed');
+    } catch (error) {
+      console.error('Registration error:', error.response);
+      console.error('Request data that caused error:', error.config?.data);
+      setError(error.response?.data?.message || 'Registration failed');
       return false;
     } finally {
       setLoading(false);
@@ -177,6 +252,7 @@ export const AuthProvider = ({children}) => {
       }
     },
     refreshToken,
+    register, // Add register to context
   };
 
   return (

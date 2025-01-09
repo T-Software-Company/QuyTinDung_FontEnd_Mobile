@@ -30,22 +30,22 @@ const validateToken = async token => {
 };
 
 // Add this helper function before AuthProvider
-const convertDateFormat = (dateStr) => {
-  if (!dateStr) return "";
-  
+const convertDateFormat = dateStr => {
+  if (!dateStr) return '';
+
   // If the date is already in ISO format (YYYY-MM-DD)
   if (dateStr.includes('-')) {
     return `${dateStr}T00:00:00Z`;
   }
-  
+
   // If the date is in DD/MM/YYYY format
   try {
     const [day, month, year] = dateStr.split('/');
     if (!day || !month || !year) return dateStr;
-    
+
     const paddedMonth = month.padStart(2, '0');
     const paddedDay = day.padStart(2, '0');
-    
+
     return `${year}-${paddedMonth}-${paddedDay}T00:00:00Z`;
   } catch (error) {
     console.error('Date conversion error:', error);
@@ -159,7 +159,7 @@ export const AuthProvider = ({children}) => {
     try {
       // Transform data to match API requirements
       const transformedData = {
-        username: "admin12345",
+        username: userData.phone,
         password: userData.password,
         email: userData.email,
         phone: userData.phone,
@@ -170,19 +170,19 @@ export const AuthProvider = ({children}) => {
         identityInfo: {
           identifyId: userData.identifyId,
           fullName: `${userData.firstName} ${userData.lastName}`, // Combine first and last name
-          ethnicity: userData.ethnicity || "",
-          religion: userData.religion || "",
-          gender: "MALE",
+          ethnicity: userData.ethnicity || '',
+          religion: userData.religion || '',
+          gender: userData.gender === 'Nam' ? 'MALE' : 'FEMALE',
           dateOfBirth: convertDateFormat(userData.dateOfBirth),
-          nationality: userData.nationality || "VN",
-          placeOfBirth: userData.placeOfBirth || "",
-          permanentAddress: userData.permanentAddress || "",
+          nationality: userData.nationality || 'VN',
+          placeOfBirth: userData.placeOfBirth || '',
+          permanentAddress: userData.permanentAddress || '',
           issueDate: convertDateFormat(userData.issueDate),
           expirationDate: convertDateFormat(userData.expirationDate),
-          issuingAuthority: userData.issuingAuthority || "",
-          legalDocType: userData.legalDocType || "CCCD",
-          frontPhotoUrl: userData.frontImage || "",
-          backPhotoUrl: userData.backImage || "",
+          issuingAuthority: userData.issuingAuthority || '',
+          legalDocType: userData.legalDocType || 'CCCD',
+          frontPhotoUrl: userData.frontImage || '',
+          backPhotoUrl: userData.backImage || '',
         },
       };
 
@@ -194,16 +194,15 @@ export const AuthProvider = ({children}) => {
         url: `https://tsoftware.store/api/v1/customers`,
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
+          Accept: 'application/json',
         },
         data: transformedData,
       });
 
       console.log('Registration response:', response.data);
 
-      if (response.status === 201) {
-        const loginResult = await login(userData.username, userData.password);
-        return loginResult;
+      if (response.status === 200) {
+        return true;
       }
 
       throw new Error('Registration failed');

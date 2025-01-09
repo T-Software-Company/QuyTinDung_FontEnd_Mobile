@@ -157,7 +157,7 @@ const ResultQR = () => {
       firstName,
       lastName,
 
-      identifyId: '1234567999',
+      identifyId: '12345679999',
       fullName: 'Phạm Văn A',
       dateOfBirth: '01/01/1990',
       gender: 'Nam',
@@ -180,7 +180,7 @@ const ResultQR = () => {
       frontImage: '',
       backImage: '',
     };
-    }, [qrData, formDataUser, formDataAddress, splitName]);
+  }, [qrData, formDataUser, formDataAddress, splitName]);
   // }, []);
 
   const handleSubmit = useCallback(
@@ -190,7 +190,11 @@ const ResultQR = () => {
         const result = await register(values);
         console.log('Register result:', result); // Debug log
         if (result) {
-          navigation.navigate('Login');
+          // navigation.navigate('Login');
+          navigation.reset({
+            index: 0,
+            routes: [{name: 'Login'}],
+          });
         }
       } catch (error) {
         Alert.alert('Thông báo', error.message);

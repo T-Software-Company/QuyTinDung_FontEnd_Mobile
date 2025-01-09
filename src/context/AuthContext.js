@@ -207,7 +207,7 @@ export const AuthProvider = ({children}) => {
 
       throw new Error('Registration failed');
     } catch (error) {
-      console.error('Registration error:', error.response);
+      console.error('Registration error:', error.response.data);
       console.error('Request data that caused error:', error.config?.data);
       setError(error.response?.data?.message || 'Registration failed');
       return false;

@@ -69,7 +69,7 @@ const Login = ({navigation}) => {
     if (result === true) {
       navigation.navigate('HomeTabs');
     } else if (error) {
-      Alert.alert(t('notification.title'), 'sai');
+      Alert.alert(t('notification.title'), 'Email / Số điện thoại hoặc mật khẩu không đúng !');
     }
   };
 

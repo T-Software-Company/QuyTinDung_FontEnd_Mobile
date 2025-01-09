@@ -143,7 +143,10 @@ export default RootComponent = function () {
 
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
-        <Stack.Screen name="RegisterAddress" component={RegisterAddressScreen} />
+        <Stack.Screen
+          name="RegisterAddress"
+          component={RegisterAddressScreen}
+        />
         <Stack.Screen name="ForgetPassword" component={ForgetPasswordScreen} />
         <Stack.Screen name="QrScreen" component={QRScannerApp} />
         <Stack.Screen name="ResultQR" component={ResultQRApp} />

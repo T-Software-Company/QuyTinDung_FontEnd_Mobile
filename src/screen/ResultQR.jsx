@@ -27,6 +27,8 @@ import {
   launchImageLibrary,
   ImageLibraryOptions,
 } from 'react-native-image-picker';
+import UploadImage from '../components/UploadImage/UploadImage';
+import {uploadImage} from '../api/uploadImage';
 
 const ResultQR = () => {
   const {theme} = useTheme();
@@ -40,11 +42,8 @@ const ResultQR = () => {
   const [signatureImage, setSignatureImage] = useState(null);
   const [frontImage, setFrontImage] = useState(null);
   const [backImage, setBackImage] = useState(null);
+  const [tempDate, setTempDate] = useState(null);
 
-  const showDatePicker = fieldName => {
-    setSelectedField(fieldName);
-    setDatePickerVisible(true);
-  };
   const hideDatePicker = () => setDatePickerVisible(false);
 
   const formatDate = date => {
@@ -158,17 +157,22 @@ const ResultQR = () => {
       firstName,
       lastName,
 
+      identifyId: '1234567999',
+      fullName: 'Phạm Văn A',
+      dateOfBirth: '01/01/1990',
+      gender: 'Nam',
+      permanentAddress: 'Hà Nội',
+      issueDate: '01/01/2021',
       // identifyId: qrData[0] || '',
-      identifyId:  '1234567',
-      fullName: qrData[2] || '',
+      // fullName: qrData[2] || '',
+      // dateOfBirth: qrData[3] || '',
+      // gender: qrData[4],
+      // permanentAddress: qrData[5] || '',
+      // issueDate: qrData[6] || '',
       ethnicity: 'Kinh',
       religion: 'Không',
-      gender: qrData[4],
-      dateOfBirth: qrData[3] || '',
       nationality: 'Việt Nam',
       placeOfBirth: '',
-      permanentAddress: qrData[5] || '',
-      issueDate: qrData[6] || '',
       expirationDate: '',
       issuingAuthority: '',
       legalDocType: 'CCCD',
@@ -176,9 +180,9 @@ const ResultQR = () => {
       frontImage: '',
       backImage: '',
     };
-  }, [qrData, formDataUser, formDataAddress, splitName]);
+    }, [qrData, formDataUser, formDataAddress, splitName]);
+  // }, []);
 
-  console.log('Initial values:', initialValues); // Debug log
   const handleSubmit = useCallback(
     async (values, {setSubmitting}) => {
       try {
@@ -247,7 +251,8 @@ const ResultQR = () => {
       borderRadius: 16,
       alignItems: 'center',
       marginHorizontal: 20,
-      marginBottom: 16,
+      marginBottom: 12,
+      marginTop: 12,
     },
     buttonText: {
       color: '#fff',
@@ -338,12 +343,30 @@ const ResultQR = () => {
           onSubmit={handleSubmit}>
           {({
             handleSubmit,
-            values,
+            values, // we need values from here
             setFieldValue,
             errors,
             touched,
             isSubmitting,
           }) => {
+            // Move showDatePicker inside Formik render prop
+            const showDatePicker = fieldName => {
+              setSelectedField(fieldName);
+              setDatePickerVisible(true);
+              setTempDate(new Date(values[fieldName] || Date.now()));
+            };
+
+            // Update the inputFields definition to use the local showDatePicker
+            const fieldConfigs = inputFields.map(field => {
+              if (field.name === 'expirationDate') {
+                return {
+                  ...field,
+                  onPress: () => showDatePicker('expirationDate'),
+                };
+              }
+              return field;
+            });
+
             const selectImage = async type => {
               const options = {
                 mediaType: 'photo',
@@ -368,19 +391,36 @@ const ResultQR = () => {
 
                 if (response.assets && response.assets[0]) {
                   const image = response.assets[0];
-                  switch(type) {
-                    case 'signature':
-                      setSignatureImage(image);
-                      setFieldValue('signatureImage', image.uri);
-                      break;
-                    case 'front':
-                      setFrontImage(image);
-                      setFieldValue('frontImage', image.uri);
-                      break;
-                    case 'back':
-                      setBackImage(image);
-                      setFieldValue('backImage', image.uri);
-                      break;
+                  try {
+                    // Upload image to server
+                    const uploadResult = await uploadImage(image);
+                    const imageUrl = uploadResult.url; // Adjust based on your API response
+
+                    console.log('Uploaded image URL:', imageUrl); // Debug log
+                    // Update state and form values with server URL
+                    switch (type) {
+                      case 'signature':
+                        setSignatureImage({...image, uri: imageUrl});
+                        setFieldValue('signatureImage', imageUrl);
+                        break;
+                      case 'front':
+                        setFrontImage({...image, uri: imageUrl});
+                        setFieldValue('frontImage', imageUrl);
+                        break;
+                      case 'back':
+                        setBackImage({...image, uri: imageUrl});
+                        setFieldValue('backImage', imageUrl);
+                        break;
+                    }
+                  } catch (uploadError) {
+                    // console.error(
+                    //   'Error uploading image:',
+                    //   uploadError.message || uploadError,
+                    // );
+                    Alert.alert(
+                      'Lỗi',
+                      'Không thể tải ảnh lên, vui lòng thử lại',
+                    );
                   }
                 }
               } catch (error) {
@@ -392,7 +432,7 @@ const ResultQR = () => {
             return (
               <>
                 <ScrollView style={styles.body}>
-                  {inputFields.map((field, index) => (
+                  {fieldConfigs.map((field, index) => (
                     <InputBorder
                       key={index}
                       name={field.label}
@@ -414,144 +454,100 @@ const ResultQR = () => {
                       notChange={field.notChange}
                     />
                   ))}
-                  <View style={styles.imagePickerContainer}>
-                    <Text style={styles.imagePickerLabel}>
-                      Ảnh chữ ký chính chủ
-                    </Text>
-                    <TouchableOpacity
-                      style={styles.imagePickerButton}
-                      onPress={() => selectImage('signature')}>
-                      <Text style={{color: theme.text}}>
-                        {signatureImage ? 'Thay đổi ảnh' : 'Chọn ảnh'}
-                      </Text>
-                    </TouchableOpacity>
-                    {signatureImage && (
-                      <Image
-                        source={{uri: signatureImage.uri}}
-                        style={styles.selectedImage}
-                        resizeMode="cover"
-                      />
-                    )}
-                    {touched.signatureImage && errors.signatureImage && (
-                      <Text style={styles.errorText}>{errors.signatureImage}</Text>
-                    )}
-                  </View>
+                  <UploadImage
+                    title="Ảnh chữ ký chính chủ"
+                    theme={theme}
+                    typeImage={signatureImage}
+                    onSelectImage={() => selectImage('signature')}
+                    touched={touched?.signatureImage}
+                    errors={errors?.signatureImage}
+                  />
 
-                  <View style={styles.imagePickerContainer}>
-                    <Text style={styles.imagePickerLabel}>
-                      Ảnh mặt trước CCCD
-                    </Text>
-                    <TouchableOpacity
-                      style={styles.imagePickerButton}
-                      onPress={() => selectImage('front')}>
-                      <Text style={{color: theme.text}}>
-                        {frontImage ? 'Thay đổi ảnh' : 'Chọn ảnh'}
-                      </Text>
-                    </TouchableOpacity>
-                    {frontImage && (
-                      <Image
-                        source={{uri: frontImage.uri}}
-                        style={styles.selectedImage}
-                        resizeMode="cover"
-                      />
-                    )}
-                    {touched.frontImage && errors.frontImage && (
-                      <Text style={styles.errorText}>{errors.frontImage}</Text>
-                    )}
-                  </View>
+                  <UploadImage
+                    title="Ảnh mặt trước CCCD"
+                    theme={theme}
+                    typeImage={frontImage}
+                    onSelectImage={() => selectImage('front')}
+                    touched={touched?.frontImage}
+                    errors={errors?.frontImage}
+                  />
 
-                  <View style={styles.imagePickerContainer}>
-                    <Text style={styles.imagePickerLabel}>
-                      Ảnh mặt sau CCCD
-                    </Text>
-                    <TouchableOpacity
-                      style={styles.imagePickerButton}
-                      onPress={() => selectImage('back')}>
-                      <Text style={{color: theme.text}}>
-                        {backImage ? 'Thay đổi ảnh' : 'Chọn ảnh'}
-                      </Text>
-                    </TouchableOpacity>
-                    {backImage && (
-                      <Image
-                        source={{uri: backImage.uri}}
-                        style={styles.selectedImage}
-                        resizeMode="cover"
-                      />
-                    )}
-                    {touched.backImage && errors.backImage && (
-                      <Text style={styles.errorText}>{errors.backImage}</Text>
-                    )}
-                  </View>
+                  <UploadImage
+                    title="Ảnh mặt sau CCCD"
+                    theme={theme}
+                    typeImage={backImage}
+                    onSelectImage={() => selectImage('back')}
+                    touched={touched?.backImage}
+                    errors={errors?.backImage}
+                  />
                 </ScrollView>
 
-                {isDatePickerVisible && (
-                  <View style={styles.datePickerOverlay}>
-                    <View style={styles.datePickerContainer}>
-                      <View style={styles.datePickerWrapper}>
-                        {Platform.OS === 'ios' ? (
-                          <DateTimePicker
-                            value={
-                              values[selectedField]
-                                ? new Date(values[selectedField])
-                                : new Date()
-                            }
-                            mode="date"
-                            display="spinner"
-                            onChange={(event, date) => {
-                              if (date) {
-                                const formattedDate = date
-                                  .toISOString()
-                                  .split('T')[0];
-                                setFieldValue(selectedField, formattedDate);
-                              }
-                            }}
-                            minimumDate={new Date()}
-                            locale="vi-VN"
-                            textColor="black"
-                          />
-                        ) : (
-                          <DateTimePicker
-                            value={
-                              values[selectedField]
-                                ? new Date(values[selectedField])
-                                : new Date()
-                            }
-                            mode="date"
-                            display="default"
-                            onChange={(event, date) => {
-                              if (event.type === 'set' && date) {
-                                const formattedDate = date
+                {isDatePickerVisible &&
+                  tempDate && ( // Add tempDate check here
+                    <View style={styles.datePickerOverlay}>
+                      <View style={styles.datePickerContainer}>
+                        <View style={styles.datePickerWrapper}>
+                          {Platform.OS === 'ios' ? (
+                            <DateTimePicker
+                              value={tempDate}
+                              mode="date"
+                              display="spinner"
+                              onChange={(event, date) => {
+                                if (date) {
+                                  setTempDate(date);
+                                }
+                              }}
+                              minimumDate={new Date()}
+                              locale="vi-VN"
+                              textColor="black"
+                            />
+                          ) : (
+                            <DateTimePicker
+                              value={tempDate}
+                              mode="date"
+                              display="default"
+                              onChange={(event, date) => {
+                                if (event.type === 'set' && date) {
+                                  const formattedDate = date
+                                    .toISOString()
+                                    .split('T')[0];
+                                  setFieldValue(selectedField, formattedDate);
+                                }
+                                setDatePickerVisible(false);
+                              }}
+                              minimumDate={new Date()}
+                            />
+                          )}
+                        </View>
+                        {Platform.OS === 'ios' && (
+                          <View style={styles.datePickerButtons}>
+                            <TouchableOpacity
+                              style={styles.datePickerButton}
+                              onPress={() => {
+                                setDatePickerVisible(false);
+                              }}>
+                              <Text style={styles.datePickerButtonText}>
+                                Hủy
+                              </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                              style={styles.datePickerButton}
+                              onPress={() => {
+                                const formattedDate = tempDate
                                   .toISOString()
                                   .split('T')[0];
                                 setFieldValue(selectedField, formattedDate);
                                 setDatePickerVisible(false);
-                              } else {
-                                setDatePickerVisible(false);
-                              }
-                            }}
-                            minimumDate={new Date()}
-                          />
+                              }}>
+                              <Text style={styles.datePickerButtonText}>
+                                Xác nhận
+                              </Text>
+                            </TouchableOpacity>
+                          </View>
                         )}
                       </View>
-                      {Platform.OS === 'ios' && (
-                        <View style={styles.datePickerButtons}>
-                          <TouchableOpacity
-                            style={styles.datePickerButton}
-                            onPress={() => setDatePickerVisible(false)}>
-                            <Text style={styles.datePickerButtonText}>Hủy</Text>
-                          </TouchableOpacity>
-                          <TouchableOpacity
-                            style={styles.datePickerButton}
-                            onPress={() => setDatePickerVisible(false)}>
-                            <Text style={styles.datePickerButtonText}>
-                              Xác nhận
-                            </Text>
-                          </TouchableOpacity>
-                        </View>
-                      )}
                     </View>
-                  </View>
-                )}
+                  )}
 
                 <TouchableOpacity
                   style={[styles.button, isSubmitting && styles.buttonDisabled]}

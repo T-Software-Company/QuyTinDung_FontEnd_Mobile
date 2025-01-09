@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "https://jsonplaceholder.typicode.com", // URL gốc của API
-  timeout: 5000, // Thời gian chờ (ms)
+  baseURL: "https://tsoftware.store/api/v1", // URL gốc của API
+  timeout: 1000, // Thời gian chờ (ms)
   headers: {
     "Content-Type": "application/json",
   },

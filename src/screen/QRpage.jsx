@@ -14,6 +14,7 @@ import {
   useCameraDevice,
   useCameraPermission,
 } from 'react-native-vision-camera';
+import {useTranslation} from 'react-i18next';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import Header from '../components/Header/Header';
 
@@ -23,6 +24,7 @@ const scanAreaSize = SCREEN_WIDTH * 0.7; // Scanner area is 70% of screen width
 
 const QRScannerApp = () => {
   const navigation = useNavigation();
+  const {t} = useTranslation();
   const route = useRoute();
   const {formDataAddress, formDataUser} = route.params; // Lấy formData từ NotificationScan
 
@@ -131,7 +133,9 @@ const QRScannerApp = () => {
   if (device == null) {
     return (
       <SafeAreaView>
-        <Text style={styles.centerText}>Camera not available</Text>
+        <Text style={styles.centerText}>
+          {t('register.camera.notAvailable')}
+        </Text>
       </SafeAreaView>
     );
   }
@@ -140,8 +144,13 @@ const QRScannerApp = () => {
     return (
       <SafeAreaView>
         <View style={styles.container}>
-          <Text style={styles.centerText}>Camera permission is required</Text>
-          <Button title="Request Permission" onPress={checkPermission} />
+          <Text style={styles.centerText}>
+            {t('register.camera.permissionRequired')}
+          </Text>
+          <Button 
+            title={t('register.camera.requestPermission')} 
+            onPress={checkPermission} 
+          />
         </View>
       </SafeAreaView>
     );
@@ -187,7 +196,7 @@ const QRScannerApp = () => {
       </View>
 
       <Text style={styles.instructionText}>
-        Đưa mã QR trên CCCD vào khung ảnh
+        {t('register.scanScreen.instruction')}
       </Text>
     </View>
   );

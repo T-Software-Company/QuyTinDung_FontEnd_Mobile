@@ -31,21 +31,75 @@
             "passwordLength": "Mật khẩu phải có ít nhất 6 ký tự!",
             "passwordMismatch": "Mật khẩu và xác nhận mật khẩu không khớp!"
         },
-        "success": "Đăng ký thành công!"
-    },
-    "registerAddress": {
-        "title": "Địa chỉ",
-        "submit": "Tiếp tục",
-        "submitting": "Đang xử lý...",
-        "errors": {
-            "title": "Lỗi nhập liệu",
-            "country": "Vui lòng nhập quốc gia",
-            "cityProvince": "Vui lòng nhập tỉnh/thành phố",
-            "district": "Vui lòng nhập quận/huyện",
-            "wardOrCommune": "Vui lòng nhập phường/xã",
-            "streetAddress": "Vui lòng nhập số nhà, tên đường"
+        "success": "Đăng ký thành công!",
+        "address": {
+            "title": "Địa chỉ hiện tại",
+            "country": "Quốc gia",
+            "countryPlaceholder": "Nhập quốc gia của bạn",
+            "cityProvince": "Thành phố/Tỉnh",
+            "cityProvincePlaceholder": "Nhập thành phố/tỉnh của bạn",
+            "district": "Quận/Huyện",
+            "districtPlaceholder": "Nhập quận/huyện của bạn",
+            "wardOrCommune": "Phường/Xã",
+            "wardOrCommunePlaceholder": "Nhập phường/xã của bạn",
+            "streetAddress": "Địa chỉ đường",
+            "streetAddressPlaceholder": "Nhập địa chỉ đường của bạn",
+            "submit": "Tiếp tục",
+            "submitting": "Đang xử lý..."
+        },
+        "notificationScan": {
+            "title": "Quét mã QR trên CCCD",
+            "button": "Chụp QR trên CCCD",
+            "notice": "Bạn sẽ chịu trách nhiệm trước pháp luật về việc cung cấp ",
+            "emphasis": "CCCD gắn chip là bản gốc, chính chủ, còn hiệu lực"
+        },
+        "camera": {
+            "title": "Quét mã QR",
+            "notAvailable": "Camera không khả dụng",
+            "permissionRequired": "Cần quyền truy cập camera để quét mã QR",
+            "requestPermission": "Cấp quyền truy cập",
+            "scanScreen": {
+                "instruction": "Đặt mã QR vào trong khung để quét"
+            }
+        },
+        "resultScreen": {
+            "title": "Xác nhận thông tin",
+            "identityNumber": "Số CCCD",
+            "name": "Họ và tên",
+            "dateOfBirth": "Ngày sinh",
+            "gender": "Giới tính",
+            "identityHome": "Địa chỉ thường trú",
+            "identitySupplyDay": "Ngày cấp",
+            "identityDueDay": "Ngày hết hạn",
+            "identityAddress": "Nơi cấp",
+            "placeOfBirth": "Nơi sinh",
+            "religion": "Tôn giáo",
+            "ethnicity": "Dân tộc", 
+            "nationality": "Quốc tịch",
+            "signatureImage": "Ảnh chữ ký",
+            "frontImage": "Ảnh mặt trước CCCD",
+            "backImage": "Ảnh mặt sau CCCD",
+            "datePicker": {
+                "cancel": "Hủy",
+                "confirm": "Xác nhận"
+            },
+            "imageError": "Không thể tải ảnh lên, vui lòng thử lại",
+            "submit": "Đăng ký",
+            "processing": "Đang xử lý...",
+            "validationErrors": {
+                "placeOfBirth": "Vui lòng nhập nơi sinh",
+                "expirationDate": "Vui lòng nhập ngày hết hạn",
+                "issuingAuthority": "Vui lòng nhập nơi cấp",
+                "religion": "Vui lòng nhập tôn giáo",
+                "ethnicity": "Vui lòng nhập dân tộc",
+                "nationality": "Vui lòng nhập quốc tịch",
+                "signatureImage": "Vui lòng chọn ảnh chữ ký",
+                "frontImage": "Vui lòng chọn ảnh mặt trước CCCD",
+                "backImage": "Vui lòng chọn ảnh mặt sau CCCD"
+            }
         }
     },
+   
     "forgetPassword": {
         "title": "Quên mật khẩu",
         "email": "Email / Số điện thoại",
@@ -239,9 +293,6 @@
         "newPassword": "Mật khẩu mới",
         "confirmPassword": "Xác nhận mật khẩu",
         "submit": "Thay đổi"
-    },
-    "notificationScan": {
-        "title": "Quét mã QR trên CCCD",
-        "button": "Chụp QR trên CCCD"
     }
+    
 }

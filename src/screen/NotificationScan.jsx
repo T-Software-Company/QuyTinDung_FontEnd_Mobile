@@ -41,17 +41,16 @@ const Notification = ({navigation}) => {
 
             <View>
               <Text style={{color: theme.text, lineHeight: 24, fontSize: 13}}>
-                Bạn sẽ chịu trách nhiệm trước pháp luật về việc cung cấp{' '}
+                {t('register.notificationScan.notice')}
                 <Text style={{fontWeight: 600}}>
-                  CCCD gắn chip là bản gốc, chính chủ, còn hiệu lực
+                  {t('register.notificationScan.emphasis')}
                 </Text>
               </Text>
               <TouchableOpacity
                 style={styles.button}
                 onPress={() => navigation.navigate('QrScreen', {formDataAddress, formDataUser})}>
-                {/* Sửa cách truyền params */}
                 <Text style={styles.textButton}>
-                  {t('notificationScan.button')}
+                  {t('register.notificationScan.button')}
                 </Text>
               </TouchableOpacity>
             </View>

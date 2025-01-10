@@ -68,31 +68,31 @@ const RegisterAddress = ({navigation, route}) => {
     () => [
       {
         name: 'country',
-        label: 'Quốc gia',
-        placeholder: 'Nhập quốc gia',
+        label: t('register.address.country'),
+        placeholder: t('register.address.countryPlaceholder'),
       },
       {
         name: 'cityProvince',
-        label: 'Tỉnh/Thành phố',
-        placeholder: 'Nhập tỉnh/thành phố',
+        label: t('register.address.cityProvince'),
+        placeholder: t('register.address.cityProvincePlaceholder'),
       },
       {
         name: 'district',
-        label: 'Quận/Huyện',
-        placeholder: 'Nhập quận/huyện',
+        label: t('register.address.district'),
+        placeholder: t('register.address.districtPlaceholder'),
       },
       {
         name: 'wardOrCommune',
-        label: 'Phường/Xã',
-        placeholder: 'Nhập phường/xã',
+        label: t('register.address.wardOrCommune'), 
+        placeholder: t('register.address.wardOrCommunePlaceholder'),
       },
       {
         name: 'streetAddress',
-        label: 'Nhập số nhà, tên đường',
-        placeholder: 'Nhập số nhà, tên đường',
+        label: t('register.address.streetAddress'),
+        placeholder: t('register.address.streetAddressPlaceholder'),
       },
     ],
-    [],
+    [t],
   );
 
   // Styles
@@ -203,8 +203,8 @@ const RegisterAddress = ({navigation, route}) => {
                   }}>
                   <Text style={styles.textButton}>
                     {isSubmitting
-                      ? t('registerAddress.submitting')
-                      : t('registerAddress.submit')}
+                      ? t('register.address.submitting')
+                      : t('register.address.submit')}
                   </Text>
                 </TouchableOpacity>
               </View>

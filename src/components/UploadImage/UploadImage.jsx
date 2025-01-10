@@ -1,5 +1,6 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
+import {useTranslation} from 'react-i18next';
 
 const UploadImage = ({
   title,
@@ -9,6 +10,8 @@ const UploadImage = ({
   touched,
   errors,
 }) => {
+  const {i18n} = useTranslation(); // Add i18n from useTranslation
+
   const styles = StyleSheet.create({
     errorText: {
       color: 'red',
@@ -40,12 +43,16 @@ const UploadImage = ({
 
   return (
     <View style={styles.imagePickerContainer}>
-      <Text style={styles.imagePickerLabel}>{title} (dưới 1MB)</Text>
+      <Text style={styles.imagePickerLabel}>
+        {title} {i18n.language === 'vi' ? 'dưới 1MB' : 'under 1MB'}
+      </Text>
       <TouchableOpacity
         style={styles.imagePickerButton}
         onPress={onSelectImage}>
         <Text style={{color: theme.text}}>
-          {typeImage ? 'Thay đổi ảnh' : 'Chọn ảnh'}
+          {i18n.language === 'vi' 
+            ? (typeImage ? 'Thay đổi ảnh' : 'Chọn ảnh')
+            : (typeImage ? 'Change image' : 'Select image')}
         </Text>
       </TouchableOpacity>
       {typeImage && (

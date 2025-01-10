@@ -179,21 +179,75 @@
             "passwordLength": "Password must be at least 6 characters!",
             "passwordMismatch": "Passwords do not match!"
         },
-        "success": "Registration successful!"
-    },
-    "registerAddress": {
-        "title": "Address",
-        "submit": "Continue",
-        "submitting": "Processing...",
-        "errors": {
-            "title": "Input Error",
-            "country": "Please enter your country",
-            "cityProvince": "Please enter your city/province",
-            "district": "Please enter your district",
-            "wardOrCommune": "Please enter your ward/commune",
-            "streetAddress": "Please enter your street address"
+        "success": "Registration successful!",
+        "address": {
+            "title": "Current Address",
+            "country": "Country",
+            "countryPlaceholder": "Enter your country",
+            "cityProvince": "City/Province",
+            "cityProvincePlaceholder": "Enter your city/province",
+            "district": "District",
+            "districtPlaceholder": "Enter your district",
+            "wardOrCommune": "Ward/Commune",
+            "wardOrCommunePlaceholder": "Enter your ward/commune",
+            "streetAddress": "Street Address",
+            "streetAddressPlaceholder": "Enter your street address",
+            "submit": "Continue",
+            "submitting": "Processing..."
+        },
+        "notificationScan": {
+            "title": "Scan QR Code on ID Card",
+            "button": "Scan QR on ID Card",
+            "notice": "You will be legally responsible for providing ",
+            "emphasis": "an original, authentic, and valid chip-based ID card"
+        },
+        "camera": {
+            "title": "Scan QR Code",
+            "notAvailable": "Camera not available",
+            "permissionRequired": "Camera permission is required to scan QR codes",
+            "requestPermission": "Grant Permission",
+            "scanScreen": {
+                "instruction": "Place the QR code inside the frame to scan"
+            }
+        },
+        "resultScreen": {
+            "title": "Confirm Information",
+            "identityNumber": "ID Card Number",
+            "name": "Full Name",
+            "dateOfBirth": "Date of Birth",
+            "gender": "Gender",
+            "identityHome": "Permanent Address",
+            "identitySupplyDay": "Date of Issue",
+            "identityDueDay": "Expiry Date",
+            "identityAddress": "Place of Issue",
+            "placeOfBirth": "Place of Birth",
+            "religion": "Religion",
+            "ethnicity": "Ethnicity",
+            "nationality": "Nationality",
+            "signatureImage": "Signature Image",
+            "frontImage": "Front of ID Card",
+            "backImage": "Back of ID Card",
+            "datePicker": {
+                "cancel": "Cancel",
+                "confirm": "Confirm"
+            },
+            "imageError": "Could not upload image, please try again",
+            "submit": "Register",
+            "processing": "Processing...",
+            "validationErrors": {
+                "placeOfBirth": "Please enter place of birth",
+                "expirationDate": "Please enter expiration date",
+                "issuingAuthority": "Please enter issuing authority",
+                "religion": "Please enter religion",
+                "ethnicity": "Please enter ethnicity", 
+                "nationality": "Please enter nationality",
+                "signatureImage": "Please select a signature image",
+                "frontImage": "Please select front side of ID card",
+                "backImage": "Please select back side of ID card"
+            }
         }
     },
+    
     "forgetPassword": {
         "title": "Forgot Password",
         "email": "Email / Phone number",

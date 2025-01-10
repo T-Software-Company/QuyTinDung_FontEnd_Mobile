@@ -383,28 +383,30 @@ const Header = ({Navbar, navigation}) => {
             <Image source={AppIcons.back} style={styles.icon} />
           </TouchableOpacity>
           <View>
-            <Text style={styles.heading}>{t('notificationScan.title')}</Text>
+            <Text style={styles.heading}>{t('register.camera.title')}</Text>
           </View>
-          <TouchableOpacity style={[styles.noBorderArrow, styles.hidden]}>
-            
-          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.noBorderArrow, styles.hidden]}></TouchableOpacity>
         </View>
       )}
 
       {/* Render header when navbar name ScanQR */}
       {Navbar === 'ScanQR' && (
-        <View style={[styles.containHeading, {paddingTop: 50, backgroundColor: "rgba(0,0,0,0.6)"}]}>
+        <View
+          style={[
+            styles.containHeading,
+            {paddingTop: 50, backgroundColor: 'rgba(0,0,0,0.6)'},
+          ]}>
           <TouchableOpacity
             style={[styles.noBorderArrow]}
             onPress={() => navigation.goBack()}>
             <Image source={AppIcons.back} style={styles.icon} />
           </TouchableOpacity>
           <View>
-            <Text style={styles.heading}>{t('notificationScan.title')}</Text>
+            <Text style={styles.heading}>{t('register.camera.title')}</Text>
           </View>
-          <TouchableOpacity style={[styles.noBorderArrow, styles.hidden]}>
-            
-          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.noBorderArrow, styles.hidden]}></TouchableOpacity>
         </View>
       )}
 
@@ -417,11 +419,12 @@ const Header = ({Navbar, navigation}) => {
             <Image source={AppIcons.back} style={styles.icon} />
           </TouchableOpacity>
           <View>
-            <Text style={styles.heading}>Xác thực thông tin</Text>
+            <Text style={styles.heading}>
+              {t('register.resultScreen.title')}
+            </Text>
           </View>
-          <TouchableOpacity style={[styles.noBorderArrow, styles.hidden]}>
-            
-          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.noBorderArrow, styles.hidden]}></TouchableOpacity>
         </View>
       )}
 
@@ -434,11 +437,10 @@ const Header = ({Navbar, navigation}) => {
             <Image source={AppIcons.back} style={styles.icon} />
           </TouchableOpacity>
           <View>
-            <Text style={styles.heading}>Địa chỉ hiện tại</Text>
+            <Text style={styles.heading}>{t('register.address.title')}</Text>
           </View>
-          <TouchableOpacity style={[styles.noBorderArrow, styles.hidden]}>
-            
-          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.noBorderArrow, styles.hidden]}></TouchableOpacity>
         </View>
       )}
     </>

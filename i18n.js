@@ -9,7 +9,7 @@ i18n.use(initReactI18next).init({
     en: {translation: en},
     vi: {translation: vi},
   },
-  lng: 'vi', // Ngôn ngữ mặc định
+  lng: 'en', // Ngôn ngữ mặc định
   fallbackLng: 'vi', // Ngôn ngữ dự phòng khi không tìm thấy bản dịch
   interpolation: {
     escapeValue: false, // Không cần escape HTML

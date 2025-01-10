@@ -23,7 +23,7 @@ const windowHeight = Dimensions.get('window').height;
 
 const Login = ({navigation}) => {
   const [formData, setFormData] = useState({
-    email: 'febif@mailinator.com',
+    email: 'admin2@gmail.com',
     password: '123456',
   });
   const [invisible, setInvisible] = useState(true);

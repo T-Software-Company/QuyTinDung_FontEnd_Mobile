@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import {
   SafeAreaView,
   StyleSheet,
@@ -5,10 +6,7 @@ import {
   TouchableOpacity,
   View,
   Dimensions,
-  TextInput,
-  Image,
   Alert,
-  Platform,
   ActivityIndicator,
 } from 'react-native';
 import React, {useState} from 'react';
@@ -17,21 +15,30 @@ import {useTheme} from '../context/ThemeContext';
 import InputBorder from '../components/InputBorder/InputBorder';
 import {useTranslation} from 'react-i18next';
 import {useAuth} from '../context/AuthContext';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
-const windowWidth = Dimensions.get('window').width;
+interface LoginProps {
+  navigation: NativeStackNavigationProp<any>;
+}
+
+interface FormData {
+  email: string;
+  password: string;
+}
+
 const windowHeight = Dimensions.get('window').height;
 
-const Login = ({navigation}) => {
-  const [formData, setFormData] = useState({
+const Login: React.FC<LoginProps> = ({navigation}) => {
+  const [formData, setFormData] = useState<FormData>({
     email: 'admin2@gmail.com',
     password: '123456',
   });
-  const [invisible, setInvisible] = useState(true);
+  const [invisible, setInvisible] = useState<boolean>(true);
   const {theme} = useTheme();
   const {t} = useTranslation();
   const {login, loading, error} = useAuth();
 
-  const handleChange = (field, value) => {
+  const handleChange = (field: keyof FormData, value: string): void => {
     setFormData(prev => ({
       ...prev,
       [field]: value,
@@ -39,12 +46,12 @@ const Login = ({navigation}) => {
   };
 
   // Hàm kiểm tra định dạng email
-  const isValidEmail = email => {
+  const isValidEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex kiểm tra email
     return emailRegex.test(email);
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (): Promise<void> => {
     const {email, password} = formData;
 
     // Validation checks
@@ -53,15 +60,15 @@ const Login = ({navigation}) => {
       return;
     }
 
-    // if (!isValidEmail(email)) {
-    //   Alert.alert(t('notification.title'), t('login.errors.invalidEmail'));
-    //   return;
-    // }
+    if (!isValidEmail(email)) {
+      Alert.alert(t('notification.title'), t('login.errors.invalidEmail'));
+      return;
+    }
 
-    // if (password.length < 6) {
-    //   Alert.alert(t('notification.title'), t('login.errors.passwordLength'));
-    //   return;
-    // }
+    if (password.length < 6) {
+      Alert.alert(t('notification.title'), t('login.errors.passwordLength'));
+      return;
+    }
 
     const result = await login(email, password);
 

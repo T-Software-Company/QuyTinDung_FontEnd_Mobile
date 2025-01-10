@@ -7,7 +7,7 @@
 // import 'react-native-gesture-handler'; // Đảm bảo import trước bất kỳ thư viện nào khác
 
 import React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {View, Text} from 'react-native';
 
 import RootNavigator from './src/navigators/RootNavigator';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
@@ -17,20 +17,32 @@ import './i18n';
 import ThemeProvider from './src/context/ThemeContext';
 import {AuthProvider} from './src/context/AuthContext';
 
-class ErrorBoundary extends React.Component {
-  state = {hasError: false};
+interface ErrorBoundaryProps {
+  children: React.ReactNode;
+}
 
-  static getDerivedStateFromError(error) {
+interface ErrorBoundaryState {
+  hasError: boolean;
+}
+
+class ErrorBoundary extends React.Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
+  state: ErrorBoundaryState = {hasError: false};
+
+  static getDerivedStateFromError(): ErrorBoundaryState {
     return {hasError: true};
   }
 
-  componentDidCatch(error, errorInfo) {
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
     console.error('Auth Error:', error, errorInfo);
   }
 
-  render() {
+  render(): React.ReactNode {
     if (this.state.hasError) {
       return (
+        // eslint-disable-next-line react-native/no-inline-styles
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <Text>Something went wrong with authentication.</Text>
         </View>
@@ -40,10 +52,11 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-function App() {
+function App(): React.ReactNode {
   const queryClient = new QueryClient();
 
   return (
+    // eslint-disable-next-line react-native/no-inline-styles
     <SafeAreaProvider style={{flex: 1}}>
       <ErrorBoundary>
         <QueryClientProvider client={queryClient}>

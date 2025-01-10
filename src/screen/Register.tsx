@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-shadow */
+/* eslint-disable react-native/no-inline-styles */
 import React, { useState, useCallback, useMemo } from 'react';
 import {
   SafeAreaView,
@@ -15,11 +17,35 @@ import { useTheme } from '../context/ThemeContext';
 import InputBorder from '../components/InputBorder/InputBorder';
 import { useTranslation } from 'react-i18next';
 
-const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
+interface RegisterFormValues {
+  phone: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
 
-const Register = ({ navigation }) => {
-  const [invisible, setInvisible] = useState(true);
-  const [invisibleConfirm, setInvisibleConfirm] = useState(true);
+interface InputFieldConfig {
+  name: keyof RegisterFormValues;
+  iconSource: any;
+  placeholder: string;
+  secureVisible?: boolean;
+  onPressIcon?: () => void;
+  touchEyes?: boolean;
+  keyboardType?: 'default' | 'numeric' | 'email-address';
+}
+
+interface RegisterProps {
+  navigation: {
+    navigate: (screen: string, params?: any) => void;
+    goBack: () => void;
+  };
+}
+
+const { height: windowHeight } = Dimensions.get('window');
+
+const Register: React.FC<RegisterProps> = ({ navigation }) => {
+  const [invisible, setInvisible] = useState<boolean>(true);
+  const [invisibleConfirm, setInvisibleConfirm] = useState<boolean>(true);
   const { theme } = useTheme();
   const { t } = useTranslation();
 
@@ -45,14 +71,14 @@ const Register = ({ navigation }) => {
 
   // Handle Form Submission
   const handleSubmit = useCallback(
-    (values) => {
+    (values: RegisterFormValues) => {
       navigation.navigate('RegisterAddress', { formDataUser: values });
     },
     [navigation]
   );
 
   // Input Fields Configuration
-  const inputFields = useMemo(
+  const inputFields: InputFieldConfig[] = useMemo(
     () => [
       {
         name: 'phone',
@@ -148,7 +174,7 @@ const Register = ({ navigation }) => {
                   touchEyes={field.touchEyes}
                   keyboardType={field.keyboardType}
                   error={touched[field.name] && errors[field.name]}
-                  textContentType="oneTimeCode"
+                  // textContentType="oneTimeCode"
                 />
               ))}
 

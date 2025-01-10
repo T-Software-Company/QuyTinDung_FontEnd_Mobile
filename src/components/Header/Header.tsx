@@ -1,11 +1,27 @@
+/* eslint-disable react-native/no-inline-styles */
 import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {AppIcons} from '../../icons';
 import {useTheme} from '../../context/ThemeContext';
 import {useAuth} from '../../context/AuthContext';
 
-const Header = ({Navbar, navigation}) => {
+type RootStackParamList = {
+  InfoPerson: undefined;
+  Notification: undefined;
+  SentSave: undefined;
+  CreateLoan: undefined;
+  Home: undefined;
+  // ...add other screen names as needed
+};
+
+interface HeaderProps {
+  Navbar: string;
+  navigation: NativeStackNavigationProp<RootStackParamList>;
+}
+
+const Header: React.FC<HeaderProps> = ({Navbar, navigation}) => {
   const {t} = useTranslation();
   const {theme} = useTheme();
   const {logout} = useAuth();
@@ -258,7 +274,7 @@ const Header = ({Navbar, navigation}) => {
               style={{
                 position: 'absolute',
                 right: 0,
-                width: '80',
+                width: 80, // Changed from '80' to 80
                 textAlign: 'right',
                 flexShrink: 1,
                 flexWrap: 'nowrap',
@@ -385,8 +401,7 @@ const Header = ({Navbar, navigation}) => {
           <View>
             <Text style={styles.heading}>{t('register.camera.title')}</Text>
           </View>
-          <TouchableOpacity
-            style={[styles.noBorderArrow, styles.hidden]}></TouchableOpacity>
+          <TouchableOpacity style={[styles.noBorderArrow, styles.hidden]} />
         </View>
       )}
 
@@ -406,7 +421,7 @@ const Header = ({Navbar, navigation}) => {
             <Text style={styles.heading}>{t('register.camera.title')}</Text>
           </View>
           <TouchableOpacity
-            style={[styles.noBorderArrow, styles.hidden]}></TouchableOpacity>
+            style={[styles.noBorderArrow, styles.hidden]} />
         </View>
       )}
 
@@ -424,7 +439,7 @@ const Header = ({Navbar, navigation}) => {
             </Text>
           </View>
           <TouchableOpacity
-            style={[styles.noBorderArrow, styles.hidden]}></TouchableOpacity>
+            style={[styles.noBorderArrow, styles.hidden]} />
         </View>
       )}
 
@@ -440,7 +455,7 @@ const Header = ({Navbar, navigation}) => {
             <Text style={styles.heading}>{t('register.address.title')}</Text>
           </View>
           <TouchableOpacity
-            style={[styles.noBorderArrow, styles.hidden]}></TouchableOpacity>
+            style={[styles.noBorderArrow, styles.hidden]} />
         </View>
       )}
     </>

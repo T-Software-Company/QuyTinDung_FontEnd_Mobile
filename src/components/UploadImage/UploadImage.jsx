@@ -50,7 +50,7 @@ const UploadImage = ({
         style={styles.imagePickerButton}
         onPress={onSelectImage}>
         <Text style={{color: theme.text}}>
-          {i18n.language === 'vi' 
+          {i18n.language === 'vi'
             ? (typeImage ? 'Thay đổi ảnh' : 'Chọn ảnh')
             : (typeImage ? 'Change image' : 'Select image')}
         </Text>

@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import {
   Image,
   SafeAreaView,
@@ -5,21 +6,43 @@ import {
   Text,
   TouchableOpacity,
   View,
-  ScrollView,
   Platform,
 } from 'react-native';
-import React, {useState} from 'react';
+import React from 'react';
 import Header from '../components/Header/Header';
-import ContentButton from '../components/ContentButton/ContentButton';
-import i18n from '../../i18n';
 import {useTranslation} from 'react-i18next';
 import {useTheme} from '../context/ThemeContext';
 import {AppIcons} from '../icons';
 import {useRoute} from '@react-navigation/native';
+import {RouteProp} from '@react-navigation/native';
 
-const Notification = ({navigation}) => {
-  const currentLanguage = i18n.language;
-  const route = useRoute();
+interface FormDataAddress {
+  // Add your form data address properties here
+  [key: string]: any;
+}
+
+interface FormDataUser {
+  // Add your form data user properties here
+  [key: string]: any;
+}
+
+type RootStackParamList = {
+  NotificationScan: {
+    formDataAddress: FormDataAddress;
+    formDataUser: FormDataUser;
+  };
+  QrScreen: {
+    formDataAddress: FormDataAddress;
+    formDataUser: FormDataUser;
+  };
+};
+
+type NotificationProps = {
+  navigation: any;
+};
+
+const Notification: React.FC<NotificationProps> = ({navigation}) => {
+  const route = useRoute<RouteProp<RootStackParamList, 'NotificationScan'>>();
   const {formDataAddress, formDataUser} = route.params; // Lấy formData từ Register
   const {t} = useTranslation();
   const {theme} = useTheme();

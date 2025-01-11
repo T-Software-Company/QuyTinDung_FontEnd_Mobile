@@ -22,7 +22,7 @@ interface InputBorderProps {
   onPress?: () => void;
   pointerEvents?: 'auto' | 'none' | 'box-none' | 'box-only';
   notChange?: boolean;
-  error?: string;
+  error?: string | undefined | boolean;
 }
 
 const InputBorder: React.FC<InputBorderProps> = ({
@@ -39,7 +39,9 @@ const InputBorder: React.FC<InputBorderProps> = ({
   onPress,
   pointerEvents,
   notChange,
+  error,
 }) => {
+  console.log('error', {error});
   const styles = StyleSheet.create({
     heading: {
       fontSize: 14,
@@ -73,6 +75,11 @@ const InputBorder: React.FC<InputBorderProps> = ({
     },
     touchableContainer: {
       width: '100%',
+    },
+    errorText: {
+      color: 'red',
+      fontSize: 12,
+      marginTop: 4,
     },
   });
 
@@ -129,6 +136,7 @@ const InputBorder: React.FC<InputBorderProps> = ({
             )}
           </TouchableOpacity>
         )}
+        {error && <Text style={styles.errorText}>{error}</Text>}
       </View>
     </View>
   );

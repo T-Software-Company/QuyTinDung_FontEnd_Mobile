@@ -90,6 +90,7 @@ const ResultQR = () => {
         label: t('register.resultScreen.identityDueDay'),
         isDate: true,
         iconSource: AppIcons.email,
+        // eslint-disable-next-line no-undef
         onPress: () => showDatePicker('expirationDate'),
         pointerEvents: 'none',
       },
@@ -191,6 +192,7 @@ const ResultQR = () => {
             routes: [{name: 'Login'}],
           });
         }
+      // eslint-disable-next-line no-catch-shadow, no-shadow
       } catch (error) {
         Alert.alert(t('register.resultScreen.title'), error.message);
       } finally {
@@ -270,6 +272,10 @@ const ResultQR = () => {
       backgroundColor: 'white',
       borderRadius: 12,
       height: Platform.OS === 'ios' ? 260 : 'auto',
+      padding: 20,
+      width: '90%',
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     datePickerOverlay: {
       position: 'absolute',
@@ -280,14 +286,6 @@ const ResultQR = () => {
       backgroundColor: 'rgba(0, 0, 0, 0.5)',
       justifyContent: 'center',
       alignItems: 'center',
-    },
-    datePickerContainer: {
-      backgroundColor: 'white',
-      borderRadius: 12,
-      padding: 20,
-      width: '90%',
-      alignItems: 'center',
-      justifyContent: 'center',
     },
     datePickerWrapper: {
       height: 200,

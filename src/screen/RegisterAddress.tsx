@@ -1,17 +1,15 @@
+/* eslint-disable react-native/no-inline-styles */
 import {
   SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  Dimensions,
-  TextInput,
-  Image,
   Alert,
   ScrollView,
 } from 'react-native';
 import React, {useMemo, useCallback} from 'react';
-import {Formik} from 'formik';
+import {Formik, FormikProps} from 'formik';
 import * as Yup from 'yup';
 import {AppIcons} from '../icons';
 import {useTheme} from '../context/ThemeContext';
@@ -19,16 +17,37 @@ import InputBorder from '../components/InputBorder/InputBorder';
 import {useTranslation} from 'react-i18next';
 import Header from '../components/Header/Header';
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+interface FormValues {
+  country: string;
+  cityProvince: string;
+  district: string;
+  wardOrCommune: string;
+  streetAddress: string;
+}
 
-const RegisterAddress = ({navigation, route}) => {
+interface RegisterAddressProps {
+  navigation: any; // Replace with proper navigation type from your navigation library
+  route: {
+    params?: {
+      formDataUser?: Record<string, any>;
+    };
+  };
+}
+
+interface InputFieldConfig {
+  name: keyof FormValues;
+  label: string;
+  placeholder: string;
+}
+
+
+const RegisterAddress: React.FC<RegisterAddressProps> = ({navigation, route}) => {
   const {theme} = useTheme();
   const {t} = useTranslation();
-  const previousFormData = route.params?.formDataUser || {};
+  const previousFormData = useMemo(() => route.params?.formDataUser || {}, [route.params]);
 
   // Validation Schema
-  const validationSchema = useMemo(
+  const validationSchema: Yup.ObjectSchema<FormValues> = useMemo(
     () =>
       Yup.object().shape({
         country: Yup.string()
@@ -52,7 +71,7 @@ const RegisterAddress = ({navigation, route}) => {
 
   // Handle Form Submission
   const handleSubmit = useCallback(
-    values => {
+    (values: FormValues) => {
       navigation.navigate('NotificationScan', {
         formDataAddress: {
           ...values,
@@ -60,11 +79,11 @@ const RegisterAddress = ({navigation, route}) => {
         formDataUser: previousFormData,
       });
     },
-    [navigation, previousFormData, validationSchema, t],
+    [navigation, previousFormData],
   );
 
   // Input Fields Configuration
-  const inputFields = useMemo(
+  const inputFields: InputFieldConfig[] = useMemo(
     () => [
       {
         name: 'country',
@@ -83,7 +102,7 @@ const RegisterAddress = ({navigation, route}) => {
       },
       {
         name: 'wardOrCommune',
-        label: t('register.address.wardOrCommune'), 
+        label: t('register.address.wardOrCommune'),
         placeholder: t('register.address.wardOrCommunePlaceholder'),
       },
       {
@@ -145,7 +164,7 @@ const RegisterAddress = ({navigation, route}) => {
       <View style={styles.container}>
         <Header Navbar="ConfirmAddress" navigation={navigation} />
 
-        <Formik
+        <Formik<FormValues>
           initialValues={{
             country: 'Vietnam',
             cityProvince: 'Saigon',
@@ -156,6 +175,7 @@ const RegisterAddress = ({navigation, route}) => {
           validationSchema={validationSchema}
           onSubmit={handleSubmit}>
           {({
+            // eslint-disable-next-line @typescript-eslint/no-shadow
             handleSubmit,
             values,
             setFieldValue,
@@ -164,7 +184,7 @@ const RegisterAddress = ({navigation, route}) => {
             setTouched,
             isSubmitting,
             resetForm,
-          }) => (
+          }: FormikProps<FormValues>) => (
             <>
               <ScrollView style={styles.body}>
                 <View>
@@ -181,6 +201,7 @@ const RegisterAddress = ({navigation, route}) => {
                       value={values[field.name]}
                       theme={theme}
                       error={errors[field.name]}
+                      textContentType="none"
                     />
                   ))}
                 </View>

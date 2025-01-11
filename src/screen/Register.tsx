@@ -46,6 +46,7 @@ const { height: windowHeight } = Dimensions.get('window');
 const Register: React.FC<RegisterProps> = ({ navigation }) => {
   const [invisible, setInvisible] = useState<boolean>(true);
   const [invisibleConfirm, setInvisibleConfirm] = useState<boolean>(true);
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const { theme } = useTheme();
   const { t } = useTranslation();
 
@@ -149,7 +150,7 @@ const Register: React.FC<RegisterProps> = ({ navigation }) => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ handleChange, handleSubmit, values, errors, touched }) => (
+        {({ handleChange, handleSubmit, values, errors, touched, setTouched }) => (
           <View style={styles.container}>
             <View
               style={{
@@ -166,29 +167,44 @@ const Register: React.FC<RegisterProps> = ({ navigation }) => {
                   name={field.placeholder}
                   iconSource={field.iconSource}
                   placeholder={field.placeholder}
-                  onSetValue={handleChange(field.name)}
+                  onSetValue={(value) => {
+                    setIsSubmitted(false);
+                    handleChange(field.name)(value);
+                  }}
                   value={values[field.name]}
                   theme={theme}
                   secureVisible={field.secureVisible}
                   onPressIcon={field.onPressIcon}
                   touchEyes={field.touchEyes}
                   keyboardType={field.keyboardType}
-                  error={touched[field.name] && errors[field.name]}
-                  // textContentType="oneTimeCode"
+                  error={isSubmitted && touched[field.name] && errors[field.name]}
+                  textContentType="none"
                 />
               ))}
 
               <TouchableOpacity
                 style={styles.button}
                 onPress={() => {
+                  setIsSubmitted(true);
+                  // Set all fields as touched
+                  const touchedFields = {
+                    phone: true,
+                    email: true,
+                    password: true,
+                    confirmPassword: true,
+                  };
+                  setTouched(touchedFields);
+
                   validationSchema
                     .validate(values, { abortEarly: false })
+                    .then(() => {
+                      handleSubmit();
+                    })
                     .catch((error) => {
                       if (error.inner && error.inner.length > 0) {
                         Alert.alert(t('Thông báo'), error.inner[0].message);
                       }
                     });
-                  handleSubmit();
                 }}
               >
                 <Text style={styles.textButton}>{t('register.submit')}</Text>

@@ -18,7 +18,7 @@ type RootStackParamList = {
 
 interface HeaderProps {
   Navbar: string;
-  navigation: NativeStackNavigationProp<RootStackParamList>;
+  navigation: NativeStackNavigationProp<RootStackParamList, keyof RootStackParamList>;
 }
 
 const Header: React.FC<HeaderProps> = ({Navbar, navigation}) => {

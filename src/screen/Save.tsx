@@ -1,46 +1,59 @@
-import {
-  Image,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import Header from '../components/Header/Header';
 import Table from '../components/Table/Table';
 import BoxAdd from '../components/BoxAdd/BoxAdd';
 import {useTranslation} from 'react-i18next';
 import {useTheme} from '../context/ThemeContext';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../navigators/RootNavigator';
 
-const Save = ({navigation}) => {
-  const {theme} = useTheme();
+type SaveScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Save'>;
+
+interface SaveProps {
+  navigation: SaveScreenNavigationProp;
+}
+
+interface Theme {
+  background: string;
+  text: string;
+}
+
+interface SaveBoxData {
+  id: number;
+  boxes: Array<{
+    key: string;
+    value: string;
+  }>;
+}
+
+const Save: React.FC<SaveProps> = ({navigation}) => {
+  const {theme} = useTheme() as {theme: Theme};
   const {t} = useTranslation();
 
-  const data = [
+  const data: SaveBoxData[] = [
     {
       id: 1,
       boxes: [
-        {key: `${t('save.originalAmount')}`, value: '100.000.000 đ'},
-        {key: `${t('save.accountNumber')}`, value: '123-456-789'},
-        {key: `${t('save.dueDate')}`, value: '22/07/2024'},
+        {key: t('save.originalAmount'), value: '100.000.000 đ'},
+        {key: t('save.accountNumber'), value: '123-456-789'},
+        {key: t('save.dueDate'), value: '22/07/2024'},
       ],
     },
     {
       id: 2,
       boxes: [
-        {key: `${t('save.originalAmount')}`, value: '200.000.000 đ'},
-        {key: `${t('save.accountNumber')}`, value: '987-654-321'},
-        {key: `${t('save.dueDate')}`, value: '15/08/2024'},
+        {key: t('save.originalAmount'), value: '200.000.000 đ'},
+        {key: t('save.accountNumber'), value: '987-654-321'},
+        {key: t('save.dueDate'), value: '15/08/2024'},
       ],
     },
     {
       id: 3,
       boxes: [
-        {key: `${t('save.originalAmount')}`, value: '300.000.000 đ'},
-        {key: `${t('save.accountNumber')}`, value: '987-654-321'},
-        {key: `${t('save.dueDate')}`, value: '15/08/2024'},
+        {key: t('save.originalAmount'), value: '300.000.000 đ'},
+        {key: t('save.accountNumber'), value: '987-654-321'},
+        {key: t('save.dueDate'), value: '15/08/2024'},
       ],
     },
   ];
@@ -48,12 +61,7 @@ const Save = ({navigation}) => {
   return (
     <SafeAreaView style={[styles.view, {backgroundColor: theme.background}]}>
       <View style={styles.container}>
-        {/* Heading */}
-
         <Header Navbar="Save" navigation={navigation} />
-
-        {/* Body */}
-
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           showsVerticalScrollIndicator={false}>
@@ -75,7 +83,7 @@ const Save = ({navigation}) => {
                 name="save"
                 data={data}
                 navigation={navigation}
-                detail="InfoSave"
+                detail="InfoSave"  // TypeScript will ensure this is correct
               />
             </View>
           </View>

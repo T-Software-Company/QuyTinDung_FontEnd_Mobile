@@ -2,23 +2,15 @@
 import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../../navigators/RootNavigator'; // Fix import path
 import {AppIcons} from '../../icons';
 import {useTheme} from '../../context/ThemeContext';
 import {useAuth} from '../../context/AuthContext';
 
-type RootStackParamList = {
-  InfoPerson: undefined;
-  Notification: undefined;
-  SentSave: undefined;
-  CreateLoan: undefined;
-  Home: undefined;
-  // ...add other screen names as needed
-};
-
 interface HeaderProps {
   Navbar: string;
-  navigation: NativeStackNavigationProp<RootStackParamList, keyof RootStackParamList>;
+  navigation: StackNavigationProp<RootStackParamList, keyof RootStackParamList>;
 }
 
 const Header: React.FC<HeaderProps> = ({Navbar, navigation}) => {

@@ -33,17 +33,52 @@ import ForgetPasswordScreen from '../screen/ForgetPassword';
 import RegisterScreen from '../screen/Register';
 import RegisterAddressScreen from '../screen/RegisterAddress';
 
+export interface FormDataAddress {
+  country: string;
+  cityProvince: string;
+  district: string;
+  wardOrCommune: string;
+  streetAddress: string;
+}
+
+export interface FormDataUser {
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+}
+
+export interface UserData {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  // Add other user data fields as needed
+}
+
 export type RootStackParamList = {
   HomeTabs: undefined;
   Login: undefined;
   Register: undefined;
-  RegisterAddress: undefined;
+  RegisterAddress: {
+    formDataUser: FormDataUser;
+  };
   ForgetPassword: undefined;
-  QrScreen: undefined;
-  ResultQR: undefined;
-  NotificationScan: undefined;
-  InfoSave: undefined;
-  InfoLoan: undefined;
+  QrScreen: {
+    formDataAddress: FormDataAddress;
+    formDataUser: FormDataUser;
+  };
+  ResultQR: {
+    formDataAddress: FormDataAddress;
+    formDataUser: FormDataUser;
+    qrData: string[];
+  };
+  NotificationScan: {
+    formDataAddress: FormDataAddress;
+    formDataUser: FormDataUser;
+  };
+  InfoSave: {id?: string};
+  InfoLoan: {id?: string};
   InfoPerson: undefined;
   Deposit: undefined;
   Transfer: undefined;
@@ -53,20 +88,32 @@ export type RootStackParamList = {
   DarkModeSetting: undefined;
   ChangePassword: undefined;
   Notification: undefined;
+  Home: undefined;
+  Save: undefined;
+  Loan: undefined;
+  Rate: undefined;
+  Setting: undefined;
+  ScanQR: undefined;
+  ConfirmInfo: undefined;
+  ConfirmAddress: undefined;
 };
 
 export type TabParamList = {
-  [key: string]: undefined; // Allow dynamic tab names from translations
+  Home: undefined;
+  Save: undefined;
+  Loan: undefined;
+  Rate: undefined;
+  Setting: undefined;
 };
 
 const Tab = createBottomTabNavigator<TabParamList>();
 const Stack = createStackNavigator<RootStackParamList>();
 
-const MyTabs: React.FC = () => {
+const MyTabs = () => {
   const {t} = useTranslation();
   const {theme} = useTheme();
 
-  const getTabIcon = (routeName: string) => {
+  const getTabIcon = (routeName: keyof TabParamList) => {
     switch (routeName) {
       case 'Home':
         return AppIcons.home;

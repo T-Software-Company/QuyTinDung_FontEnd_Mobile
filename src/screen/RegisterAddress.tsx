@@ -16,6 +16,19 @@ import {useTheme} from '../context/ThemeContext';
 import InputBorder from '../components/InputBorder/InputBorder';
 import {useTranslation} from 'react-i18next';
 import Header from '../components/Header/Header';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RouteProp } from '@react-navigation/native';
+import { RootStackParamList } from '../navigators/RootNavigator';
+
+type RegisterAddressNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'RegisterAddress'
+>;
+
+type RegisterAddressRouteProp = RouteProp<
+  RootStackParamList,
+  'RegisterAddress'
+>;
 
 interface FormValues {
   country: string;
@@ -26,12 +39,8 @@ interface FormValues {
 }
 
 interface RegisterAddressProps {
-  navigation: any; // Replace with proper navigation type from your navigation library
-  route: {
-    params?: {
-      formDataUser?: Record<string, any>;
-    };
-  };
+  navigation: RegisterAddressNavigationProp;
+  route: RegisterAddressRouteProp;
 }
 
 interface InputFieldConfig {
@@ -52,19 +61,19 @@ const RegisterAddress: React.FC<RegisterAddressProps> = ({navigation, route}) =>
       Yup.object().shape({
         country: Yup.string()
           .trim()
-          .required(t('registerAddress.errors.country')),
+          .required(t('register.address.errors.country')),
         cityProvince: Yup.string()
           .trim()
-          .required(t('registerAddress.errors.cityProvince')),
+          .required(t('register.address.errors.cityProvince')),
         district: Yup.string()
           .trim()
-          .required(t('registerAddress.errors.district')),
+          .required(t('register.address.errors.district')),
         wardOrCommune: Yup.string()
           .trim()
-          .required(t('registerAddress.errors.wardOrCommune')),
+          .required(t('register.address.errors.wardOrCommune')),
         streetAddress: Yup.string()
           .trim()
-          .required(t('registerAddress.errors.streetAddress')),
+          .required(t('register.address.errors.streetAddress')),
       }),
     [t],
   );
@@ -73,11 +82,9 @@ const RegisterAddress: React.FC<RegisterAddressProps> = ({navigation, route}) =>
   const handleSubmit = useCallback(
     (values: FormValues) => {
       navigation.navigate('NotificationScan', {
-        formDataAddress: {
-          ...values,
-        },
+        formDataAddress: values,
         formDataUser: previousFormData,
-      });
+      } as const);
     },
     [navigation, previousFormData],
   );

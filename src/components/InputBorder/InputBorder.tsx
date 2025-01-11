@@ -1,6 +1,14 @@
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Platform } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TextInput,
+  TouchableOpacity,
+  Platform,
+} from 'react-native';
 import React from 'react';
-import { AppIcons } from '../../icons';
+import {AppIcons} from '../../icons';
 
 interface InputBorderProps {
   name: string;
@@ -20,9 +28,9 @@ interface InputBorderProps {
   editable?: boolean;
   textContentType?: string;
   onPress?: () => void;
-  pointerEvents?: 'auto' | 'none' | 'box-none' | 'box-only';
+  pointerEvents?: 'auto' | 'none' | 'box-none' | 'box-only' | undefined;
   notChange?: boolean;
-  error?: string | undefined | boolean;
+  error?: string | boolean | undefined;
 }
 
 const InputBorder: React.FC<InputBorderProps> = ({
@@ -41,7 +49,6 @@ const InputBorder: React.FC<InputBorderProps> = ({
   notChange,
   error,
 }) => {
-  console.log('error', {error});
   const styles = StyleSheet.create({
     heading: {
       fontSize: 14,

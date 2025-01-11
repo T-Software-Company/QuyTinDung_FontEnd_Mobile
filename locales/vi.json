@@ -45,7 +45,14 @@
             "streetAddress": "Địa chỉ đường",
             "streetAddressPlaceholder": "Nhập địa chỉ đường của bạn",
             "submit": "Tiếp tục",
-            "submitting": "Đang xử lý..."
+            "submitting": "Đang xử lý...",
+            "errors": {
+                "country": "Vui lòng nhập quốc gia",
+                "cityProvince": "Vui lòng nhập thành phố/tỉnh",
+                "district": "Vui lòng nhập quận/huyện",
+                "wardOrCommune": "Vui lòng nhập phường/xã",
+                "streetAddress": "Vui lòng nhập địa chỉ đường"
+            }
         },
         "notificationScan": {
             "title": "Quét mã QR trên CCCD",
@@ -96,7 +103,10 @@
                 "signatureImage": "Vui lòng chọn ảnh chữ ký",
                 "frontImage": "Vui lòng chọn ảnh mặt trước CCCD",
                 "backImage": "Vui lòng chọn ảnh mặt sau CCCD"
-            }
+            },
+            "imageSize": "dưới 1MB",
+            "changeImage": "Thay đổi ảnh",
+            "selectImage": "Chọn ảnh"
         }
     },
    

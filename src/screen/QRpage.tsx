@@ -10,51 +10,33 @@ import {
 } from 'react-native';
 import {
   Camera,
+  Code,
   useCameraDevice,
   useCameraPermission,
 } from 'react-native-vision-camera';
-import {useNavigation, useRoute, RouteProp} from '@react-navigation/native';
+import {RouteProp} from '@react-navigation/native';
 import Header from '../components/Header/Header';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useTranslation} from 'react-i18next'; // Add missing import
+import {RootStackParamList} from '../navigators/RootNavigator'; // Add this import
+import {StackNavigationProp} from '@react-navigation/stack';
 
-interface FormDataAddress {
-  [key: string]: any;
-}
-
-interface FormDataUser {
-  [key: string]: any;
-}
-
-type RootStackParamList = {
-  QrScreen: {
-    formDataAddress: FormDataAddress;
-    formDataUser: FormDataUser;
-  };
-  ResultQR: {
-    formDataAddress: FormDataAddress;
-    formDataUser: FormDataUser;
-    qrData: string[];
-  };
-};
-
-type QRNavigationProp = NativeStackNavigationProp<
+type QRScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   'QrScreen'
 >;
 
+type QRScreenRouteProp = RouteProp<RootStackParamList, 'QrScreen'>;
 
-interface Code {
-  value?: string;
+interface QRScannerAppProps {
+  navigation: QRScreenNavigationProp;
+  route: QRScreenRouteProp;
 }
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const scanAreaSize = SCREEN_WIDTH * 0.7; // Scanner area is 70% of screen width
 
-const QRScannerApp: React.FC = () => {
+const QRScannerApp: React.FC<QRScannerAppProps> = ({navigation, route}) => {
   const {t} = useTranslation(); // Add missing translation hook
-  const navigation = useNavigation<QRNavigationProp>();
-  const route = useRoute<RouteProp<RootStackParamList, 'QrScreen'>>();
   const {formDataAddress, formDataUser} = route.params; // Lấy formData từ NotificationScan
 
   console.log('QR Screen formData:', formDataAddress); // Debug log
@@ -228,7 +210,7 @@ const QRScannerApp: React.FC = () => {
       </View>
 
       <Text style={styles.instructionText}>
-        {t('register.scanScreen.instruction')}
+        {t('register.camera.scanScreen.instruction')}
       </Text>
     </View>
   );

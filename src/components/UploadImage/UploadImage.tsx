@@ -1,8 +1,25 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
+import { Asset } from 'react-native-image-picker';
 
-const UploadImage = ({
+interface ImageResponse extends Asset {
+  uri: string;
+}
+
+interface UploadImageProps {
+  title: string;
+  theme: {
+    noteText: string;
+    text: string;
+  };
+  typeImage: ImageResponse | null;
+  onSelectImage: () => void;
+  touched?: boolean;
+  errors?: string;
+}
+
+const UploadImage: React.FC<UploadImageProps> = ({
   title,
   theme,
   typeImage,
@@ -10,7 +27,7 @@ const UploadImage = ({
   touched,
   errors,
 }) => {
-  const {i18n} = useTranslation(); // Add i18n from useTranslation
+  const {t} = useTranslation();
 
   const styles = StyleSheet.create({
     errorText: {
@@ -44,15 +61,15 @@ const UploadImage = ({
   return (
     <View style={styles.imagePickerContainer}>
       <Text style={styles.imagePickerLabel}>
-        {title} {i18n.language === 'vi' ? 'dưới 1MB' : 'under 1MB'}
+        {title} {t('register.resultScreen.imageSize')}
       </Text>
       <TouchableOpacity
         style={styles.imagePickerButton}
         onPress={onSelectImage}>
         <Text style={{color: theme.text}}>
-          {i18n.language === 'vi'
-            ? (typeImage ? 'Thay đổi ảnh' : 'Chọn ảnh')
-            : (typeImage ? 'Change image' : 'Select image')}
+          {typeImage
+            ? t('register.resultScreen.changeImage')
+            : t('register.resultScreen.selectImage')}
         </Text>
       </TouchableOpacity>
       {typeImage && (

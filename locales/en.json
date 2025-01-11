@@ -193,7 +193,14 @@
             "streetAddress": "Street Address",
             "streetAddressPlaceholder": "Enter your street address",
             "submit": "Continue",
-            "submitting": "Processing..."
+            "submitting": "Processing...",
+            "errors": {
+                "country": "Country is required",
+                "cityProvince": "City/Province is required",
+                "district": "District is required",
+                "wardOrCommune": "Ward/Commune is required",
+                "streetAddress": "Street address is required"
+            }
         },
         "notificationScan": {
             "title": "Scan QR Code on ID Card",
@@ -244,7 +251,10 @@
                 "signatureImage": "Please select a signature image",
                 "frontImage": "Please select front side of ID card",
                 "backImage": "Please select back side of ID card"
-            }
+            },
+            "imageSize": "under 1MB",
+            "changeImage": "Change image",
+            "selectImage": "Select image"
         }
     },
     

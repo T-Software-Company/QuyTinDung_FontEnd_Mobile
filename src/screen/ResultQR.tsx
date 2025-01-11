@@ -1,4 +1,7 @@
-import React, {useEffect, useState, useMemo, useCallback} from 'react';
+/* eslint-disable curly */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-shadow */
+import React, { useState, useMemo, useCallback} from 'react';
 import {
   View,
   Text,
@@ -10,8 +13,6 @@ import {
   Platform,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {useRoute} from '@react-navigation/native';
-import {useNavigation} from '@react-navigation/native';
 import Header from '../components/Header/Header';
 import InputBorder from '../components/InputBorder/InputBorder';
 import {useTranslation} from 'react-i18next';
@@ -20,31 +21,83 @@ import {AppIcons} from '../icons';
 import {useAuth} from '../context/AuthContext';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-import {
-  launchImageLibrary,
-} from 'react-native-image-picker';
+import {launchImageLibrary, ImageLibraryOptions, MediaType} from 'react-native-image-picker';
 import UploadImage from '../components/UploadImage/UploadImage';
 import {uploadImage} from '../api/uploadImage';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp} from '@react-navigation/native';
+import {RootStackParamList, FormDataAddress} from '../navigators/RootNavigator';
+import { Asset } from 'react-native-image-picker';
 
-const ResultQR = () => {
+interface ImageResponse extends Asset {
+  uri: string;
+}
+
+type ResultQRNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'ResultQR'
+>;
+
+type ResultQRRouteProp = RouteProp<RootStackParamList, 'ResultQR'>;
+
+interface ResultQRProps {
+  navigation: ResultQRNavigationProp;
+  route: ResultQRRouteProp;
+}
+
+interface FormValues {
+  [key: string]: any; // Add index signature
+  firstName: string;
+  lastName: string;
+  identifyId: string;
+  fullName: string;
+  dateOfBirth: string;
+  gender: string;
+  permanentAddress: string;
+  issueDate: string;
+  expirationDate: string;
+  issuingAuthority: string;
+  placeOfBirth: string;
+  religion: string;
+  ethnicity: string;
+  nationality: string;
+  signatureImage: string;
+  frontImage: string;
+  backImage: string;
+  legalDocType: string;
+  email: string;
+  phone: string;
+  password: string;
+  address: FormDataAddress;
+}
+
+
+// Remove InitialFormValues interface and use FormValues directly
+const ResultQR: React.FC<ResultQRProps> = ({navigation, route}) => {
   const {theme} = useTheme();
   const {t, i18n} = useTranslation(); // Add i18n from useTranslation
-  const route = useRoute();
-  const navigation = useNavigation();
-  // const {formDataAddress, formDataUser, qrData} = route.params;
-  const {register, loading, error} = useAuth();
+  const {formDataAddress, formDataUser, qrData} = route.params;
+  const {register} = useAuth();
   const [isDatePickerVisible, setDatePickerVisible] = useState(false);
-  const [selectedField, setSelectedField] = useState(null);
-  const [signatureImage, setSignatureImage] = useState(null);
-  const [frontImage, setFrontImage] = useState(null);
-  const [backImage, setBackImage] = useState(null);
-  const [tempDate, setTempDate] = useState(null);
-  const [showAndroidPicker, setShowAndroidPicker] = useState(false);
+  const [selectedField, setSelectedField] = useState<string>('');
+  const [signatureImage, setSignatureImage] = useState<ImageResponse | null>(
+    null,
+  );
+  const [frontImage, setFrontImage] = useState<ImageResponse | null>(null);
+  const [backImage, setBackImage] = useState<ImageResponse | null>(null);
+  const [tempDate, setTempDate] = useState<Date | null>(null);
   const [show, setShow] = useState(false);
 
-  const hideDatePicker = () => setDatePickerVisible(false);
+  const showDatePicker = useCallback((fieldName: string) => {
+    if (Platform.OS === 'android') {
+      setShow(true);
+    }
+    setSelectedField(fieldName);
+    setDatePickerVisible(true);
+    setTempDate(new Date());
+  }, []);
 
-  const formatDate = date => {
+  const formatDate = (date: string | Date | null) => {
     if (!date) return '';
     const d = new Date(date);
     return `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1)
@@ -90,9 +143,8 @@ const ResultQR = () => {
         label: t('register.resultScreen.identityDueDay'),
         isDate: true,
         iconSource: AppIcons.email,
-        // eslint-disable-next-line no-undef
         onPress: () => showDatePicker('expirationDate'),
-        pointerEvents: 'none',
+        pointerEvents: 'none' as const, // Add type assertion here
       },
       {
         name: 'issuingAuthority',
@@ -115,26 +167,44 @@ const ResultQR = () => {
         label: t('register.resultScreen.nationality'),
       },
     ],
-    [t],
+    [t, showDatePicker],
   );
 
   const validationSchema = useMemo(
     () =>
       Yup.object().shape({
-        placeOfBirth: Yup.string().required(t('register.resultScreen.validationErrors.placeOfBirth')),
-        expirationDate: Yup.string().required(t('register.resultScreen.validationErrors.expirationDate')),
-        issuingAuthority: Yup.string().required(t('register.resultScreen.validationErrors.issuingAuthority')),
-        religion: Yup.string().required(t('register.resultScreen.validationErrors.religion')),
-        ethnicity: Yup.string().required(t('register.resultScreen.validationErrors.ethnicity')),
-        nationality: Yup.string().required(t('register.resultScreen.validationErrors.nationality')),
-        signatureImage: Yup.string().required(t('register.resultScreen.validationErrors.signatureImage')),
-        frontImage: Yup.string().required(t('register.resultScreen.validationErrors.frontImage')),
-        backImage: Yup.string().required(t('register.resultScreen.validationErrors.backImage')),
+        placeOfBirth: Yup.string().required(
+          t('register.resultScreen.validationErrors.placeOfBirth'),
+        ),
+        expirationDate: Yup.string().required(
+          t('register.resultScreen.validationErrors.expirationDate'),
+        ),
+        issuingAuthority: Yup.string().required(
+          t('register.resultScreen.validationErrors.issuingAuthority'),
+        ),
+        religion: Yup.string().required(
+          t('register.resultScreen.validationErrors.religion'),
+        ),
+        ethnicity: Yup.string().required(
+          t('register.resultScreen.validationErrors.ethnicity'),
+        ),
+        nationality: Yup.string().required(
+          t('register.resultScreen.validationErrors.nationality'),
+        ),
+        signatureImage: Yup.string().required(
+          t('register.resultScreen.validationErrors.signatureImage'),
+        ),
+        frontImage: Yup.string().required(
+          t('register.resultScreen.validationErrors.frontImage'),
+        ),
+        backImage: Yup.string().required(
+          t('register.resultScreen.validationErrors.backImage'),
+        ),
       }),
     [t],
   );
 
-  const splitName = useCallback(fullName => {
+  const splitName = useCallback((fullName: string) => {
     if (!fullName) return {lastName: '', firstName: ''};
     const parts = fullName.trim().split(' ');
     const lastName = parts[0];
@@ -142,28 +212,26 @@ const ResultQR = () => {
     return {lastName, firstName};
   }, []);
 
-  const initialValues = useMemo(() => {
-    // const {lastName, firstName} = splitName(qrData[2]);
+  const initialValues: FormValues = useMemo(() => {
+    const {lastName, firstName} = splitName(qrData[2]);
     return {
-      // address: {
-      //   ...formDataAddress,
-      // },
-      // ...formDataUser,
-      // firstName,
-      // lastName,
+      address: formDataAddress, // This will now be properly typed
+      ...formDataUser,
+      firstName,
+      lastName,
 
-      identifyId: '12345679999',
-      fullName: 'Phạm Văn A',
-      dateOfBirth: '01/01/1990',
-      gender: 'Nam',
-      permanentAddress: 'Hà Nội',
-      issueDate: '01/01/2021',
-      // identifyId: qrData[0] || '',
-      // fullName: qrData[2] || '',
-      // dateOfBirth: qrData[3] || '',
-      // gender: qrData[4],
-      // permanentAddress: qrData[5] || '',
-      // issueDate: qrData[6] || '',
+      // identifyId: '12345679999',
+      // fullName: 'Phạm Văn A',
+      // dateOfBirth: '01/01/1990',
+      // gender: 'Nam',
+      // permanentAddress: 'Hà Nội',
+      // issueDate: '01/01/2021',
+      identifyId: qrData[0] || '',
+      fullName: qrData[2] || '',
+      dateOfBirth: qrData[3] || '',
+      gender: qrData[4],
+      permanentAddress: qrData[5] || '',
+      issueDate: qrData[6] || '',
       ethnicity: 'Kinh',
       religion: 'Không',
       nationality: 'Việt Nam',
@@ -175,15 +243,25 @@ const ResultQR = () => {
       frontImage: '',
       backImage: '',
     };
-  // }, [qrData, formDataUser, formDataAddress, splitName]);
-  }, []);
+  }, [qrData, formDataUser, formDataAddress, splitName]);
+  // }, []);
 
   // Update Alert messages to use translations
   const handleSubmit = useCallback(
-    async (values, {setSubmitting}) => {
+    async (
+      values: FormValues,
+      {setSubmitting}: {setSubmitting: (isSubmitting: boolean) => void},
+    ) => {
       try {
         console.log('Registering with data:', values); // Debug log
-        const result = await register(values);
+        const userData = {
+          ...values,
+          phone: formDataUser.phone,
+          password: formDataUser.password,
+          email: formDataUser.email,
+          address: JSON.stringify(formDataAddress), // Convert address to string
+        };
+        const result = await register(userData);
         console.log('Register result:', result); // Debug log
         if (result) {
           // navigation.navigate('Login');
@@ -192,9 +270,8 @@ const ResultQR = () => {
             routes: [{name: 'Login'}],
           });
         }
-      // eslint-disable-next-line no-catch-shadow, no-shadow
       } catch (error) {
-        Alert.alert(t('register.resultScreen.title'), error.message);
+        Alert.alert(t('register.resultScreen.title'), (error as Error).message);
       } finally {
         setSubmitting(false);
       }
@@ -334,7 +411,7 @@ const ResultQR = () => {
     <SafeAreaView style={styles.view}>
       <View style={styles.container}>
         <Header Navbar="ConfirmInfo" navigation={navigation} />
-        <Formik
+        <Formik<FormValues>
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}>
@@ -346,31 +423,22 @@ const ResultQR = () => {
             touched,
             isSubmitting,
           }) => {
-            // Define showDatePicker function
-            const showDatePicker = fieldName => {
-              if (Platform.OS === 'android') {
-                setShow(true); // Sử dụng state mới để kiểm soát việc hiển thị
-              }
-              setSelectedField(fieldName);
-              setDatePickerVisible(true);
-              setTempDate(new Date(values[fieldName] || Date.now()));
-            };
 
             // Map fields with showDatePicker
-            const fieldConfigs = inputFields.map(field => {
-              if (field.name === 'expirationDate') {
-                return {
-                  ...field,
-                  onPress: () => showDatePicker('expirationDate'),
-                };
-              }
-              return field;
-            });
+            const fieldConfigs = inputFields.map(field => ({
+              ...field,
+              getValue: (values: FormValues) =>
+                field.name === 'expirationDate'
+                  ? formatDate(values[field.name])
+                  : values[field.name as keyof FormValues],
+            }));
 
             // Update image picker error handling
-            const selectImage = async type => {
-              const options = {
-                mediaType: 'photo',
+            const selectImage = async (
+              type: 'signature' | 'front' | 'back',
+            ) => {
+              const options: ImageLibraryOptions = {
+                mediaType: 'photo' as MediaType,
                 quality: 0.8,
                 selectionLimit: 1,
               };
@@ -437,12 +505,18 @@ const ResultQR = () => {
             };
 
             // Update validation error alerts
-            const onSubmitPress = (values, handleSubmit) => {
+            const onSubmitPress = (
+              values: FormValues,
+              handleSubmit: () => void,
+            ) => {
               validationSchema
                 .validate(values, {abortEarly: false})
                 .catch(error => {
                   if (error.inner && error.inner.length > 0) {
-                    Alert.alert(t('register.resultScreen.title'), error.inner[0].message);
+                    Alert.alert(
+                      t('register.resultScreen.title'),
+                      error.inner[0].message,
+                    );
                   }
                 });
               handleSubmit();
@@ -456,22 +530,17 @@ const ResultQR = () => {
                       key={index}
                       name={field.label}
                       iconSource={AppIcons.email}
-                      value={
-                        field.name === 'expirationDate'
-                          ? formatDate(values[field.name])
-                          : values[field.name]
-                      }
+                      value={field.getValue(values)}
                       onSetValue={value => {
                         if (!field.notChange) {
                           setFieldValue(field.name, value);
                         }
-                      }}
-                      error={touched[field.name] && errors[field.name]}
+                      } }
+                      error={touched[field.name] && errors[field.name] ? String(errors[field.name]) : undefined}
                       theme={theme}
                       onPress={field.onPress}
                       pointerEvents={field.pointerEvents}
-                      notChange={field.notChange}
-                    />
+                      notChange={field.notChange} placeholder={''}                    />
                   ))}
                   <UploadImage
                     title={t('register.resultScreen.signatureImage')}
@@ -501,81 +570,86 @@ const ResultQR = () => {
                   />
                 </ScrollView>
 
-                {Platform.OS === 'ios' ? (
-                  // iOS DatePicker
-                  isDatePickerVisible && tempDate && (
-                    <View style={styles.datePickerOverlay}>
-                      <View style={styles.datePickerContainer}>
-                        <View style={styles.datePickerWrapper}>
-                          <DateTimePicker
-                            value={tempDate}
-                            mode="date"
-                            display="spinner"
-                            onChange={(event, date) => {
-                              if (date) {
-                                setTempDate(date);
-                              }
-                            }}
-                            minimumDate={new Date()}
-                            locale={i18n.language === 'vi' ? 'vi-VN' : 'en-US'} // Set locale based on current language
-                            textColor="black"
-                          />
-                        </View>
-                        <View style={styles.datePickerButtons}>
-                          <TouchableOpacity
-                            style={styles.datePickerButton}
-                            onPress={() => setDatePickerVisible(false)}>
-                            <Text style={styles.datePickerButtonText}>
-                              {t('register.resultScreen.datePicker.cancel')}
-                            </Text>
-                          </TouchableOpacity>
-                          <TouchableOpacity
-                            style={styles.datePickerButton}
-                            onPress={() => {
-                              const formattedDate = tempDate
-                                .toISOString()
-                                .split('T')[0];
-                              setFieldValue(selectedField, formattedDate);
-                              setDatePickerVisible(false);
-                            }}>
-                            <Text style={styles.datePickerButtonText}>
-                              {t('register.resultScreen.datePicker.confirm')}
-                            </Text>
-                          </TouchableOpacity>
+                {Platform.OS === 'ios'
+                  ? // iOS DatePicker
+                    isDatePickerVisible &&
+                    tempDate && (
+                      <View style={styles.datePickerOverlay}>
+                        <View style={styles.datePickerContainer}>
+                          <View style={styles.datePickerWrapper}>
+                            <DateTimePicker
+                              value={tempDate}
+                              mode="date"
+                              display="spinner"
+                              onChange={(event, date) => {
+                                if (date) {
+                                  setTempDate(date);
+                                }
+                              }}
+                              minimumDate={new Date()}
+                              locale={
+                                i18n.language === 'vi' ? 'vi-VN' : 'en-US'
+                              } // Set locale based on current language
+                              textColor="black"
+                            />
+                          </View>
+                          <View style={styles.datePickerButtons}>
+                            <TouchableOpacity
+                              style={styles.datePickerButton}
+                              onPress={() => setDatePickerVisible(false)}>
+                              <Text style={styles.datePickerButtonText}>
+                                {t('register.resultScreen.datePicker.cancel')}
+                              </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                              style={styles.datePickerButton}
+                              onPress={() => {
+                                const formattedDate = tempDate
+                                  .toISOString()
+                                  .split('T')[0];
+                                if (selectedField) {
+                                  setFieldValue(selectedField, formattedDate);
+                                }
+                                setDatePickerVisible(false);
+                              }}>
+                              <Text style={styles.datePickerButtonText}>
+                                {t('register.resultScreen.datePicker.confirm')}
+                              </Text>
+                            </TouchableOpacity>
+                          </View>
                         </View>
                       </View>
-                    </View>
-                  )
-                ) : (
-                  // Android DatePicker
-                  show && (
-                    <DateTimePicker
-                      value={tempDate || new Date()}
-                      mode="date"
-                      is24Hour={true}
-                      display="spinner"
-                      onChange={(event, date) => {
-                        setShow(false); // Ẩn picker sau khi chọn
-                        if (event.type === 'set' && date) {
-                          const formattedDate = date
-                            .toISOString()
-                            .split('T')[0];
-                          setFieldValue(selectedField, formattedDate);
-                          setTempDate(date);
-                        }
-                      }}
-                      minimumDate={new Date()}
-                      locale={i18n.language === 'vi' ? 'vi-VN' : 'en-US'} // Set locale for Android too
-                    />
-                  )
-                )}
+                    )
+                  : // Android DatePicker
+                    show && (
+                      <DateTimePicker
+                        value={tempDate || new Date()}
+                        mode="date"
+                        is24Hour={true}
+                        display="spinner"
+                        onChange={(event, date) => {
+                          setShow(false); // Ẩn picker sau khi chọn
+                          if (event.type === 'set' && date && selectedField) {
+                            const formattedDate = date
+                              .toISOString()
+                              .split('T')[0];
+                            setFieldValue(selectedField, formattedDate);
+                            setTempDate(date);
+                          }
+                        }}
+                        minimumDate={new Date()}
+                        locale={i18n.language === 'vi' ? 'vi-VN' : 'en-US'} // Set locale for Android too
+                      />
+                    )}
 
                 <TouchableOpacity
                   style={[styles.button, isSubmitting && styles.buttonDisabled]}
                   disabled={isSubmitting}
                   onPress={() => onSubmitPress(values, handleSubmit)}>
                   <Text style={styles.buttonText}>
-                    {isSubmitting ? t('register.resultScreen.processing') : t('register.resultScreen.submit')}
+                    {isSubmitting
+                      ? t('register.resultScreen.processing')
+                      : t('register.resultScreen.submit')}
                   </Text>
                 </TouchableOpacity>
               </>
@@ -588,3 +662,5 @@ const ResultQR = () => {
 };
 
 export default ResultQR;
+
+

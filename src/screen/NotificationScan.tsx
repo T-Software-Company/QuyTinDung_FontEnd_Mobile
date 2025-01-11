@@ -13,36 +13,21 @@ import Header from '../components/Header/Header';
 import {useTranslation} from 'react-i18next';
 import {useTheme} from '../context/ThemeContext';
 import {AppIcons} from '../icons';
-import {useRoute} from '@react-navigation/native';
 import {RouteProp} from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../navigators/RootNavigator';
 
-interface FormDataAddress {
-  // Add your form data address properties here
-  [key: string]: any;
+type NotificationScanNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'NotificationScan'
+>;
+
+interface NotificationScanProps {
+  navigation: NotificationScanNavigationProp;
+  route: RouteProp<RootStackParamList, 'NotificationScan'>;
 }
 
-interface FormDataUser {
-  // Add your form data user properties here
-  [key: string]: any;
-}
-
-type RootStackParamList = {
-  NotificationScan: {
-    formDataAddress: FormDataAddress;
-    formDataUser: FormDataUser;
-  };
-  QrScreen: {
-    formDataAddress: FormDataAddress;
-    formDataUser: FormDataUser;
-  };
-};
-
-type NotificationProps = {
-  navigation: any;
-};
-
-const Notification: React.FC<NotificationProps> = ({navigation}) => {
-  const route = useRoute<RouteProp<RootStackParamList, 'NotificationScan'>>();
+const NotificationScan: React.FC<NotificationScanProps> = ({navigation, route}) => {
   const {formDataAddress, formDataUser} = route.params; // Lấy formData từ Register
   const {t} = useTranslation();
   const {theme} = useTheme();
@@ -84,7 +69,7 @@ const Notification: React.FC<NotificationProps> = ({navigation}) => {
   );
 };
 
-export default Notification;
+export default NotificationScan;
 
 const styles = StyleSheet.create({
   view: {

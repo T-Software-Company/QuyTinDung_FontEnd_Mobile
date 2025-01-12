@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-shadow */
+/* eslint-disable react-native/no-inline-styles */
 import React, { useState, useCallback, useMemo } from 'react';
 import {
   SafeAreaView,
@@ -15,11 +17,36 @@ import { useTheme } from '../context/ThemeContext';
 import InputBorder from '../components/InputBorder/InputBorder';
 import { useTranslation } from 'react-i18next';
 
-const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
+interface RegisterFormValues {
+  phone: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
 
-const Register = ({ navigation }) => {
-  const [invisible, setInvisible] = useState(true);
-  const [invisibleConfirm, setInvisibleConfirm] = useState(true);
+interface InputFieldConfig {
+  name: keyof RegisterFormValues;
+  iconSource: any;
+  placeholder: string;
+  secureVisible?: boolean;
+  onPressIcon?: () => void;
+  touchEyes?: boolean;
+  keyboardType?: 'default' | 'numeric' | 'email-address';
+}
+
+interface RegisterProps {
+  navigation: {
+    navigate: (screen: string, params?: any) => void;
+    goBack: () => void;
+  };
+}
+
+const { height: windowHeight } = Dimensions.get('window');
+
+const Register: React.FC<RegisterProps> = ({ navigation }) => {
+  const [invisible, setInvisible] = useState<boolean>(true);
+  const [invisibleConfirm, setInvisibleConfirm] = useState<boolean>(true);
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const { theme } = useTheme();
   const { t } = useTranslation();
 
@@ -45,14 +72,14 @@ const Register = ({ navigation }) => {
 
   // Handle Form Submission
   const handleSubmit = useCallback(
-    (values) => {
+    (values: RegisterFormValues) => {
       navigation.navigate('RegisterAddress', { formDataUser: values });
     },
     [navigation]
   );
 
   // Input Fields Configuration
-  const inputFields = useMemo(
+  const inputFields: InputFieldConfig[] = useMemo(
     () => [
       {
         name: 'phone',
@@ -123,7 +150,7 @@ const Register = ({ navigation }) => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ handleChange, handleSubmit, values, errors, touched }) => (
+        {({ handleChange, handleSubmit, values, errors, touched, setTouched }) => (
           <View style={styles.container}>
             <View
               style={{
@@ -140,29 +167,44 @@ const Register = ({ navigation }) => {
                   name={field.placeholder}
                   iconSource={field.iconSource}
                   placeholder={field.placeholder}
-                  onSetValue={handleChange(field.name)}
+                  onSetValue={(value) => {
+                    setIsSubmitted(false);
+                    handleChange(field.name)(value);
+                  }}
                   value={values[field.name]}
                   theme={theme}
                   secureVisible={field.secureVisible}
                   onPressIcon={field.onPressIcon}
                   touchEyes={field.touchEyes}
                   keyboardType={field.keyboardType}
-                  error={touched[field.name] && errors[field.name]}
-                  textContentType="oneTimeCode"
+                  error={isSubmitted && touched[field.name] && errors[field.name]}
+                  textContentType="none"
                 />
               ))}
 
               <TouchableOpacity
                 style={styles.button}
                 onPress={() => {
+                  setIsSubmitted(true);
+                  // Set all fields as touched
+                  const touchedFields = {
+                    phone: true,
+                    email: true,
+                    password: true,
+                    confirmPassword: true,
+                  };
+                  setTouched(touchedFields);
+
                   validationSchema
                     .validate(values, { abortEarly: false })
+                    .then(() => {
+                      handleSubmit();
+                    })
                     .catch((error) => {
                       if (error.inner && error.inner.length > 0) {
                         Alert.alert(t('Thông báo'), error.inner[0].message);
                       }
                     });
-                  handleSubmit();
                 }}
               >
                 <Text style={styles.textButton}>{t('register.submit')}</Text>

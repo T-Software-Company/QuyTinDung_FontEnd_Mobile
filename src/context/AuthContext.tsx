@@ -1,5 +1,10 @@
-import React, {createContext, useState, useContext, useEffect} from 'react';
-import {authorize, refresh} from 'react-native-app-auth';
+import React, {
+  createContext,
+  useState,
+  useContext,
+  useEffect,
+  ReactNode,
+} from 'react';
 import keycloakConfig from '../../keycloakConfig';
 import {
   saveAccessToken,
@@ -10,9 +15,51 @@ import {
 } from '../../tokenStorage';
 import axios from 'axios';
 
-const AuthContext = createContext(null);
+interface AuthContextType {
+  isAuthenticated: boolean;
+  loading: boolean;
+  error: string | null;
+  needsAccountSetup: boolean;
+  login: (
+    username: string,
+    password: string,
+  ) => Promise<boolean | {needsSetup: boolean}>;
+  logout: () => Promise<void>;
+  refreshToken: () => Promise<boolean>;
+  register: (userData: UserData) => Promise<boolean>;
+}
 
-const validateToken = async token => {
+interface UserData {
+  phone: string;
+  password: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  address: string;
+  signatureImage?: string;
+  identifyId: string;
+  ethnicity?: string;
+  religion?: string;
+  gender: string;
+  dateOfBirth: string;
+  nationality?: string;
+  placeOfBirth?: string;
+  permanentAddress?: string;
+  issueDate: string;
+  expirationDate: string;
+  issuingAuthority?: string;
+  legalDocType?: string;
+  frontImage?: string;
+  backImage?: string;
+}
+
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+const AuthContext = createContext<AuthContextType | null>(null);
+
+const validateToken = async (token: string): Promise<boolean> => {
   try {
     const response = await axios.get(
       `${keycloakConfig.url}/realms/${keycloakConfig.realm}/protocol/openid-connect/userinfo`,
@@ -30,7 +77,8 @@ const validateToken = async token => {
 };
 
 // Add this helper function before AuthProvider
-const convertDateFormat = dateStr => {
+const convertDateFormat = (dateStr: string): string => {
+  // eslint-disable-next-line curly
   if (!dateStr) return '';
 
   // If the date is already in ISO format (YYYY-MM-DD)
@@ -41,6 +89,7 @@ const convertDateFormat = dateStr => {
   // If the date is in DD/MM/YYYY format
   try {
     const [day, month, year] = dateStr.split('/');
+    // eslint-disable-next-line curly
     if (!day || !month || !year) return dateStr;
 
     const paddedMonth = month.padStart(2, '0');
@@ -53,13 +102,13 @@ const convertDateFormat = dateStr => {
   }
 };
 
-export const AuthProvider = ({children}) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [needsAccountSetup, setNeedsAccountSetup] = useState(false);
+export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [needsAccountSetup, setNeedsAccountSetup] = useState<boolean>(false);
 
-  const checkAuthState = async () => {
+  const checkAuthState = async (): Promise<void> => {
     try {
       setLoading(true);
       const token = await getAccessToken();
@@ -77,7 +126,9 @@ export const AuthProvider = ({children}) => {
         }
       }
       setIsAuthenticated(false);
-    } catch (error) {
+    } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      const error = err as Error;
       console.error('Auth state check failed:', error);
       setError(error.message);
       setIsAuthenticated(false);
@@ -88,9 +139,13 @@ export const AuthProvider = ({children}) => {
 
   useEffect(() => {
     checkAuthState();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const login = async (username, password) => {
+  const login = async (
+    username: string,
+    password: string,
+  ): Promise<boolean | {needsSetup: boolean}> => {
     setLoading(true);
     setError(null); // Reset error state
 
@@ -129,9 +184,11 @@ export const AuthProvider = ({children}) => {
         return true;
       }
       throw new Error('No access token in response');
-    } catch (error) {
+    } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      const error = err as any; // using any here because axios errors have additional properties
       console.log('Login error:', error.response);
-      setError(error);
+      setError(error.message);
       console.log(error.response.data);
       if (error.response?.data?.error === 'invalid_grant') {
         if (
@@ -152,7 +209,7 @@ export const AuthProvider = ({children}) => {
     }
   };
 
-  const register = async userData => {
+  const register = async (userData: UserData): Promise<boolean> => {
     setLoading(true);
     setError(null);
 
@@ -191,7 +248,7 @@ export const AuthProvider = ({children}) => {
 
       const response = await axios({
         method: 'post',
-        url: `https://tsoftware.store/api/v1/customers`,
+        url: 'https://tsoftware.store/api/v1/customers',
         headers: {
           'Content-Type': 'application/json',
           Accept: 'application/json',
@@ -206,8 +263,10 @@ export const AuthProvider = ({children}) => {
       }
 
       throw new Error('Registration failed');
-    } catch (error) {
-      console.error('Registration error:', error.response.data);
+    } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      const error = err as any; // using any here because axios errors have additional properties
+      console.error('Registration error:', error.response?.data);
       console.error('Request data that caused error:', error.config?.data);
       setError(error.response?.data?.message || 'Registration failed');
       return false;
@@ -216,7 +275,7 @@ export const AuthProvider = ({children}) => {
     }
   };
 
-  const refreshToken = async () => {
+  const refreshToken = async (): Promise<boolean> => {
     try {
       const currentRefreshToken = await getRefreshToken();
       if (!currentRefreshToken) {
@@ -243,6 +302,7 @@ export const AuthProvider = ({children}) => {
         return true;
       }
       return false;
+      // eslint-disable-next-line no-catch-shadow, @typescript-eslint/no-shadow
     } catch (error) {
       console.error('Token refresh failed:', error);
       await clearTokens();
@@ -250,25 +310,27 @@ export const AuthProvider = ({children}) => {
     }
   };
 
-  const contextValue = {
+  const contextValue: AuthContextType = {
     isAuthenticated,
     loading,
     error,
     needsAccountSetup,
     login,
-    logout: async () => {
+    logout: async (): Promise<void> => {
       setLoading(true);
       try {
         await clearTokens();
         setIsAuthenticated(false);
-      } catch (error) {
+      } catch (err) {
+        // eslint-disable-next-line @typescript-eslint/no-shadow
+        const error = err as Error;
         setError(error.message);
       } finally {
         setLoading(false);
       }
     },
     refreshToken,
-    register, // Add register to context
+    register,
   };
 
   return (
@@ -276,7 +338,7 @@ export const AuthProvider = ({children}) => {
   );
 };
 
-export const useAuth = () => {
+export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');

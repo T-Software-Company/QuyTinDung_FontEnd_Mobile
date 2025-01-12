@@ -1,9 +1,45 @@
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {useTheme} from '../../context/ThemeContext';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../../navigators/RootNavigator';
 
-const Table = ({name, data, navigation, detail}) => {
-  const {theme} = useTheme();
+interface TableBox {
+  key: string;
+  value: string;
+}
+
+interface TableBoxList {
+  id: number | string; // Update to handle both number and string IDs
+  boxes: TableBox[];
+}
+
+interface Theme {
+  headerShadow: string;
+  tableChildBackground: string;
+  tableHeaderBackground: string;
+  tableBorderColor: string;
+  text: string;
+  background: string;
+}
+
+type TableName = 'rate' | 'loan' | 'save';
+
+type TableNavigationTarget = {
+  rate: never;
+  loan: 'InfoLoan';
+  save: 'InfoSave';
+};
+
+interface TableProps {
+  name: TableName;
+  data: TableBox[] | TableBoxList[];
+  navigation?: StackNavigationProp<RootStackParamList>;
+  detail?: TableNavigationTarget[TableName];
+}
+
+const Table: React.FC<TableProps> = ({name, data, navigation, detail}) => {
+  const {theme} = useTheme() as {theme: Theme};
 
   const styles = StyleSheet.create({
     boxList: {
@@ -45,10 +81,19 @@ const Table = ({name, data, navigation, detail}) => {
     },
   });
 
+  const handleNavigation = () => {
+    if (navigation && detail) {
+      navigation.navigate({
+        name: detail,
+        params: {id: undefined}, // Add required params structure
+      });
+    }
+  };
+
   return (
     <>
       {name === 'rate'
-        ? data.map((box, idx) => (
+        ? (data as TableBox[]).map((box, idx) => (
             <View
               key={idx}
               style={[
@@ -56,7 +101,9 @@ const Table = ({name, data, navigation, detail}) => {
                 {
                   borderBottomColor: theme.tableBorderColor,
                   backgroundColor:
-                    idx === 0 ? theme.tableHeaderBackground : theme.tableChildBackground,
+                    idx === 0
+                      ? theme.tableHeaderBackground
+                      : theme.tableChildBackground,
                 },
                 idx === 0 && styles.firstChild,
                 idx > 0 && idx < data.length - 1 && styles.middleChild,
@@ -79,9 +126,9 @@ const Table = ({name, data, navigation, detail}) => {
               </Text>
             </View>
           ))
-        : data?.map(boxList => (
+        : (data as TableBoxList[]).map(boxList => (
             <TouchableOpacity
-              onPress={() => navigation.navigate(detail)}
+              onPress={handleNavigation}
               key={boxList.id}
               style={[styles.boxList, {backgroundColor: theme.background}]}>
               {boxList.boxes.map((box, idx) => (

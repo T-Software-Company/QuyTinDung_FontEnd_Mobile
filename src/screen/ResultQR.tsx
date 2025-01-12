@@ -1,20 +1,18 @@
-import React, {useEffect, useState, useMemo, useCallback} from 'react';
+/* eslint-disable curly */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-shadow */
+import React, { useState, useMemo, useCallback} from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  TextInput,
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
   Alert,
   Platform,
-  Dimensions,
-  Image,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {useRoute} from '@react-navigation/native';
-import {useNavigation} from '@react-navigation/native';
 import Header from '../components/Header/Header';
 import InputBorder from '../components/InputBorder/InputBorder';
 import {useTranslation} from 'react-i18next';
@@ -23,30 +21,83 @@ import {AppIcons} from '../icons';
 import {useAuth} from '../context/AuthContext';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-import {
-  launchImageLibrary,
-  ImageLibraryOptions,
-} from 'react-native-image-picker';
+import {launchImageLibrary, ImageLibraryOptions, MediaType} from 'react-native-image-picker';
 import UploadImage from '../components/UploadImage/UploadImage';
 import {uploadImage} from '../api/uploadImage';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp} from '@react-navigation/native';
+import {RootStackParamList, FormDataAddress} from '../navigators/RootNavigator';
+import { Asset } from 'react-native-image-picker';
 
-const ResultQR = () => {
+interface ImageResponse extends Asset {
+  uri: string;
+}
+
+type ResultQRNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'ResultQR'
+>;
+
+type ResultQRRouteProp = RouteProp<RootStackParamList, 'ResultQR'>;
+
+interface ResultQRProps {
+  navigation: ResultQRNavigationProp;
+  route: ResultQRRouteProp;
+}
+
+interface FormValues {
+  [key: string]: any; // Add index signature
+  firstName: string;
+  lastName: string;
+  identifyId: string;
+  fullName: string;
+  dateOfBirth: string;
+  gender: string;
+  permanentAddress: string;
+  issueDate: string;
+  expirationDate: string;
+  issuingAuthority: string;
+  placeOfBirth: string;
+  religion: string;
+  ethnicity: string;
+  nationality: string;
+  signatureImage: string;
+  frontImage: string;
+  backImage: string;
+  legalDocType: string;
+  email: string;
+  phone: string;
+  password: string;
+  address: FormDataAddress;
+}
+
+
+// Remove InitialFormValues interface and use FormValues directly
+const ResultQR: React.FC<ResultQRProps> = ({navigation, route}) => {
   const {theme} = useTheme();
-  const {t} = useTranslation();
-  const route = useRoute();
-  const navigation = useNavigation();
+  const {t, i18n} = useTranslation(); // Add i18n from useTranslation
   const {formDataAddress, formDataUser, qrData} = route.params;
-  const {register, loading, error} = useAuth();
+  const {register} = useAuth();
   const [isDatePickerVisible, setDatePickerVisible] = useState(false);
-  const [selectedField, setSelectedField] = useState(null);
-  const [signatureImage, setSignatureImage] = useState(null);
-  const [frontImage, setFrontImage] = useState(null);
-  const [backImage, setBackImage] = useState(null);
-  const [tempDate, setTempDate] = useState(null);
+  const [selectedField, setSelectedField] = useState<string>('');
+  const [signatureImage, setSignatureImage] = useState<ImageResponse | null>(
+    null,
+  );
+  const [frontImage, setFrontImage] = useState<ImageResponse | null>(null);
+  const [backImage, setBackImage] = useState<ImageResponse | null>(null);
+  const [tempDate, setTempDate] = useState<Date | null>(null);
+  const [show, setShow] = useState(false);
 
-  const hideDatePicker = () => setDatePickerVisible(false);
+  const showDatePicker = useCallback((fieldName: string) => {
+    if (Platform.OS === 'android') {
+      setShow(true);
+    }
+    setSelectedField(fieldName);
+    setDatePickerVisible(true);
+    setTempDate(new Date());
+  }, []);
 
-  const formatDate = date => {
+  const formatDate = (date: string | Date | null) => {
     if (!date) return '';
     const d = new Date(date);
     return `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1)
@@ -54,92 +105,106 @@ const ResultQR = () => {
       .padStart(2, '0')}/${d.getFullYear()}`;
   };
 
-  // Input Fields Configuration
+  // Fixed input fields translations
   const inputFields = useMemo(
     () => [
       {
         name: 'identifyId',
-        label: 'Số CCCD',
+        label: t('register.resultScreen.identityNumber'),
         notChange: true,
       },
       {
         name: 'fullName',
-        label: 'Họ và tên',
+        label: t('register.resultScreen.name'),
         notChange: true,
       },
       {
         name: 'dateOfBirth',
-        label: 'Ngày sinh',
+        label: t('register.resultScreen.dateOfBirth'),
         notChange: true,
       },
-
       {
         name: 'gender',
-        label: 'Giới tính',
+        label: t('register.resultScreen.gender'),
         notChange: true,
       },
       {
         name: 'permanentAddress',
-        label: 'Địa chỉ thường trú',
+        label: t('register.resultScreen.identityHome'),
         notChange: true,
       },
       {
         name: 'issueDate',
-        label: 'Ngày cấp',
+        label: t('register.resultScreen.identitySupplyDay'),
         notChange: true,
       },
       {
         name: 'expirationDate',
-        label: 'Ngày hết hạn',
+        label: t('register.resultScreen.identityDueDay'),
         isDate: true,
-        iconSource: AppIcons.email, // Add calendar icon if you have one
-        onPress: () => {
-          console.log('Opening date picker'); // For debugging
-          showDatePicker('expirationDate');
-        },
-        pointerEvents: 'none',
+        iconSource: AppIcons.email,
+        onPress: () => showDatePicker('expirationDate'),
+        pointerEvents: 'none' as const, // Add type assertion here
       },
       {
         name: 'issuingAuthority',
-        label: 'Nơi cấp',
+        label: t('register.resultScreen.identityAddress'),
       },
       {
         name: 'placeOfBirth',
-        label: 'Nơi sinh',
+        label: t('register.resultScreen.placeOfBirth'),
       },
       {
         name: 'religion',
-        label: 'Tôn giáo',
+        label: t('register.resultScreen.religion'),
       },
       {
         name: 'ethnicity',
-        label: 'Dân tộc',
+        label: t('register.resultScreen.ethnicity'),
       },
       {
         name: 'nationality',
-        label: 'Quốc tịch',
+        label: t('register.resultScreen.nationality'),
       },
     ],
-    [],
+    [t, showDatePicker],
   );
 
   const validationSchema = useMemo(
     () =>
       Yup.object().shape({
-        placeOfBirth: Yup.string().required('Vui lòng nhập nơi sinh'),
-        expirationDate: Yup.string().required('Vui lòng nhập ngày hết hạn'),
-        issuingAuthority: Yup.string().required('Vui lòng nhập nơi cấp'),
-        religion: Yup.string().required('Vui lòng nhập tôn giáo'),
-        ethnicity: Yup.string().required('Vui lòng nhập dân tộc'),
-        nationality: Yup.string().required('Vui lòng nhập quốc tịch'),
-        signatureImage: Yup.string().required('Vui lòng chọn ảnh chữ ký'),
-        frontImage: Yup.string().required('Vui lòng chọn ảnh mặt trước CCCD'),
-        backImage: Yup.string().required('Vui lòng chọn ảnh mặt sau CCCD'),
+        placeOfBirth: Yup.string().required(
+          t('register.resultScreen.validationErrors.placeOfBirth'),
+        ),
+        expirationDate: Yup.string().required(
+          t('register.resultScreen.validationErrors.expirationDate'),
+        ),
+        issuingAuthority: Yup.string().required(
+          t('register.resultScreen.validationErrors.issuingAuthority'),
+        ),
+        religion: Yup.string().required(
+          t('register.resultScreen.validationErrors.religion'),
+        ),
+        ethnicity: Yup.string().required(
+          t('register.resultScreen.validationErrors.ethnicity'),
+        ),
+        nationality: Yup.string().required(
+          t('register.resultScreen.validationErrors.nationality'),
+        ),
+        signatureImage: Yup.string().required(
+          t('register.resultScreen.validationErrors.signatureImage'),
+        ),
+        frontImage: Yup.string().required(
+          t('register.resultScreen.validationErrors.frontImage'),
+        ),
+        backImage: Yup.string().required(
+          t('register.resultScreen.validationErrors.backImage'),
+        ),
       }),
-    [],
+    [t],
   );
 
-  const splitName = useCallback(fullName => {
+  const splitName = useCallback((fullName: string) => {
     if (!fullName) return {lastName: '', firstName: ''};
     const parts = fullName.trim().split(' ');
     const lastName = parts[0];
@@ -147,28 +212,26 @@ const ResultQR = () => {
     return {lastName, firstName};
   }, []);
 
-  const initialValues = useMemo(() => {
+  const initialValues: FormValues = useMemo(() => {
     const {lastName, firstName} = splitName(qrData[2]);
     return {
-      address: {
-        ...formDataAddress,
-      },
+      address: formDataAddress, // This will now be properly typed
       ...formDataUser,
       firstName,
       lastName,
 
-      identifyId: '12345679999',
-      fullName: 'Phạm Văn A',
-      dateOfBirth: '01/01/1990',
-      gender: 'Nam',
-      permanentAddress: 'Hà Nội',
-      issueDate: '01/01/2021',
-      // identifyId: qrData[0] || '',
-      // fullName: qrData[2] || '',
-      // dateOfBirth: qrData[3] || '',
-      // gender: qrData[4],
-      // permanentAddress: qrData[5] || '',
-      // issueDate: qrData[6] || '',
+      // identifyId: '12345679999',
+      // fullName: 'Phạm Văn A',
+      // dateOfBirth: '01/01/1990',
+      // gender: 'Nam',
+      // permanentAddress: 'Hà Nội',
+      // issueDate: '01/01/2021',
+      identifyId: qrData[0] || '',
+      fullName: qrData[2] || '',
+      dateOfBirth: qrData[3] || '',
+      gender: qrData[4],
+      permanentAddress: qrData[5] || '',
+      issueDate: qrData[6] || '',
       ethnicity: 'Kinh',
       religion: 'Không',
       nationality: 'Việt Nam',
@@ -183,11 +246,22 @@ const ResultQR = () => {
   }, [qrData, formDataUser, formDataAddress, splitName]);
   // }, []);
 
+  // Update Alert messages to use translations
   const handleSubmit = useCallback(
-    async (values, {setSubmitting}) => {
+    async (
+      values: FormValues,
+      {setSubmitting}: {setSubmitting: (isSubmitting: boolean) => void},
+    ) => {
       try {
         console.log('Registering with data:', values); // Debug log
-        const result = await register(values);
+        const userData = {
+          ...values,
+          phone: formDataUser.phone,
+          password: formDataUser.password,
+          email: formDataUser.email,
+          address: JSON.stringify(formDataAddress), // Convert address to string
+        };
+        const result = await register(userData);
         console.log('Register result:', result); // Debug log
         if (result) {
           // navigation.navigate('Login');
@@ -197,12 +271,12 @@ const ResultQR = () => {
           });
         }
       } catch (error) {
-        Alert.alert('Thông báo', error.message);
+        Alert.alert(t('register.resultScreen.title'), (error as Error).message);
       } finally {
         setSubmitting(false);
       }
     },
-    [register, navigation],
+    [register, navigation, t],
   );
 
   const styles = StyleSheet.create({
@@ -275,6 +349,10 @@ const ResultQR = () => {
       backgroundColor: 'white',
       borderRadius: 12,
       height: Platform.OS === 'ios' ? 260 : 'auto',
+      padding: 20,
+      width: '90%',
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     datePickerOverlay: {
       position: 'absolute',
@@ -285,14 +363,6 @@ const ResultQR = () => {
       backgroundColor: 'rgba(0, 0, 0, 0.5)',
       justifyContent: 'center',
       alignItems: 'center',
-    },
-    datePickerContainer: {
-      backgroundColor: 'white',
-      borderRadius: 12,
-      padding: 20,
-      width: '90%',
-      alignItems: 'center',
-      justifyContent: 'center',
     },
     datePickerWrapper: {
       height: 200,
@@ -341,39 +411,34 @@ const ResultQR = () => {
     <SafeAreaView style={styles.view}>
       <View style={styles.container}>
         <Header Navbar="ConfirmInfo" navigation={navigation} />
-        <Formik
+        <Formik<FormValues>
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}>
           {({
             handleSubmit,
-            values, // we need values from here
+            values,
             setFieldValue,
             errors,
             touched,
             isSubmitting,
           }) => {
-            // Move showDatePicker inside Formik render prop
-            const showDatePicker = fieldName => {
-              setSelectedField(fieldName);
-              setDatePickerVisible(true);
-              setTempDate(new Date(values[fieldName] || Date.now()));
-            };
 
-            // Update the inputFields definition to use the local showDatePicker
-            const fieldConfigs = inputFields.map(field => {
-              if (field.name === 'expirationDate') {
-                return {
-                  ...field,
-                  onPress: () => showDatePicker('expirationDate'),
-                };
-              }
-              return field;
-            });
+            // Map fields with showDatePicker
+            const fieldConfigs = inputFields.map(field => ({
+              ...field,
+              getValue: (values: FormValues) =>
+                field.name === 'expirationDate'
+                  ? formatDate(values[field.name])
+                  : values[field.name as keyof FormValues],
+            }));
 
-            const selectImage = async type => {
-              const options = {
-                mediaType: 'photo',
+            // Update image picker error handling
+            const selectImage = async (
+              type: 'signature' | 'front' | 'back',
+            ) => {
+              const options: ImageLibraryOptions = {
+                mediaType: 'photo' as MediaType,
                 quality: 0.8,
                 selectionLimit: 1,
               };
@@ -389,7 +454,10 @@ const ResultQR = () => {
 
                 if (response.errorCode) {
                   console.log('ImagePicker Error:', response.errorMessage);
-                  Alert.alert('Lỗi', 'Không thể chọn ảnh, vui lòng thử lại');
+                  Alert.alert(
+                    t('register.resultScreen.title'),
+                    t('register.resultScreen.imageError'),
+                  );
                   return;
                 }
 
@@ -422,15 +490,36 @@ const ResultQR = () => {
                     //   uploadError.message || uploadError,
                     // );
                     Alert.alert(
-                      'Lỗi',
-                      'Không thể tải ảnh lên, vui lòng thử lại',
+                      t('register.resultScreen.title'),
+                      t('register.resultScreen.imageError'),
                     );
                   }
                 }
               } catch (error) {
                 console.error('Error in image picker:', error);
-                Alert.alert('Lỗi', 'Không thể chọn ảnh, vui lòng thử lại');
+                Alert.alert(
+                  t('register.resultScreen.title'),
+                  t('register.resultScreen.imageError'),
+                );
               }
+            };
+
+            // Update validation error alerts
+            const onSubmitPress = (
+              values: FormValues,
+              handleSubmit: () => void,
+            ) => {
+              validationSchema
+                .validate(values, {abortEarly: false})
+                .catch(error => {
+                  if (error.inner && error.inner.length > 0) {
+                    Alert.alert(
+                      t('register.resultScreen.title'),
+                      error.inner[0].message,
+                    );
+                  }
+                });
+              handleSubmit();
             };
 
             return (
@@ -441,25 +530,20 @@ const ResultQR = () => {
                       key={index}
                       name={field.label}
                       iconSource={AppIcons.email}
-                      value={
-                        field.name === 'expirationDate'
-                          ? formatDate(values[field.name])
-                          : values[field.name]
-                      }
+                      value={field.getValue(values)}
                       onSetValue={value => {
                         if (!field.notChange) {
                           setFieldValue(field.name, value);
                         }
-                      }}
-                      error={touched[field.name] && errors[field.name]}
+                      } }
+                      error={touched[field.name] && errors[field.name] ? String(errors[field.name]) : undefined}
                       theme={theme}
                       onPress={field.onPress}
                       pointerEvents={field.pointerEvents}
-                      notChange={field.notChange}
-                    />
+                      notChange={field.notChange} placeholder={''}                    />
                   ))}
                   <UploadImage
-                    title="Ảnh chữ ký chính chủ"
+                    title={t('register.resultScreen.signatureImage')}
                     theme={theme}
                     typeImage={signatureImage}
                     onSelectImage={() => selectImage('signature')}
@@ -468,7 +552,7 @@ const ResultQR = () => {
                   />
 
                   <UploadImage
-                    title="Ảnh mặt trước CCCD"
+                    title={t('register.resultScreen.frontImage')}
                     theme={theme}
                     typeImage={frontImage}
                     onSelectImage={() => selectImage('front')}
@@ -477,7 +561,7 @@ const ResultQR = () => {
                   />
 
                   <UploadImage
-                    title="Ảnh mặt sau CCCD"
+                    title={t('register.resultScreen.backImage')}
                     theme={theme}
                     typeImage={backImage}
                     onSelectImage={() => selectImage('back')}
@@ -486,12 +570,13 @@ const ResultQR = () => {
                   />
                 </ScrollView>
 
-                {isDatePickerVisible &&
-                  tempDate && ( // Add tempDate check here
-                    <View style={styles.datePickerOverlay}>
-                      <View style={styles.datePickerContainer}>
-                        <View style={styles.datePickerWrapper}>
-                          {Platform.OS === 'ios' ? (
+                {Platform.OS === 'ios'
+                  ? // iOS DatePicker
+                    isDatePickerVisible &&
+                    tempDate && (
+                      <View style={styles.datePickerOverlay}>
+                        <View style={styles.datePickerContainer}>
+                          <View style={styles.datePickerWrapper}>
                             <DateTimePicker
                               value={tempDate}
                               mode="date"
@@ -502,36 +587,18 @@ const ResultQR = () => {
                                 }
                               }}
                               minimumDate={new Date()}
-                              locale="vi-VN"
+                              locale={
+                                i18n.language === 'vi' ? 'vi-VN' : 'en-US'
+                              } // Set locale based on current language
                               textColor="black"
                             />
-                          ) : (
-                            <DateTimePicker
-                              value={tempDate}
-                              mode="date"
-                              display="default"
-                              onChange={(event, date) => {
-                                if (event.type === 'set' && date) {
-                                  const formattedDate = date
-                                    .toISOString()
-                                    .split('T')[0];
-                                  setFieldValue(selectedField, formattedDate);
-                                }
-                                setDatePickerVisible(false);
-                              }}
-                              minimumDate={new Date()}
-                            />
-                          )}
-                        </View>
-                        {Platform.OS === 'ios' && (
+                          </View>
                           <View style={styles.datePickerButtons}>
                             <TouchableOpacity
                               style={styles.datePickerButton}
-                              onPress={() => {
-                                setDatePickerVisible(false);
-                              }}>
+                              onPress={() => setDatePickerVisible(false)}>
                               <Text style={styles.datePickerButtonText}>
-                                Hủy
+                                {t('register.resultScreen.datePicker.cancel')}
                               </Text>
                             </TouchableOpacity>
                             <TouchableOpacity
@@ -540,34 +607,49 @@ const ResultQR = () => {
                                 const formattedDate = tempDate
                                   .toISOString()
                                   .split('T')[0];
-                                setFieldValue(selectedField, formattedDate);
+                                if (selectedField) {
+                                  setFieldValue(selectedField, formattedDate);
+                                }
                                 setDatePickerVisible(false);
                               }}>
                               <Text style={styles.datePickerButtonText}>
-                                Xác nhận
+                                {t('register.resultScreen.datePicker.confirm')}
                               </Text>
                             </TouchableOpacity>
                           </View>
-                        )}
+                        </View>
                       </View>
-                    </View>
-                  )}
+                    )
+                  : // Android DatePicker
+                    show && (
+                      <DateTimePicker
+                        value={tempDate || new Date()}
+                        mode="date"
+                        is24Hour={true}
+                        display="spinner"
+                        onChange={(event, date) => {
+                          setShow(false); // Ẩn picker sau khi chọn
+                          if (event.type === 'set' && date && selectedField) {
+                            const formattedDate = date
+                              .toISOString()
+                              .split('T')[0];
+                            setFieldValue(selectedField, formattedDate);
+                            setTempDate(date);
+                          }
+                        }}
+                        minimumDate={new Date()}
+                        locale={i18n.language === 'vi' ? 'vi-VN' : 'en-US'} // Set locale for Android too
+                      />
+                    )}
 
                 <TouchableOpacity
                   style={[styles.button, isSubmitting && styles.buttonDisabled]}
                   disabled={isSubmitting}
-                  onPress={() => {
-                    validationSchema
-                      .validate(values, {abortEarly: false})
-                      .catch(error => {
-                        if (error.inner && error.inner.length > 0) {
-                          Alert.alert('Thông báo', error.inner[0].message);
-                        }
-                      });
-                    handleSubmit();
-                  }}>
+                  onPress={() => onSubmitPress(values, handleSubmit)}>
                   <Text style={styles.buttonText}>
-                    {isSubmitting ? 'Đang xử lý...' : 'Đăng ký'}
+                    {isSubmitting
+                      ? t('register.resultScreen.processing')
+                      : t('register.resultScreen.submit')}
                   </Text>
                 </TouchableOpacity>
               </>
@@ -580,3 +662,5 @@ const ResultQR = () => {
 };
 
 export default ResultQR;
+
+

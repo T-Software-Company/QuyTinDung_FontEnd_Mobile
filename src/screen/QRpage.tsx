@@ -4,36 +4,48 @@ import {
   Text,
   StyleSheet,
   Alert,
-  ScrollView,
   Button,
   SafeAreaView,
   Dimensions,
 } from 'react-native';
 import {
   Camera,
+  Code,
   useCameraDevice,
   useCameraPermission,
 } from 'react-native-vision-camera';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {RouteProp} from '@react-navigation/native';
 import Header from '../components/Header/Header';
+import {useTranslation} from 'react-i18next'; // Add missing import
+import {RootStackParamList} from '../navigators/RootNavigator'; // Add this import
+import {StackNavigationProp} from '@react-navigation/stack';
+
+type QRScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'QrScreen'
+>;
+
+type QRScreenRouteProp = RouteProp<RootStackParamList, 'QrScreen'>;
+
+interface QRScannerAppProps {
+  navigation: QRScreenNavigationProp;
+  route: QRScreenRouteProp;
+}
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
-const SCREEN_HEIGHT = Dimensions.get('window').height;
 const scanAreaSize = SCREEN_WIDTH * 0.7; // Scanner area is 70% of screen width
 
-const QRScannerApp = () => {
-  const navigation = useNavigation();
-  const route = useRoute();
+const QRScannerApp: React.FC<QRScannerAppProps> = ({navigation, route}) => {
+  const {t} = useTranslation(); // Add missing translation hook
   const {formDataAddress, formDataUser} = route.params; // Lấy formData từ NotificationScan
 
   console.log('QR Screen formData:', formDataAddress); // Debug log
 
-  const [scannedItems, setScannedItems] = useState([]);
-  const [lastScannedCode, setLastScannedCode] = useState(null);
-  const [isScanning, setIsScanning] = useState(true);
+  const [lastScannedCode, setLastScannedCode] = useState<string | null>(null);
+  const [isScanning, setIsScanning] = useState<boolean>(true);
   const {hasPermission, requestPermission} = useCameraPermission();
   const device = useCameraDevice('back');
-  const [isCameraActive, setIsCameraActive] = useState(true);
+  const [isCameraActive, setIsCameraActive] = useState<boolean>(true);
 
   useEffect(() => {
     checkPermission();
@@ -48,6 +60,7 @@ const QRScannerApp = () => {
       setIsCameraActive(false);
       unsubscribe(); // Cleanup listener khi unmount
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigation]);
 
   const checkPermission = async () => {
@@ -58,11 +71,11 @@ const QRScannerApp = () => {
     }
   };
 
-  const isDuplicateCode = code => {
+  const isDuplicateCode = (code: string) => {
     return lastScannedCode === code;
   };
 
-  const formatDate = dateStr => {
+  const formatDate = (dateStr: string) => {
     // Xử lý chuỗi 8 ký tự dạng "DDMMYYYY"
     if (dateStr.length === 8) {
       const day = dateStr.substring(0, 2);
@@ -82,7 +95,7 @@ const QRScannerApp = () => {
     return dateStr; // Trả về nguyên gốc nếu không match format nào
   };
 
-  const processQRData = rawData => {
+  const processQRData = (rawData: string) => {
     // Bước 1: Chuẩn hóa data gốc
     let cleanData = rawData.trim();
     // Bước 2: Loại bỏ dấu {} nếu có
@@ -90,8 +103,9 @@ const QRScannerApp = () => {
     // Bước 3: Split và xử lý từng phần tử
     const dataArray = cleanData
       .split('|')
-      .map(item => item.trim()) // loại bỏ khoảng trắng đầu cuối
-      // .filter(item => item !== ''); // loại bỏ phần tử rỗng
+      // eslint-disable-next-line semi
+      .map(item => item.trim()); // loại bỏ khoảng trắng đầu cuối
+    // .filter(item => item !== ''); // loại bỏ phần tử rỗng
 
     console.log('QR Data Array:', dataArray); // Debug log
     // Format lại date ở index 2 (ngày sinh) và 5 (ngày cấp)
@@ -103,14 +117,17 @@ const QRScannerApp = () => {
     return dataArray;
   };
 
-  const handleCodeScanned = codes => {
+  const handleCodeScanned = (codes: Code[]) => {
+    // eslint-disable-next-line curly
     if (!isScanning || codes.length === 0) return;
 
-    const currentCode = codes[0].value;
-    if (currentCode === lastScannedCode) return;
+    const currentCode = codes[0].value ?? '';
+    // eslint-disable-next-line curly
+    if (isDuplicateCode(currentCode)) return; // Fix: Use isDuplicateCode function
 
     try {
       const qrData = processQRData(currentCode);
+      setLastScannedCode(currentCode); // Fix: Update last scanned code
       setIsScanning(false);
       setIsCameraActive(false); // Deactivate camera before navigation
 
@@ -131,7 +148,9 @@ const QRScannerApp = () => {
   if (device == null) {
     return (
       <SafeAreaView>
-        <Text style={styles.centerText}>Camera not available</Text>
+        <Text style={styles.centerText}>
+          {t('register.camera.notAvailable')}
+        </Text>
       </SafeAreaView>
     );
   }
@@ -140,14 +159,18 @@ const QRScannerApp = () => {
     return (
       <SafeAreaView>
         <View style={styles.container}>
-          <Text style={styles.centerText}>Camera permission is required</Text>
-          <Button title="Request Permission" onPress={checkPermission} />
+          <Text style={styles.centerText}>
+            {t('register.camera.permissionRequired')}
+          </Text>
+          <Button
+            title={t('register.camera.requestPermission')}
+            onPress={checkPermission}
+          />
         </View>
       </SafeAreaView>
     );
   }
 
-  console.log('Scanned items:', scannedItems);
   return (
     <View style={styles.container}>
       <Camera
@@ -187,7 +210,7 @@ const QRScannerApp = () => {
       </View>
 
       <Text style={styles.instructionText}>
-        Đưa mã QR trên CCCD vào khung ảnh
+        {t('register.camera.scanScreen.instruction')}
       </Text>
     </View>
   );

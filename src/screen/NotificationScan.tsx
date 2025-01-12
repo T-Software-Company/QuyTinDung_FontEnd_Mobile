@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import {
   Image,
   SafeAreaView,
@@ -5,21 +6,28 @@ import {
   Text,
   TouchableOpacity,
   View,
-  ScrollView,
   Platform,
 } from 'react-native';
-import React, {useState} from 'react';
+import React from 'react';
 import Header from '../components/Header/Header';
-import ContentButton from '../components/ContentButton/ContentButton';
-import i18n from '../../i18n';
 import {useTranslation} from 'react-i18next';
 import {useTheme} from '../context/ThemeContext';
 import {AppIcons} from '../icons';
-import {useRoute} from '@react-navigation/native';
+import {RouteProp} from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../navigators/RootNavigator';
 
-const Notification = ({navigation}) => {
-  const currentLanguage = i18n.language;
-  const route = useRoute();
+type NotificationScanNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'NotificationScan'
+>;
+
+interface NotificationScanProps {
+  navigation: NotificationScanNavigationProp;
+  route: RouteProp<RootStackParamList, 'NotificationScan'>;
+}
+
+const NotificationScan: React.FC<NotificationScanProps> = ({navigation, route}) => {
   const {formDataAddress, formDataUser} = route.params; // Lấy formData từ Register
   const {t} = useTranslation();
   const {theme} = useTheme();
@@ -41,17 +49,16 @@ const Notification = ({navigation}) => {
 
             <View>
               <Text style={{color: theme.text, lineHeight: 24, fontSize: 13}}>
-                Bạn sẽ chịu trách nhiệm trước pháp luật về việc cung cấp{' '}
+                {t('register.notificationScan.notice')}
                 <Text style={{fontWeight: 600}}>
-                  CCCD gắn chip là bản gốc, chính chủ, còn hiệu lực
+                  {t('register.notificationScan.emphasis')}
                 </Text>
               </Text>
               <TouchableOpacity
                 style={styles.button}
                 onPress={() => navigation.navigate('QrScreen', {formDataAddress, formDataUser})}>
-                {/* Sửa cách truyền params */}
                 <Text style={styles.textButton}>
-                  {t('notificationScan.button')}
+                  {t('register.notificationScan.button')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -62,7 +69,7 @@ const Notification = ({navigation}) => {
   );
 };
 
-export default Notification;
+export default NotificationScan;
 
 const styles = StyleSheet.create({
   view: {

@@ -1,9 +1,30 @@
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React from 'react';
-import {useTheme} from '../../context/ThemeContext';
 
-const SelectedTabs = ({tabs, selectedTab, onSelectTab}) => {
-  const {theme} = useTheme();
+interface TabItem {
+  key: string;
+  label: string;
+}
+
+interface Theme {
+  tabBarInactive: string;
+  tabBarActive: string;
+  textInactive: string;
+}
+
+interface SelectedTabsProps {
+  tabs: TabItem[];
+  selectedTab: string;
+  onSelectTab: (key: string) => void;
+  theme: Theme;
+}
+
+const SelectedTabs: React.FC<SelectedTabsProps> = ({
+  tabs,
+  selectedTab,
+  onSelectTab,
+  theme,
+}) => {
   const styles = StyleSheet.create({
     tabBar: {
       flexDirection: 'row',
@@ -12,13 +33,13 @@ const SelectedTabs = ({tabs, selectedTab, onSelectTab}) => {
     },
     tab: {
       padding: 12,
-      backgroundColor: theme.tabBarInactive, // Màu nền khi tab không được chọn
+      backgroundColor: theme.tabBarInactive,
       borderRadius: 10,
       width: '48%',
       alignItems: 'center',
     },
     activeTab: {
-      backgroundColor: theme.tabBarActive, // Màu nền khi tab được chọn
+      backgroundColor: theme.tabBarActive,
     },
     tabText: {
       color: theme.textInactive,

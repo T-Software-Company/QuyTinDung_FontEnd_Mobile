@@ -6,18 +6,36 @@ import {
   View,
   Alert,
 } from 'react-native';
-import React, {useRef} from 'react';
+import React from 'react';
 import Header from '../components/Header/Header';
 import ButtonSetting from '../components/ButtonSetting/ButtonSetting';
 import {useTranslation} from 'react-i18next';
 import {useTheme} from '../context/ThemeContext';
 import i18n from '../../i18n';
-import { AppIcons } from '../icons';
+import {AppIcons} from '../icons';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../navigators/RootNavigator';
 // import { Modalize } from 'react-native-modalize';
 
-const Setting = ({navigation}) => {
+type SettingScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'Setting'
+>;
+
+interface SettingProps {
+  navigation: SettingScreenNavigationProp;
+}
+
+interface Theme {
+  background: string;
+  noteText: string;
+  iconColorActive: string;
+  iconColor: string;
+}
+
+const Setting: React.FC<SettingProps> = ({navigation}) => {
   const {t} = useTranslation();
-  const {theme} = useTheme();
+  const {theme} = useTheme() as {theme: Theme};
   const {isDarkMode} = useTheme();
   const currentLanguage = i18n.language;
   // const modalizeRef = useRef(null);
@@ -30,18 +48,44 @@ const Setting = ({navigation}) => {
   //   modalizeRef.current?.close();
   // };
   const phoneNumber = '1234567890'; // Thay bằng số điện thoại bạn muốn
-  console.log(currentLanguage)
+  console.log(currentLanguage);
+
+  const alertTexts = {
+    title: {
+      vi: 'Xác nhận cuộc gọi',
+      en: 'Confirm Call',
+    },
+    message: {
+      vi: `Bạn có muốn gọi đến số ${phoneNumber} không?`,
+      en: `Do you want to call ${phoneNumber}?`,
+    },
+    cancel: {
+      vi: 'Hủy',
+      en: 'Cancel',
+    },
+    confirm: {
+      vi: 'Đồng ý',
+      en: 'Confirm',
+    },
+  };
+
   const confirmAndMakeCall = () => {
     Alert.alert(
-      'Xác nhận cuộc gọi',
-      `Bạn có muốn gọi đến số ${phoneNumber} không?`,
+      currentLanguage === 'vi' ? alertTexts.title.vi : alertTexts.title.en,
+      currentLanguage === 'vi' ? alertTexts.message.vi : alertTexts.message.en,
       [
         {
-          text: 'Hủy',
+          text:
+            currentLanguage === 'vi'
+              ? alertTexts.cancel.vi
+              : alertTexts.cancel.en,
           style: 'cancel',
         },
         {
-          text: 'Đồng ý',
+          text:
+            currentLanguage === 'vi'
+              ? alertTexts.confirm.vi
+              : alertTexts.confirm.en,
           onPress: () => makeCall(),
         },
       ],
@@ -114,7 +158,15 @@ const Setting = ({navigation}) => {
                 title={t('settings.screenMode')}
                 icon={AppIcons.next}
                 onPress={() => navigation.navigate('DarkModeSetting')}
-                optionText={currentLanguage === "vi" ? (isDarkMode ? 'Tối' : 'Sáng') : (isDarkMode ? 'Dark' : 'Light')}  
+                optionText={
+                  currentLanguage === 'vi'
+                    ? isDarkMode
+                      ? 'Tối'
+                      : 'Sáng'
+                    : isDarkMode
+                    ? 'Dark'
+                    : 'Light'
+                }
               />
 
               <ButtonSetting

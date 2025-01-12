@@ -10,7 +10,30 @@ import {
 import React from 'react';
 import {AppIcons} from '../../icons';
 
-const InputBorder = ({
+interface InputBorderProps {
+  name: string;
+  iconSource: any; // Update this if you have a more specific type for icons
+  placeholder: string;
+  onSetValue: (value: string) => void;
+  value: string;
+  theme: {
+    noteText: string;
+    iconColor: string;
+    text: string;
+  };
+  keyboardType?: 'default' | 'email-address' | 'numeric' | 'phone-pad';
+  secureVisible?: boolean;
+  onPressIcon?: () => void;
+  touchEyes?: boolean;
+  editable?: boolean;
+  textContentType?: string;
+  onPress?: () => void;
+  pointerEvents?: 'auto' | 'none' | 'box-none' | 'box-only' | undefined;
+  notChange?: boolean;
+  error?: string | boolean | undefined;
+}
+
+const InputBorder: React.FC<InputBorderProps> = ({
   name,
   iconSource,
   placeholder,
@@ -21,11 +44,10 @@ const InputBorder = ({
   secureVisible,
   onPressIcon,
   touchEyes,
-  editable,
-  textContentType,
   onPress,
   pointerEvents,
   notChange,
+  error,
 }) => {
   const styles = StyleSheet.create({
     heading: {
@@ -61,6 +83,11 @@ const InputBorder = ({
     touchableContainer: {
       width: '100%',
     },
+    errorText: {
+      color: 'red',
+      fontSize: 12,
+      marginTop: 4,
+    },
   });
 
   const inputElement = (
@@ -74,12 +101,13 @@ const InputBorder = ({
       style={styles.textInput}
       autoCapitalize="none"
       editable={!notChange}
-      textContentType={textContentType}
+      // textContentType={textContentType}
       pointerEvents={pointerEvents}
     />
   );
 
   return (
+    // eslint-disable-next-line react-native/no-inline-styles
     <View style={{marginBottom: 20}}>
       <Text style={styles.heading}>{name}</Text>
       <View style={styles.inputContainer}>
@@ -103,10 +131,11 @@ const InputBorder = ({
               />
             ) : (
               <Image
+                // eslint-disable-next-line react-native/no-inline-styles
                 style={{
                   bottom: Platform.OS === 'ios' ? 4 : 4,
                   paddingVertical: 0,
-                  textAlignVertical: 'center',
+                  // textAlignVertical: 'center',
                   tintColor: theme.iconColor,
                 }}
                 source={AppIcons.eyesClose}
@@ -114,6 +143,7 @@ const InputBorder = ({
             )}
           </TouchableOpacity>
         )}
+        {error && <Text style={styles.errorText}>{error}</Text>}
       </View>
     </View>
   );

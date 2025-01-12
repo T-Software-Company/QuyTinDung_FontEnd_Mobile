@@ -1,59 +1,67 @@
-import {
-  Image,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import Header from '../components/Header/Header';
 import Table from '../components/Table/Table';
 import BoxAdd from '../components/BoxAdd/BoxAdd';
 import {useTranslation} from 'react-i18next';
 import {useTheme} from '../context/ThemeContext';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../navigators/RootNavigator';
 
-const Save = ({navigation}) => {
-  const {theme} = useTheme();
+type LoanScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Loan'>;
+
+interface LoanProps {
+  navigation: LoanScreenNavigationProp;
+}
+
+interface Theme {
+  background: string;
+  text: string;
+}
+
+interface LoanBoxData {
+  id: number;
+  boxes: Array<{
+    key: string;
+    value: string;
+  }>;
+}
+
+const Loan: React.FC<LoanProps> = ({navigation}) => {
+  const {theme} = useTheme() as {theme: Theme};
   const {t} = useTranslation();
 
-  const data = [
+  const data: LoanBoxData[] = [
     {
       id: 1,
       boxes: [
-        {key: `${t('loan.loanAmount')}`, value: '100.000.000 đ'},
-        {key: `${t('loan.contractNumber')}`, value: '123-456-789'},
-        {key: `${t('loan.dueDate')}`, value: '22/07/2024'},
+        {key: t('loan.loanAmount'), value: '100.000.000 đ'},
+        {key: t('loan.contractNumber'), value: '123-456-789'},
+        {key: t('loan.dueDate'), value: '22/07/2024'},
       ],
     },
     {
       id: 2,
       boxes: [
-        {key: `${t('loan.loanAmount')}`, value: '200.000.000 đ'},
-        {key: `${t('loan.contractNumber')}`, value: '987-654-321'},
-        {key: `${t('loan.dueDate')}`, value: '15/08/2024'},
+        {key: t('loan.loanAmount'), value: '200.000.000 đ'},
+        {key: t('loan.contractNumber'), value: '987-654-321'},
+        {key: t('loan.dueDate'), value: '15/08/2024'},
       ],
     },
     {
       id: 3,
       boxes: [
-        {key: `${t('loan.loanAmount')}`, value: '300.000.000 đ'},
-        {key: `${t('loan.contractNumber')}`, value: '987-654-321'},
-        {key: `${t('loan.dueDate')}`, value: '15/08/2024'},
+        {key: t('loan.loanAmount'), value: '300.000.000 đ'},
+        {key: t('loan.contractNumber'), value: '987-654-321'},
+        {key: t('loan.dueDate'), value: '15/08/2024'},
       ],
     },
   ];
 
   return (
-    <SafeAreaView
-      style={[styles.view, {backgroundColor: theme.background}]}>
+    <SafeAreaView style={[styles.view, {backgroundColor: theme.background}]}>
       <View style={styles.container}>
-        {/* Heading */}
-
         <Header Navbar="Loan" navigation={navigation} />
-
-        {/* Body */}
 
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
@@ -68,8 +76,7 @@ const Save = ({navigation}) => {
             />
 
             <View style={styles.listSaves}>
-              <Text
-                style={[styles.headingList, {color: theme.text}]}>
+              <Text style={[styles.headingList, {color: theme.text}]}>
                 {t('loan.loanList')}
               </Text>
 
@@ -77,7 +84,7 @@ const Save = ({navigation}) => {
                 name="loan"
                 data={data}
                 navigation={navigation}
-                detail="InfoLoan"
+                detail="InfoLoan"  // TypeScript will ensure this is correct
               />
             </View>
           </View>
@@ -87,7 +94,7 @@ const Save = ({navigation}) => {
   );
 };
 
-export default Save;
+export default Loan;
 
 const styles = StyleSheet.create({
   view: {

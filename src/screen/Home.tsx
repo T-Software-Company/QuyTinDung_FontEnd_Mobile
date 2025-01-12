@@ -10,12 +10,27 @@ import {AppIcons} from '../icons';
 import {useTheme} from '../context/ThemeContext';
 import {fetchProtectedData} from '../api/apiService';
 import {useAuth} from '../context/AuthContext';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList, UserData} from '../navigators/RootNavigator';
 
-const Home = ({navigation}) => {
-  const {theme} = useTheme();
+type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
+
+interface HomeProps {
+  navigation: HomeScreenNavigationProp;
+}
+
+interface Theme {
+  background: string;
+  backgroundIcon: string;
+  iconColor: string;
+  text: string;
+}
+
+const Home: React.FC<HomeProps> = ({navigation}) => {
+  const {theme} = useTheme() as {theme: Theme};
   const {t} = useTranslation();
-  const {isAuthenticated, login} = useAuth();
-  const [data, setData] = useState(null);
+  const {isAuthenticated} = useAuth();
+  const [data, setData] = useState<UserData | null>(null);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -23,9 +38,9 @@ const Home = ({navigation}) => {
       return;
     }
     loadData();
-  }, [isAuthenticated]);
+  }, [isAuthenticated, navigation]);
 
-  const loadData = async () => {
+  const loadData = async (): Promise<void> => {
     const result = await fetchProtectedData('userinfo');
     if (result) {
       setData(result);
@@ -98,10 +113,6 @@ const styles = StyleSheet.create({
   view: {
     flex: 1,
     backgroundColor: 'white',
-  },
-  container: {
-    width: '100%',
-    height: '100%',
   },
   container: {
     width: '100%',

@@ -1,98 +1,124 @@
+/* eslint-disable react-native/no-inline-styles */
 import {
   SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  Dimensions,
-  TextInput,
-  Image,
   Alert,
   ScrollView,
 } from 'react-native';
 import React, {useMemo, useCallback} from 'react';
-import {Formik} from 'formik';
+import {Formik, FormikProps} from 'formik';
 import * as Yup from 'yup';
 import {AppIcons} from '../icons';
 import {useTheme} from '../context/ThemeContext';
 import InputBorder from '../components/InputBorder/InputBorder';
 import {useTranslation} from 'react-i18next';
 import Header from '../components/Header/Header';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RouteProp } from '@react-navigation/native';
+import { RootStackParamList } from '../navigators/RootNavigator';
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+type RegisterAddressNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'RegisterAddress'
+>;
 
-const RegisterAddress = ({navigation, route}) => {
+type RegisterAddressRouteProp = RouteProp<
+  RootStackParamList,
+  'RegisterAddress'
+>;
+
+interface FormValues {
+  country: string;
+  cityProvince: string;
+  district: string;
+  wardOrCommune: string;
+  streetAddress: string;
+}
+
+interface RegisterAddressProps {
+  navigation: RegisterAddressNavigationProp;
+  route: RegisterAddressRouteProp;
+}
+
+interface InputFieldConfig {
+  name: keyof FormValues;
+  label: string;
+  placeholder: string;
+}
+
+
+const RegisterAddress: React.FC<RegisterAddressProps> = ({navigation, route}) => {
   const {theme} = useTheme();
   const {t} = useTranslation();
-  const previousFormData = route.params?.formDataUser || {};
+  const previousFormData = useMemo(() => route.params?.formDataUser || {}, [route.params]);
 
   // Validation Schema
-  const validationSchema = useMemo(
+  const validationSchema: Yup.ObjectSchema<FormValues> = useMemo(
     () =>
       Yup.object().shape({
         country: Yup.string()
           .trim()
-          .required(t('registerAddress.errors.country')),
+          .required(t('register.address.errors.country')),
         cityProvince: Yup.string()
           .trim()
-          .required(t('registerAddress.errors.cityProvince')),
+          .required(t('register.address.errors.cityProvince')),
         district: Yup.string()
           .trim()
-          .required(t('registerAddress.errors.district')),
+          .required(t('register.address.errors.district')),
         wardOrCommune: Yup.string()
           .trim()
-          .required(t('registerAddress.errors.wardOrCommune')),
+          .required(t('register.address.errors.wardOrCommune')),
         streetAddress: Yup.string()
           .trim()
-          .required(t('registerAddress.errors.streetAddress')),
+          .required(t('register.address.errors.streetAddress')),
       }),
     [t],
   );
 
   // Handle Form Submission
   const handleSubmit = useCallback(
-    values => {
+    (values: FormValues) => {
       navigation.navigate('NotificationScan', {
-        formDataAddress: {
-          ...values,
-        },
+        formDataAddress: values,
         formDataUser: previousFormData,
-      });
+      } as const);
     },
-    [navigation, previousFormData, validationSchema, t],
+    [navigation, previousFormData],
   );
 
   // Input Fields Configuration
-  const inputFields = useMemo(
+  const inputFields: InputFieldConfig[] = useMemo(
     () => [
       {
         name: 'country',
-        label: 'Quốc gia',
-        placeholder: 'Nhập quốc gia',
+        label: t('register.address.country'),
+        placeholder: t('register.address.countryPlaceholder'),
       },
       {
         name: 'cityProvince',
-        label: 'Tỉnh/Thành phố',
-        placeholder: 'Nhập tỉnh/thành phố',
+        label: t('register.address.cityProvince'),
+        placeholder: t('register.address.cityProvincePlaceholder'),
       },
       {
         name: 'district',
-        label: 'Quận/Huyện',
-        placeholder: 'Nhập quận/huyện',
+        label: t('register.address.district'),
+        placeholder: t('register.address.districtPlaceholder'),
       },
       {
         name: 'wardOrCommune',
-        label: 'Phường/Xã',
-        placeholder: 'Nhập phường/xã',
+        label: t('register.address.wardOrCommune'),
+        placeholder: t('register.address.wardOrCommunePlaceholder'),
       },
       {
         name: 'streetAddress',
-        label: 'Nhập số nhà, tên đường',
-        placeholder: 'Nhập số nhà, tên đường',
+        label: t('register.address.streetAddress'),
+        placeholder: t('register.address.streetAddressPlaceholder'),
       },
     ],
-    [],
+    [t],
   );
 
   // Styles
@@ -145,7 +171,7 @@ const RegisterAddress = ({navigation, route}) => {
       <View style={styles.container}>
         <Header Navbar="ConfirmAddress" navigation={navigation} />
 
-        <Formik
+        <Formik<FormValues>
           initialValues={{
             country: 'Vietnam',
             cityProvince: 'Saigon',
@@ -156,6 +182,7 @@ const RegisterAddress = ({navigation, route}) => {
           validationSchema={validationSchema}
           onSubmit={handleSubmit}>
           {({
+            // eslint-disable-next-line @typescript-eslint/no-shadow
             handleSubmit,
             values,
             setFieldValue,
@@ -164,7 +191,7 @@ const RegisterAddress = ({navigation, route}) => {
             setTouched,
             isSubmitting,
             resetForm,
-          }) => (
+          }: FormikProps<FormValues>) => (
             <>
               <ScrollView style={styles.body}>
                 <View>
@@ -181,6 +208,7 @@ const RegisterAddress = ({navigation, route}) => {
                       value={values[field.name]}
                       theme={theme}
                       error={errors[field.name]}
+                      textContentType="none"
                     />
                   ))}
                 </View>
@@ -203,8 +231,8 @@ const RegisterAddress = ({navigation, route}) => {
                   }}>
                   <Text style={styles.textButton}>
                     {isSubmitting
-                      ? t('registerAddress.submitting')
-                      : t('registerAddress.submit')}
+                      ? t('register.address.submitting')
+                      : t('register.address.submit')}
                   </Text>
                 </TouchableOpacity>
               </View>

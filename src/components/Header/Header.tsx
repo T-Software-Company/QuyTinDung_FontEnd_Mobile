@@ -1,11 +1,19 @@
+/* eslint-disable react-native/no-inline-styles */
 import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../../navigators/RootNavigator'; // Fix import path
 import {AppIcons} from '../../icons';
 import {useTheme} from '../../context/ThemeContext';
 import {useAuth} from '../../context/AuthContext';
 
-const Header = ({Navbar, navigation}) => {
+interface HeaderProps {
+  Navbar: string;
+  navigation: StackNavigationProp<RootStackParamList, keyof RootStackParamList>;
+}
+
+const Header: React.FC<HeaderProps> = ({Navbar, navigation}) => {
   const {t} = useTranslation();
   const {theme} = useTheme();
   const {logout} = useAuth();
@@ -258,7 +266,7 @@ const Header = ({Navbar, navigation}) => {
               style={{
                 position: 'absolute',
                 right: 0,
-                width: '80',
+                width: 80, // Changed from '80' to 80
                 textAlign: 'right',
                 flexShrink: 1,
                 flexWrap: 'nowrap',
@@ -383,28 +391,29 @@ const Header = ({Navbar, navigation}) => {
             <Image source={AppIcons.back} style={styles.icon} />
           </TouchableOpacity>
           <View>
-            <Text style={styles.heading}>{t('notificationScan.title')}</Text>
+            <Text style={styles.heading}>{t('register.camera.title')}</Text>
           </View>
-          <TouchableOpacity style={[styles.noBorderArrow, styles.hidden]}>
-            
-          </TouchableOpacity>
+          <TouchableOpacity style={[styles.noBorderArrow, styles.hidden]} />
         </View>
       )}
 
       {/* Render header when navbar name ScanQR */}
       {Navbar === 'ScanQR' && (
-        <View style={[styles.containHeading, {paddingTop: 50, backgroundColor: "rgba(0,0,0,0.6)"}]}>
+        <View
+          style={[
+            styles.containHeading,
+            {paddingTop: 50, backgroundColor: 'rgba(0,0,0,0.6)'},
+          ]}>
           <TouchableOpacity
             style={[styles.noBorderArrow]}
             onPress={() => navigation.goBack()}>
             <Image source={AppIcons.back} style={styles.icon} />
           </TouchableOpacity>
           <View>
-            <Text style={styles.heading}>{t('notificationScan.title')}</Text>
+            <Text style={styles.heading}>{t('register.camera.title')}</Text>
           </View>
-          <TouchableOpacity style={[styles.noBorderArrow, styles.hidden]}>
-            
-          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.noBorderArrow, styles.hidden]} />
         </View>
       )}
 
@@ -417,11 +426,12 @@ const Header = ({Navbar, navigation}) => {
             <Image source={AppIcons.back} style={styles.icon} />
           </TouchableOpacity>
           <View>
-            <Text style={styles.heading}>Xác thực thông tin</Text>
+            <Text style={styles.heading}>
+              {t('register.resultScreen.title')}
+            </Text>
           </View>
-          <TouchableOpacity style={[styles.noBorderArrow, styles.hidden]}>
-            
-          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.noBorderArrow, styles.hidden]} />
         </View>
       )}
 
@@ -434,11 +444,10 @@ const Header = ({Navbar, navigation}) => {
             <Image source={AppIcons.back} style={styles.icon} />
           </TouchableOpacity>
           <View>
-            <Text style={styles.heading}>Địa chỉ hiện tại</Text>
+            <Text style={styles.heading}>{t('register.address.title')}</Text>
           </View>
-          <TouchableOpacity style={[styles.noBorderArrow, styles.hidden]}>
-            
-          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.noBorderArrow, styles.hidden]} />
         </View>
       )}
     </>

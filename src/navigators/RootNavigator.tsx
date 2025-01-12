@@ -1,9 +1,14 @@
-import {Text, View, SafeAreaView, Image, StyleSheet} from 'react-native';
+/* eslint-disable react/react-in-jsx-scope */
+import {Text, View, Image, StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createStackNavigator} from '@react-navigation/stack';
 import {TransitionPresets} from '@react-navigation/stack';
+import {useTranslation} from 'react-i18next';
+import {AppIcons} from '../icons';
+import {useTheme} from '../context/ThemeContext';
+
+// Import all screens
 import HomeScreen from '../screen/Home';
 import SettingScreen from '../screen/Setting';
 import LoanScreen from '../screen/Loan';
@@ -23,51 +28,116 @@ import ChangePasswordScreen from '../screen/ChangePassword';
 import QRScannerApp from '../screen/QRpage';
 import ResultQRApp from '../screen/ResultQR';
 import NotificationScanScreen from '../screen/NotificationScan';
-
 import LoginScreen from '../screen/Login';
 import ForgetPasswordScreen from '../screen/ForgetPassword';
 import RegisterScreen from '../screen/Register';
 import RegisterAddressScreen from '../screen/RegisterAddress';
 
-import Footer from '../components/Footer/Footer';
-import {useTranslation} from 'react-i18next';
-import {AppIcons} from '../icons';
-import {useTheme} from '../context/ThemeContext';
+export interface FormDataAddress {
+  country: string;
+  cityProvince: string;
+  district: string;
+  wardOrCommune: string;
+  streetAddress: string;
+}
 
-const Tab = createBottomTabNavigator();
-// const RootStack = createStackNavigator<RootStackParams>();
+export interface FormDataUser {
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+}
+
+export interface UserData {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  // Add other user data fields as needed
+}
+
+export type RootStackParamList = {
+  HomeTabs: undefined;
+  Login: undefined;
+  Register: undefined;
+  RegisterAddress: {
+    formDataUser: FormDataUser;
+  };
+  ForgetPassword: undefined;
+  QrScreen: {
+    formDataAddress: FormDataAddress;
+    formDataUser: FormDataUser;
+  };
+  ResultQR: {
+    formDataAddress: FormDataAddress;
+    formDataUser: FormDataUser;
+    qrData: string[];
+  };
+  NotificationScan: {
+    formDataAddress: FormDataAddress;
+    formDataUser: FormDataUser;
+  };
+  InfoSave: {id?: string};
+  InfoLoan: {id?: string};
+  InfoPerson: undefined;
+  Deposit: undefined;
+  Transfer: undefined;
+  SentSave: undefined;
+  CreateLoan: undefined;
+  LanguageSetting: undefined;
+  DarkModeSetting: undefined;
+  ChangePassword: undefined;
+  Notification: undefined;
+  Home: undefined;
+  Save: undefined;
+  Loan: undefined;
+  Rate: undefined;
+  Setting: undefined;
+  ScanQR: undefined;
+  ConfirmInfo: undefined;
+  ConfirmAddress: undefined;
+};
+
+export type TabParamList = {
+  Home: undefined;
+  Save: undefined;
+  Loan: undefined;
+  Rate: undefined;
+  Setting: undefined;
+};
+
+const Tab = createBottomTabNavigator<TabParamList>();
+const Stack = createStackNavigator<RootStackParamList>();
+
 const MyTabs = () => {
   const {t} = useTranslation();
   const {theme} = useTheme();
+
+  const getTabIcon = (routeName: keyof TabParamList) => {
+    switch (routeName) {
+      case 'Home':
+        return AppIcons.home;
+      case 'Save':
+        return AppIcons.save;
+      case 'Loan':
+        return AppIcons.loan;
+      case 'Rate':
+        return AppIcons.rate;
+      case 'Setting':
+        return AppIcons.settings;
+      default:
+        return AppIcons.home;
+    }
+  };
 
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
         headerShown: false,
         tabBarShowLabel: false,
+        // eslint-disable-next-line react/no-unstable-nested-components
         tabBarIcon: ({focused}) => {
-          let iconSource;
-
-          // Gán biểu tượng tùy vào tên route
-          switch (route.name) {
-            case t('navbar.home'):
-              iconSource = AppIcons.home;
-              break;
-            case t('navbar.save'):
-              iconSource = AppIcons.save;
-              break;
-            case t('navbar.loan'):
-              iconSource = AppIcons.loan;
-              break;
-            case t('navbar.rate'):
-              iconSource = AppIcons.rate;
-              break;
-            case t('navbar.setting'):
-              iconSource = AppIcons.settings;
-              break;
-            default:
-              break;
-          }
+          const iconSource = getTabIcon(route.name);
 
           return (
             <View style={styles.tabIconContainer}>
@@ -85,62 +155,40 @@ const MyTabs = () => {
               <Text
                 style={[
                   styles.tabLabel,
+                  // eslint-disable-next-line react-native/no-inline-styles
                   {
                     color: focused ? theme.iconColorActive : theme.iconColor,
                     fontSize: 10,
                   },
                 ]}>
-                {route.name}
+                {t(`navbar.${route.name.toLowerCase()}`)}
               </Text>
             </View>
           );
         },
         tabBarStyle: {
-          height: 75, // Tăng chiều cao thanh điều hướng
+          height: 75,
           paddingBottom: 20,
           paddingTop: 15,
           backgroundColor: theme.tabBarBackground,
         },
       })}>
-      <Tab.Screen
-        name={t('navbar.home')}
-        value="Trang chủ"
-        component={HomeScreen}
-      />
-      <Tab.Screen
-        name={t('navbar.save')}
-        value="Tiết kiệm"
-        component={SaveScreen}
-      />
-      <Tab.Screen
-        name={t('navbar.loan')}
-        value="Khoản vay"
-        component={LoanScreen}
-      />
-      <Tab.Screen
-        name={t('navbar.rate')}
-        value="Lãi suất"
-        component={RateScreen}
-      />
-      <Tab.Screen
-        name={t('navbar.setting')}
-        value="Cài đặt"
-        component={SettingScreen}
-      />
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Save" component={SaveScreen} />
+      <Tab.Screen name="Loan" component={LoanScreen} />
+      <Tab.Screen name="Rate" component={RateScreen} />
+      <Tab.Screen name="Setting" component={SettingScreen} />
     </Tab.Navigator>
   );
 };
 
-const Stack = createNativeStackNavigator();
-
-export default RootComponent = function () {
+const RootComponent: React.FC = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Register"
+        initialRouteName="Login"
         screenOptions={{headerShown: false}}>
         <Stack.Screen name="HomeTabs" component={MyTabs} />
-
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen
@@ -154,7 +202,6 @@ export default RootComponent = function () {
           name="NotificationScan"
           component={NotificationScanScreen}
         />
-
         <Stack.Screen name="InfoSave" component={InfoSaveScreen} />
         <Stack.Screen name="InfoLoan" component={InfoLoanScreen} />
         <Stack.Screen name="InfoPerson" component={InfoPersonScreen} />
@@ -171,20 +218,25 @@ export default RootComponent = function () {
           component={DarkModeSettingScreen}
         />
         <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
-
         <Stack.Screen
           name="Notification"
           component={NotificationScreen}
           options={{
-            ...TransitionPresets.ModalSlideFromBottomIOS, // Hiệu ứng chỉ áp dụng cho ScreenA
+            ...TransitionPresets.ModalSlideFromBottomIOS,
             gestureDirection: 'vertical',
-            cardStyleInterpolator: ({current, layouts}) => ({
+            cardStyleInterpolator: ({
+              current,
+              layouts,
+            }: {
+              current: any;
+              layouts: any;
+            }) => ({
               cardStyle: {
                 transform: [
                   {
                     translateY: current.progress.interpolate({
                       inputRange: [0, 1],
-                      outputRange: [layouts.screen.height, 0], // Từ dưới lên
+                      outputRange: [layouts.screen.height, 0],
                     }),
                   },
                 ],
@@ -214,3 +266,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+export default RootComponent;

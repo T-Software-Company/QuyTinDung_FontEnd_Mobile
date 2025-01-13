@@ -1,23 +1,42 @@
-import {
-  Alert,
-  Image,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import Header from '../components/Header/Header';
 import i18n from '../../i18n';
 import {useTheme} from '../context/ThemeContext';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../navigators/RootNavigator';
+import {RouteProp} from '@react-navigation/native';
 
-const InfoLoan = ({navigation}) => {
+type InfoLoanScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'InfoLoan'
+>;
+type InfoLoanScreenRouteProp = RouteProp<RootStackParamList, 'InfoLoan'>;
+
+interface InfoLoanProps {
+  navigation: InfoLoanScreenNavigationProp;
+  route: InfoLoanScreenRouteProp;
+}
+
+interface Theme {
+  background: string;
+  headerShadow: string;
+  tableChildBackground: string;
+  tableHeaderBackground: string;
+  tableBorderColor: string;
+  text: string;
+}
+
+interface LoanDataItem {
+  key: string;
+  value: string;
+}
+
+const InfoLoan: React.FC<InfoLoanProps> = ({navigation}) => {
   const currentLanguage = i18n.language;
-  const {theme} = useTheme();
+  const {theme} = useTheme() as {theme: Theme};
 
-  const dataVietnam = [
+  const dataVietnam: LoanDataItem[] = [
     {key: 'Số hợp đồng', value: '123-456-789'},
     {key: 'Số tiền vay', value: '100.000.000 đ'},
     {key: 'Mục đích vay', value: 'Mua nhà'},
@@ -32,7 +51,7 @@ const InfoLoan = ({navigation}) => {
     {key: 'Ngày đến hạn', value: '22/10/2024'},
   ];
 
-  const dataEnglish = [
+  const dataEnglish: LoanDataItem[] = [
     {key: 'Contract Number', value: '123-456-789'},
     {key: 'Loan Amount', value: '100,000,000 VND'},
     {key: 'Loan Purpose', value: 'Buying a house'},
@@ -49,7 +68,6 @@ const InfoLoan = ({navigation}) => {
 
   const data = currentLanguage === 'vi' ? dataVietnam : dataEnglish;
 
-
   const styles = StyleSheet.create({
     view: {
       flex: 1,
@@ -58,7 +76,6 @@ const InfoLoan = ({navigation}) => {
       width: '100%',
       height: '100%',
     },
-  
     containHeading: {
       display: 'flex',
       flexDirection: 'row',
@@ -77,12 +94,12 @@ const InfoLoan = ({navigation}) => {
       alignItems: 'flex-start',
       justifyContent: 'center',
     },
-  
+
     body: {
       marginTop: 16,
       paddingHorizontal: 20,
     },
-  
+
     textWhite: {
       color: 'white',
     },
@@ -92,12 +109,12 @@ const InfoLoan = ({navigation}) => {
     iconPrimary: {
       tintColor: '#007BFF',
     },
-  
+
     boxList: {
       marginVertical: 12,
       backgroundColor: theme.tableChildBackground,
       borderRadius: 12,
-  
+
       // Shadow for iOS
       shadowColor: theme.headerShadow, // Màu bóng
       shadowOffset: {width: 0, height: 2}, // Độ lệch bóng
@@ -109,7 +126,7 @@ const InfoLoan = ({navigation}) => {
       flexDirection: 'column',
       height: 'auto',
     },
-  
+
     boxWrap: {
       display: 'flex',
       flexDirection: 'row',
@@ -117,7 +134,7 @@ const InfoLoan = ({navigation}) => {
       alignItems: 'center',
       padding: 12,
     },
-  
+
     firstChild: {
       backgroundColor: theme.tableHeaderBackground,
       borderTopLeftRadius: 12,
@@ -127,7 +144,7 @@ const InfoLoan = ({navigation}) => {
       borderBottomColor: theme.tableBorderColor,
       borderBottomWidth: 1,
     },
-  
+
     textKeyRow: {
       fontWeight: 'bold',
       color: theme.text,
@@ -136,13 +153,12 @@ const InfoLoan = ({navigation}) => {
       fontWeight: 'regular',
       color: theme.text,
     },
-  
+
     hidden: {
       opacity: 0,
       pointerEvents: 'none',
     },
   });
-
 
   return (
     <SafeAreaView style={[styles.view, {backgroundColor: theme.background}]}>
@@ -157,7 +173,7 @@ const InfoLoan = ({navigation}) => {
           contentInsetAdjustmentBehavior="automatic"
           showsVerticalScrollIndicator={false}>
           <View style={styles.body}>
-            <View style={styles.listInfos}>
+            <View>
               <View style={styles.boxList}>
                 {data.map((box, idx) => (
                   <View
@@ -170,14 +186,14 @@ const InfoLoan = ({navigation}) => {
                     <Text
                       style={[
                         idx === 0 && styles.textKeyRow,
-                        idx > 0 && idx < data.length  && styles.textRow,
+                        idx > 0 && idx < data.length && styles.textRow,
                       ]}>
                       {box.key}
                     </Text>
                     <Text
                       style={[
                         idx === 0 && styles.textKeyRow,
-                        idx > 0 && idx < data.length  && styles.textRow,
+                        idx > 0 && idx < data.length && styles.textRow,
                       ]}>
                       {box.value}
                     </Text>
@@ -193,5 +209,3 @@ const InfoLoan = ({navigation}) => {
 };
 
 export default InfoLoan;
-
-

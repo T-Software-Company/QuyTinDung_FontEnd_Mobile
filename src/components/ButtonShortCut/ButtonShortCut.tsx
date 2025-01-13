@@ -4,11 +4,30 @@ import {
   View,
   TouchableOpacity,
   Image,
-  Alert,
+  ImageSourcePropType,
+  ImageStyle,
 } from 'react-native';
 import React from 'react';
 
-const ButtonShortCut = ({name, urlIcon, styleCustom, onPress, theme}) => {
+interface ButtonShortCutProps {
+  name: string;
+  urlIcon: ImageSourcePropType;
+  styleCustom?: ImageStyle;
+  onPress: () => void;
+  theme: {
+    backgroundIcon: string;
+    iconColor: string;
+    text: string;
+  };
+}
+
+const ButtonShortCut: React.FC<ButtonShortCutProps> = ({
+  name,
+  urlIcon,
+  styleCustom,
+  onPress,
+  theme,
+}) => {
   return (
     <View style={styles.wrapButton}>
       <TouchableOpacity

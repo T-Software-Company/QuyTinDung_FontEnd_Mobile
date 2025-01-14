@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import {
   Alert,
   Image,
@@ -8,42 +9,64 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Platform,
 } from 'react-native';
-
 import React, {useState} from 'react';
 import Header from '../components/Header/Header';
 import {useTheme} from '../context/ThemeContext';
 import {useTranslation} from 'react-i18next';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../navigators/RootNavigator';
+import {AppIcons} from '../icons';
 
-const ChangePassword = ({navigation}) => {
-  const [currentPassword, setCurrentPassword] = useState('12345678');
-  const [password, setPassword] = useState('123456789');
-  const [confirmPassword, setConfirmPassword] = useState('123456789');
-  const [invisibleCurrent, setInvisibleCurrent] = useState(true);
-  const [invisible, setInvisible] = useState(true);
-  const [invisibleConfirm, setInvisibleConfirm] = useState(true);
+type ChangePasswordNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'ChangePassword'
+>;
+
+interface ChangePasswordProps {
+  navigation: ChangePasswordNavigationProp;
+}
+
+interface PasswordNotes {
+  mainNote: string;
+  subTitle: string;
+  note1: string;
+  note2: string;
+}
+
+const ChangePassword: React.FC<ChangePasswordProps> = ({navigation}) => {
+  const [currentPassword, setCurrentPassword] = useState<string>('12345678');
+  const [password, setPassword] = useState<string>('123456789');
+  const [confirmPassword, setConfirmPassword] = useState<string>('123456789');
+  const [invisibleCurrent, setInvisibleCurrent] = useState<boolean>(true);
+  const [invisible, setInvisible] = useState<boolean>(true);
+  const [invisibleConfirm, setInvisibleConfirm] = useState<boolean>(true);
   const {theme} = useTheme();
   const {t, i18n} = useTranslation();
 
-  const getPasswordNotes = () => {
+  const getPasswordNotes = (): PasswordNotes => {
     if (i18n.language === 'vi') {
       return {
-        mainNote: 'Để bảo vệ thông tin và ngăn ngừa người khác xâm nhập vào tài khoản của bạn, hãy sử dụng mật khẩu mạnh và thay đổi mật khẩu 3 - 6 tháng/lần',
+        mainNote:
+          'Để bảo vệ thông tin và ngăn ngừa người khác xâm nhập vào tài khoản của bạn, hãy sử dụng mật khẩu mạnh và thay đổi mật khẩu 3 - 6 tháng/lần',
         subTitle: 'Một số điểm cần lưu ý để có mật khẩu mạnh:',
-        note1: 'Không sử dụng dẫy dễ đoán (dãy số tăng giảm, trùng nhau hoặc ngày sinh).',
-        note2: 'Không dùng lại các mật khẩu đã sử dụng trước đó.'
-      };
-    } else {
-      return {
-        mainNote: 'To protect your information and prevent others from accessing your account, use a strong password and change it every 3-6 months',
-        subTitle: 'Some notes for a strong password:',
-        note1: 'Do not use predictable sequences (increasing/decreasing numbers, repeated numbers, or birthdates).',
-        note2: 'Do not reuse passwords that have been used before.'
+        note1:
+          'Không sử dụng dẫy dễ đoán (dãy số tăng giảm, trùng nhau hoặc ngày sinh).',
+        note2: 'Không dùng lại các mật khẩu đã sử dụng trước đó.',
       };
     }
+    return {
+      mainNote:
+        'To protect your information and prevent others from accessing your account, use a strong password and change it every 3-6 months',
+      subTitle: 'Some notes for a strong password:',
+      note1:
+        'Do not use predictable sequences (increasing/decreasing numbers, repeated numbers, or birthdates).',
+      note2: 'Do not reuse passwords that have been used before.',
+    };
   };
 
-  const notes = getPasswordNotes();
+  const notes: PasswordNotes = getPasswordNotes();
 
   const styles = StyleSheet.create({
     view: {
@@ -143,7 +166,7 @@ const ChangePassword = ({navigation}) => {
           nestedScrollEnabled={true}
           showsVerticalScrollIndicator={false}>
           <View style={styles.body}>
-            <View style={styles.form}>
+            <View>
               <View style={styles.note}>
                 <Text style={styles.textNote}>{notes.mainNote}</Text>
                 <View>
@@ -164,7 +187,11 @@ const ChangePassword = ({navigation}) => {
                 </Text>
                 <View>
                   <TextInput
-                    placeholder={i18n.language === 'vi' ? "Nhập mật khẩu hiện tại" : "Enter current password"}
+                    placeholder={
+                      i18n.language === 'vi'
+                        ? 'Nhập mật khẩu hiện tại'
+                        : 'Enter current password'
+                    }
                     placeholderTextColor="#aaa"
                     secureTextEntry={invisibleCurrent}
                     onChangeText={setCurrentPassword}
@@ -175,17 +202,14 @@ const ChangePassword = ({navigation}) => {
                     style={styles.iconEyes}
                     onPress={() => setInvisibleCurrent(!invisibleCurrent)}>
                     {invisibleCurrent ? (
-                      <Image
-                        source={require('../../assets/images/eyes-icon.png')}
-                      />
+                      <Image source={AppIcons.eyesOpen} />
                     ) : (
                       <Image
                         style={{
                           bottom: Platform.OS === 'ios' ? 4 : 4,
                           paddingVertical: 0,
-                          textAlignVertical: 'center',
                         }}
-                        source={require('../../assets/images/eyesclose-icon.png')}
+                        source={AppIcons.eyesClose}
                       />
                     )}
                   </TouchableOpacity>
@@ -198,7 +222,11 @@ const ChangePassword = ({navigation}) => {
                 </Text>
                 <View>
                   <TextInput
-                    placeholder={i18n.language === 'vi' ? "Nhập mật khẩu mới" : "Enter new password"}
+                    placeholder={
+                      i18n.language === 'vi'
+                        ? 'Nhập mật khẩu mới'
+                        : 'Enter new password'
+                    }
                     placeholderTextColor="#aaa"
                     secureTextEntry={invisible}
                     onChangeText={setPassword}
@@ -209,17 +237,14 @@ const ChangePassword = ({navigation}) => {
                     style={styles.iconEyes}
                     onPress={() => setInvisible(!invisible)}>
                     {invisible ? (
-                      <Image
-                        source={require('../../assets/images/eyes-icon.png')}
-                      />
+                      <Image source={AppIcons.eyesOpen} />
                     ) : (
                       <Image
                         style={{
                           bottom: Platform.OS === 'ios' ? 4 : 4,
                           paddingVertical: 0,
-                          textAlignVertical: 'center',
                         }}
-                        source={require('../../assets/images/eyesclose-icon.png')}
+                        source={AppIcons.eyesClose}
                       />
                     )}
                   </TouchableOpacity>
@@ -232,7 +257,11 @@ const ChangePassword = ({navigation}) => {
                 </Text>
                 <View>
                   <TextInput
-                    placeholder={i18n.language === 'vi' ? "Nhập lại mật khẩu mới" : "Confirm new password"}
+                    placeholder={
+                      i18n.language === 'vi'
+                        ? 'Nhập lại mật khẩu mới'
+                        : 'Confirm new password'
+                    }
                     placeholderTextColor="#aaa"
                     secureTextEntry={invisibleConfirm}
                     onChangeText={setConfirmPassword}
@@ -243,17 +272,14 @@ const ChangePassword = ({navigation}) => {
                     style={styles.iconEyes}
                     onPress={() => setInvisibleConfirm(!invisibleConfirm)}>
                     {invisibleConfirm ? (
-                      <Image
-                        source={require('../../assets/images/eyes-icon.png')}
-                      />
+                      <Image source={AppIcons.eyesOpen} />
                     ) : (
                       <Image
                         style={{
                           bottom: Platform.OS === 'ios' ? 4 : 4,
                           paddingVertical: 0,
-                          textAlignVertical: 'center',
                         }}
-                        source={require('../../assets/images/eyesclose-icon.png')}
+                        source={AppIcons.eyesClose}
                       />
                     )}
                   </TouchableOpacity>
@@ -266,7 +292,7 @@ const ChangePassword = ({navigation}) => {
                     i18n.language === 'vi' ? 'Thông báo' : 'Notification',
                     i18n.language === 'vi'
                       ? 'Thay đổi mật khẩu thành công'
-                      : 'Password changed successfully'
+                      : 'Password changed successfully',
                   )
                 }>
                 <Text

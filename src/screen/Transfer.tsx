@@ -5,20 +5,29 @@ import {
   View,
   TouchableOpacity,
   Text,
-  Alert,
 } from 'react-native';
-
 import React from 'react';
 import Header from '../components/Header/Header';
 import FormTransfer from '../components/FormTransfer/FormTransfer';
 import {useTranslation} from 'react-i18next';
-import i18n from '../../i18n';
-import {useTheme} from '../context/ThemeContext'; // Import ThemeContext
+// import i18n from '../../i18n';
+import {useTheme} from '../context/ThemeContext';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../navigators/RootNavigator';
 
-const Transfer = ({navigation}) => {
-  const currentLanguage = i18n.language;
+type TransferNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'Transfer'
+>;
+
+interface TransferProps {
+  navigation: TransferNavigationProp;
+}
+
+const Transfer: React.FC<TransferProps> = ({navigation}) => {
+  // const currentLanguage = i18n.language;
   const {t} = useTranslation();
-  const {theme} = useTheme(); // Use ThemeContext
+  const {theme} = useTheme();
 
   const styles = StyleSheet.create({
     view: {
@@ -80,11 +89,7 @@ const Transfer = ({navigation}) => {
   return (
     <SafeAreaView style={styles.view}>
       <View style={styles.container}>
-        {/* Heading */}
-
         <Header Navbar="Transfer" navigation={navigation} />
-
-        {/* Body */}
         <View style={styles.body}>
           <ScrollView
             contentInsetAdjustmentBehavior="automatic"
@@ -93,7 +98,6 @@ const Transfer = ({navigation}) => {
             <FormTransfer />
           </ScrollView>
 
-          {/* Một thành phần cố định */}
           <View style={styles.fixedBox}>
             <View style={styles.wrap}>
               <View style={styles.wrapTotal}>

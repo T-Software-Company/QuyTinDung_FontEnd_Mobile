@@ -1,3 +1,5 @@
+/* eslint-disable curly */
+/* eslint-disable react-native/no-inline-styles */
 import {
   StyleSheet,
   Text,
@@ -13,24 +15,42 @@ import {useTheme} from '../../context/ThemeContext';
 import i18n from '../../../i18n';
 import {useTranslation} from 'react-i18next';
 
-const FormTransfer = () => {
-  const currentLanguage = i18n.language;
+interface BankNames {
+  [key: string]: {
+    vi: string;
+    en: string;
+  };
+}
+
+// interface FormData {
+//   selectedBank: string;
+//   accountNumber: string;
+//   receiverName: string;
+//   amount: string;
+//   content: string;
+// }
+
+const FormTransfer: React.FC = () => {
+  const currentLanguage: 'vi' | 'en' = i18n.language as 'vi' | 'en';
   const {t} = useTranslation();
 
-  const [selectedBank, setSelectedBank] = useState('');
-  const [showPicker, setShowPicker] = useState(false);
-  const [accountNumber, setAccountNumber] = useState('');
-  const [receiverName, setReceiverName] = useState('');
-  const [amount, setAmount] = useState('');
-  const [content, setContent] = useState('');
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  const [selectedBank, setSelectedBank] = useState<string>('');
+  const [showPicker, setShowPicker] = useState<boolean>(false);
+  const [accountNumber, setAccountNumber] = useState<string>('');
+  // const [receiverName, setReceiverName] = useState<string>('');
+  const [amount, setAmount] = useState<string>('');
+  const [content, setContent] = useState<string>('');
+  const [isEnabled, setIsEnabled] = useState<boolean>(false);
   const {theme} = useTheme();
-  
-  const getBankName = value => {
-    if (!value) return currentLanguage === 'vi' ? 'Chọn ngân hàng' : 'Select bank';
 
-    const banks = {
+  const toggleSwitch = (): void =>
+    setIsEnabled(previousState => !previousState);
+
+  const getBankName = (value: string): string => {
+    if (!value)
+      return currentLanguage === 'vi' ? 'Chọn ngân hàng' : 'Select bank';
+
+    const banks: BankNames = {
       vcb: {vi: 'Vietcombank', en: 'Vietcombank'},
       tcb: {vi: 'Techcombank', en: 'Techcombank'},
       tpb: {vi: 'TPBank', en: 'TPBank'},
@@ -76,7 +96,7 @@ const FormTransfer = () => {
       color: theme.noteText,
       fontSize: 12,
     },
-  
+
     boxTransfer: {
       backgroundColor: theme.background,
       marginTop: 20,
@@ -134,7 +154,10 @@ const FormTransfer = () => {
       color: theme.text,
     },
     switch: {
-      transform: Platform.OS === "ios" ? [{scaleX: 0.6}, {scaleY: 0.6}] : [{scaleX: 1}, {scaleY: 1}],
+      transform:
+        Platform.OS === 'ios'
+          ? [{scaleX: 0.6}, {scaleY: 0.6}]
+          : [{scaleX: 1}, {scaleY: 1}],
     },
   });
 
@@ -226,5 +249,3 @@ const FormTransfer = () => {
 };
 
 export default FormTransfer;
-
-

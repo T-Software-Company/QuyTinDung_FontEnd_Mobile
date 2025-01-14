@@ -1,6 +1,6 @@
+/* eslint-disable react-native/no-inline-styles */
 import {
   Alert,
-  Image,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -8,19 +8,34 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React from 'react';
 import Header from '../components/Header/Header';
 import i18n from '../../i18n';
-import { useTranslation } from 'react-i18next';
-import { useTheme } from '../context/ThemeContext';
+import {useTranslation} from 'react-i18next';
+import {useTheme} from '../context/ThemeContext';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../navigators/RootNavigator';
 
+type InfoSaveNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'InfoSave'
+>;
 
-const InfoSave = ({navigation}) => {
+interface InfoSaveProps {
+  navigation: InfoSaveNavigationProp;
+}
+
+interface DataItem {
+  key: string;
+  value: string;
+}
+
+const InfoSave: React.FC<InfoSaveProps> = ({navigation}) => {
   const currentLanguage = i18n.language;
-  const {t} = useTranslation()
+  const {t} = useTranslation();
   const {theme} = useTheme();
 
-  const dataVietnam = [
+  const dataVietnam: DataItem[] = [
     {key: 'Số tài khoản', value: '123-456-789'},
     {key: 'Số tiền gốc', value: '100.000.000 đ'},
     {key: 'Lãi dự kiến', value: '3.000.000 đ'},
@@ -35,7 +50,7 @@ const InfoSave = ({navigation}) => {
     {key: 'Ngày đến hạn', value: '22/07/2024'},
   ];
 
-  const dataEnglish = [
+  const dataEnglish: DataItem[] = [
     {key: 'Account Number', value: '123-456-789'},
     {key: 'Principal Amount', value: '100,000,000 VND'},
     {key: 'Expected Interest', value: '3,000,000 VND'},
@@ -50,7 +65,7 @@ const InfoSave = ({navigation}) => {
     {key: 'Maturity Date', value: '22/07/2024'},
   ];
 
-  const data = currentLanguage === "vi" ? dataVietnam : dataEnglish
+  const data: DataItem[] = currentLanguage === 'vi' ? dataVietnam : dataEnglish;
 
   const styles = StyleSheet.create({
     view: {
@@ -61,7 +76,7 @@ const InfoSave = ({navigation}) => {
       width: '100%',
       height: '100%',
     },
-  
+
     containHeading: {
       display: 'flex',
       flexDirection: 'row',
@@ -80,12 +95,12 @@ const InfoSave = ({navigation}) => {
       alignItems: 'flex-start',
       justifyContent: 'center',
     },
-  
+
     body: {
       marginTop: 16,
       paddingHorizontal: 20,
     },
-  
+
     textWhite: {
       color: 'white',
     },
@@ -95,12 +110,12 @@ const InfoSave = ({navigation}) => {
     iconPrimary: {
       tintColor: '#007BFF',
     },
-  
+
     boxList: {
       marginVertical: 12,
       backgroundColor: theme.tableChildBackground,
       borderRadius: 12,
-  
+
       // Shadow for iOS
       shadowColor: theme.headerShadow, // Màu bóng
       shadowOffset: {width: 0, height: 2}, // Độ lệch bóng
@@ -112,7 +127,7 @@ const InfoSave = ({navigation}) => {
       flexDirection: 'column',
       height: 'auto',
     },
-  
+
     boxWrap: {
       display: 'flex',
       flexDirection: 'row',
@@ -120,7 +135,7 @@ const InfoSave = ({navigation}) => {
       alignItems: 'center',
       padding: 12,
     },
-  
+
     firstChild: {
       backgroundColor: theme.tableHeaderBackground,
       borderTopLeftRadius: 12,
@@ -131,7 +146,7 @@ const InfoSave = ({navigation}) => {
       backgroundColor: theme.tableChildBackground,
       borderBottomWidth: 1,
     },
-  
+
     textKeyRow: {
       fontWeight: 'bold',
       color: theme.text,
@@ -140,7 +155,7 @@ const InfoSave = ({navigation}) => {
       fontWeight: 'regular',
       color: theme.text,
     },
-  
+
     btn: {
       width: '100%',
       backgroundColor: '#007BFF',
@@ -148,13 +163,12 @@ const InfoSave = ({navigation}) => {
       borderRadius: 12,
       marginTop: 12,
     },
-  
+
     hidden: {
       opacity: 0,
       pointerEvents: 'none',
     },
   });
-
 
   return (
     <SafeAreaView style={styles.view}>
@@ -169,9 +183,9 @@ const InfoSave = ({navigation}) => {
           contentInsetAdjustmentBehavior="automatic"
           showsVerticalScrollIndicator={false}>
           <View style={styles.body}>
-            <View style={styles.listInfos}>
+            <View>
               <View style={styles.boxList}>
-                {data.map((box, idx) => (
+                {data.map((box: DataItem, idx: number) => (
                   <View
                     key={idx}
                     style={[
@@ -182,14 +196,14 @@ const InfoSave = ({navigation}) => {
                     <Text
                       style={[
                         idx === 0 && styles.textKeyRow,
-                        idx > 0 && idx < data.length  && styles.textRow,
+                        idx > 0 && idx < data.length && styles.textRow,
                       ]}>
                       {box.key}
                     </Text>
                     <Text
                       style={[
                         idx === 0 && styles.textKeyRow,
-                        idx > 0 && idx < data.length  && styles.textRow,
+                        idx > 0 && idx < data.length && styles.textRow,
                       ]}>
                       {box.value}
                     </Text>
@@ -204,7 +218,7 @@ const InfoSave = ({navigation}) => {
                     styles.textWhite,
                     {fontWeight: 'bold', textAlign: 'center'},
                   ]}>
-                  {t("infoSave.submit")}
+                  {t('infoSave.submit')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -216,5 +230,3 @@ const InfoSave = ({navigation}) => {
 };
 
 export default InfoSave;
-
-

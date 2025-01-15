@@ -149,20 +149,36 @@
         "totalAssets": "Tổng số tiền tiết kiệm",
         "add": "Mở thêm",
         "savingsList": "Danh sách sổ tiết kiệm",
-        "accountNumber": "Số tài khoản",
-        "originalAmount": "Số tiền gốc",
-        "dueDate": "Ngày đến hạn",
-        "status": "Trạng thái"
+        "fields": {
+            "status": "Trạng thái",
+            "originalAmount": "Số tiền gốc",
+            "accountNumber": "Số tài khoản",
+            "expectedInterest": "Lãi dự kiến",
+            "term": "Kỳ hạn",
+            "rate": "Lãi suất",
+            "interestPaymentMethod": "Phương thức trả lãi",
+            "interestReceivingMethod": "Hình thức nhận lãi",
+            "openDate": "Ngày mở",
+            "dueDate": "Ngày đến hạn"
+        }
     },
     "loan": {
         "title": "Khoản vay",
         "totalAssets": "Tổng số tiền vay",
         "add": "Vay thêm",
         "loanList": "Danh sách khoản vay",
-        "loanAmount": "Số tiền vay",
-        "contractNumber": "Số hợp đồng",
-        "dueDate": "Ngày đến hạn",
-        "status": "Trạng thái"
+        "fields": {
+            "status": "Trạng thái",
+            "loanAmount": "Số tiền vay",
+            "contractNumber": "Số hợp đồng",
+            "purpose": "Mục đích vay",
+            "term": "Kỳ hạn",
+            "rate": "Lãi suất",
+            "principalPayment": "Chu kỳ trả gốc",
+            "interestPayment": "Chu kỳ trả lãi",
+            "effectiveDate": "Ngày có hiệu lực",
+            "dueDate": "Ngày đến hạn"
+        }
     },
     "rate": {
         "title": "Lãi suất",

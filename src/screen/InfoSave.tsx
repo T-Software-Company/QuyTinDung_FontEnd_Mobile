@@ -1,3 +1,4 @@
+/* eslint-disable no-sparse-arrays */
 /* eslint-disable react-native/no-inline-styles */
 import {
   Alert,
@@ -8,64 +9,40 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useMemo} from 'react';
 import Header from '../components/Header/Header';
-import i18n from '../../i18n';
 import {useTranslation} from 'react-i18next';
 import {useTheme} from '../context/ThemeContext';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../navigators/RootNavigator';
-
+import {RouteProp} from '@react-navigation/native';
 type InfoSaveNavigationProp = StackNavigationProp<
   RootStackParamList,
   'InfoSave'
 >;
 
+type InfoSaveScreenRouteProp = RouteProp<RootStackParamList, 'InfoSave'>;
+
 interface InfoSaveProps {
   navigation: InfoSaveNavigationProp;
+  route: InfoSaveScreenRouteProp;
 }
 
-interface DataItem {
+interface SaveDataItem {
   key: string;
   value: string;
 }
+interface SaveData {
+  boxData: SaveDataItem[];
+}
 
-const InfoSave: React.FC<InfoSaveProps> = ({navigation}) => {
-  const currentLanguage = i18n.language;
+const InfoSave: React.FC<InfoSaveProps> = ({navigation, route}) => {
+  const data = useMemo<SaveData>(
+    () => ({boxData: [], ...route.params}),
+    [route.params],
+  );
   const {t} = useTranslation();
   const {theme} = useTheme();
-
-  const dataVietnam: DataItem[] = [
-    {key: 'Số tài khoản', value: '123-456-789'},
-    {key: 'Số tiền gốc', value: '100.000.000 đ'},
-    {key: 'Lãi dự kiến', value: '3.000.000 đ'},
-
-    {key: 'Kỳ hạn', value: '3 tháng'},
-    {key: 'Lãi suất', value: '3.6%/năm'},
-
-    {key: 'Phương thức trả lãi', value: 'Trả lãi cuối kỳ'},
-    {key: 'Hình thức nhận lãi', value: 'Lãi nhập gốc'},
-
-    {key: 'Ngày mở', value: '22/04/2024'},
-    {key: 'Ngày đến hạn', value: '22/07/2024'},
-  ];
-
-  const dataEnglish: DataItem[] = [
-    {key: 'Account Number', value: '123-456-789'},
-    {key: 'Principal Amount', value: '100,000,000 VND'},
-    {key: 'Expected Interest', value: '3,000,000 VND'},
-
-    {key: 'Term', value: '3 months'},
-    {key: 'Interest Rate', value: '3.6%/year'},
-
-    {key: 'Interest Payment Method', value: 'End-of-term payment'},
-    {key: 'Interest Receipt Method', value: 'Compound interest'},
-
-    {key: 'Opening Date', value: '22/04/2024'},
-    {key: 'Maturity Date', value: '22/07/2024'},
-  ];
-
-  const data: DataItem[] = currentLanguage === 'vi' ? dataVietnam : dataEnglish;
 
   const styles = StyleSheet.create({
     view: {
@@ -132,8 +109,9 @@ const InfoSave: React.FC<InfoSaveProps> = ({navigation}) => {
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      alignItems: 'center',
+      alignItems: 'center', // Changed from 'center' to 'flex-start'
       padding: 12,
+      gap: 8,
     },
 
     firstChild: {
@@ -150,10 +128,14 @@ const InfoSave: React.FC<InfoSaveProps> = ({navigation}) => {
     textKeyRow: {
       fontWeight: 'bold',
       color: theme.text,
+      width: '48%', // Added fixed width
+      flexWrap: 'wrap', // Added to allow text wrapping
     },
     textRow: {
       fontWeight: 'regular',
       color: theme.text,
+      width: '48%', // Added fixed width
+      flexWrap: 'wrap', // Added to allow text wrapping
     },
 
     btn: {
@@ -185,26 +167,34 @@ const InfoSave: React.FC<InfoSaveProps> = ({navigation}) => {
           <View style={styles.body}>
             <View>
               <View style={styles.boxList}>
-                {data.map((box: DataItem, idx: number) => (
+                {data.boxData.map((box: SaveDataItem, idx: number) => (
                   <View
                     key={idx}
                     style={[
                       styles.boxWrap,
                       idx === 0 && styles.firstChild, // Áp dụng kiểu cho phần tử đầu tiên
-                      idx > 0 && idx < data.length - 1 && styles.middleChild, // Phần tử giữa
+                      idx > 0 &&
+                        idx < data.boxData.length - 1 &&
+                        styles.middleChild, // Phần tử giữa
                     ]}>
                     <Text
                       style={[
                         idx === 0 && styles.textKeyRow,
-                        idx > 0 && idx < data.length && styles.textRow,
-                      ]}>
+                        idx > 0 && idx < data.boxData.length && styles.textRow,
+                        ,
+                        {textAlign: 'left'},
+                      ]}
+                      numberOfLines={undefined}>
                       {box.key}
                     </Text>
                     <Text
                       style={[
                         idx === 0 && styles.textKeyRow,
-                        idx > 0 && idx < data.length && styles.textRow,
-                      ]}>
+                        idx > 0 && idx < data.boxData.length && styles.textRow,
+                        ,
+                        {textAlign: 'right'},
+                      ]}
+                      numberOfLines={undefined}>
                       {box.value}
                     </Text>
                   </View>

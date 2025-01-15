@@ -32,7 +32,18 @@
         "originalAmount": "Original amount",
         "accountNumber": "Account number",
         "dueDate": "Due date",
-        "status": "Status"
+        "status": "Status",
+        "fields": {
+            "originalAmount": "Original Amount",
+            "accountNumber": "Account Number",
+            "expectedInterest": "Expected Interest",
+            "term": "Term",
+            "rate": "Interest Rate",
+            "interestPaymentMethod": "Interest Payment Method",
+            "interestReceivingMethod": "Interest Receiving Method",
+            "openDate": "Open Date",
+            "dueDate": "Due Date"
+        }
     },
     "loan": {
         "title": "Loan",
@@ -42,7 +53,18 @@
         "loanAmount": "Loan amount",
         "contractNumber": "Contract number",
         "dueDate": "Due date",
-        "status": "Status"
+        "status": "Status",
+        "fields": {
+            "loanAmount": "Loan Amount",
+            "contractNumber": "Contract Number",
+            "purpose": "Purpose",
+            "term": "Term",
+            "rate": "Interest Rate",
+            "principalPayment": "Principal Payment Cycle",
+            "interestPayment": "Interest Payment Cycle",
+            "effectiveDate": "Effective Date",
+            "dueDate": "Due Date"
+        }
     },
     "rate": {
         "title": "Interest rate",

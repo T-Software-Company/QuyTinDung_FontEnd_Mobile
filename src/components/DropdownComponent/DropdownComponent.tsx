@@ -36,6 +36,7 @@ const DropdownComponent = <T extends DropdownItem>({
       placeholderStyle={styles.placeholderStyle}
       iconStyle={styles.iconStyle}
       containerStyle={styles.dropDownContainer} // Changed from dropDownContainerStyle
+      activeColor="#eaeaea"
       maxHeight={200}
       value={value}
       data={data}

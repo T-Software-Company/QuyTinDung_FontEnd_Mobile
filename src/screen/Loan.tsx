@@ -7,6 +7,7 @@ import {useTranslation} from 'react-i18next';
 import {useTheme} from '../context/ThemeContext';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../navigators/RootNavigator';
+import i18n from '../../i18n';
 
 type LoanScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Loan'>;
 
@@ -30,30 +31,76 @@ interface LoanBoxData {
 const Loan: React.FC<LoanProps> = ({navigation}) => {
   const {theme} = useTheme() as {theme: Theme};
   const {t} = useTranslation();
+  const currentLanguage = i18n.language;
+
+  const value =
+    currentLanguage === 'vi'
+      ? {
+          purpose: 'Mua nhà',
+          month: 'tháng',
+          year: 'năm',
+        }
+      : {
+          purpose: 'Buy a house',
+          month: 'months',
+          year: 'years',
+        };
 
   const data: LoanBoxData[] = [
     {
       id: 1,
       boxes: [
-        {key: t('loan.loanAmount'), value: '100.000.000 đ'},
-        {key: t('loan.contractNumber'), value: '123-456-789'},
-        {key: t('loan.dueDate'), value: '22/07/2024'},
+        {key: t('loan.fields.loanAmount'), value: '100.000.000 đ'},
+        {key: t('loan.fields.contractNumber'), value: '123-456-789'},
+        {key: t('loan.fields.purpose'), value: value.purpose},
+        {key: t('loan.fields.term'), value: `12 ${value.month}`},
+        {key: t('loan.fields.rate'), value: `12%/${value.year}`},
+        {key: t('loan.fields.principalPayment'), value: `6 ${value.month}`},
+        {key: t('loan.fields.interestPayment'), value: `6 ${value.month}`},
+        {key: t('loan.fields.effectiveDate'), value: '22/04/2024'},
+        {key: t('loan.fields.dueDate'), value: '22/07/2024'},
       ],
     },
     {
       id: 2,
       boxes: [
-        {key: t('loan.loanAmount'), value: '200.000.000 đ'},
-        {key: t('loan.contractNumber'), value: '987-654-321'},
-        {key: t('loan.dueDate'), value: '15/08/2024'},
+        {key: t('loan.fields.loanAmount'), value: '200.000.000 đ'},
+        {key: t('loan.fields.contractNumber'), value: '987-654-321'},
+        {key: t('loan.fields.purpose'), value: value.purpose},
+        {key: t('loan.fields.term'), value: `12 ${value.month}`},
+        {key: t('loan.fields.rate'), value: `12%/${value.year}`},
+        {key: t('loan.fields.principalPayment'), value: `6 ${value.month}`},
+        {key: t('loan.fields.interestPayment'), value: `6 ${value.month}`},
+        {key: t('loan.fields.effectiveDate'), value: '22/04/2024'},
+        {key: t('loan.fields.dueDate'), value: '15/08/2024'},
       ],
     },
     {
       id: 3,
       boxes: [
-        {key: t('loan.loanAmount'), value: '300.000.000 đ'},
-        {key: t('loan.contractNumber'), value: '987-654-321'},
-        {key: t('loan.dueDate'), value: '15/08/2024'},
+        {key: t('loan.fields.loanAmount'), value: '300.000.000 đ'},
+        {key: t('loan.fields.contractNumber'), value: '987-654-321'},
+        {key: t('loan.fields.purpose'), value: value.purpose},
+        {key: t('loan.fields.term'), value: `12 ${value.month}`},
+        {key: t('loan.fields.rate'), value: `12%/${value.year}`},
+        {key: t('loan.fields.principalPayment'), value: `6 ${value.month}`},
+        {key: t('loan.fields.interestPayment'), value: `6 ${value.month}`},
+        {key: t('loan.fields.effectiveDate'), value: '22/04/2024'},
+        {key: t('loan.fields.dueDate'), value: '15/08/2024'},
+      ],
+    },
+    {
+      id: 4,
+      boxes: [
+        {key: t('loan.fields.loanAmount'), value: '300.000.000 đ'},
+        {key: t('loan.fields.contractNumber'), value: '987-654-321'},
+        {key: t('loan.fields.purpose'), value: value.purpose},
+        {key: t('loan.fields.term'), value: `12 ${value.month}`},
+        {key: t('loan.fields.rate'), value: `12%/${value.year}`},
+        {key: t('loan.fields.principalPayment'), value: `6 ${value.month}`},
+        {key: t('loan.fields.interestPayment'), value: `6 ${value.month}`},
+        {key: t('loan.fields.effectiveDate'), value: '22/04/2024'},
+        {key: t('loan.fields.dueDate'), value: '15/08/2024'},
       ],
     },
   ];
@@ -84,7 +131,7 @@ const Loan: React.FC<LoanProps> = ({navigation}) => {
                 name="loan"
                 data={data}
                 navigation={navigation}
-                detail="InfoLoan"  // TypeScript will ensure this is correct
+                detail="InfoLoan" // TypeScript will ensure this is correct
               />
             </View>
           </View>
@@ -108,6 +155,7 @@ const styles = StyleSheet.create({
   body: {
     marginTop: 32,
     paddingHorizontal: 20,
+    paddingBottom: 20,
   },
 
   listSaves: {

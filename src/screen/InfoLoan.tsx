@@ -1,7 +1,8 @@
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable no-sparse-arrays */
 import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useMemo} from 'react';
 import Header from '../components/Header/Header';
-import i18n from '../../i18n';
 import {useTheme} from '../context/ThemeContext';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../navigators/RootNavigator';
@@ -32,41 +33,16 @@ interface LoanDataItem {
   value: string;
 }
 
-const InfoLoan: React.FC<InfoLoanProps> = ({navigation}) => {
-  const currentLanguage = i18n.language;
+interface LoanData {
+  boxData: LoanDataItem[];
+}
+const InfoLoan: React.FC<InfoLoanProps> = ({navigation, route}) => {
+  const data = useMemo<LoanData>(
+    () => ({boxData: [], ...route.params}),
+    [route.params],
+  );
   const {theme} = useTheme() as {theme: Theme};
-
-  const dataVietnam: LoanDataItem[] = [
-    {key: 'Số hợp đồng', value: '123-456-789'},
-    {key: 'Số tiền vay', value: '100.000.000 đ'},
-    {key: 'Mục đích vay', value: 'Mua nhà'},
-
-    {key: 'Kỳ hạn', value: '12 tháng'},
-    {key: 'Lãi suất', value: '12%/năm'},
-
-    {key: 'Chu kỳ trả gốc', value: '6 tháng'},
-    {key: 'Chu kỳ trả lãi', value: '6 tháng'},
-
-    {key: 'Ngày có hiệu lực', value: '22/04/2024'},
-    {key: 'Ngày đến hạn', value: '22/10/2024'},
-  ];
-
-  const dataEnglish: LoanDataItem[] = [
-    {key: 'Contract Number', value: '123-456-789'},
-    {key: 'Loan Amount', value: '100,000,000 VND'},
-    {key: 'Loan Purpose', value: 'Buying a house'},
-
-    {key: 'Term', value: '12 months'},
-    {key: 'Interest Rate', value: '12%/year'},
-
-    {key: 'Principal Payment Cycle', value: '6 months'},
-    {key: 'Interest Payment Cycle', value: '6 months'},
-
-    {key: 'Effective Date', value: '22/04/2024'},
-    {key: 'Maturity Date', value: '22/10/2024'},
-  ];
-
-  const data = currentLanguage === 'vi' ? dataVietnam : dataEnglish;
+  console.log('InfoLoan: ', data);
 
   const styles = StyleSheet.create({
     view: {
@@ -133,6 +109,7 @@ const InfoLoan: React.FC<InfoLoanProps> = ({navigation}) => {
       justifyContent: 'space-between',
       alignItems: 'center',
       padding: 12,
+      gap: 8,
     },
 
     firstChild: {
@@ -148,10 +125,14 @@ const InfoLoan: React.FC<InfoLoanProps> = ({navigation}) => {
     textKeyRow: {
       fontWeight: 'bold',
       color: theme.text,
+      width: '48%', // Added fixed width
+      flexWrap: 'wrap',
     },
     textRow: {
       fontWeight: 'regular',
       color: theme.text,
+      width: '48%', // Added fixed width
+      flexWrap: 'wrap',
     },
 
     hidden: {
@@ -175,26 +156,34 @@ const InfoLoan: React.FC<InfoLoanProps> = ({navigation}) => {
           <View style={styles.body}>
             <View>
               <View style={styles.boxList}>
-                {data.map((box, idx) => (
+                {data.boxData.map((box, idx) => (
                   <View
                     key={idx}
                     style={[
                       styles.boxWrap,
                       idx === 0 && styles.firstChild, // Áp dụng kiểu cho phần tử đầu tiên
-                      idx > 0 && idx < data.length - 1 && styles.middleChild, // Phần tử giữa
+                      idx > 0 &&
+                        idx < data.boxData.length - 1 &&
+                        styles.middleChild, // Phần tử giữa
                     ]}>
                     <Text
                       style={[
                         idx === 0 && styles.textKeyRow,
-                        idx > 0 && idx < data.length && styles.textRow,
-                      ]}>
+                        idx > 0 && idx < data.boxData.length && styles.textRow,
+                        ,
+                        {textAlign: 'left'},
+                      ]}
+                      numberOfLines={undefined}>
                       {box.key}
                     </Text>
                     <Text
                       style={[
                         idx === 0 && styles.textKeyRow,
-                        idx > 0 && idx < data.length && styles.textRow,
-                      ]}>
+                        idx > 0 && idx < data.boxData.length && styles.textRow,
+                        ,
+                        {textAlign: 'right'},
+                      ]}
+                      numberOfLines={undefined}>
                       {box.value}
                     </Text>
                   </View>

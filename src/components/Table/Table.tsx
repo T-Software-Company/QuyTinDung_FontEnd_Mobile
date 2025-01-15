@@ -3,6 +3,7 @@ import React from 'react';
 import {useTheme} from '../../context/ThemeContext';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../navigators/RootNavigator';
+import {useTranslation} from 'react-i18next';
 
 interface TableBox {
   key: string;
@@ -38,8 +39,25 @@ interface TableProps {
   detail?: TableNavigationTarget[TableName];
 }
 
+// Add interface for navigation params
+interface InfoParams {
+  id: string;
+  boxData: TableBox[];
+}
+
 const Table: React.FC<TableProps> = ({name, data, navigation, detail}) => {
   const {theme} = useTheme() as {theme: Theme};
+  const {t} = useTranslation();
+
+  // Define allowed keys based on language
+  const allowedKeys: string[] = [
+    t('loan.fields.loanAmount'),
+    t('loan.fields.contractNumber'),
+    t('loan.fields.dueDate'),
+    t('save.fields.originalAmount'),
+    t('save.fields.accountNumber'),
+    t('save.fields.dueDate'),
+  ];
 
   const styles = StyleSheet.create({
     boxList: {
@@ -81,12 +99,13 @@ const Table: React.FC<TableProps> = ({name, data, navigation, detail}) => {
     },
   });
 
-  const handleNavigation = () => {
+  // Updated handleNavigation with proper types
+  const handleNavigation = (selectedBoxList: TableBoxList) => {
     if (navigation && detail) {
-      navigation.navigate({
-        name: detail,
-        params: {id: undefined}, // Add required params structure
-      });
+      navigation.navigate(detail, {
+        id: selectedBoxList.id.toString(), // Convert id to string
+        boxData: selectedBoxList.boxes,
+      } as InfoParams);
     }
   };
 
@@ -126,52 +145,59 @@ const Table: React.FC<TableProps> = ({name, data, navigation, detail}) => {
               </Text>
             </View>
           ))
-        : (data as TableBoxList[]).map(boxList => (
-            <TouchableOpacity
-              onPress={handleNavigation}
-              key={boxList.id}
-              style={[styles.boxList, {backgroundColor: theme.background}]}>
-              {boxList.boxes.map((box, idx) => (
-                <View
-                  key={idx}
-                  style={[
-                    styles.boxWrap,
-                    {
-                      borderBottomColor: theme.tableBorderColor,
-                      backgroundColor:
-                        idx === 0
-                          ? theme.tableHeaderBackground
-                          : theme.tableChildBackground,
-                    },
-                    idx === 0 && styles.firstChild,
-                    idx > 0 &&
-                      idx < boxList.boxes.length - 1 &&
-                      styles.middleChild,
-                  ]}>
-                  <Text
+        : (data as TableBoxList[]).map(boxList => {
+            // Filter boxes that match allowed keys
+            const filteredBoxes = boxList.boxes.filter(box =>
+              allowedKeys.includes(box.key),
+            );
+
+            return (
+              <TouchableOpacity
+                onPress={() => handleNavigation(boxList)} // Pass the complete boxList
+                key={boxList.id}
+                style={[styles.boxList, {backgroundColor: theme.background}]}>
+                {filteredBoxes.map((box, idx) => (
+                  <View
+                    key={idx}
                     style={[
-                      {color: theme.text},
-                      idx === 0 && styles.textKeyRow,
+                      styles.boxWrap,
+                      {
+                        borderBottomColor: theme.tableBorderColor,
+                        backgroundColor:
+                          idx === 0
+                            ? theme.tableHeaderBackground
+                            : theme.tableChildBackground,
+                      },
+                      idx === 0 && styles.firstChild,
                       idx > 0 &&
-                        idx < boxList.boxes.length - 1 &&
-                        styles.textRow,
+                        idx < filteredBoxes.length - 1 &&
+                        styles.middleChild,
                     ]}>
-                    {box.key}
-                  </Text>
-                  <Text
-                    style={[
-                      {color: theme.text},
-                      idx === 0 && styles.textKeyRow,
-                      idx > 0 &&
-                        idx < boxList.boxes.length - 1 &&
-                        styles.textRow,
-                    ]}>
-                    {box.value}
-                  </Text>
-                </View>
-              ))}
-            </TouchableOpacity>
-          ))}
+                    <Text
+                      style={[
+                        {color: theme.text},
+                        idx === 0 && styles.textKeyRow,
+                        idx > 0 &&
+                          idx < filteredBoxes.length - 1 &&
+                          styles.textRow,
+                      ]}>
+                      {box.key}
+                    </Text>
+                    <Text
+                      style={[
+                        {color: theme.text},
+                        idx === 0 && styles.textKeyRow,
+                        idx > 0 &&
+                          idx < filteredBoxes.length - 1 &&
+                          styles.textRow,
+                      ]}>
+                      {box.value}
+                    </Text>
+                  </View>
+                ))}
+              </TouchableOpacity>
+            );
+          })}
     </>
   );
 };

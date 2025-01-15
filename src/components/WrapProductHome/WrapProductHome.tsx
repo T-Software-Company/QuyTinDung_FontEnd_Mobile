@@ -3,8 +3,20 @@ import React from 'react';
 import ProductHome from '../ProductHome/ProductHome';
 import {useTranslation} from 'react-i18next';
 
-const WrapProductHome = ({name, theme}) => {
+interface Theme {
+  text: string;
+  background: string;
+  backgroundBox: string;
+}
+
+interface WrapProductHomeProps {
+  name: string;
+  theme: Theme;
+}
+
+const WrapProductHome: React.FC<WrapProductHomeProps> = ({name, theme}) => {
   const {t} = useTranslation();
+
   return (
     <View style={styles.product}>
       <Text style={[styles.headingTitle, {color: theme.text}]}>{name}</Text>

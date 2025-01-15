@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 import {
   StyleSheet,
   Text,
@@ -5,76 +6,65 @@ import {
   TouchableOpacity,
   Alert,
   Image,
-  Switch,
-  Animated,
+  LayoutAnimation,
   Platform,
-  // Clipboard,  // Add this import
+  UIManager,
 } from 'react-native';
-import Clipboard from '@react-native-clipboard/clipboard'; // Add this import
-import React, {useState, useRef} from 'react';
-import DropdownComponent from '../DropdownComponent/DropdownComponent';
-import InputBackground from '../InputBackground/InputBackground';
-import Icon from 'react-native-vector-icons/FontAwesome5'; // Import icon FontAwesome
+import Clipboard from '@react-native-clipboard/clipboard';
+import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import i18n from '../../../i18n';
 import {AppIcons} from '../../icons';
+import {Theme} from '../../theme/colors';
 
-const FormDeposit = ({theme}) => {
+// Enable LayoutAnimation for Android
+if (Platform.OS === 'android') {
+  if (UIManager.setLayoutAnimationEnabledExperimental) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
+}
+
+interface FormDepositProps {
+  theme: Theme;
+}
+
+interface BankFieldProps {
+  label: string;
+  value: string;
+  icon?: boolean;
+}
+
+interface BankInfo {
+  accountNumber: BankFieldProps;
+  accountName: BankFieldProps;
+  branch: BankFieldProps;
+  desc: BankFieldProps;
+}
+
+interface BankInfoMap {
+  [key: string]: BankInfo;
+}
+
+type ActiveSectionType = 'qr' | 'bank' | null;
+type BankType = 'TPBank' | 'BIDV';
+
+const FormDeposit: React.FC<FormDepositProps> = ({theme}) => {
   const currentLanguage = i18n.language;
   const {t} = useTranslation();
+  const [selectedBank, setSelectedBank] = useState<BankType>('TPBank');
+  const [activeSection, setActiveSection] = useState<ActiveSectionType>(null);
 
-  const [value, setValue] = useState(null);
-  const [isVisibleQR, setIsVisibleQR] = useState(false); // Trạng thái toggle
-  const [isVisibleBank, setIsVisibleBank] = useState(true); // Trạng thái toggle
-  const [selectedBank, setSelectedBank] = useState('TPBank'); // Add new state for active bank
-  const [activeSection, setActiveSection] = useState('qr');
-
-  const animation = useRef(new Animated.Value(0)).current; // Giá trị animation
-
-  // Xử lý toggle nội dung và animation
   const toggleQRContent = () => {
-    if (activeSection === 'qr') {
-      setActiveSection(null);
-      Animated.timing(animation, {
-        toValue: 0,
-        duration: 100,
-        useNativeDriver: false,
-      }).start();
-    } else {
-      setActiveSection('qr');
-      Animated.timing(animation, {
-        toValue: 1,
-        duration: 100,
-        useNativeDriver: false,
-      }).start();
-    }
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setActiveSection(activeSection === 'qr' ? null : 'qr');
   };
 
   const toggleBankContent = () => {
-    if (activeSection === 'bank') {
-      setActiveSection(null);
-      Animated.timing(animation, {
-        toValue: 0,
-        duration: 100,
-        useNativeDriver: false,
-      }).start();
-    } else {
-      setActiveSection('bank');
-      Animated.timing(animation, {
-        toValue: 1,
-        duration: 100,
-        useNativeDriver: false,
-      }).start();
-    }
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setActiveSection(activeSection === 'bank' ? null : 'bank');
   };
 
-  // Tính chiều cao của nội dung dựa trên animation
-  const contentHeight = animation.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, 'auto'], // Chiều cao nội dung trượt (100px)
-  });
-
-  const bankInfo = {
+  const bankInfo: BankInfoMap = {
     TPBank: {
       accountNumber: {
         label: t('deposit.accountFields.accountNumber'),
@@ -117,7 +107,7 @@ const FormDeposit = ({theme}) => {
     },
   };
 
-  const handleCopy = text => {
+  const handleCopy = (text: string): void => {
     Clipboard.setString(text);
     Alert.alert(
       currentLanguage === 'vi' ? 'Thông báo' : 'Notification',
@@ -171,6 +161,7 @@ const FormDeposit = ({theme}) => {
       overflow: 'hidden', // Đảm bảo nội dung không tràn ra ngoài
       marginVertical: 0,
       width: '100%',
+      height: 'auto', // Let content determine height
     },
     contentText: {
       color: theme.text,
@@ -338,7 +329,7 @@ const FormDeposit = ({theme}) => {
     },
   });
 
-  const BankField = ({label, value, icon}) => (
+  const BankField: React.FC<BankFieldProps> = ({label, value, icon}) => (
     <TouchableOpacity
       style={styles.wrapField}
       onPress={() => handleCopy(value)}>
@@ -347,9 +338,9 @@ const FormDeposit = ({theme}) => {
         <Text style={styles.descBank}>{value}</Text>
       </View>
       {icon && (
-        <View onPress={() => handleCopy(value)}>
+        <TouchableOpacity onPress={() => handleCopy(value)}>
           <Image style={styles.iconDownload} source={AppIcons.copy} />
-        </View>
+        </TouchableOpacity>
       )}
     </TouchableOpacity>
   );
@@ -368,7 +359,7 @@ const FormDeposit = ({theme}) => {
         </TouchableOpacity>
 
         {/* Nội dung có animation */}
-        <Animated.View style={[styles.content, {height: contentHeight}]}>
+        <View style={styles.content}>
           {activeSection === 'qr' && (
             <>
               <View style={styles.wrapQr}>
@@ -411,7 +402,7 @@ const FormDeposit = ({theme}) => {
               </TouchableOpacity>
             </>
           )}
-        </Animated.View>
+        </View>
       </View>
 
       <View style={styles.wrapFunction}>
@@ -428,7 +419,7 @@ const FormDeposit = ({theme}) => {
         </TouchableOpacity>
 
         {/* Nội dung có animation */}
-        <Animated.View style={[styles.content, {height: contentHeight}]}>
+        <View style={styles.content}>
           {activeSection === 'bank' && (
             <View style={styles.wrapTransferBank}>
               <Text style={styles.noteTransfer}>
@@ -468,7 +459,7 @@ const FormDeposit = ({theme}) => {
               </View>
             </View>
           )}
-        </Animated.View>
+        </View>
       </View>
     </View>
   );

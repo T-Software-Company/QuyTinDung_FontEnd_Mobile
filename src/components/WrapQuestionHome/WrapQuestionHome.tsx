@@ -1,36 +1,48 @@
-import {StyleSheet, Text, View, Image} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import QuestionHome from '../QuestionHome/QuestionHome';
-import { useTranslation } from 'react-i18next';
-import { AppIcons } from '../../icons';
+import {useTranslation} from 'react-i18next';
+import {AppIcons} from '../../icons';
 
-const WrapQuestionHome = ({name, theme}) => {
-  const {t} = useTranslation()
+interface Theme {
+  text: string;
+  background: string;
+  iconColor: string;
+  backgroundBox: string;
+}
+
+interface WrapQuestionHomeProps {
+  name: string;
+  theme: Theme;
+}
+
+const WrapQuestionHome: React.FC<WrapQuestionHomeProps> = ({name, theme}) => {
+  const {t} = useTranslation();
   return (
     <View style={styles.questions}>
       <Text style={[styles.headingTitle, {color: theme.text}]}>{name}</Text>
 
       <View style={styles.wrapBox}>
         <QuestionHome
-          question={t("home.descQuestion1")}
+          question={t('home.descQuestion1')}
           urlIcon={AppIcons.add}
           theme={theme}
         />
 
         <QuestionHome
-          question={t("home.descQuestion2")}
+          question={t('home.descQuestion2')}
           urlIcon={AppIcons.message}
           theme={theme}
         />
 
         <QuestionHome
-          question={t("home.descQuestion1")}
+          question={t('home.descQuestion1')}
           urlIcon={AppIcons.add}
           theme={theme}
         />
 
         <QuestionHome
-          question={t("home.descQuestion2")}
+          question={t('home.descQuestion2')}
           urlIcon={AppIcons.message}
           theme={theme}
         />
@@ -57,5 +69,4 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 12,
   },
-  
 });

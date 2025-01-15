@@ -1,43 +1,31 @@
-import {
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  Text,
-  Alert
-} from 'react-native';
-
+import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
 import React from 'react';
 import Header from '../components/Header/Header';
 import FormDeposit from '../components/FormDeposit/FormDeposit';
-import {useTranslation} from 'react-i18next';
 import {useTheme} from '../context/ThemeContext';
-import i18n from '../../i18n';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../navigators/RootNavigator';
 
+type DepositNavigationProp = StackNavigationProp<RootStackParamList, 'Deposit'>;
 
-const Deposit = ({navigation}) => {
-  const {t} = useTranslation();
+interface DepositProps {
+  navigation: DepositNavigationProp;
+}
+
+const Deposit: React.FC<DepositProps> = ({navigation}) => {
   const {theme} = useTheme();
-  const currentLanguage = i18n.language;
-
 
   return (
     <SafeAreaView style={[styles.view, {backgroundColor: theme.background}]}>
       <View style={styles.container}>
-        {/* Heading */}
-
         <Header Navbar="Deposit" navigation={navigation} />
-
-        {/* Body */}
         <View style={styles.body}>
           <ScrollView
             contentInsetAdjustmentBehavior="automatic"
             nestedScrollEnabled={true}
             showsVerticalScrollIndicator={false}>
-            <FormDeposit theme={theme}/>
+            <FormDeposit theme={theme} />
           </ScrollView>
-          
         </View>
       </View>
     </SafeAreaView>

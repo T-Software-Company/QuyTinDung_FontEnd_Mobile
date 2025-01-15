@@ -25,7 +25,7 @@ interface FormData {
   value: string | null;
   selectedRate: RateItem | null;
   methodExtend: MethodItem | null;
-  method: string | null;
+  method: MethodItem | null; // Changed from string to MethodItem
 }
 
 const FormCreateSave: React.FC = () => {
@@ -169,8 +169,8 @@ const FormCreateSave: React.FC = () => {
           {t('formCreateSave.depositAmount')}
         </Text>
         <InputBackground
-          value={formData.value}
-          onChange={(value: string) => handleOnchange('value', value)}
+          value={formData.value ?? undefined}
+          onChangeText={(value: string) => handleOnchange('value', value)}
           placeholder={t('formCreateSave.depositRange')}
           keyboardType="numeric"
         />
@@ -181,7 +181,7 @@ const FormCreateSave: React.FC = () => {
         <DropdownComponent
           data={rates}
           placeholder={t('formCreateSave.selectTermRate')}
-          value={formData.selectedRate?.value}
+          value={formData.selectedRate?.value || null} // Add null fallback
           onChange={(value: RateItem) => handleOnchange('selectedRate', value)}
         />
 
@@ -218,8 +218,8 @@ const FormCreateSave: React.FC = () => {
         <DropdownComponent
           data={method_pay}
           placeholder={t('formCreateSave.selectPaymentMethod')}
-          value={formData.method}
-          onChange={(value: string) => handleOnchange('method', value)}
+          value={formData.method?.value || null}
+          onChange={(value: MethodItem) => handleOnchange('method', value)}
         />
       </View>
       <TouchableOpacity style={styles.btn} onPress={submit}>

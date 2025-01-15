@@ -2,12 +2,23 @@ import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useTheme} from '../../context/ThemeContext';
-import { AppIcons } from '../../icons';
+import {AppIcons} from '../../icons';
 
-const BoxTotalNav = () => {
-  const [hide, setHide] = useState(true);
+interface Theme {
+  backgroundBox: string;
+  text: string;
+  iconColor: string;
+  profit: string;
+}
+
+interface ThemeContextType {
+  theme: Theme;
+}
+
+const BoxTotalNav: React.FC = () => {
+  const [hide, setHide] = useState<boolean>(true);
   const {t} = useTranslation();
-  const {theme} = useTheme();
+  const {theme} = useTheme() as ThemeContextType;
 
   return (
     <View style={[styles.boxShow, {backgroundColor: theme.backgroundBox}]}>
@@ -54,7 +65,7 @@ const BoxTotalNav = () => {
           <View style={styles.borderArrowHandle}>
             <Image
               style={{tintColor: theme.iconColor}}
-              source={require('../../../assets/images/arrow-right.png')}
+              source={AppIcons.next}
             />
           </View>
         </View>

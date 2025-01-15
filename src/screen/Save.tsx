@@ -83,7 +83,7 @@ const Save: React.FC<SaveProps> = ({navigation}) => {
                 name="save"
                 data={data}
                 navigation={navigation}
-                detail="InfoSave"  // TypeScript will ensure this is correct
+                detail="InfoSave" // TypeScript will ensure this is correct
               />
             </View>
           </View>

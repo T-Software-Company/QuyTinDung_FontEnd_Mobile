@@ -183,8 +183,8 @@ const FormCreateLoan: React.FC<FormCreateLoanProps> = ({theme}) => {
         <InputBackground
           placeholder={t('formCreateLoan.loanRange')}
           keyboardType="numeric"
-          onChange={(value: string) => handleOnchange('value', value)}
-          value={formData.value}
+          onChangeText={(value: string) => handleOnchange('value', value)}
+          value={formData.value ?? undefined}
         />
       </View>
 
@@ -214,7 +214,7 @@ const FormCreateLoan: React.FC<FormCreateLoanProps> = ({theme}) => {
           value={formData.methodExtend}
           data={target_loan}
           placeholder={t('formCreateLoan.selectPurpose')}
-          onChange={(value: string) => handleOnchange('methodExtend', value)}
+          onChange={(value: TargetItem) => handleOnchange('methodExtend', value.value)}
         />
       </View>
 
@@ -226,7 +226,7 @@ const FormCreateLoan: React.FC<FormCreateLoanProps> = ({theme}) => {
           value={formData.method}
           data={frequency_pay}
           placeholder={t('formCreateLoan.selectPaymentFrequency')}
-          onChange={(value: string) => handleOnchange('method', value)}
+          onChange={(value: TargetItem) => handleOnchange('method', value.value)}
         />
       </View>
       <TouchableOpacity

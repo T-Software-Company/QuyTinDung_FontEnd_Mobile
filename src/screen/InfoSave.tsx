@@ -1,6 +1,7 @@
+/* eslint-disable no-sparse-arrays */
+/* eslint-disable react-native/no-inline-styles */
 import {
   Alert,
-  Image,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -8,57 +9,51 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useMemo} from 'react';
 import Header from '../components/Header/Header';
-import i18n from '../../i18n';
+import {useTranslation} from 'react-i18next';
 import {useTheme} from '../context/ThemeContext';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../navigators/RootNavigator';
+import {RouteProp} from '@react-navigation/native';
+type InfoSaveNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'InfoSave'
+>;
 
-const InfoLoan = ({navigation}) => {
-  const currentLanguage = i18n.language;
+type InfoSaveScreenRouteProp = RouteProp<RootStackParamList, 'InfoSave'>;
+
+interface InfoSaveProps {
+  navigation: InfoSaveNavigationProp;
+  route: InfoSaveScreenRouteProp;
+}
+
+interface SaveDataItem {
+  key: string;
+  value: string;
+}
+interface SaveData {
+  boxData: SaveDataItem[];
+}
+
+const InfoSave: React.FC<InfoSaveProps> = ({navigation, route}) => {
+  const data = useMemo<SaveData>(
+    () => ({boxData: [], ...route.params}),
+    [route.params],
+  );
+  const {t} = useTranslation();
   const {theme} = useTheme();
-
-  const dataVietnam = [
-    {key: 'Số hợp đồng', value: '123-456-789'},
-    {key: 'Số tiền vay', value: '100.000.000 đ'},
-    {key: 'Mục đích vay', value: 'Mua nhà'},
-
-    {key: 'Kỳ hạn', value: '12 tháng'},
-    {key: 'Lãi suất', value: '12%/năm'},
-
-    {key: 'Chu kỳ trả gốc', value: '6 tháng'},
-    {key: 'Chu kỳ trả lãi', value: '6 tháng'},
-
-    {key: 'Ngày có hiệu lực', value: '22/04/2024'},
-    {key: 'Ngày đến hạn', value: '22/10/2024'},
-  ];
-
-  const dataEnglish = [
-    {key: 'Contract Number', value: '123-456-789'},
-    {key: 'Loan Amount', value: '100,000,000 VND'},
-    {key: 'Loan Purpose', value: 'Buying a house'},
-
-    {key: 'Term', value: '12 months'},
-    {key: 'Interest Rate', value: '12%/year'},
-
-    {key: 'Principal Payment Cycle', value: '6 months'},
-    {key: 'Interest Payment Cycle', value: '6 months'},
-
-    {key: 'Effective Date', value: '22/04/2024'},
-    {key: 'Maturity Date', value: '22/10/2024'},
-  ];
-
-  const data = currentLanguage === 'vi' ? dataVietnam : dataEnglish;
-
 
   const styles = StyleSheet.create({
     view: {
       flex: 1,
+      backgroundColor: theme.background,
     },
     container: {
       width: '100%',
       height: '100%',
     },
-  
+
     containHeading: {
       display: 'flex',
       flexDirection: 'row',
@@ -77,12 +72,12 @@ const InfoLoan = ({navigation}) => {
       alignItems: 'flex-start',
       justifyContent: 'center',
     },
-  
+
     body: {
       marginTop: 16,
       paddingHorizontal: 20,
     },
-  
+
     textWhite: {
       color: 'white',
     },
@@ -92,12 +87,12 @@ const InfoLoan = ({navigation}) => {
     iconPrimary: {
       tintColor: '#007BFF',
     },
-  
+
     boxList: {
       marginVertical: 12,
       backgroundColor: theme.tableChildBackground,
       borderRadius: 12,
-  
+
       // Shadow for iOS
       shadowColor: theme.headerShadow, // Màu bóng
       shadowOffset: {width: 0, height: 2}, // Độ lệch bóng
@@ -109,15 +104,16 @@ const InfoLoan = ({navigation}) => {
       flexDirection: 'column',
       height: 'auto',
     },
-  
+
     boxWrap: {
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      alignItems: 'center',
+      alignItems: 'center', // Changed from 'center' to 'flex-start'
       padding: 12,
+      gap: 8,
     },
-  
+
     firstChild: {
       backgroundColor: theme.tableHeaderBackground,
       borderTopLeftRadius: 12,
@@ -125,31 +121,43 @@ const InfoLoan = ({navigation}) => {
     },
     middleChild: {
       borderBottomColor: theme.tableBorderColor,
+      backgroundColor: theme.tableChildBackground,
       borderBottomWidth: 1,
     },
-  
+
     textKeyRow: {
       fontWeight: 'bold',
       color: theme.text,
+      width: '48%', // Added fixed width
+      flexWrap: 'wrap', // Added to allow text wrapping
     },
     textRow: {
       fontWeight: 'regular',
       color: theme.text,
+      width: '48%', // Added fixed width
+      flexWrap: 'wrap', // Added to allow text wrapping
     },
-  
+
+    btn: {
+      width: '100%',
+      backgroundColor: '#007BFF',
+      padding: 12,
+      borderRadius: 12,
+      marginTop: 12,
+    },
+
     hidden: {
       opacity: 0,
       pointerEvents: 'none',
     },
   });
 
-
   return (
-    <SafeAreaView style={[styles.view, {backgroundColor: theme.background}]}>
+    <SafeAreaView style={styles.view}>
       <View style={styles.container}>
         {/* Heading */}
 
-        <Header Navbar="InfoLoan" navigation={navigation} />
+        <Header Navbar="InfoSave" navigation={navigation} />
 
         {/* Body */}
 
@@ -157,33 +165,52 @@ const InfoLoan = ({navigation}) => {
           contentInsetAdjustmentBehavior="automatic"
           showsVerticalScrollIndicator={false}>
           <View style={styles.body}>
-            <View style={styles.listInfos}>
+            <View>
               <View style={styles.boxList}>
-                {data.map((box, idx) => (
+                {data.boxData.map((box: SaveDataItem, idx: number) => (
                   <View
                     key={idx}
                     style={[
                       styles.boxWrap,
                       idx === 0 && styles.firstChild, // Áp dụng kiểu cho phần tử đầu tiên
-                      idx > 0 && idx < data.length - 1 && styles.middleChild, // Phần tử giữa
+                      idx > 0 &&
+                        idx < data.boxData.length - 1 &&
+                        styles.middleChild, // Phần tử giữa
                     ]}>
                     <Text
                       style={[
                         idx === 0 && styles.textKeyRow,
-                        idx > 0 && idx < data.length  && styles.textRow,
-                      ]}>
+                        idx > 0 && idx < data.boxData.length && styles.textRow,
+                        ,
+                        {textAlign: 'left'},
+                      ]}
+                      numberOfLines={undefined}>
                       {box.key}
                     </Text>
                     <Text
                       style={[
                         idx === 0 && styles.textKeyRow,
-                        idx > 0 && idx < data.length  && styles.textRow,
-                      ]}>
+                        idx > 0 && idx < data.boxData.length && styles.textRow,
+                        ,
+                        {textAlign: 'right'},
+                      ]}
+                      numberOfLines={undefined}>
                       {box.value}
                     </Text>
                   </View>
                 ))}
               </View>
+              <TouchableOpacity
+                style={styles.btn}
+                onPress={() => Alert.alert('Thông báo', 'Tất toán thành công')}>
+                <Text
+                  style={[
+                    styles.textWhite,
+                    {fontWeight: 'bold', textAlign: 'center'},
+                  ]}>
+                  {t('infoSave.submit')}
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         </ScrollView>
@@ -192,6 +219,4 @@ const InfoLoan = ({navigation}) => {
   );
 };
 
-export default InfoLoan;
-
-
+export default InfoSave;

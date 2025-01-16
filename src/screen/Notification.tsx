@@ -1,26 +1,42 @@
 import {
-  Image,
   SafeAreaView,
   StyleSheet,
-  Text,
-  TouchableOpacity,
   View,
   ScrollView,
   Platform,
 } from 'react-native';
-import React, {useState} from 'react';
+import React from 'react';
 import Header from '../components/Header/Header';
 import ContentButton from '../components/ContentButton/ContentButton';
 import i18n from '../../i18n';
-import {useTranslation} from 'react-i18next';
+// import {useTranslation} from 'react-i18next';
 import {useTheme} from '../context/ThemeContext';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../navigators/RootNavigator';
 
-const Notification = ({navigation}) => {
+type NotificationNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'Notification'
+>;
+
+interface NotificationProps {
+  navigation: NotificationNavigationProp;
+}
+
+interface NotificationItem {
+  id: number;
+  title: string;
+  desc: string;
+  time: string;
+  seen: boolean;
+}
+
+const Notification: React.FC<NotificationProps> = ({navigation}) => {
   const currentLanguage = i18n.language;
-  const {t} = useTranslation();
+  // const {t} = useTranslation();
   const {theme} = useTheme();
 
-  const notificationsVietnam = [
+  const notificationsVietnam: NotificationItem[] = [
     {
       id: 1,
       title: 'Số dư tài khoản',
@@ -46,7 +62,7 @@ const Notification = ({navigation}) => {
     },
   ];
 
-  const notificationsEnglish = [
+  const notificationsEnglish: NotificationItem[] = [
     {
       id: 1,
       title: 'Account Balance',
@@ -72,7 +88,7 @@ const Notification = ({navigation}) => {
     },
   ];
 
-  const notifications =
+  const notifications: NotificationItem[] =
     currentLanguage === 'vi' ? notificationsVietnam : notificationsEnglish;
 
   return (
@@ -85,7 +101,7 @@ const Notification = ({navigation}) => {
         {/* Body */}
         <ScrollView style={styles.body}>
           <View style={styles.wrapNotification}>
-            {notifications.map(notification => (
+            {notifications.map((notification: NotificationItem) => (
               <ContentButton data={notification} key={notification.id} />
             ))}
           </View>

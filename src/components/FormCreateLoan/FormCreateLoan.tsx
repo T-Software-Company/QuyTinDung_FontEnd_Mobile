@@ -1,21 +1,49 @@
+/* eslint-disable react-native/no-inline-styles */
 import {StyleSheet, Text, View, Alert, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
 import DropdownComponent from '../DropdownComponent/DropdownComponent';
 import InputBackground from '../InputBackground/InputBackground';
 import {useTranslation} from 'react-i18next';
 import i18n from '../../../i18n';
+import {Theme} from '../../theme/colors';
 
-const FormCreateLoan = ({theme}) => {
+interface FormCreateLoanProps {
+  theme: Theme;
+}
+
+interface RateItem {
+  value: string;
+  label: string;
+  rate: string;
+}
+
+interface TargetItem {
+  value: string;
+  label: string;
+}
+
+interface FormData {
+  value: string | null;
+  selectedRate: RateItem | null;
+  methodExtend: string | null;
+  method: string | null;
+}
+
+interface NotificationType {
+  vi: string;
+  en: string;
+}
+
+const FormCreateLoan: React.FC<FormCreateLoanProps> = ({theme}) => {
   const currentLanguage = i18n.language;
-
   const {t} = useTranslation();
 
-  const notification = {
+  const notification: NotificationType = {
     vi: 'Bạn đã tạo khoản vay thành công.\nVui lòng chờ nhân viên hỗ trợ tư vấn và xác nhận.',
-    en: 'Your loan has been created successfully.\nPlease wait for staff support and confirmation.'
+    en: 'Your loan has been created successfully.\nPlease wait for staff support and confirmation.',
   };
 
-  const rates = [
+  const rates: RateItem[] = [
     {
       value: '1',
       label: currentLanguage === 'vi' ? '1 tháng' : '1 month',
@@ -33,7 +61,7 @@ const FormCreateLoan = ({theme}) => {
     },
   ];
 
-  const target_loan = [
+  const target_loan: TargetItem[] = [
     {
       value: '1',
       label: currentLanguage === 'vi' ? 'Mua nhà' : 'Buy house',
@@ -48,7 +76,7 @@ const FormCreateLoan = ({theme}) => {
     },
   ];
 
-  const frequency_pay = [
+  const frequency_pay: TargetItem[] = [
     {
       value: '1',
       label: currentLanguage === 'vi' ? 'Hàng tuần' : 'Weekly',
@@ -63,21 +91,19 @@ const FormCreateLoan = ({theme}) => {
     },
   ];
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     value: null,
     selectedRate: null,
     methodExtend: null,
     method: null,
   });
 
-  const handleOnchange = (field, value) => {
+  const handleOnchange = (field: keyof FormData, value: any): void => {
     setFormData(prev => ({
       ...prev,
       [field]: value,
     }));
   };
-
-  // console.log('Form data:', formData);
 
   const styles = StyleSheet.create({
     boxInput: {
@@ -149,7 +175,7 @@ const FormCreateLoan = ({theme}) => {
   });
 
   return (
-    <View style={styles.form}>
+    <View>
       <View style={styles.boxInput}>
         <Text style={styles.headingTitle}>
           {t('formCreateLoan.loanAmount')}
@@ -157,8 +183,8 @@ const FormCreateLoan = ({theme}) => {
         <InputBackground
           placeholder={t('formCreateLoan.loanRange')}
           keyboardType="numeric"
-          onChange={value => handleOnchange('value', value)}
-          value={formData.value}
+          onChangeText={(value: string) => handleOnchange('value', value)}
+          value={formData.value ?? undefined}
         />
       </View>
 
@@ -168,7 +194,7 @@ const FormCreateLoan = ({theme}) => {
           value={formData.selectedRate?.value}
           data={rates}
           placeholder={t('formCreateLoan.selectTermRate')}
-          onChange={value => handleOnchange('selectedRate', value)}
+          onChange={(value: RateItem) => handleOnchange('selectedRate', value)}
         />
 
         {formData.selectedRate ? (
@@ -188,7 +214,7 @@ const FormCreateLoan = ({theme}) => {
           value={formData.methodExtend}
           data={target_loan}
           placeholder={t('formCreateLoan.selectPurpose')}
-          onChange={value => handleOnchange('methodExtend', value)}
+          onChange={(value: TargetItem) => handleOnchange('methodExtend', value.value)}
         />
       </View>
 
@@ -200,15 +226,19 @@ const FormCreateLoan = ({theme}) => {
           value={formData.method}
           data={frequency_pay}
           placeholder={t('formCreateLoan.selectPaymentFrequency')}
-          onChange={value => handleOnchange('method', value)}
+          onChange={(value: TargetItem) => handleOnchange('method', value.value)}
         />
       </View>
       <TouchableOpacity
         style={styles.btn}
         onPress={() => {
-          const message = currentLanguage === 'vi' ? notification.vi : notification.en;
+          const message =
+            currentLanguage === 'vi' ? notification.vi : notification.en;
           // Handle showing notification message here
-          Alert.alert(currentLanguage === "vi" ? 'Thông báo': "Notification", message);
+          Alert.alert(
+            currentLanguage === 'vi' ? 'Thông báo' : 'Notification',
+            message,
+          );
         }}>
         <Text
           style={[styles.textWhite, {fontWeight: 'bold', textAlign: 'center'}]}>

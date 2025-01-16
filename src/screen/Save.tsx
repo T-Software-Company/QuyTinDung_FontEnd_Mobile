@@ -7,6 +7,7 @@ import {useTranslation} from 'react-i18next';
 import {useTheme} from '../context/ThemeContext';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../navigators/RootNavigator';
+import i18n from '../../i18n';
 
 type SaveScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Save'>;
 
@@ -30,30 +31,64 @@ interface SaveBoxData {
 const Save: React.FC<SaveProps> = ({navigation}) => {
   const {theme} = useTheme() as {theme: Theme};
   const {t} = useTranslation();
+  const currentLanguage = i18n.language;
+
+  const value =
+    currentLanguage === 'vi'
+      ? {
+          method: 'Trả lãi cuối kỳ',
+          receive: 'Lãi nhập gốc',
+          month: 'tháng',
+          year: 'năm',
+        }
+      : {
+          method: 'Pay interest at the end of the period',
+          receive: 'Interest entered principal',
+          month: 'months',
+          year: 'years',
+        };
 
   const data: SaveBoxData[] = [
     {
       id: 1,
       boxes: [
-        {key: t('save.originalAmount'), value: '100.000.000 đ'},
-        {key: t('save.accountNumber'), value: '123-456-789'},
-        {key: t('save.dueDate'), value: '22/07/2024'},
+        {key: t('save.fields.originalAmount'), value: '100.000.000 đ'},
+        {key: t('save.fields.accountNumber'), value: '123-456-789'},
+        {key: t('save.fields.expectedInterest'), value: '3.000.000 đ'},
+        {key: t('save.fields.term'), value: `3 ${value.month}`},
+        {key: t('save.fields.rate'), value: `3.6%/${value.year}`},
+        {key: t('save.fields.interestPaymentMethod'), value: value.method},
+        {key: t('save.fields.interestReceivingMethod'), value: value.receive},
+        {key: t('save.fields.openDate'), value: '22/04/2024'},
+        {key: t('save.fields.dueDate'), value: '22/07/2024'},
       ],
     },
     {
       id: 2,
       boxes: [
-        {key: t('save.originalAmount'), value: '200.000.000 đ'},
-        {key: t('save.accountNumber'), value: '987-654-321'},
-        {key: t('save.dueDate'), value: '15/08/2024'},
+        {key: t('save.fields.originalAmount'), value: '200.000.000 đ'},
+        {key: t('save.fields.accountNumber'), value: '987-654-321'},
+        {key: t('save.fields.expectedInterest'), value: '3.000.000 đ'},
+        {key: t('save.fields.term'), value: `3 ${value.month}`},
+        {key: t('save.fields.rate'), value: `3.6%/${value.year}`},
+        {key: t('save.fields.interestPaymentMethod'), value: value.method},
+        {key: t('save.fields.interestReceivingMethod'), value: value.receive},
+        {key: t('save.fields.openDate'), value: '22/04/2024'},
+        {key: t('save.fields.dueDate'), value: '15/08/2024'},
       ],
     },
     {
       id: 3,
       boxes: [
-        {key: t('save.originalAmount'), value: '300.000.000 đ'},
-        {key: t('save.accountNumber'), value: '987-654-321'},
-        {key: t('save.dueDate'), value: '15/08/2024'},
+        {key: t('save.fields.originalAmount'), value: '300.000.000 đ'},
+        {key: t('save.fields.accountNumber'), value: '987-654-321'},
+        {key: t('save.fields.expectedInterest'), value: '3.000.000 đ'},
+        {key: t('save.fields.term'), value: `3 ${value.month}`},
+        {key: t('save.fields.rate'), value: `3.6%/${value.year}`},
+        {key: t('save.fields.interestPaymentMethod'), value: value.method},
+        {key: t('save.fields.interestReceivingMethod'), value: value.receive},
+        {key: t('save.fields.openDate'), value: '22/04/2024'},
+        {key: t('save.fields.dueDate'), value: '15/08/2024'},
       ],
     },
   ];
@@ -83,7 +118,7 @@ const Save: React.FC<SaveProps> = ({navigation}) => {
                 name="save"
                 data={data}
                 navigation={navigation}
-                detail="InfoSave"  // TypeScript will ensure this is correct
+                detail="InfoSave" // TypeScript will ensure this is correct
               />
             </View>
           </View>
@@ -108,6 +143,7 @@ const styles = StyleSheet.create({
   body: {
     marginTop: 32,
     paddingHorizontal: 20,
+    paddingBottom: 20,
   },
 
   listSaves: {

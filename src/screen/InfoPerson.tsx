@@ -10,7 +10,7 @@ import {
   View,
 } from 'react-native';
 import {useTranslation} from 'react-i18next';
-
+import {StackNavigationProp} from '@react-navigation/stack';
 import React, {useState} from 'react';
 import Header from '../components/Header/Header';
 import SelectedTabs from '../components/SelectedTabs/SelectedTabs';
@@ -18,20 +18,52 @@ import {AppIcons} from '../icons';
 import {useTheme} from '../context/ThemeContext';
 import i18n from '../../i18n';
 
-const InfoPerson = ({navigation}) => {
+import {RootStackParamList} from '../navigators/RootNavigator';
+
+type InfoPersonScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'InfoPerson'
+>;
+
+interface InfoPersonProps {
+  navigation: InfoPersonScreenNavigationProp;
+}
+
+interface TabItem {
+  key: string;
+  label: string;
+}
+
+interface PersonInfo {
+  id: number;
+  name: string;
+  nameFund: string;
+  phone: string;
+  address: string;
+  email: string;
+  sex: string;
+  birthday: string;
+  idcccd: string;
+  startDayCccd: string;
+  expireDayCccd: string;
+  placeCccd: string;
+  addressCccd: string;
+}
+
+const InfoPerson: React.FC<InfoPersonProps> = ({navigation}) => {
   const currentLanguage = i18n.language;
   const {t} = useTranslation();
-  const [number, setNumber] = useState(null);
-  const [selectedTab, setSelectedTab] = useState('info');
-  const [isEditable, setIsEditable] = useState(false);
+  const [number, setNumber] = useState<string | null>(null);
+  const [selectedTab, setSelectedTab] = useState<'info' | 'paper'>('info');
+  const [isEditable, setIsEditable] = useState<boolean>(false);
   const {theme} = useTheme();
 
-  const tabs = [
-    {key: 'info', label: t('info.infoContact').toUpperCase()},
-    {key: 'paper', label: t('info.identityDocument').toUpperCase()},
+  const tabs: TabItem[] = [
+    {key: 'info', label: (t('info.infoContact') as string).toUpperCase()},
+    {key: 'paper', label: (t('info.identityDocument') as string).toUpperCase()},
   ];
 
-  const infoPerson = {
+  const infoPerson: PersonInfo = {
     id: 1,
     name: 'Nguyễn Văn A',
     nameFund: 'Quỹ TDND Thành Đức',
@@ -47,10 +79,10 @@ const InfoPerson = ({navigation}) => {
     addressCccd: 'Thôn 7, Huyện Nam Hà, Tỉnh Hà Nam',
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (): void => {
     Alert.alert(
       currentLanguage === 'vi' ? 'Thông báo' : 'Notification',
-      currentLanguage === "vi" ? 'Cập nhật thành công' : "Update successfully",
+      currentLanguage === 'vi' ? 'Cập nhật thành công' : 'Update successfully',
     );
     setIsEditable(false);
   };
@@ -177,7 +209,7 @@ const InfoPerson = ({navigation}) => {
           nestedScrollEnabled={true}
           showsVerticalScrollIndicator={false}>
           <View style={styles.body}>
-            <View style={styles.form}>
+            <View>
               <View style={styles.boxAvatar}>
                 <Image style={styles.avatar} source={AppIcons.avatar} />
                 <Text style={[styles.name, {color: theme.text}]}>
@@ -190,7 +222,10 @@ const InfoPerson = ({navigation}) => {
               <SelectedTabs
                 tabs={tabs}
                 selectedTab={selectedTab}
-                onSelectTab={setSelectedTab}
+                onSelectTab={(key: string) =>
+                  setSelectedTab(key as 'info' | 'paper')
+                }
+                theme={theme}
               />
 
               {selectedTab === 'info' ? (

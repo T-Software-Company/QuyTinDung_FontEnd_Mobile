@@ -1,6 +1,6 @@
+/* eslint-disable react-native/no-inline-styles */
 import {
   Alert,
-  Image,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -15,16 +15,31 @@ import {useLanguage} from '../context/LanguageContext';
 import i18n from '../../i18n';
 import {useTranslation} from 'react-i18next';
 import {useTheme} from '../context/ThemeContext';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../navigators/RootNavigator';
 
-const LanguageSetting = ({navigation}) => {
+type LanguageSettingNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'LanguageSetting'
+>;
+
+interface LanguageSettingProps {
+  navigation: LanguageSettingNavigationProp;
+}
+
+type LanguageType = 'vi' | 'en';
+
+const LanguageSetting: React.FC<LanguageSettingProps> = ({navigation}) => {
   const currentLanguage = i18n.language;
 
-  const [selectedLanguage, setSelectedLanguage] = useState(currentLanguage);
+  const [selectedLanguage, setSelectedLanguage] = useState<LanguageType>(
+    currentLanguage as LanguageType,
+  );
   const {changeLanguage} = useLanguage();
   const {t} = useTranslation();
   const {theme} = useTheme();
 
-  const submitLanguage = () => {
+  const submitLanguage = (): void => {
     changeLanguage(selectedLanguage);
     Alert.alert(
       `${selectedLanguage === 'vi' ? 'Thông báo' : 'Notification'}`,
@@ -107,7 +122,6 @@ const LanguageSetting = ({navigation}) => {
       fontSize: 16,
       color: theme.text,
     },
-
   });
 
   return (
@@ -124,7 +138,7 @@ const LanguageSetting = ({navigation}) => {
           nestedScrollEnabled={true}
           showsVerticalScrollIndicator={false}>
           <View style={styles.body}>
-            <View style={styles.form}>
+            <View>
               <View style={styles.optionContainer}>
                 <TouchableOpacity
                   style={styles.radioButton}

@@ -1,14 +1,38 @@
-import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+/* eslint-disable react/no-unstable-nested-components */
+import React from 'react';
+import {
+  SafeAreaView,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
 import Header from '../components/Header/Header';
-import { useTranslation } from 'react-i18next';
-import { useTheme } from '../context/ThemeContext';
+import {useTranslation} from 'react-i18next';
+import {useTheme} from '../context/ThemeContext';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../navigators/RootNavigator';
 
-const DarkModeSetting = ({ navigation }) => {
-  const { t } = useTranslation();
-  const { isDarkMode, toggleTheme, theme } = useTheme();
+type DarkModeSettingNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'DarkModeSetting'
+>;
 
-  const Option = ({ title, isSelected, onPress }) => (
+interface DarkModeSettingProps {
+  navigation: DarkModeSettingNavigationProp;
+}
+
+interface OptionProps {
+  title: string;
+  isSelected: boolean;
+  onPress: () => void;
+}
+
+const DarkModeSetting: React.FC<DarkModeSettingProps> = ({navigation}) => {
+  const {t} = useTranslation();
+  const {isDarkMode, toggleTheme, theme} = useTheme();
+
+  const Option: React.FC<OptionProps> = ({title, isSelected, onPress}) => (
     <TouchableOpacity
       style={[styles.option, isSelected && styles.selectedOption]}
       onPress={onPress}>
@@ -71,21 +95,17 @@ const DarkModeSetting = ({ navigation }) => {
     <SafeAreaView style={styles.view}>
       <View style={styles.container}>
         <Header Navbar="DarkModeSetting" navigation={navigation} />
-        
+
         <View style={styles.optionsContainer}>
           <Option
             title={t('screen.light')}
             isSelected={!isDarkMode}
-            onPress={() => {
-              toggleTheme();
-            }}
+            onPress={toggleTheme}
           />
           <Option
             title={t('screen.dark')}
             isSelected={isDarkMode}
-            onPress={() => {
-              toggleTheme();
-            }}
+            onPress={toggleTheme}
           />
         </View>
       </View>

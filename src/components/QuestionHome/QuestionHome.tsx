@@ -1,7 +1,19 @@
-import {StyleSheet, Text, View, Image} from 'react-native';
+import {StyleSheet, Text, View, Image, ImageSourcePropType} from 'react-native';
 import React from 'react';
 
-const QuestionHome = ({question, urlIcon, theme}) => {
+interface Theme {
+  backgroundBox: string;
+  iconColor: string;
+  text: string;
+}
+
+interface QuestionHomeProps {
+  question: string;
+  urlIcon: ImageSourcePropType;
+  theme: Theme;
+}
+
+const QuestionHome: React.FC<QuestionHomeProps> = ({question, urlIcon, theme}) => {
   return (
     <View style={[styles.boxContent, {backgroundColor: theme.backgroundBox}]}>
       <View>

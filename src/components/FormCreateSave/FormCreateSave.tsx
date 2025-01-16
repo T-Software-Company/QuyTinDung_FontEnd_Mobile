@@ -1,26 +1,39 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Alert,
-  ActivityIndicator,
-} from 'react-native';
+/* eslint-disable react-native/no-inline-styles */
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
+import {GestureResponderEvent} from 'react-native';
 import DropdownComponent from '../DropdownComponent/DropdownComponent';
 import InputBackground from '../InputBackground/InputBackground';
 import {useTranslation} from 'react-i18next';
 import i18n from '../../../i18n';
 import {useTheme} from '../../context/ThemeContext';
-import {useQuery} from '@tanstack/react-query';
-import {getUser, getUsers} from '../../api/User';
+// import {useQuery} from '@tanstack/react-query';
+// import {getUser, getUsers} from '../../api/User';
 
-const FormCreateSave = () => {
+interface RateItem {
+  value: string;
+  label: string;
+  rate: string;
+}
+
+interface MethodItem {
+  value: string;
+  label: string;
+}
+
+interface FormData {
+  value: string | null;
+  selectedRate: RateItem | null;
+  methodExtend: MethodItem | null;
+  method: MethodItem | null; // Changed from string to MethodItem
+}
+
+const FormCreateSave: React.FC = () => {
   const {theme} = useTheme();
   const currentLanguage = i18n.language;
-
   const {t} = useTranslation();
-  const rates = [
+
+  const rates: RateItem[] = [
     {
       value: '1',
       label: `5 ${t('formCreateSave.month')}`,
@@ -39,7 +52,7 @@ const FormCreateSave = () => {
     },
   ];
 
-  const method_extend = [
+  const method_extend: MethodItem[] = [
     {
       value: '1',
       label: t('formCreateSave.renewalMethods.includeInterest'),
@@ -54,7 +67,7 @@ const FormCreateSave = () => {
     },
   ];
 
-  const method_pay = [
+  const method_pay: MethodItem[] = [
     {
       value: '1',
       label: t('formCreateSave.paymentMethods.online'),
@@ -65,14 +78,14 @@ const FormCreateSave = () => {
     },
   ];
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     value: null,
     selectedRate: null,
     methodExtend: null,
     method: null,
   });
 
-  const handleOnchange = (field, value) => {
+  const handleOnchange = (field: keyof FormData, value: any): void => {
     setFormData(prev => ({
       ...prev,
       [field]: value,
@@ -100,7 +113,7 @@ const FormCreateSave = () => {
 
   // console.log('Data:', data);
 
-  const submit = e => {
+  const submit = (e: GestureResponderEvent) => {
     e.preventDefault();
     console.log('Form data:', formData);
   };
@@ -150,14 +163,14 @@ const FormCreateSave = () => {
   });
 
   return (
-    <View style={styles.form}>
+    <View>
       <View style={styles.boxInput}>
         <Text style={styles.headingTitle}>
           {t('formCreateSave.depositAmount')}
         </Text>
         <InputBackground
-          value={formData.value}
-          onChange={value => handleOnchange('value', value)}
+          value={formData.value ?? undefined}
+          onChangeText={(value: string) => handleOnchange('value', value)}
           placeholder={t('formCreateSave.depositRange')}
           keyboardType="numeric"
         />
@@ -168,8 +181,8 @@ const FormCreateSave = () => {
         <DropdownComponent
           data={rates}
           placeholder={t('formCreateSave.selectTermRate')}
-          value={formData.selectedRate?.value}
-          onChange={value => handleOnchange('selectedRate', value)}
+          value={formData.selectedRate?.value || null} // Add null fallback
+          onChange={(value: RateItem) => handleOnchange('selectedRate', value)}
         />
 
         {formData.selectedRate ? (
@@ -192,7 +205,9 @@ const FormCreateSave = () => {
           data={method_extend}
           placeholder={t('formCreateSave.renewalOptions')}
           value={formData.methodExtend?.value}
-          onChange={value => handleOnchange('methodExtend', value)}
+          onChange={(value: MethodItem) =>
+            handleOnchange('methodExtend', value)
+          }
         />
       </View>
 
@@ -203,8 +218,8 @@ const FormCreateSave = () => {
         <DropdownComponent
           data={method_pay}
           placeholder={t('formCreateSave.selectPaymentMethod')}
-          value={formData.method}
-          onChange={value => handleOnchange('method', value)}
+          value={formData.method?.value || null}
+          onChange={(value: MethodItem) => handleOnchange('method', value)}
         />
       </View>
       <TouchableOpacity style={styles.btn} onPress={submit}>

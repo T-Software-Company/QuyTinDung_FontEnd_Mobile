@@ -1,4 +1,5 @@
-import React, {useState, useEffect} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useState, useEffect, useRef} from 'react';
 import {
   StyleSheet,
   Text,
@@ -14,17 +15,41 @@ import {
 } from 'react-native';
 import {useTheme} from '../../context/ThemeContext';
 import {useTranslation} from 'react-i18next';
-import i18n from '../../../i18n';
+// import i18n from '../../../i18n';
 
-const BankBottomSheetPicker = ({visible, onClose, onSelect, selectedValue}) => {
-  const currentLanguage = i18n.language;
+interface Bank {
+  label: string;
+  value: string;
+}
+
+interface BankBottomSheetPickerProps {
+  visible: boolean;
+  onClose: () => void;
+  onSelect: (value: string) => void;
+  selectedValue: string;
+}
+
+interface Theme {
+  background: string;
+  text: string;
+  iconColor: string;
+  noteText: string;
+  backgroundBox: string;
+}
+
+const BankBottomSheetPicker: React.FC<BankBottomSheetPickerProps> = ({
+  visible,
+  onClose,
+  onSelect,
+  selectedValue,
+}) => {
+  // const currentLanguage = i18n.language;
   const {t} = useTranslation();
-  
-  const [localVisible, setLocalVisible] = useState(visible);
-  const [searchText, setSearchText] = useState('');
-  const slideAnim = React.useRef(new Animated.Value(0)).current;
-  const fadeAnim = React.useRef(new Animated.Value(0)).current;
-  const {theme} = useTheme();
+  const [localVisible, setLocalVisible] = useState<boolean>(visible);
+  const [searchText, setSearchText] = useState<string>('');
+  const slideAnim = useRef(new Animated.Value(0)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const {theme} = useTheme() as {theme: Theme};
 
   useEffect(() => {
     if (visible) {
@@ -69,7 +94,7 @@ const BankBottomSheetPicker = ({visible, onClose, onSelect, selectedValue}) => {
     outputRange: [Dimensions.get('window').height, 0],
   });
 
-  const banks = [
+  const banks: Bank[] = [
     {label: 'Vietcombank', value: 'vcb'},
     {label: 'Techcombank', value: 'tcb'},
     {label: 'TPBank', value: 'tpb'},

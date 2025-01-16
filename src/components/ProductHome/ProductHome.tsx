@@ -1,7 +1,18 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 
-const ProductHome = ({header, desc, theme}) => {
+interface Theme {
+  backgroundBox: string;
+  text: string;
+}
+
+interface ProductHomeProps {
+  header: string;
+  desc: string;
+  theme: Theme;
+}
+
+const ProductHome: React.FC<ProductHomeProps> = ({header, desc, theme}) => {
   return (
     <View style={[styles.boxProduct, {backgroundColor: theme.backgroundBox}]}>
       <Text style={[styles.headerProduct, {color: theme.text}]}>{header}</Text>

@@ -24,6 +24,7 @@ interface Theme {
   backgroundIcon: string;
   iconColor: string;
   text: string;
+  backgroundBox: string;
 }
 
 const Home: React.FC<HomeProps> = ({navigation}) => {

@@ -1,22 +1,19 @@
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React from 'react';
+import {Theme} from '../../theme/colors';
 
 interface TabItem {
   key: string;
   label: string;
 }
 
-interface Theme {
-  tabBarInactive: string;
-  tabBarActive: string;
-  textInactive: string;
-}
+// Create a subset of Theme with only the properties we need
 
 interface SelectedTabsProps {
   tabs: TabItem[];
   selectedTab: string;
   onSelectTab: (key: string) => void;
-  theme: Theme;
+  theme: Theme; // Use the imported Theme type
 }
 
 const SelectedTabs: React.FC<SelectedTabsProps> = ({
@@ -42,7 +39,7 @@ const SelectedTabs: React.FC<SelectedTabsProps> = ({
       backgroundColor: theme.tabBarActive,
     },
     tabText: {
-      color: theme.textInactive,
+      color: theme.textInactive || '#000', // Provide fallback for undefined
       fontWeight: 'bold',
     },
     tabTextActive: {

@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import Header from '../components/Header/Header';
-import ContentButton from '../components/ContentButton/ContentButton';
+import ContentNotification from '../components/ContentNotification/ContentNotification';
 import i18n from '../../i18n';
 // import {useTranslation} from 'react-i18next';
 import {useTheme} from '../context/ThemeContext';
@@ -102,7 +102,7 @@ const Notification: React.FC<NotificationProps> = ({navigation}) => {
         <ScrollView style={styles.body}>
           <View style={styles.wrapNotification}>
             {notifications.map((notification: NotificationItem) => (
-              <ContentButton data={notification} key={notification.id} />
+              <ContentNotification data={notification} key={notification.id} />
             ))}
           </View>
         </ScrollView>

@@ -1,30 +1,32 @@
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React from 'react';
 
-const ContentButton = ({data}) => {
+interface NotificationData {
+  title: string;
+  desc: string;
+  time: string;
+  seen: boolean;
+}
+
+interface ContentNotificationProps {
+  data: NotificationData;
+}
+
+const ContentNotification: React.FC<ContentNotificationProps> = ({data}) => {
   return (
-    <>
-      <TouchableOpacity
-        style={[
-          styles.boxNotification,
-          !data.seen ? styles.boxActive : '',
-        ]}>
-        <View style={styles.boxHeader}>
-          <Text style={styles.headerNotification}>{data.title}</Text>
-          {!data.seen ? (
-            <View style={styles.circleHeader}></View>
-          ) : (
-            <></>
-          )}
-        </View>
-        <Text style={styles.descriptionNotification}>{data.desc}</Text>
-        <Text style={styles.timeNotification}>{data.time}</Text>
-      </TouchableOpacity>
-    </>
+    <TouchableOpacity
+      style={[styles.boxNotification, !data.seen && styles.boxActive]}>
+      <View style={styles.boxHeader}>
+        <Text style={styles.headerNotification}>{data.title}</Text>
+        {!data.seen && <View style={styles.circleHeader} />}
+      </View>
+      <Text style={styles.descriptionNotification}>{data.desc}</Text>
+      <Text style={styles.timeNotification}>{data.time}</Text>
+    </TouchableOpacity>
   );
 };
 
-export default ContentButton;
+export default ContentNotification;
 
 const styles = StyleSheet.create({
   boxNotification: {

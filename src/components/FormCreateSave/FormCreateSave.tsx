@@ -181,7 +181,7 @@ const FormCreateSave: React.FC = () => {
         <DropdownComponent
           data={rates}
           placeholder={t('formCreateSave.selectTermRate')}
-          value={formData.selectedRate?.value || null} // Add null fallback
+          value={formData.selectedRate?.value || undefined} // Add null fallback
           onChange={(value: RateItem) => handleOnchange('selectedRate', value)}
         />
 
@@ -218,7 +218,7 @@ const FormCreateSave: React.FC = () => {
         <DropdownComponent
           data={method_pay}
           placeholder={t('formCreateSave.selectPaymentMethod')}
-          value={formData.method?.value || null}
+          value={formData.method?.value || undefined}
           onChange={(value: MethodItem) => handleOnchange('method', value)}
         />
       </View>

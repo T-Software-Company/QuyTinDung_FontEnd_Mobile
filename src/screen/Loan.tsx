@@ -85,8 +85,7 @@ const Loan: React.FC<LoanProps> = ({navigation}) => {
         {key: t('loan.fields.rate'), value: `12%/${value.year}`},
         {key: t('loan.fields.principalPayment'), value: `6 ${value.month}`},
         {key: t('loan.fields.interestPayment'), value: `6 ${value.month}`},
-        {key: t('loan.fields.effectiveDate'), value: '22/04/2024'},
-        {key: t('loan.fields.dueDate'), value: '15/08/2024'},
+        {key: t('loan.fields.status'), value: t('loan.fields.spending')},
       ],
     },
     {

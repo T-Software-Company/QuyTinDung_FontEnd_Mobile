@@ -169,6 +169,7 @@
         "loanList": "Danh sách khoản vay",
         "fields": {
             "status": "Trạng thái",
+            "spending": "Chờ xác nhận",
             "loanAmount": "Số tiền vay",
             "contractNumber": "Số hợp đồng",
             "purpose": "Mục đích vay",

@@ -23,10 +23,10 @@ interface TargetItem {
 }
 
 interface FormData {
-  value: string | null;
-  selectedRate: RateItem | null;
-  methodExtend: string | null;
-  method: string | null;
+  value: string | undefined;
+  selectedRate: RateItem | undefined;
+  methodExtend: string | undefined;
+  method: string | undefined;
 }
 
 interface NotificationType {
@@ -92,10 +92,10 @@ const FormCreateLoan: React.FC<FormCreateLoanProps> = ({theme}) => {
   ];
 
   const [formData, setFormData] = useState<FormData>({
-    value: null,
-    selectedRate: null,
-    methodExtend: null,
-    method: null,
+    value: undefined,
+    selectedRate: undefined,
+    methodExtend: undefined,
+    method: undefined,
   });
 
   const handleOnchange = (field: keyof FormData, value: any): void => {
@@ -214,7 +214,9 @@ const FormCreateLoan: React.FC<FormCreateLoanProps> = ({theme}) => {
           value={formData.methodExtend}
           data={target_loan}
           placeholder={t('formCreateLoan.selectPurpose')}
-          onChange={(value: TargetItem) => handleOnchange('methodExtend', value.value)}
+          onChange={(value: TargetItem) =>
+            handleOnchange('methodExtend', value.value)
+          }
         />
       </View>
 
@@ -226,7 +228,9 @@ const FormCreateLoan: React.FC<FormCreateLoanProps> = ({theme}) => {
           value={formData.method}
           data={frequency_pay}
           placeholder={t('formCreateLoan.selectPaymentFrequency')}
-          onChange={(value: TargetItem) => handleOnchange('method', value.value)}
+          onChange={(value: TargetItem) =>
+            handleOnchange('method', value.value)
+          }
         />
       </View>
       <TouchableOpacity

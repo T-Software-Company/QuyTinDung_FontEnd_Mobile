@@ -52,7 +52,7 @@ const FormDeposit: React.FC<FormDepositProps> = ({theme}) => {
   const currentLanguage = i18n.language;
   const {t} = useTranslation();
   const [selectedBank, setSelectedBank] = useState<BankType>('TPBank');
-  const [activeSection, setActiveSection] = useState<ActiveSectionType>(null);
+  const [activeSection, setActiveSection] = useState<ActiveSectionType>('qr');
 
   const toggleQRContent = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);

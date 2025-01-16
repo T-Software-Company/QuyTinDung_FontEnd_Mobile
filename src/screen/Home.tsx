@@ -8,7 +8,7 @@ import BoxTotalNav from '../components/BoxTotalNav/BoxTotalNav';
 import {useTranslation} from 'react-i18next';
 import {AppIcons} from '../icons';
 import {useTheme} from '../context/ThemeContext';
-import {fetchProtectedData} from '../api/apiService';
+import {getUserData} from '../api/apiService';
 import {useAuth} from '../context/AuthContext';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList, UserData} from '../navigators/RootNavigator';
@@ -42,7 +42,7 @@ const Home: React.FC<HomeProps> = ({navigation}) => {
   }, [isAuthenticated, navigation]);
 
   const loadData = async (): Promise<void> => {
-    const result = await fetchProtectedData('userinfo');
+    const result = await getUserData();
     if (result) {
       setData(result);
     } else {

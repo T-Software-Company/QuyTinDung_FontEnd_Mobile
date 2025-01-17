@@ -11,9 +11,10 @@ import {useAuth} from '../../context/AuthContext';
 interface HeaderProps {
   Navbar: string;
   navigation: StackNavigationProp<RootStackParamList, keyof RootStackParamList>;
+  name?: string;
 }
 
-const Header: React.FC<HeaderProps> = ({Navbar, navigation}) => {
+const Header: React.FC<HeaderProps> = ({Navbar, navigation, name}) => {
   const {t} = useTranslation();
   const {theme} = useTheme();
   const {logout} = useAuth();
@@ -108,7 +109,7 @@ const Header: React.FC<HeaderProps> = ({Navbar, navigation}) => {
           </TouchableOpacity>
           <View style={{flex: 1, marginLeft: 16, gap: 4}}>
             <Text style={{color: theme.text}}>{t('home.welcome')}</Text>
-            <Text style={styles.heading}>{t('home.name')}</Text>
+            <Text style={styles.heading}>{name}</Text>
           </View>
           <TouchableOpacity
             style={styles.borderArrow}

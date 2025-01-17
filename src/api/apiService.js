@@ -15,9 +15,9 @@ export const getUserData = async () => {
       },
     });
 
-    console.log('User data:', response.data);
+    // console.log('User data:', response.data);
 
-    return response.data;
+    return response?.data.result;
   } catch (error) {
     console.log('Error fetching user data:', error);
     console.error('Error fetching user data:', error);

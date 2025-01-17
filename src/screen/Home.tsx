@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {SafeAreaView, StyleSheet, View, ScrollView, Alert} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import Header from '../components/Header/Header';
 import ButtonShortCut from '../components/ButtonShortCut/ButtonShortCut';
 import WrapProductHome from '../components/WrapProductHome/WrapProductHome';
@@ -11,7 +12,9 @@ import {useTheme} from '../context/ThemeContext';
 import {getUserData} from '../api/apiService';
 import {useAuth} from '../context/AuthContext';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamList, UserData} from '../navigators/RootNavigator';
+import {RootStackParamList} from '../navigators/RootNavigator';
+import {useAppSelector, useAppDispatch} from '../store/hooks';
+import {setUserData, setLoading, setError} from '../store/slices/userSlice';
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 
@@ -31,7 +34,8 @@ const Home: React.FC<HomeProps> = ({navigation}) => {
   const {theme} = useTheme() as {theme: Theme};
   const {t} = useTranslation();
   const {isAuthenticated} = useAuth();
-  const [data, setData] = useState<UserData | null>(null);
+  const dispatch = useAppDispatch();
+  const {userData} = useAppSelector(state => state.user);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -42,22 +46,29 @@ const Home: React.FC<HomeProps> = ({navigation}) => {
   }, [isAuthenticated, navigation]);
 
   const loadData = async (): Promise<void> => {
-    const result = await getUserData();
-    if (result) {
-      setData(result);
-    } else {
-      Alert.alert('Error', 'Failed to fetch data');
+    try {
+      dispatch(setLoading(true));
+      const result = await getUserData();
+      console.log('Result: ', result);
+      if (result) {
+        dispatch(setUserData(result));
+      }
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'An unknown error occurred';
+      dispatch(setError(errorMessage));
+      Alert.alert('Error', errorMessage);
     }
   };
   console.log('HomePage: ', isAuthenticated);
-  console.log('Data: ', data);
+  console.log('Data: ', userData);
 
   return (
     <SafeAreaView style={[styles.view, {backgroundColor: theme.background}]}>
       <View style={styles.container}>
         {/* Heading */}
 
-        <Header Navbar="Home" navigation={navigation} />
+        <Header Navbar="Home" navigation={navigation} name={userData?.identityInfo?.fullName} />
 
         {/* Body */}
 

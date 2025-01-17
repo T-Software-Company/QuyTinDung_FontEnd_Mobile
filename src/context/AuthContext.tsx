@@ -226,7 +226,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         signaturePhoto: userData.signatureImage,
         identityInfo: {
           identifyId: userData.identifyId,
-          fullName: `${userData.firstName} ${userData.lastName}`, // Combine first and last name
+          fullName: `${userData.lastName} ${userData.firstName}`, // Combine first and last name
           ethnicity: userData.ethnicity || '',
           religion: userData.religion || '',
           gender: userData.gender === 'Nam' ? 'MALE' : 'FEMALE',

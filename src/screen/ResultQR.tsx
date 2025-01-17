@@ -220,7 +220,7 @@ const ResultQR: React.FC<ResultQRProps> = ({navigation, route}) => {
       firstName,
       lastName,
 
-      // identifyId: '12345679999',
+      // identifyId: '12345999999',
       // fullName: 'Phạm Văn A',
       // dateOfBirth: '01/01/1990',
       // gender: 'Nam',

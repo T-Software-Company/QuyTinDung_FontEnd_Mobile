@@ -2,8 +2,8 @@
 import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../navigators/RootNavigator'; // Fix import path
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../../navigators/RootNavigator'; // Fix import path
 import {AppIcons} from '../../icons';
 import {useTheme} from '../../context/ThemeContext';
 import {useAuth} from '../../context/AuthContext';
@@ -83,6 +83,8 @@ const Header: React.FC<HeaderProps> = ({Navbar, navigation, name}) => {
     },
     icon: {
       tintColor: theme.iconColor,
+      width: 24,
+      height: 24,
     },
     noBorderArrow: {
       width: 42,
@@ -413,8 +415,7 @@ const Header: React.FC<HeaderProps> = ({Navbar, navigation, name}) => {
           <View>
             <Text style={styles.heading}>{t('register.camera.title')}</Text>
           </View>
-          <TouchableOpacity
-            style={[styles.noBorderArrow, styles.hidden]} />
+          <TouchableOpacity style={[styles.noBorderArrow, styles.hidden]} />
         </View>
       )}
 
@@ -431,8 +432,7 @@ const Header: React.FC<HeaderProps> = ({Navbar, navigation, name}) => {
               {t('register.resultScreen.title')}
             </Text>
           </View>
-          <TouchableOpacity
-            style={[styles.noBorderArrow, styles.hidden]} />
+          <TouchableOpacity style={[styles.noBorderArrow, styles.hidden]} />
         </View>
       )}
 
@@ -447,8 +447,22 @@ const Header: React.FC<HeaderProps> = ({Navbar, navigation, name}) => {
           <View>
             <Text style={styles.heading}>{t('register.address.title')}</Text>
           </View>
+          <TouchableOpacity style={[styles.noBorderArrow, styles.hidden]} />
+        </View>
+      )}
+
+      {/* Render header when navbar name Privacy */}
+      {Navbar === 'Privacy' && (
+        <View style={[styles.containHeading]}>
           <TouchableOpacity
-            style={[styles.noBorderArrow, styles.hidden]} />
+            style={[styles.noBorderArrow]}
+            onPress={() => navigation.goBack()}>
+            <Image source={AppIcons.back} style={styles.icon} />
+          </TouchableOpacity>
+          <View>
+            <Text style={styles.heading}>{t('privacy.title')}</Text>
+          </View>
+          <TouchableOpacity style={[styles.noBorderArrow, styles.hidden]} />
         </View>
       )}
     </>

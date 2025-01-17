@@ -13,11 +13,39 @@ interface QuestionHomeProps {
   theme: Theme;
 }
 
-const QuestionHome: React.FC<QuestionHomeProps> = ({question, urlIcon, theme}) => {
+const QuestionHome: React.FC<QuestionHomeProps> = ({
+  question,
+  urlIcon,
+  theme,
+}) => {
+  const styles = StyleSheet.create({
+    boxContent: {
+      width: '48%',
+      paddingHorizontal: 20,
+      paddingVertical: 24,
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 12,
+      borderRadius: 20,
+      flexWrap: 'nowrap',
+    },
+    imgQuestion: {},
+    textQuestion: {
+      flexGrow: 1,
+    },
+    iconStyle: {
+      tintColor: theme.iconColor,
+      width: 24,
+      height: 24,
+    },
+  });
+
   return (
     <View style={[styles.boxContent, {backgroundColor: theme.backgroundBox}]}>
       <View>
-        <Image style={{tintColor: theme.iconColor}} source={urlIcon} />
+        <Image style={styles.iconStyle} source={urlIcon} />
       </View>
       <Text style={[styles.textQuestion, {color: theme.text}]}>{question}</Text>
     </View>
@@ -25,22 +53,3 @@ const QuestionHome: React.FC<QuestionHomeProps> = ({question, urlIcon, theme}) =
 };
 
 export default QuestionHome;
-
-const styles = StyleSheet.create({
-  boxContent: {
-    width: '48%',
-    paddingHorizontal: 20,
-    paddingVertical: 24,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 12,
-    borderRadius: 20,
-    flexWrap: 'nowrap',
-  },
-  imgQuestion: {},
-  textQuestion: {
-    flexGrow: 1,
-  },
-});

@@ -68,7 +68,11 @@ const Home: React.FC<HomeProps> = ({navigation}) => {
       <View style={styles.container}>
         {/* Heading */}
 
-        <Header Navbar="Home" navigation={navigation} name={userData?.identityInfo?.fullName} />
+        <Header
+          Navbar="Home"
+          navigation={navigation}
+          name={userData?.identityInfo?.fullName}
+        />
 
         {/* Body */}
 
@@ -146,5 +150,6 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     height: 'auto',
     flexWrap: 'wrap',
+    gap: 8,
   },
 });

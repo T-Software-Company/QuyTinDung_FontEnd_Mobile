@@ -320,6 +320,9 @@
         "newPassword": "Mật khẩu mới",
         "confirmPassword": "Xác nhận mật khẩu",
         "submit": "Thay đổi"
+    },
+    "privacy": {
+        "title": "Chính sách quyền riêng tư"
     }
     
 }

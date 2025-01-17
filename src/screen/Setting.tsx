@@ -190,6 +190,7 @@ const Setting: React.FC<SettingProps> = ({navigation}) => {
               <ButtonSetting
                 title={t('settings.privacyPolicy')}
                 icon={AppIcons.next}
+                onPress={() => navigation.navigate('Privacy')}
               />
             </View>
           </View>

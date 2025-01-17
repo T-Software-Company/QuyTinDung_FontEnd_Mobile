@@ -326,5 +326,8 @@
         "selectBank": "Select Bank",
         "searchBank": "Search bank...",
         "noResults": "No results found"
+    },
+    "privacy": {
+        "title": "Privacy Policy"
     }
 }

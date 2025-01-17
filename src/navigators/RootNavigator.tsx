@@ -32,6 +32,7 @@ import LoginScreen from '../screen/Login';
 import ForgetPasswordScreen from '../screen/ForgetPassword';
 import RegisterScreen from '../screen/Register';
 import RegisterAddressScreen from '../screen/RegisterAddress';
+import PrivacyScreen from '../screen/Privacy';
 
 export interface FormDataAddress {
   country: string;
@@ -96,6 +97,7 @@ export type RootStackParamList = {
   ScanQR: undefined;
   ConfirmInfo: undefined;
   ConfirmAddress: undefined;
+  Privacy: undefined;
 };
 
 export type TabParamList = {
@@ -244,6 +246,7 @@ const RootComponent: React.FC = () => {
             }),
           }}
         />
+        <Stack.Screen name="Privacy" component={PrivacyScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -141,13 +141,15 @@ const FormDeposit: React.FC<FormDepositProps> = ({theme}) => {
 
     icon: {
       tintColor: theme.iconColor,
+      width: 24,
+      height: 24,
     },
 
     toggleButton: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      paddingVertical: 10,
+      paddingVertical: 16,
       borderRadius: 5,
       paddingBottom: 12,
     },

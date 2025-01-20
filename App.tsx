@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -16,6 +17,8 @@ import {LanguageProvider} from './src/context/LanguageContext';
 import './i18n';
 import ThemeProvider from './src/context/ThemeContext';
 import {AuthProvider} from './src/context/AuthContext';
+import {Provider} from 'react-redux';
+import {store} from './src/store/store';
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
@@ -56,20 +59,21 @@ function App(): React.ReactNode {
   const queryClient = new QueryClient();
 
   return (
-    // eslint-disable-next-line react-native/no-inline-styles
-    <SafeAreaProvider style={{flex: 1}}>
-      <ErrorBoundary>
-        <QueryClientProvider client={queryClient}>
-          <ThemeProvider>
-            <LanguageProvider>
-              <AuthProvider>
-                <RootNavigator />
-              </AuthProvider>
-            </LanguageProvider>
-          </ThemeProvider>
-        </QueryClientProvider>
-      </ErrorBoundary>
-    </SafeAreaProvider>
+    <Provider store={store}>
+      <SafeAreaProvider style={{flex: 1}}>
+        <ErrorBoundary>
+          <QueryClientProvider client={queryClient}>
+            <ThemeProvider>
+              <LanguageProvider>
+                <AuthProvider>
+                  <RootNavigator />
+                </AuthProvider>
+              </LanguageProvider>
+            </ThemeProvider>
+          </QueryClientProvider>
+        </ErrorBoundary>
+      </SafeAreaProvider>
+    </Provider>
   );
 }
 

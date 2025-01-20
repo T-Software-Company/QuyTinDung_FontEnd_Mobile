@@ -60,8 +60,10 @@ const InputBorder: React.FC<InputBorderProps> = ({
       left: 0,
       top: 0,
       tintColor: theme.iconColor,
+      width: 24,
+      height: 24,
     },
-    iconEyes: {
+    iconPosition: {
       position: 'absolute',
       right: 0,
     },
@@ -87,6 +89,15 @@ const InputBorder: React.FC<InputBorderProps> = ({
       color: 'red',
       fontSize: 12,
       marginTop: 4,
+    },
+    iconEyesOpen: {},
+    iconEyes: {
+      bottom: Platform.OS === 'ios' ? 4 : 4,
+      paddingVertical: 0,
+      // textAlignVertical: 'center',
+      tintColor: theme.iconColor,
+      width: 24,
+      height: 24,
     },
   });
 
@@ -123,23 +134,11 @@ const InputBorder: React.FC<InputBorderProps> = ({
           inputElement
         )}
         {touchEyes && (
-          <TouchableOpacity style={styles.iconEyes} onPress={onPressIcon}>
+          <TouchableOpacity style={styles.iconPosition} onPress={onPressIcon}>
             {secureVisible ? (
-              <Image
-                source={AppIcons.eyesOpen}
-                style={{tintColor: theme.iconColor}}
-              />
+              <Image source={AppIcons.eyesOpen} style={styles.iconEyes} />
             ) : (
-              <Image
-                // eslint-disable-next-line react-native/no-inline-styles
-                style={{
-                  bottom: Platform.OS === 'ios' ? 4 : 4,
-                  paddingVertical: 0,
-                  // textAlignVertical: 'center',
-                  tintColor: theme.iconColor,
-                }}
-                source={AppIcons.eyesClose}
-              />
+              <Image style={styles.iconEyes} source={AppIcons.eyesClose} />
             )}
           </TouchableOpacity>
         )}

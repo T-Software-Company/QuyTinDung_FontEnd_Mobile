@@ -28,13 +28,40 @@ const ButtonShortCut: React.FC<ButtonShortCutProps> = ({
   onPress,
   theme,
 }) => {
+  const styles = StyleSheet.create({
+    wrapButton: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '20%',
+    },
+    borderButton: {
+      width: 54,
+      height: 54,
+      borderRadius: 9999,
+      backgroundColor: '#f4f4f4',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: 8,
+    },
+    textButton: {
+      textAlign: 'center',
+    },
+    styleIcon: {
+      width: 24,
+      height: 24,
+      resizeMode: 'contain',
+    },
+  });
+
   return (
     <View style={styles.wrapButton}>
       <TouchableOpacity
         style={[styles.borderButton, {backgroundColor: theme.backgroundIcon}]}
         onPress={onPress}>
         <Image
-          style={[styleCustom, {tintColor: theme.iconColor}]}
+          style={[styles.styleIcon, styleCustom, {tintColor: theme.iconColor}]}
           source={urlIcon}
         />
       </TouchableOpacity>
@@ -44,25 +71,3 @@ const ButtonShortCut: React.FC<ButtonShortCutProps> = ({
 };
 
 export default ButtonShortCut;
-
-const styles = StyleSheet.create({
-  wrapButton: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '25%',
-  },
-  borderButton: {
-    width: 54,
-    height: 54,
-    borderRadius: 9999,
-    backgroundColor: '#f4f4f4',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  textButton: {
-    textAlign: 'center',
-  },
-});

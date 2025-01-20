@@ -22,10 +22,10 @@ interface MethodItem {
 }
 
 interface FormData {
-  value: string | null;
-  selectedRate: RateItem | null;
-  methodExtend: MethodItem | null;
-  method: MethodItem | null; // Changed from string to MethodItem
+  value: string | undefined;
+  selectedRate: RateItem | undefined;
+  methodExtend: MethodItem | undefined;
+  method: MethodItem | undefined; // Changed from string to MethodItem
 }
 
 const FormCreateSave: React.FC = () => {
@@ -79,10 +79,10 @@ const FormCreateSave: React.FC = () => {
   ];
 
   const [formData, setFormData] = useState<FormData>({
-    value: null,
-    selectedRate: null,
-    methodExtend: null,
-    method: null,
+    value: undefined,
+    selectedRate: undefined,
+    methodExtend: undefined,
+    method: undefined,
   });
 
   const handleOnchange = (field: keyof FormData, value: any): void => {
@@ -181,7 +181,7 @@ const FormCreateSave: React.FC = () => {
         <DropdownComponent
           data={rates}
           placeholder={t('formCreateSave.selectTermRate')}
-          value={formData.selectedRate?.value || null} // Add null fallback
+          value={formData.selectedRate?.value || undefined} // Add null fallback
           onChange={(value: RateItem) => handleOnchange('selectedRate', value)}
         />
 
@@ -218,7 +218,7 @@ const FormCreateSave: React.FC = () => {
         <DropdownComponent
           data={method_pay}
           placeholder={t('formCreateSave.selectPaymentMethod')}
-          value={formData.method?.value || null}
+          value={formData.method?.value || undefined}
           onChange={(value: MethodItem) => handleOnchange('method', value)}
         />
       </View>

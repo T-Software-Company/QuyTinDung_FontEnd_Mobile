@@ -32,8 +32,8 @@
         "originalAmount": "Original amount",
         "accountNumber": "Account number",
         "dueDate": "Due date",
-        "status": "Status",
         "fields": {
+            "status": "Status",
             "originalAmount": "Original Amount",
             "accountNumber": "Account Number",
             "expectedInterest": "Expected Interest",
@@ -53,8 +53,9 @@
         "loanAmount": "Loan amount",
         "contractNumber": "Contract number",
         "dueDate": "Due date",
-        "status": "Status",
         "fields": {
+            "status": "Status",
+            "spending": "Pending Approval",
             "loanAmount": "Loan Amount",
             "contractNumber": "Contract Number",
             "purpose": "Purpose",
@@ -325,5 +326,8 @@
         "selectBank": "Select Bank",
         "searchBank": "Search bank...",
         "noResults": "No results found"
+    },
+    "privacy": {
+        "title": "Privacy Policy"
     }
 }

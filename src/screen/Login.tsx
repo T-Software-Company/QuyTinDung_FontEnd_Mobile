@@ -30,7 +30,7 @@ const windowHeight = Dimensions.get('window').height;
 
 const Login: React.FC<LoginProps> = ({navigation}) => {
   const [formData, setFormData] = useState<FormData>({
-    email: 'admin2@gmail.com',
+    email: 'admin12345@gmail.com',
     password: '123456',
   });
   const [invisible, setInvisible] = useState<boolean>(true);

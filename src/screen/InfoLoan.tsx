@@ -1,5 +1,4 @@
 /* eslint-disable react-native/no-inline-styles */
-/* eslint-disable no-sparse-arrays */
 import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
 import React, {useMemo} from 'react';
 import Header from '../components/Header/Header';
@@ -7,6 +6,7 @@ import {useTheme} from '../context/ThemeContext';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../navigators/RootNavigator';
 import {RouteProp} from '@react-navigation/native';
+import {useTranslation} from 'react-i18next';
 
 type InfoLoanScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -42,6 +42,8 @@ const InfoLoan: React.FC<InfoLoanProps> = ({navigation, route}) => {
     [route.params],
   );
   const {theme} = useTheme() as {theme: Theme};
+  const {t} = useTranslation();
+
   console.log('InfoLoan: ', data);
 
   const styles = StyleSheet.create({
@@ -131,13 +133,23 @@ const InfoLoan: React.FC<InfoLoanProps> = ({navigation, route}) => {
     textRow: {
       fontWeight: 'regular',
       color: theme.text,
-      width: '48%', // Added fixed width
-      flexWrap: 'wrap',
+      flexShrink: 1, // Allow text to shrink
+      textAlign: 'right',
     },
 
     hidden: {
       opacity: 0,
       pointerEvents: 'none',
+    },
+    status: {
+      backgroundColor: '#e7c631',
+      color: '#fff',
+      paddingVertical: 4,
+      paddingHorizontal: 10,
+      borderRadius: 8,
+      fontWeight: 'bold',
+      alignSelf: 'flex-start', // Change to flex-start
+      maxWidth: '100%', // Ensure it doesn't overflow
     },
   });
 
@@ -170,8 +182,10 @@ const InfoLoan: React.FC<InfoLoanProps> = ({navigation, route}) => {
                       style={[
                         idx === 0 && styles.textKeyRow,
                         idx > 0 && idx < data.boxData.length && styles.textRow,
-                        ,
-                        {textAlign: 'left'},
+                        {
+                          flex: 1, // Take remaining space
+                          textAlign: 'left',
+                        },
                       ]}
                       numberOfLines={undefined}>
                       {box.key}
@@ -180,7 +194,9 @@ const InfoLoan: React.FC<InfoLoanProps> = ({navigation, route}) => {
                       style={[
                         idx === 0 && styles.textKeyRow,
                         idx > 0 && idx < data.boxData.length && styles.textRow,
-                        ,
+                        box.key === t('loan.fields.status') &&
+                          box.value === t('loan.fields.spending') &&
+                          styles.status,
                         {textAlign: 'right'},
                       ]}
                       numberOfLines={undefined}>

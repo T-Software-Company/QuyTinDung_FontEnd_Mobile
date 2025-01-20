@@ -147,7 +147,7 @@ const QRScannerApp: React.FC<QRScannerAppProps> = ({navigation, route}) => {
   // Handle cases where camera is not available
   if (device == null) {
     return (
-      <SafeAreaView>
+      <SafeAreaView style={styles.containerNotAvailable}>
         <Text style={styles.centerText}>
           {t('register.camera.notAvailable')}
         </Text>
@@ -332,6 +332,11 @@ const styles = StyleSheet.create({
     color: '#FFF',
     backgroundColor: 'rgba(0,0,0,0.6)',
     paddingBottom: 50,
+  },
+  containerNotAvailable: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

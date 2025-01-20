@@ -150,6 +150,12 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({navigation}) => {
       right: 16,
       top: 10,
     },
+    iconStyle: {
+      bottom: Platform.OS === 'ios' ? 2 : 4,
+      paddingVertical: 0,
+      width: 24,
+      height: 24,
+    },
   });
 
   return (
@@ -202,13 +208,13 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({navigation}) => {
                     style={styles.iconEyes}
                     onPress={() => setInvisibleCurrent(!invisibleCurrent)}>
                     {invisibleCurrent ? (
-                      <Image source={AppIcons.eyesOpen} />
+                      <Image
+                        source={AppIcons.eyesOpen}
+                        style={styles.iconStyle}
+                      />
                     ) : (
                       <Image
-                        style={{
-                          bottom: Platform.OS === 'ios' ? 4 : 4,
-                          paddingVertical: 0,
-                        }}
+                        style={styles.iconStyle}
                         source={AppIcons.eyesClose}
                       />
                     )}
@@ -237,13 +243,13 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({navigation}) => {
                     style={styles.iconEyes}
                     onPress={() => setInvisible(!invisible)}>
                     {invisible ? (
-                      <Image source={AppIcons.eyesOpen} />
+                      <Image
+                        source={AppIcons.eyesOpen}
+                        style={styles.iconStyle}
+                      />
                     ) : (
                       <Image
-                        style={{
-                          bottom: Platform.OS === 'ios' ? 4 : 4,
-                          paddingVertical: 0,
-                        }}
+                        style={styles.iconStyle}
                         source={AppIcons.eyesClose}
                       />
                     )}
@@ -272,13 +278,13 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({navigation}) => {
                     style={styles.iconEyes}
                     onPress={() => setInvisibleConfirm(!invisibleConfirm)}>
                     {invisibleConfirm ? (
-                      <Image source={AppIcons.eyesOpen} />
+                      <Image
+                        source={AppIcons.eyesOpen}
+                        style={styles.iconStyle}
+                      />
                     ) : (
                       <Image
-                        style={{
-                          bottom: Platform.OS === 'ios' ? 4 : 4,
-                          paddingVertical: 0,
-                        }}
+                        style={styles.iconStyle}
                         source={AppIcons.eyesClose}
                       />
                     )}

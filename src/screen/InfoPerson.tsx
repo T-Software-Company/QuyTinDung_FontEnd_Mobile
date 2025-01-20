@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import {
   Alert,
   Image,
@@ -9,9 +10,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 import {StackNavigationProp} from '@react-navigation/stack';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Header from '../components/Header/Header';
 import SelectedTabs from '../components/SelectedTabs/SelectedTabs';
 import {AppIcons} from '../icons';
@@ -19,6 +21,7 @@ import {useTheme} from '../context/ThemeContext';
 import i18n from '../../i18n';
 
 import {RootStackParamList} from '../navigators/RootNavigator';
+import {RootState} from '../store/store';
 
 type InfoPersonScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -34,50 +37,49 @@ interface TabItem {
   label: string;
 }
 
-interface PersonInfo {
-  id: number;
-  name: string;
-  nameFund: string;
-  phone: string;
+interface UserFormat {
   address: string;
-  email: string;
-  sex: string;
-  birthday: string;
-  idcccd: string;
-  startDayCccd: string;
-  expireDayCccd: string;
-  placeCccd: string;
-  addressCccd: string;
+  gender: string;
+  dateOfBirth: string;
+  issueDate: string;
+  expirationDate: string;
 }
 
 const InfoPerson: React.FC<InfoPersonProps> = ({navigation}) => {
   const currentLanguage = i18n.language;
   const {t} = useTranslation();
-  const [number, setNumber] = useState<string | null>(null);
   const [selectedTab, setSelectedTab] = useState<'info' | 'paper'>('info');
   const [isEditable, setIsEditable] = useState<boolean>(false);
+  const [userFormat, setUserFormat] = useState<UserFormat>({
+    address: '',
+    gender: '',
+    dateOfBirth: '',
+    issueDate: '',
+    expirationDate: '',
+  });
   const {theme} = useTheme();
-
+  const user = useSelector((state: RootState) => state.user.userData);
+  console.log('user', user);
   const tabs: TabItem[] = [
     {key: 'info', label: (t('info.infoContact') as string).toUpperCase()},
     {key: 'paper', label: (t('info.identityDocument') as string).toUpperCase()},
   ];
 
-  const infoPerson: PersonInfo = {
-    id: 1,
-    name: 'Nguyễn Văn A',
-    nameFund: 'Quỹ TDND Thành Đức',
-    phone: '0912345678',
-    address: 'Phước Long B, TP. Thủ Đức, TP. Hồ Chí Minh',
-    email: 'abcd@gmail.com',
-    sex: 'Nam',
-    birthday: '01/07/1999',
-    idcccd: '0123456789',
-    startDayCccd: '22/07/2020',
-    expireDayCccd: '22/07/2024',
-    placeCccd: 'Cục trưởng cục cảnh sát',
-    addressCccd: 'Thôn 7, Huyện Nam Hà, Tỉnh Hà Nam',
-  };
+  useEffect(() => {
+    if (user) {
+      setUserFormat({
+        address: `${user.address.streetAddress}, ${user.address.wardOrCommune}, ${user.address.district}, ${user.address.cityProvince}`,
+        gender: user.identityInfo.gender === 'MALE' ? 'Nam' : 'Nữ',
+        dateOfBirth: new Date(
+          user.identityInfo.dateOfBirth,
+        ).toLocaleDateString(),
+        issueDate: new Date(user.identityInfo.issueDate).toLocaleDateString(),
+        expirationDate: new Date(
+          user.identityInfo.expirationDate,
+        ).toLocaleDateString(),
+      });
+    }
+  }, [user]);
 
   const handleSubmit = (): void => {
     Alert.alert(
@@ -213,7 +215,7 @@ const InfoPerson: React.FC<InfoPersonProps> = ({navigation}) => {
               <View style={styles.boxAvatar}>
                 <Image style={styles.avatar} source={AppIcons.avatar} />
                 <Text style={[styles.name, {color: theme.text}]}>
-                  Nguyễn Văn A
+                  {user?.identityInfo.fullName}
                 </Text>
                 <Text style={styles.nameTitle}>Quỹ TDND Châu Đức</Text>
               </View>
@@ -233,11 +235,9 @@ const InfoPerson: React.FC<InfoPersonProps> = ({navigation}) => {
                   <View style={styles.boxInput}>
                     <Text style={styles.headingTitle}>{t('info.phone')}</Text>
                     <TextInput
-                      placeholder="Nhập số điện thoại của bạn"
                       placeholderTextColor="#aaa"
                       keyboardType="numeric"
-                      onChangeText={setNumber}
-                      value={infoPerson?.phone}
+                      value={user?.phone}
                       style={[
                         styles.textInput,
                         isEditable ? styles.textEdit : '',
@@ -249,11 +249,9 @@ const InfoPerson: React.FC<InfoPersonProps> = ({navigation}) => {
                   <View style={styles.boxInput}>
                     <Text style={styles.headingTitle}>{t('info.email')}</Text>
                     <TextInput
-                      placeholder="Nhập email của bạn"
                       placeholderTextColor="#aaa"
                       keyboardType="email-address"
-                      onChangeText={setNumber}
-                      value={infoPerson?.email}
+                      value={user?.email}
                       style={[
                         styles.textInput,
                         isEditable ? styles.textEdit : '',
@@ -265,10 +263,8 @@ const InfoPerson: React.FC<InfoPersonProps> = ({navigation}) => {
                   <View style={styles.boxInput}>
                     <Text style={styles.headingTitle}>{t('info.gender')}</Text>
                     <TextInput
-                      placeholder="Chọn giới tính của bạn"
                       placeholderTextColor="#aaa"
-                      onChangeText={setNumber}
-                      value={infoPerson?.sex}
+                      value={userFormat.gender}
                       style={[
                         styles.textInput,
                         isEditable ? styles.textEdit : '',
@@ -282,10 +278,8 @@ const InfoPerson: React.FC<InfoPersonProps> = ({navigation}) => {
                       {t('info.dateOfBirth')}
                     </Text>
                     <TextInput
-                      placeholder="Chọn ngày sinh của bạn"
                       placeholderTextColor="#aaa"
-                      onChangeText={setNumber}
-                      value={infoPerson?.birthday}
+                      value={userFormat.dateOfBirth}
                       style={[
                         styles.textInput,
                         isEditable ? styles.textEdit : '',
@@ -297,11 +291,9 @@ const InfoPerson: React.FC<InfoPersonProps> = ({navigation}) => {
                   <View style={styles.boxInput}>
                     <Text style={styles.headingTitle}>{t('info.address')}</Text>
                     <TextInput
-                      placeholder="Nhập địa chỉ hiện tại"
                       placeholderTextColor="#aaa"
                       keyboardType="numeric"
-                      onChangeText={setNumber}
-                      value={infoPerson?.address}
+                      value={userFormat.address}
                       style={[
                         styles.textInput,
                         isEditable ? styles.textEdit : '',
@@ -317,11 +309,9 @@ const InfoPerson: React.FC<InfoPersonProps> = ({navigation}) => {
                       {t('info.identityNumber')}
                     </Text>
                     <TextInput
-                      placeholder="Nhập số CCCD"
                       placeholderTextColor="#aaa"
                       keyboardType="numeric"
-                      onChangeText={setNumber}
-                      value={infoPerson?.idcccd}
+                      value={user?.identityInfo?.identifyId}
                       style={[
                         styles.textInput,
                         isEditable ? styles.textEdit : '',
@@ -335,10 +325,8 @@ const InfoPerson: React.FC<InfoPersonProps> = ({navigation}) => {
                       {t('info.identityAddress')}
                     </Text>
                     <TextInput
-                      placeholder="Nhập nơi cấp CCCD"
                       placeholderTextColor="#aaa"
-                      onChangeText={setNumber}
-                      value={infoPerson?.placeCccd}
+                      value={user?.identityInfo?.issuingAuthority}
                       style={[
                         styles.textInput,
                         isEditable ? styles.textEdit : '',
@@ -352,10 +340,8 @@ const InfoPerson: React.FC<InfoPersonProps> = ({navigation}) => {
                       {t('info.identitySupplyDay')}
                     </Text>
                     <TextInput
-                      placeholder="Chọn ngày cấp CCCD"
                       placeholderTextColor="#aaa"
-                      onChangeText={setNumber}
-                      value={infoPerson?.startDayCccd}
+                      value={userFormat.issueDate}
                       style={[
                         styles.textInput,
                         isEditable ? styles.textEdit : '',
@@ -369,10 +355,8 @@ const InfoPerson: React.FC<InfoPersonProps> = ({navigation}) => {
                       {t('info.identityDueDay')}
                     </Text>
                     <TextInput
-                      placeholder="Chọn ngày hết hạn CCCD"
                       placeholderTextColor="#aaa"
-                      onChangeText={setNumber}
-                      value={infoPerson?.expireDayCccd}
+                      value={userFormat.expirationDate}
                       style={[
                         styles.textInput,
                         isEditable ? styles.textEdit : '',
@@ -386,10 +370,8 @@ const InfoPerson: React.FC<InfoPersonProps> = ({navigation}) => {
                       {t('info.identityHome')}
                     </Text>
                     <TextInput
-                      placeholder="Nhập địa chỉ thường trú của bạn"
                       placeholderTextColor="#aaa"
-                      onChangeText={setNumber}
-                      value={infoPerson?.addressCccd}
+                      value={user?.identityInfo?.permanentAddress}
                       style={[
                         styles.textInput,
                         isEditable ? styles.textEdit : '',

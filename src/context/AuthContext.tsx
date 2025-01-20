@@ -222,11 +222,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         phone: userData.phone,
         firstName: userData.firstName,
         lastName: userData.lastName,
-        address: userData.address,
+        address: JSON.parse(userData.address),
         signaturePhoto: userData.signatureImage,
         identityInfo: {
           identifyId: userData.identifyId,
-          fullName: `${userData.firstName} ${userData.lastName}`, // Combine first and last name
+          fullName: `${userData.lastName} ${userData.firstName}`, // Combine first and last name
           ethnicity: userData.ethnicity || '',
           religion: userData.religion || '',
           gender: userData.gender === 'Nam' ? 'MALE' : 'FEMALE',
@@ -266,6 +266,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     } catch (err) {
       // eslint-disable-next-line @typescript-eslint/no-shadow
       const error = err as any; // using any here because axios errors have additional properties
+      console.error('Registration response:', error.response);
       console.error('Registration error:', error.response?.data);
       console.error('Request data that caused error:', error.config?.data);
       setError(error.response?.data?.message || 'Registration failed');

@@ -2,8 +2,8 @@
 import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../navigators/RootNavigator'; // Fix import path
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../../navigators/RootNavigator'; // Fix import path
 import {AppIcons} from '../../icons';
 import {useTheme} from '../../context/ThemeContext';
 import {useAuth} from '../../context/AuthContext';
@@ -11,9 +11,10 @@ import {useAuth} from '../../context/AuthContext';
 interface HeaderProps {
   Navbar: string;
   navigation: StackNavigationProp<RootStackParamList, keyof RootStackParamList>;
+  name?: string;
 }
 
-const Header: React.FC<HeaderProps> = ({Navbar, navigation}) => {
+const Header: React.FC<HeaderProps> = ({Navbar, navigation, name}) => {
   const {t} = useTranslation();
   const {theme} = useTheme();
   const {logout} = useAuth();
@@ -82,6 +83,8 @@ const Header: React.FC<HeaderProps> = ({Navbar, navigation}) => {
     },
     icon: {
       tintColor: theme.iconColor,
+      width: 24,
+      height: 24,
     },
     noBorderArrow: {
       width: 42,
@@ -108,7 +111,7 @@ const Header: React.FC<HeaderProps> = ({Navbar, navigation}) => {
           </TouchableOpacity>
           <View style={{flex: 1, marginLeft: 16, gap: 4}}>
             <Text style={{color: theme.text}}>{t('home.welcome')}</Text>
-            <Text style={styles.heading}>{t('home.name')}</Text>
+            <Text style={styles.heading}>{name}</Text>
           </View>
           <TouchableOpacity
             style={styles.borderArrow}
@@ -412,8 +415,7 @@ const Header: React.FC<HeaderProps> = ({Navbar, navigation}) => {
           <View>
             <Text style={styles.heading}>{t('register.camera.title')}</Text>
           </View>
-          <TouchableOpacity
-            style={[styles.noBorderArrow, styles.hidden]} />
+          <TouchableOpacity style={[styles.noBorderArrow, styles.hidden]} />
         </View>
       )}
 
@@ -430,8 +432,7 @@ const Header: React.FC<HeaderProps> = ({Navbar, navigation}) => {
               {t('register.resultScreen.title')}
             </Text>
           </View>
-          <TouchableOpacity
-            style={[styles.noBorderArrow, styles.hidden]} />
+          <TouchableOpacity style={[styles.noBorderArrow, styles.hidden]} />
         </View>
       )}
 
@@ -446,8 +447,37 @@ const Header: React.FC<HeaderProps> = ({Navbar, navigation}) => {
           <View>
             <Text style={styles.heading}>{t('register.address.title')}</Text>
           </View>
+          <TouchableOpacity style={[styles.noBorderArrow, styles.hidden]} />
+        </View>
+      )}
+
+      {/* Render header when navbar name Privacy */}
+      {Navbar === 'Privacy' && (
+        <View style={[styles.containHeading]}>
           <TouchableOpacity
-            style={[styles.noBorderArrow, styles.hidden]} />
+            style={[styles.noBorderArrow]}
+            onPress={() => navigation.goBack()}>
+            <Image source={AppIcons.back} style={styles.icon} />
+          </TouchableOpacity>
+          <View>
+            <Text style={styles.heading}>{t('privacy.title')}</Text>
+          </View>
+          <TouchableOpacity style={[styles.noBorderArrow, styles.hidden]} />
+        </View>
+      )}
+
+      {/* Render header when navbar name TotalAssets */}
+      {Navbar === 'TotalAssets' && (
+        <View style={[styles.containHeading]}>
+          <TouchableOpacity
+            style={[styles.noBorderArrow]}
+            onPress={() => navigation.goBack()}>
+            <Image source={AppIcons.back} style={styles.icon} />
+          </TouchableOpacity>
+          <View>
+            <Text style={styles.heading}>Tổng tài sản</Text>
+          </View>
+          <TouchableOpacity style={[styles.noBorderArrow, styles.hidden]} />
         </View>
       )}
     </>

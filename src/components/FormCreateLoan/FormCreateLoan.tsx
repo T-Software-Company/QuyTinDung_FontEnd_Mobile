@@ -191,7 +191,7 @@ const FormCreateLoan: React.FC<FormCreateLoanProps> = ({theme}) => {
       <View style={styles.boxInput}>
         <Text style={styles.headingTitle}>{t('formCreateLoan.termRate')}</Text>
         <DropdownComponent
-          value={formData.selectedRate?.value}
+          value={formData.selectedRate?.value ?? null}
           data={rates}
           placeholder={t('formCreateLoan.selectTermRate')}
           onChange={(value: RateItem) => handleOnchange('selectedRate', value)}
@@ -214,7 +214,9 @@ const FormCreateLoan: React.FC<FormCreateLoanProps> = ({theme}) => {
           value={formData.methodExtend}
           data={target_loan}
           placeholder={t('formCreateLoan.selectPurpose')}
-          onChange={(value: TargetItem) => handleOnchange('methodExtend', value.value)}
+          onChange={(value: TargetItem) =>
+            handleOnchange('methodExtend', value.value)
+          }
         />
       </View>
 
@@ -223,10 +225,12 @@ const FormCreateLoan: React.FC<FormCreateLoanProps> = ({theme}) => {
           {t('formCreateLoan.paymentFrequency')}
         </Text>
         <DropdownComponent
-          value={formData.method}
+          value={formData.method ?? null}
           data={frequency_pay}
           placeholder={t('formCreateLoan.selectPaymentFrequency')}
-          onChange={(value: TargetItem) => handleOnchange('method', value.value)}
+          onChange={(value: TargetItem) =>
+            handleOnchange('method', value.value)
+          }
         />
       </View>
       <TouchableOpacity

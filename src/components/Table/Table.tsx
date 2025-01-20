@@ -56,6 +56,7 @@ const Table: React.FC<TableProps> = ({name, data, navigation, detail}) => {
     t('loan.fields.dueDate'),
     t('save.fields.originalAmount'),
     t('save.fields.accountNumber'),
+    t('loan.fields.status'),
     t('save.fields.dueDate'),
   ];
 
@@ -96,6 +97,14 @@ const Table: React.FC<TableProps> = ({name, data, navigation, detail}) => {
     },
     textRow: {
       fontWeight: 'regular',
+    },
+    status: {
+      backgroundColor: '#e7c631',
+      color: '#fff',
+      paddingVertical: 4,
+      paddingHorizontal: 10,
+      borderRadius: 8,
+      fontWeight: 'bold',
     },
   });
 
@@ -190,6 +199,9 @@ const Table: React.FC<TableProps> = ({name, data, navigation, detail}) => {
                         idx > 0 &&
                           idx < filteredBoxes.length - 1 &&
                           styles.textRow,
+                        box.key === t('loan.fields.status') &&
+                          box.value === t('loan.fields.spending') &&
+                          styles.status,
                       ]}>
                       {box.value}
                     </Text>

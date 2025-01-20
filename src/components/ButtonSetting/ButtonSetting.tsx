@@ -64,6 +64,11 @@ const ButtonSetting: React.FC<ButtonSettingProps> = ({
       fontSize: 14,
       color: theme.noteText,
     },
+    iconStyle: {
+      width: 16,
+      height: 16,
+      tintColor: theme.iconColor,
+    },
   });
 
   return (
@@ -72,7 +77,7 @@ const ButtonSetting: React.FC<ButtonSettingProps> = ({
       <View style={styles.wrapText}>
         {optionText && <Text style={styles.textOption}>{optionText}</Text>}
         <View style={styles.wrapIcon}>
-          <Image source={icon} style={{tintColor: theme.iconColor}} />
+          <Image source={icon} style={styles.iconStyle} />
         </View>
       </View>
     </TouchableOpacity>

@@ -465,6 +465,21 @@ const Header: React.FC<HeaderProps> = ({Navbar, navigation, name}) => {
           <TouchableOpacity style={[styles.noBorderArrow, styles.hidden]} />
         </View>
       )}
+
+      {/* Render header when navbar name TotalAssets */}
+      {Navbar === 'TotalAssets' && (
+        <View style={[styles.containHeading]}>
+          <TouchableOpacity
+            style={[styles.noBorderArrow]}
+            onPress={() => navigation.goBack()}>
+            <Image source={AppIcons.back} style={styles.icon} />
+          </TouchableOpacity>
+          <View>
+            <Text style={styles.heading}>Tổng tài sản</Text>
+          </View>
+          <TouchableOpacity style={[styles.noBorderArrow, styles.hidden]} />
+        </View>
+      )}
     </>
   );
 };

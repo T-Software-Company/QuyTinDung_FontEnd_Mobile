@@ -3,7 +3,14 @@ import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useTheme} from '../../context/ThemeContext';
 import {AppIcons} from '../../icons';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../../navigators/RootNavigator';
 
+type TotalAssetsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
+
+interface BoxTotalNav {
+  navigation: TotalAssetsScreenNavigationProp;
+}
 interface Theme {
   backgroundBox: string;
   text: string;
@@ -15,7 +22,7 @@ interface ThemeContextType {
   theme: Theme;
 }
 
-const BoxTotalNav: React.FC = () => {
+const BoxTotalNav: React.FC<BoxTotalNav> = ({navigation}) => {
   const [hide, setHide] = useState<boolean>(true);
   const {t} = useTranslation();
   const {theme} = useTheme() as ThemeContextType;
@@ -130,13 +137,13 @@ const BoxTotalNav: React.FC = () => {
               </Text>
             ) : (
               <Text style={[styles.money, {color: theme.text}]}>
-                100.100.000 đ
+                601.000.000 đ
               </Text>
             )}
           </View>
-          <View style={styles.borderArrowHandle}>
+          <TouchableOpacity style={styles.borderArrowHandle} onPress={() => navigation.navigate('TotalAssets')}>
             <Image style={styles.iconStyle} source={AppIcons.next} />
-          </View>
+          </TouchableOpacity>
         </View>
         {/* <Text style={styles.profit}>+100.000 đ</Text> */}
         {hide ? (

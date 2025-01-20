@@ -11,7 +11,7 @@ interface DropdownItem {
 interface DropdownComponentProps<T> {
   data: T[];
   placeholder: string;
-  value: string | undefined;
+  value: string | null;
   onChange: (item: T) => void;
 }
 

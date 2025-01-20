@@ -33,6 +33,10 @@ import ForgetPasswordScreen from '../screen/ForgetPassword';
 import RegisterScreen from '../screen/Register';
 import RegisterAddressScreen from '../screen/RegisterAddress';
 import PrivacyScreen from '../screen/Privacy';
+import TotalAssetsScreen from '../screen/TotalAssets';
+import DetailTransactionScreen from '../screen/DetailTransaction';
+
+
 
 export interface FormDataAddress {
   country: string;
@@ -58,7 +62,7 @@ export interface UserData {
 }
 
 export type RootStackParamList = {
-  HomeTabs: undefined;
+  HomeTabs: { screen: string };
   Login: undefined;
   Register: undefined;
   RegisterAddress: {
@@ -98,6 +102,8 @@ export type RootStackParamList = {
   ConfirmInfo: undefined;
   ConfirmAddress: undefined;
   Privacy: undefined;
+  TotalAssets: undefined;
+  DetailTransaction: undefined;
 };
 
 export type TabParamList = {
@@ -188,7 +194,7 @@ const RootComponent: React.FC = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Login"
+        initialRouteName="HomeTabs"
         screenOptions={{headerShown: false}}>
         <Stack.Screen name="HomeTabs" component={MyTabs} />
         <Stack.Screen name="Login" component={LoginScreen} />
@@ -247,6 +253,8 @@ const RootComponent: React.FC = () => {
           }}
         />
         <Stack.Screen name="Privacy" component={PrivacyScreen} />
+        <Stack.Screen name="TotalAssets" component={TotalAssetsScreen} />
+        <Stack.Screen name="DetailTransaction" component={DetailTransactionScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

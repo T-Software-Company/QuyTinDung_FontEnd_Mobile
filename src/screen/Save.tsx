@@ -20,7 +20,7 @@ interface Theme {
   text: string;
 }
 
-interface SaveBoxData {
+export interface SaveBoxData {
   id: number;
   boxes: Array<{
     key: string;

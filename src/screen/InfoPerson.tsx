@@ -67,13 +67,16 @@ const InfoPerson: React.FC<InfoPersonProps> = ({navigation}) => {
 
   useEffect(() => {
     if (user) {
-      console.log('userGender', user.gender);
       setUserFormat({
         address: `${user.address.streetAddress}, ${user.address.wardOrCommune}, ${user.address.district}, ${user.address.cityProvince}`,
         gender: user.identityInfo.gender === 'MALE' ? 'Nam' : 'Nữ',
-        dateOfBirth: new Date(user.identityInfo.dateOfBirth).toLocaleDateString(),
+        dateOfBirth: new Date(
+          user.identityInfo.dateOfBirth,
+        ).toLocaleDateString(),
         issueDate: new Date(user.identityInfo.issueDate).toLocaleDateString(),
-        expirationDate: new Date(user.identityInfo.expirationDate).toLocaleDateString(),
+        expirationDate: new Date(
+          user.identityInfo.expirationDate,
+        ).toLocaleDateString(),
       });
     }
   }, [user]);
@@ -212,7 +215,7 @@ const InfoPerson: React.FC<InfoPersonProps> = ({navigation}) => {
               <View style={styles.boxAvatar}>
                 <Image style={styles.avatar} source={AppIcons.avatar} />
                 <Text style={[styles.name, {color: theme.text}]}>
-                  {user.identityInfo.fullName}
+                  {user?.identityInfo.fullName}
                 </Text>
                 <Text style={styles.nameTitle}>Quỹ TDND Châu Đức</Text>
               </View>

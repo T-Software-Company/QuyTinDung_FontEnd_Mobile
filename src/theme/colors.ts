@@ -2,10 +2,10 @@
 // This interface ensures consistency across light and dark themes
 export interface Theme {
   // Basic UI colors
-  background: string;    // Main background color
-  text: string;         // Primary text color
-  noteText: string;     // Secondary/note text color
-  tint: string;        // Tint color for various UI elements
+  background: string; // Main background color
+  text: string; // Primary text color
+  noteText: string; // Secondary/note text color
+  tint: string; // Tint color for various UI elements
 
   // Header related colors
   headerBackground: string;
@@ -28,6 +28,8 @@ export interface Theme {
 
   // Special indicators
   profit: string;
+  interest: string;
+  error: string;
 
   // Tab bar related colors
   tabBarBackground: string;
@@ -57,6 +59,8 @@ export const lightTheme: Theme = {
 
   //profit
   profit: '#18DD12',
+  interest: '#ddb813',
+  error: '#f7132e',
 
   tabBarBackground: '#FFFFFF',
   tabBarInactive: '#ddd',
@@ -87,6 +91,8 @@ export const darkTheme: Theme = {
 
   //profit
   profit: '#76FA39',
+  interest: '#f2df37',
+  error: '#ff2d46',
 
   tabBarBackground: '#121212',
   tabBarInactive: '#fff',

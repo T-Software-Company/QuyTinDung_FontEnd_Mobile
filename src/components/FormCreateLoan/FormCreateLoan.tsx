@@ -23,10 +23,10 @@ interface TargetItem {
 }
 
 interface FormData {
-  value: string | undefined;
-  selectedRate: RateItem | undefined;
-  methodExtend: string | undefined;
-  method: string | undefined;
+  value: string | null;
+  selectedRate: RateItem | null;
+  methodExtend: string | null;
+  method: string | null;
 }
 
 interface NotificationType {
@@ -92,10 +92,10 @@ const FormCreateLoan: React.FC<FormCreateLoanProps> = ({theme}) => {
   ];
 
   const [formData, setFormData] = useState<FormData>({
-    value: undefined,
-    selectedRate: undefined,
-    methodExtend: undefined,
-    method: undefined,
+    value: null,
+    selectedRate: null,
+    methodExtend: null,
+    method: null,
   });
 
   const handleOnchange = (field: keyof FormData, value: any): void => {
@@ -191,7 +191,7 @@ const FormCreateLoan: React.FC<FormCreateLoanProps> = ({theme}) => {
       <View style={styles.boxInput}>
         <Text style={styles.headingTitle}>{t('formCreateLoan.termRate')}</Text>
         <DropdownComponent
-          value={formData.selectedRate?.value}
+          value={formData.selectedRate?.value ?? null}
           data={rates}
           placeholder={t('formCreateLoan.selectTermRate')}
           onChange={(value: RateItem) => handleOnchange('selectedRate', value)}
@@ -225,7 +225,7 @@ const FormCreateLoan: React.FC<FormCreateLoanProps> = ({theme}) => {
           {t('formCreateLoan.paymentFrequency')}
         </Text>
         <DropdownComponent
-          value={formData.method}
+          value={formData.method ?? null}
           data={frequency_pay}
           placeholder={t('formCreateLoan.selectPaymentFrequency')}
           onChange={(value: TargetItem) =>

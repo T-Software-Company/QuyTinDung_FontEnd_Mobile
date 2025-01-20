@@ -80,7 +80,7 @@ const Home: React.FC<HomeProps> = ({navigation}) => {
           contentInsetAdjustmentBehavior="automatic"
           showsVerticalScrollIndicator={false}>
           <View style={styles.body}>
-            <BoxTotalNav />
+            <BoxTotalNav navigation={navigation} />
 
             <View style={styles.wrapFunction}>
               <ButtonShortCut

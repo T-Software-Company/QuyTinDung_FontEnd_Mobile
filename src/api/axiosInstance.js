@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {getAccessToken} from '../../tokenStorage';
 
 const axiosInstance = axios.create({
   baseURL: 'https://tsoftware.store/api/v1', // URL gốc của API
@@ -7,6 +8,20 @@ const axiosInstance = axios.create({
     'Content-Type': 'application/json',
   },
 });
+
+// Thêm request interceptor để tự động thêm token
+axiosInstance.interceptors.request.use(
+  async config => {
+    const token = await getAccessToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);
 
 // Tự động xử lý lỗi
 axiosInstance.interceptors.response.use(

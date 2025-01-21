@@ -31,6 +31,10 @@ const icons: IconGroups = {
     chevronUp: require('../../assets/images/chevron-up.png'),
     chevronDown: require('../../assets/images/chevron-down.png'),
     logOut: require('../../assets/images/logout-icon.png'),
+    depositIcon: require('../../assets/images/deposit-icon.png'),
+    withdrawIcon: require('../../assets/images/withdraw-icon.png'),
+    transactionIcon: require('../../assets/images/transaction-icon.png'),
+    supportIcon: require('../../assets/images/support-icon.png'),
   },
   qr: {
     qr: require('../../assets/images/QR.jpg'),

@@ -35,8 +35,7 @@ import RegisterAddressScreen from '../screen/RegisterAddress';
 import PrivacyScreen from '../screen/Privacy';
 import TotalAssetsScreen from '../screen/TotalAssets';
 import DetailTransactionScreen from '../screen/DetailTransaction';
-
-
+import TransactionHistoryScreen from '../screen/TransactionHistory';
 
 export interface FormDataAddress {
   country: string;
@@ -61,8 +60,17 @@ export interface UserData {
   // Add other user data fields as needed
 }
 
+export interface DataTransaction {
+  code: string;
+  title: string;
+  money: string;
+  date: string;
+  status: string;
+  source: string;
+}
+
 export type RootStackParamList = {
-  HomeTabs: { screen: string };
+  HomeTabs: {screen: string};
   Login: undefined;
   Register: undefined;
   RegisterAddress: {
@@ -103,7 +111,10 @@ export type RootStackParamList = {
   ConfirmAddress: undefined;
   Privacy: undefined;
   TotalAssets: undefined;
-  DetailTransaction: undefined;
+  DetailTransaction: {
+    dataTransaction: DataTransaction;
+  };
+  TransactionHistory: undefined;
 };
 
 export type TabParamList = {
@@ -194,7 +205,7 @@ const RootComponent: React.FC = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="HomeTabs"
+        initialRouteName="TotalAssets"
         screenOptions={{headerShown: false}}>
         <Stack.Screen name="HomeTabs" component={MyTabs} />
         <Stack.Screen name="Login" component={LoginScreen} />
@@ -254,7 +265,11 @@ const RootComponent: React.FC = () => {
         />
         <Stack.Screen name="Privacy" component={PrivacyScreen} />
         <Stack.Screen name="TotalAssets" component={TotalAssetsScreen} />
-        <Stack.Screen name="DetailTransaction" component={DetailTransactionScreen} />
+        <Stack.Screen
+          name="DetailTransaction"
+          component={DetailTransactionScreen}
+        />
+        <Stack.Screen name="TransactionHistory" component={TransactionHistoryScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

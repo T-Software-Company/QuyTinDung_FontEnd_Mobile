@@ -107,7 +107,7 @@ const TotalAssets: React.FC<TotalAssetsProps> = ({navigation}) => {
 
             <AllocateAssets data={data} theme={theme} hide={hide} />
 
-            <RecentPayment theme={theme} />
+            <RecentPayment theme={theme} navigation={navigation} />
           </View>
         </ScrollView>
       </View>

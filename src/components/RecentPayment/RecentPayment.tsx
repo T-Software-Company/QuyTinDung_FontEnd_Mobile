@@ -1,30 +1,44 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import {Theme} from '../../theme/colors';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../../navigators/RootNavigator';
+
+type TotalAssetsScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'TotalAssets'
+>;
 
 interface RecentPaymentProps {
   theme: Theme;
+  navigation: TotalAssetsScreenNavigationProp;
 }
 
-const RecentPayment: React.FC<RecentPaymentProps> = ({theme}) => {
+const RecentPayment: React.FC<RecentPaymentProps> = ({theme, navigation}) => {
   const dataRecentPayment = [
     {
       title: 'Rút tiền',
-      money: '- 50.000.000đ',
+      money: '- 50.000.000 đ',
       date: '08/01/2025',
       status: 'Thất bại',
+      code: 'NSKOEIF3KJF',
+      source: 'Tài khoản số dư',
     },
     {
       title: 'Trả tiền khoản vay',
-      money: '+ 100.000.000đ',
+      money: '+ 100.000.000 đ',
       date: '25/12/2024',
       status: 'Thành công',
+      code: 'NSKOEIF3KJF',
+      source: 'Tài khoản số dư',
     },
     {
       title: 'Nạp tiền',
-      money: '+ 100.000đ',
+      money: '+ 100.000 đ',
       date: '23/12/2024',
       status: 'Thành công',
+      code: 'NSKOEIF3KJF',
+      source: 'Tài khoản ngân hàng',
     },
   ];
   const styles = StyleSheet.create({
@@ -71,20 +85,32 @@ const RecentPayment: React.FC<RecentPaymentProps> = ({theme}) => {
     <View style={styles.boxContent}>
       <View style={styles.wrapBox}>
         <Text style={styles.title}>Giao dịch gần đây</Text>
-        <Text style={styles.seeAll}>Xem tất cả</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('TransactionHistory')}>
+          <Text style={styles.seeAll}>Xem tất cả</Text>
+        </TouchableOpacity>
       </View>
 
       {dataRecentPayment.map((item, index) => (
-        <View key={index} style={styles.boxColor}>
+        <TouchableOpacity
+          key={index}
+          style={styles.boxColor}
+          onPress={() =>
+            navigation.navigate('DetailTransaction', {dataTransaction: item})
+          }>
           <View style={styles.wrapBox}>
             <Text style={styles.colorText}>{item.title}</Text>
             <Text style={styles.colorText}>{item.money}</Text>
           </View>
           <View style={styles.wrapBox}>
             <Text style={styles.noteText}>{item.date}</Text>
-            <Text style={item.status === "Thành công" ? styles.profit : styles.error}>{item.status}</Text>
+            <Text
+              style={
+                item.status === 'Thành công' ? styles.profit : styles.error
+              }>
+              {item.status}
+            </Text>
           </View>
-        </View>
+        </TouchableOpacity>
       ))}
     </View>
   );

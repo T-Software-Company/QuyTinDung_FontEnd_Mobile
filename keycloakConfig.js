@@ -11,5 +11,5 @@ export default {
   realm: 'tsoftware',
   clientId: 'mobile',
   scopes: ['openid', 'profile', 'email'],
-  clientSecret: '7mA1HO0QoknAQIJ7S0fzNSA2zngYDrHp', // Thêm dòng này
+  clientSecret: 'yWXagG5sNXUuZ1I40HAzyYBaHoLT1YJb', // Thêm dòng này
 };

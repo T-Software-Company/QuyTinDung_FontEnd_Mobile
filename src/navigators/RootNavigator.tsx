@@ -205,7 +205,7 @@ const RootComponent: React.FC = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="TotalAssets"
+        initialRouteName="HomeTabs"
         screenOptions={{headerShown: false}}>
         <Stack.Screen name="HomeTabs" component={MyTabs} />
         <Stack.Screen name="Login" component={LoginScreen} />

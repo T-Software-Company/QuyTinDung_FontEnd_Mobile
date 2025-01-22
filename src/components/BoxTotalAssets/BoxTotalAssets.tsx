@@ -120,14 +120,14 @@ const BoxTotalAssets: React.FC<BoxTotalAssetsProps> = ({hide, onSetHide}) => {
 
         <View style={styles.handleMoney}>
           <View>
-            {/* <Text style={styles.money}>100.100.000 đ</Text> */}
+            {/* <Text style={styles.money}>100.100,000 đ</Text> */}
             {hide ? (
               <Text style={[styles.money, styles.hide, {color: theme.text}]}>
                 *** *** ***
               </Text>
             ) : (
               <Text style={[styles.money, {color: theme.text}]}>
-                601.000.000 đ
+                601,000,000 đ
               </Text>
             )}
           </View>
@@ -159,7 +159,7 @@ const BoxTotalAssets: React.FC<BoxTotalAssetsProps> = ({hide, onSetHide}) => {
         {hide ? (
           <Text style={[styles.hide, {color: theme.text}]}>*** ***</Text>
         ) : (
-          <Text style={{color: theme.text}}>1.000.000 đ</Text>
+          <Text style={{color: theme.text}}>1,000,000 đ</Text>
         )}
       </View>
       <View style={styles.wrapMoney}>
@@ -167,7 +167,7 @@ const BoxTotalAssets: React.FC<BoxTotalAssetsProps> = ({hide, onSetHide}) => {
         {hide ? (
           <Text style={[styles.hide, {color: theme.text}]}>*** ***</Text>
         ) : (
-          <Text style={{color: theme.profit}}>30.000.000 đ</Text>
+          <Text style={{color: theme.profit}}>30,000,000 đ</Text>
         )}
       </View>
       <View style={styles.wrapMoney}>
@@ -175,7 +175,7 @@ const BoxTotalAssets: React.FC<BoxTotalAssetsProps> = ({hide, onSetHide}) => {
         {hide ? (
           <Text style={[styles.hide, {color: theme.text}]}>*** ***</Text>
         ) : (
-          <Text style={styles.interest}>50.000.000 đ</Text>
+          <Text style={styles.interest}>50,000,000 đ</Text>
         )}
       </View>
     </View>

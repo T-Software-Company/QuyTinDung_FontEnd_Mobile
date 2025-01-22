@@ -30,7 +30,7 @@ const windowHeight = Dimensions.get('window').height;
 
 const Login: React.FC<LoginProps> = ({navigation}) => {
   const [formData, setFormData] = useState<FormData>({
-    email: 'admin12345@gmail.com',
+    email: 'demo@gmail.com',
     password: '123456',
   });
   const [invisible, setInvisible] = useState<boolean>(true);
@@ -76,7 +76,10 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
     if (result === true) {
       navigation.navigate('HomeTabs');
     } else if (error) {
-      Alert.alert(t('notification.title'), 'Email / Số điện thoại hoặc mật khẩu không đúng !');
+      Alert.alert(
+        t('notification.title'),
+        'Email / Số điện thoại hoặc mật khẩu không đúng !',
+      );
     }
   };
 

@@ -80,7 +80,7 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({
         id: '5',
         title: 'Rút tiền',
         money: '- 500,000,000 đ',
-        date: '11/1/2025',
+        date: '13/1/2025',
         status: 'Thành công',
         code: 'TRX987654321',
         source: 'Ngân hàng',
@@ -89,8 +89,8 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({
         id: '6',
         title: 'Rút tiền',
         money: '- 500,000,000 đ',
-        date: '11/1/2025',
-        status: 'Thành công',
+        date: '12/1/2025',
+        status: 'Thất bại',
         code: 'TRX987654321',
         source: 'Ngân hàng',
       },
@@ -99,7 +99,7 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({
         title: 'Rút tiền',
         money: '- 500,000,000 đ',
         date: '11/1/2025',
-        status: 'Thành công',
+        status: 'Thất bại',
         code: 'TRX987654321',
         source: 'Ngân hàng',
       },
@@ -107,7 +107,7 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({
         id: '8',
         title: 'Nạp tiền',
         money: '+ 500,000,000 đ',
-        date: '11/1/2025',
+        date: '16/1/2025',
         status: 'Thành công',
         code: 'TRX987654321',
         source: 'Ngân hàng',
@@ -125,7 +125,7 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({
         id: '10',
         title: 'Rút tiền',
         money: '- 500,000,000 đ',
-        date: '11/1/2025',
+        date: '21/1/2025',
         status: 'Thành công',
         code: 'TRX987654321',
         source: 'Ngân hàng',
@@ -239,6 +239,12 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({
       filtered = filtered.filter(item => {
         const transactionDate = parseDateString(item.date);
         return formatDateToMonthYear(transactionDate) === selectedMonth;
+      });
+      // Sắp xếp theo ngày giảm dần (mới nhất lên đầu)
+      filtered.sort((a, b) => {
+        const dateA = parseDateString(a.date);
+        const dateB = parseDateString(b.date);
+        return dateB.getTime() - dateA.getTime();
       });
     }
 
@@ -501,7 +507,7 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({
       fontSize: 14,
     },
     filterTextActive: {
-      color: '#fff',
+      color: theme.text,
     },
     filterSection: {
       gap: 16,
@@ -601,7 +607,7 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({
             keyExtractor={item => item.id}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.listContainer}
-            bounces={false} // Thêm để tránh scroll quá đà
+            bounces={true} // Thêm để tránh scroll quá đà
           />
         </View>
         {renderMonthPicker()}

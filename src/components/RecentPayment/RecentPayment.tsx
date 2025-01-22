@@ -18,7 +18,7 @@ const RecentPayment: React.FC<RecentPaymentProps> = ({theme, navigation}) => {
   const dataRecentPayment = [
     {
       title: 'Rút tiền',
-      money: '- 50.000.000 đ',
+      money: '- 50,000,000 đ',
       date: '08/01/2025',
       status: 'Thất bại',
       code: 'NSKOEIF3KJF',
@@ -26,7 +26,7 @@ const RecentPayment: React.FC<RecentPaymentProps> = ({theme, navigation}) => {
     },
     {
       title: 'Trả tiền khoản vay',
-      money: '+ 100.000.000 đ',
+      money: '+ 100,000,000 đ',
       date: '25/12/2024',
       status: 'Thành công',
       code: 'NSKOEIF3KJF',
@@ -34,7 +34,7 @@ const RecentPayment: React.FC<RecentPaymentProps> = ({theme, navigation}) => {
     },
     {
       title: 'Nạp tiền',
-      money: '+ 100.000 đ',
+      money: '+ 100,000 đ',
       date: '23/12/2024',
       status: 'Thành công',
       code: 'NSKOEIF3KJF',

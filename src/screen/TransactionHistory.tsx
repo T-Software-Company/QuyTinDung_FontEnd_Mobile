@@ -292,13 +292,7 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({
         </View>
       </View>
       <View style={styles.itemRight}>
-        <Text
-          style={[
-            styles.money,
-      
-          ]}>
-          {item.money}
-        </Text>
+        <Text style={[styles.money]}>{item.money}</Text>
         <Text
           style={[
             styles.status,

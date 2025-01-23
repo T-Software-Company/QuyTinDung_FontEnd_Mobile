@@ -3,10 +3,13 @@ import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useTheme} from '../../context/ThemeContext';
 import {AppIcons} from '../../icons';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../navigators/RootNavigator';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../../navigators/RootNavigator';
 
-type TotalAssetsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
+type TotalAssetsScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'Home'
+>;
 
 interface BoxTotalNav {
   navigation: TotalAssetsScreenNavigationProp;
@@ -130,26 +133,28 @@ const BoxTotalNav: React.FC<BoxTotalNav> = ({navigation}) => {
       <View style={styles.wrapMoney}>
         <View style={styles.handleMoney}>
           <View>
-            {/* <Text style={styles.money}>100.100.000 đ</Text> */}
+            {/* <Text style={styles.money}>100.100,000 đ</Text> */}
             {hide ? (
               <Text style={[styles.money, {color: theme.text}]}>
                 *** *** ***
               </Text>
             ) : (
               <Text style={[styles.money, {color: theme.text}]}>
-                601.000.000 đ
+                601,000,000 đ
               </Text>
             )}
           </View>
-          <TouchableOpacity style={styles.borderArrowHandle} onPress={() => navigation.navigate('TotalAssets')}>
+          <TouchableOpacity
+            style={styles.borderArrowHandle}
+            onPress={() => navigation.navigate('TotalAssets')}>
             <Image style={styles.iconStyle} source={AppIcons.next} />
           </TouchableOpacity>
         </View>
-        {/* <Text style={styles.profit}>+100.000 đ</Text> */}
+        {/* <Text style={styles.profit}>+100,000 đ</Text> */}
         {hide ? (
           <Text style={[styles.hide, {color: theme.text}]}>*** ***</Text>
         ) : (
-          <Text style={{color: theme.profit}}>+100.000 đ</Text>
+          <Text style={{color: theme.profit}}>+100,000 đ</Text>
         )}
       </View>
     </View>

@@ -40,7 +40,7 @@ const Notification: React.FC<NotificationProps> = ({navigation}) => {
     {
       id: 1,
       title: 'Số dư tài khoản',
-      desc: 'Tài khoản của bạn được nạp thêm 5.000.000 đ. Số dư hiện tại là 100.000.000 đ',
+      desc: 'Tài khoản của bạn được nạp thêm 5,000,000 đ. Số dư hiện tại là 100,000,000 đ',
       time: '1 phút trước',
       seen: false,
     },
@@ -48,7 +48,7 @@ const Notification: React.FC<NotificationProps> = ({navigation}) => {
     {
       id: 2,
       title: 'Số dư tài khoản',
-      desc: 'Tài khoản của bạn được nạp thêm 10.000.000 đ. Số dư hiện tại là 90.000.000 đ',
+      desc: 'Tài khoản của bạn được nạp thêm 10,000,000 đ. Số dư hiện tại là 90,000,000 đ',
       time: '3 phút trước',
       seen: true,
     },

@@ -167,11 +167,11 @@ const FormTransfer: React.FC = () => {
         <Text style={styles.heading}>{t('transfer.source')}</Text>
         <View style={styles.boxWrapMoney}>
           <Text style={styles.titleMoney}>{t('transfer.availableCash')}</Text>
-          <Text style={styles.heading}>500.000đ</Text>
+          <Text style={styles.heading}>500,000đ</Text>
         </View>
         <View style={styles.boxWrapMoney}>
           <Text style={styles.titleMoney}>{t('transfer.availableLimit')}</Text>
-          <Text style={styles.heading}>500.000đ</Text>
+          <Text style={styles.heading}>500,000đ</Text>
         </View>
       </View>
 

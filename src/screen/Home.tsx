@@ -9,7 +9,7 @@ import BoxTotalNav from '../components/BoxTotalNav/BoxTotalNav';
 import {useTranslation} from 'react-i18next';
 import {AppIcons} from '../icons';
 import {useTheme} from '../context/ThemeContext';
-import {getUserData} from '../api/apiService';
+import {getUserData} from '../api/services/userService';
 import {useAuth} from '../context/AuthContext';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../navigators/RootNavigator';

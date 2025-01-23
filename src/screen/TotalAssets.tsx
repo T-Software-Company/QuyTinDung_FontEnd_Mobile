@@ -33,13 +33,13 @@ const TotalAssets: React.FC<TotalAssetsProps> = ({navigation}) => {
   const data = [
     {
       title: 'Tổng tiền tiết kiệm',
-      money: '600.000.000 đ',
-      interest: '30.000.000 đ',
+      money: '600,000,000 đ',
+      interest: '30,000,000 đ',
     },
     {
       title: 'Tổng tiền khoản vay',
-      money: '1.000.000.000 đ',
-      interest: '50.000.000 đ',
+      money: '1,000,000,000 đ',
+      interest: '50,000,000 đ',
     },
   ];
 
@@ -94,20 +94,24 @@ const TotalAssets: React.FC<TotalAssetsProps> = ({navigation}) => {
               <ButtonShortCut
                 name={t('home.makeADeposit')}
                 urlIcon={AppIcons.saveSent}
-                onPress={() => navigation.navigate('HomeTabs', {screen: 'Save'})}
+                onPress={() =>
+                  navigation.navigate('HomeTabs', {screen: 'Save'})
+                }
                 theme={theme}
               />
               <ButtonShortCut
                 name={t('home.createLoan')}
                 urlIcon={AppIcons.loan}
-                onPress={() => navigation.navigate('HomeTabs', {screen: 'Loan'})}
+                onPress={() =>
+                  navigation.navigate('HomeTabs', {screen: 'Loan'})
+                }
                 theme={theme}
               />
             </View>
 
             <AllocateAssets data={data} theme={theme} hide={hide} />
 
-            <RecentPayment theme={theme} />
+            <RecentPayment theme={theme} navigation={navigation} />
           </View>
         </ScrollView>
       </View>

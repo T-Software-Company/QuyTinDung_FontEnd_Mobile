@@ -50,7 +50,7 @@ const Loan: React.FC<LoanProps> = ({navigation}) => {
     {
       id: 1,
       boxes: [
-        {key: t('loan.fields.loanAmount'), value: '100.000.000 đ'},
+        {key: t('loan.fields.loanAmount'), value: '100,000,000 đ'},
         {key: t('loan.fields.contractNumber'), value: '123-456-789'},
         {key: t('loan.fields.purpose'), value: value.purpose},
         {key: t('loan.fields.term'), value: `12 ${value.month}`},
@@ -64,7 +64,7 @@ const Loan: React.FC<LoanProps> = ({navigation}) => {
     {
       id: 2,
       boxes: [
-        {key: t('loan.fields.loanAmount'), value: '200.000.000 đ'},
+        {key: t('loan.fields.loanAmount'), value: '200,000,000 đ'},
         {key: t('loan.fields.contractNumber'), value: '987-654-321'},
         {key: t('loan.fields.purpose'), value: value.purpose},
         {key: t('loan.fields.term'), value: `12 ${value.month}`},
@@ -78,7 +78,7 @@ const Loan: React.FC<LoanProps> = ({navigation}) => {
     {
       id: 3,
       boxes: [
-        {key: t('loan.fields.loanAmount'), value: '300.000.000 đ'},
+        {key: t('loan.fields.loanAmount'), value: '300,000,000 đ'},
         {key: t('loan.fields.contractNumber'), value: '987-654-321'},
         {key: t('loan.fields.purpose'), value: value.purpose},
         {key: t('loan.fields.term'), value: `12 ${value.month}`},
@@ -91,7 +91,7 @@ const Loan: React.FC<LoanProps> = ({navigation}) => {
     {
       id: 4,
       boxes: [
-        {key: t('loan.fields.loanAmount'), value: '300.000.000 đ'},
+        {key: t('loan.fields.loanAmount'), value: '300,000,000 đ'},
         {key: t('loan.fields.contractNumber'), value: '987-654-321'},
         {key: t('loan.fields.purpose'), value: value.purpose},
         {key: t('loan.fields.term'), value: `12 ${value.month}`},
@@ -115,7 +115,7 @@ const Loan: React.FC<LoanProps> = ({navigation}) => {
           <View style={styles.body}>
             <BoxAdd
               title={t('loan.totalAssets')}
-              number="100.000.000 đ"
+              number="100,000,000 đ"
               navigation={navigation}
               add="CreateLoan"
               addText={t('loan.add')}

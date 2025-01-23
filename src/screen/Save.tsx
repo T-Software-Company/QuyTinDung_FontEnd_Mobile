@@ -52,9 +52,9 @@ const Save: React.FC<SaveProps> = ({navigation}) => {
     {
       id: 1,
       boxes: [
-        {key: t('save.fields.originalAmount'), value: '100.000.000 đ'},
+        {key: t('save.fields.originalAmount'), value: '100,000,000 đ'},
         {key: t('save.fields.accountNumber'), value: '123-456-789'},
-        {key: t('save.fields.expectedInterest'), value: '3.000.000 đ'},
+        {key: t('save.fields.expectedInterest'), value: '3.000,000 đ'},
         {key: t('save.fields.term'), value: `3 ${value.month}`},
         {key: t('save.fields.rate'), value: `3.6%/${value.year}`},
         {key: t('save.fields.interestPaymentMethod'), value: value.method},
@@ -66,9 +66,9 @@ const Save: React.FC<SaveProps> = ({navigation}) => {
     {
       id: 2,
       boxes: [
-        {key: t('save.fields.originalAmount'), value: '200.000.000 đ'},
+        {key: t('save.fields.originalAmount'), value: '200,000,000 đ'},
         {key: t('save.fields.accountNumber'), value: '987-654-321'},
-        {key: t('save.fields.expectedInterest'), value: '3.000.000 đ'},
+        {key: t('save.fields.expectedInterest'), value: '3.000,000 đ'},
         {key: t('save.fields.term'), value: `3 ${value.month}`},
         {key: t('save.fields.rate'), value: `3.6%/${value.year}`},
         {key: t('save.fields.interestPaymentMethod'), value: value.method},
@@ -80,9 +80,9 @@ const Save: React.FC<SaveProps> = ({navigation}) => {
     {
       id: 3,
       boxes: [
-        {key: t('save.fields.originalAmount'), value: '300.000.000 đ'},
+        {key: t('save.fields.originalAmount'), value: '300,000,000 đ'},
         {key: t('save.fields.accountNumber'), value: '987-654-321'},
-        {key: t('save.fields.expectedInterest'), value: '3.000.000 đ'},
+        {key: t('save.fields.expectedInterest'), value: '3.000,000 đ'},
         {key: t('save.fields.term'), value: `3 ${value.month}`},
         {key: t('save.fields.rate'), value: `3.6%/${value.year}`},
         {key: t('save.fields.interestPaymentMethod'), value: value.method},
@@ -103,7 +103,7 @@ const Save: React.FC<SaveProps> = ({navigation}) => {
           <View style={styles.body}>
             <BoxAdd
               title={t('save.totalAssets')}
-              number="100.000.000 đ"
+              number="100,000,000 đ"
               navigation={navigation}
               add="SentSave"
               addText={t('save.add')}

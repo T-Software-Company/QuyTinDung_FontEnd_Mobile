@@ -234,6 +234,7 @@
     },
     "formCreateLoan": {
         "title": "Tạo khoản vay",
+        "introduce": "Giới thiệu sản phẩm vay",
         "loanAmount": "Số tiền cần vay",
         "loanRange": "Tối thiểu 1 triệu, tối đa 100 tỷ",
         "termRate": "Kỳ hạn và lãi suất",

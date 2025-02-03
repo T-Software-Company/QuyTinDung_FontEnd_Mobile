@@ -117,7 +117,7 @@ const Loan: React.FC<LoanProps> = ({navigation}) => {
               title={t('loan.totalAssets')}
               number="100,000,000 đ"
               navigation={navigation}
-              add="CreateLoan"
+              add="LoadingWorkflowLoan"
               addText={t('loan.add')}
             />
 

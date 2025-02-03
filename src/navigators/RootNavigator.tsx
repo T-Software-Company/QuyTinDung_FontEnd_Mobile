@@ -20,6 +20,7 @@ import SentSaveScreen from '../screen/SentSave';
 import DepositScreen from '../screen/Deposit';
 import TransferScreen from '../screen/Transfer';
 import CreateLoanScreen from '../screen/CreateLoan';
+import IntroduceLoanScreen from '../screen/IntroduceLoan';
 import NotificationScreen from '../screen/Notification';
 import InfoPersonScreen from '../screen/InfoPerson';
 import LanguageSettingScreen from '../screen/LanguageSetting';
@@ -36,6 +37,8 @@ import PrivacyScreen from '../screen/Privacy';
 import TotalAssetsScreen from '../screen/TotalAssets';
 import DetailTransactionScreen from '../screen/DetailTransaction';
 import TransactionHistoryScreen from '../screen/TransactionHistory';
+import LoadingWorkflowLoanScreen from '../screen/LoadingWorkflowLoan';
+
 
 export interface FormDataAddress {
   country: string;
@@ -97,6 +100,8 @@ export type RootStackParamList = {
   Transfer: undefined;
   SentSave: undefined;
   CreateLoan: undefined;
+  IntroduceLoan: undefined;
+  LoadingWorkflowLoan: undefined;
   LanguageSetting: undefined;
   DarkModeSetting: undefined;
   ChangePassword: undefined;
@@ -228,6 +233,8 @@ const RootComponent: React.FC = () => {
         <Stack.Screen name="Transfer" component={TransferScreen} />
         <Stack.Screen name="SentSave" component={SentSaveScreen} />
         <Stack.Screen name="CreateLoan" component={CreateLoanScreen} />
+        <Stack.Screen name="LoadingWorkflowLoan" component={LoadingWorkflowLoanScreen} />
+        <Stack.Screen name="IntroduceLoan" component={IntroduceLoanScreen} />
         <Stack.Screen
           name="LanguageSetting"
           component={LanguageSettingScreen}

@@ -1,3 +1,4 @@
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -5,44 +6,47 @@ import {
   TouchableOpacity,
   View,
   Dimensions,
-  TextInput,
-  Image,
   Alert,
-  Platform,
 } from 'react-native';
-import React, {useState} from 'react';
 import {AppIcons} from '../icons';
 import {useTheme} from '../context/ThemeContext';
 import {useTranslation} from 'react-i18next';
 import InputBorder from '../components/InputBorder/InputBorder';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../navigators/RootNavigator';
 
-const windowWidth = Dimensions.get('window').width;
+type ForgetPasswordNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'ForgetPassword'
+>;
+
+interface ForgetPasswordProps {
+  navigation: ForgetPasswordNavigationProp;
+}
+
+interface FormData {
+  email: string;
+  idCccd: string;
+}
+
 const windowHeight = Dimensions.get('window').height;
 
-const ForgetPassword = ({navigation}) => {
-  const [email, setEmail] = useState('');
-  const [idCccd, setIdCccd] = useState('');
+const ForgetPassword: React.FC<ForgetPasswordProps> = ({navigation}) => {
   const {theme} = useTheme();
   const {t} = useTranslation();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     email: '',
     idCccd: '',
   });
 
-  const handleChange = (field, value) => {
+  const handleChange = (field: keyof FormData, value: string): void => {
     setFormData(prev => ({
       ...prev,
       [field]: value,
     }));
   };
 
-  // Hàm kiểm tra định dạng email
-  const isValidEmail = email => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex kiểm tra email
-    return emailRegex.test(email);
-  };
-
-  const handleSubmit = () => {
+  const handleSubmit = (): void => {
     Alert.alert(t('forgetPassword.notification'), t('forgetPassword.otpSent'));
   };
 

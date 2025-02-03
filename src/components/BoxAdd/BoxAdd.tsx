@@ -9,7 +9,7 @@ interface BoxAddProps {
   title: string;
   number: string;
   navigation: StackNavigationProp<RootStackParamList>;
-  add: Extract<keyof RootStackParamList, 'CreateLoan' | 'SentSave'>;
+  add: Extract<keyof RootStackParamList, 'LoadingWorkflowLoan' | 'SentSave'>;
   addText: string;
 }
 

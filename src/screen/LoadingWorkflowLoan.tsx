@@ -7,12 +7,12 @@ import {fetchWorkflowStatus} from '../api/services/createLoan';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../navigators/RootNavigator';
 import {useTheme} from '../context/ThemeContext';
-import {WorkflowStepType} from '../api/types/loan';
+import {WorkflowStepType} from '../api/types/loanInit';
 
 // Add type for screen names
 type ScreenName =
   | 'IntroduceLoan'
-  | 'LoanRequest'
+  | 'CreateLoan'
   | 'LoanPlan'
   | 'FinancialInfo'
   | 'CreditRating'
@@ -21,7 +21,7 @@ type ScreenName =
 // Define the step to screen mapping with proper types
 const stepToScreenMap: Record<WorkflowStepType, ScreenName> = {
   init: 'IntroduceLoan',
-  'create-loan-request': 'LoanRequest',
+  'create-loan-request': 'CreateLoan',
   'create-loan-plan': 'LoanPlan',
   'create-financial-info': 'FinancialInfo',
   'create-credit-rating': 'CreditRating',
@@ -54,24 +54,35 @@ const LoadingWorkflowLoan: React.FC<LoadingWorkflowLoanProps> = ({
         if (response.code === 200) {
           const {currentSteps, prevSteps} = response.result;
 
-          // If currentSteps is empty and init was completed, show IntroduceLoan
+          let nextScreen: ScreenName;
+
+          // When currentSteps is empty and prevSteps has 'init' -> go to LoanRequest
           if (currentSteps.length === 0 && prevSteps.includes('init')) {
-            navigation.replace('IntroduceLoan');
-            return;
+            nextScreen = 'CreateLoan';
+          }
+          // When currentSteps is empty and prevSteps is empty -> go to IntroduceLoan
+          else if (currentSteps.length === 0 && prevSteps.length === 0) {
+            nextScreen = 'IntroduceLoan';
+          }
+          // For other cases, use the current step to determine screen
+          else if (
+            currentSteps.length > 0 &&
+            currentSteps[0] in stepToScreenMap
+          ) {
+            nextScreen = stepToScreenMap[currentSteps[0] as WorkflowStepType];
+          }
+          // Default fallback
+          else {
+            nextScreen = 'IntroduceLoan';
           }
 
-          // For other cases, use the first current step to determine screen
-          const nextScreen =
-            currentSteps.length > 0 && currentSteps[0] in stepToScreenMap
-              ? stepToScreenMap[currentSteps[0] as WorkflowStepType]
-              : 'IntroduceLoan';
-
           await AsyncStorage.setItem('currentStep', currentSteps[0] || 'init');
+          console.log('nextScreen', nextScreen);
           navigation.replace(nextScreen);
         }
       } catch (error) {
+        console.log('Error checking workflow status:', error);
         console.error('Error checking workflow status:', error);
-        // In case of error, default to IntroduceLoan
         navigation.replace('IntroduceLoan');
       }
     };
@@ -96,9 +107,7 @@ const LoadingWorkflowLoan: React.FC<LoadingWorkflowLoanProps> = ({
   return (
     <View style={styles.container}>
       <ActivityIndicator size="large" color={theme.text} />
-      <Text style={styles.loadingText}>
-        Đang kiểm tra...
-      </Text>
+      <Text style={styles.loadingText}>Đang kiểm tra...</Text>
     </View>
   );
 };

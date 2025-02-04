@@ -1,3 +1,7 @@
+export interface UserInit {
+  userId: string | undefined;
+}
+
 export interface LoanWorkflowResponse {
   code: number;
   message: string;

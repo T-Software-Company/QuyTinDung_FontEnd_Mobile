@@ -6,6 +6,8 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
 // Remove CheckBox import
 import Header from '../components/Header/Header';
@@ -13,8 +15,9 @@ import {useTheme} from '../context/ThemeContext';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../navigators/RootNavigator';
 import i18n from '../../i18n';
-import { useSelector } from 'react-redux';
-import { RootState } from '../store/store';
+import {useSelector} from 'react-redux';
+import {RootState} from '../store/store';
+import {initLoan} from '../api/services/createLoan';
 
 type IntroduceLoanNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -48,6 +51,7 @@ interface ContentType {
 
 const IntroduceLoan: React.FC<IntroduceLoanProps> = ({navigation}) => {
   const [isAccepted, setIsAccepted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const currentLanguage = i18n.language;
   const {theme} = useTheme();
 
@@ -221,9 +225,24 @@ const IntroduceLoan: React.FC<IntroduceLoanProps> = ({navigation}) => {
     },
   });
 
-  const handleApply = () => {
-    if (isAccepted) {
-      navigation.navigate('CreateLoan');
+  const handleApply = async () => {
+    if (!isAccepted || isLoading || !user?.id) return;
+
+    try {
+      setIsLoading(true);
+      const response = await initLoan({userId: user.id});
+
+      if (response.code === 200) {
+        navigation.replace('CreateLoan');
+      }
+    } catch (error) {
+      Alert.alert(
+        'Lỗi',
+        'Không thể đăng ký khoản vay mới. \n Vui lòng liên hệ quầy để hỗ trợ',
+      );
+      console.log('Error initializing loan:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -282,7 +301,8 @@ const IntroduceLoan: React.FC<IntroduceLoanProps> = ({navigation}) => {
         <View style={styles.footer}>
           <TouchableOpacity
             style={styles.checkboxContainer}
-            onPress={() => setIsAccepted(!isAccepted)}>
+            onPress={() => setIsAccepted(!isAccepted)}
+            disabled={isLoading}>
             <View style={styles.customCheckbox}>
               {isAccepted && <View style={styles.checkboxInner} />}
             </View>
@@ -290,10 +310,16 @@ const IntroduceLoan: React.FC<IntroduceLoanProps> = ({navigation}) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.button}
+            style={[styles.button, isLoading && {opacity: 0.7}]}
             onPress={handleApply}
-            disabled={!isAccepted}>
-            <Text style={styles.buttonText}>{selectedContent.buttonText}</Text>
+            disabled={!isAccepted || isLoading}>
+            {isLoading ? (
+              <ActivityIndicator color="white" />
+            ) : (
+              <Text style={styles.buttonText}>
+                {selectedContent.buttonText}
+              </Text>
+            )}
           </TouchableOpacity>
         </View>
       </View>

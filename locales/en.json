@@ -119,6 +119,7 @@
     },
     "formCreateLoan": {
         "title": "Create loan",
+        "introduce": "Introduce Loan",
         "loanAmount": "Loan amount",
         "loanRange": "Minimum 1 million, maximum 100 billion",
         "termRate": "Term and rate",

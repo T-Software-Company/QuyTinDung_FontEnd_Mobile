@@ -1,21 +1,21 @@
 import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
 import React from 'react';
 import Header from '../components/Header/Header';
-import FormCreateLoan from '../components/FormCreateLoan/FormCreateLoan';
+import FormCreateFinancialInfo from '../components/FormCreateFinancialInfo/FormCreateFinancialInfo';
 import {useTheme} from '../context/ThemeContext';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../navigators/RootNavigator';
 
-type CreateLoanNavigationProp = StackNavigationProp<
+type CreateLoanPlanNavigationProp = StackNavigationProp<
   RootStackParamList,
-  'CreateLoan'
+  'CreateFinancialInfo'
 >;
 
-interface CreateLoanProps {
-  navigation: CreateLoanNavigationProp;
+interface CreateLoanPlanProps {
+  navigation: CreateLoanPlanNavigationProp;
 }
 
-const CreateLoan: React.FC<CreateLoanProps> = ({navigation}) => {
+const CreateLoanPlan: React.FC<CreateLoanPlanProps> = ({navigation}) => {
   const {theme} = useTheme();
 
   const styles = StyleSheet.create({
@@ -35,13 +35,13 @@ const CreateLoan: React.FC<CreateLoanProps> = ({navigation}) => {
   return (
     <SafeAreaView style={[styles.view, {backgroundColor: theme.background}]}>
       <View style={styles.container}>
-        <Header Navbar="CreateLoan" navigation={navigation} />
+        <Header Navbar="CreateFinancialInfo" navigation={navigation} />
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           nestedScrollEnabled={true}
           showsVerticalScrollIndicator={false}>
           <View style={styles.body}>
-            <FormCreateLoan theme={theme} />
+            <FormCreateFinancialInfo theme={theme} />
           </View>
         </ScrollView>
       </View>
@@ -49,4 +49,4 @@ const CreateLoan: React.FC<CreateLoanProps> = ({navigation}) => {
   );
 };
 
-export default CreateLoan;
+export default CreateLoanPlan;

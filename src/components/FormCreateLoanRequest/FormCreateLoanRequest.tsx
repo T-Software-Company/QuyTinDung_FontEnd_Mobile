@@ -21,15 +21,10 @@ import {
 } from '../../api/types/loanRequest';
 import {loanRequest} from '../../api/services/createLoan';
 
-interface FormCreateLoanProps {
+interface FormCreateLoanRequestProps {
   theme: Theme;
 }
 
-interface RateItem {
-  value: string;
-  label: string;
-  rate: string;
-}
 
 interface TargetItem {
   value: string;
@@ -37,10 +32,8 @@ interface TargetItem {
 }
 
 interface FormData extends Omit<LoanRequestBody, 'application'> {
-  value: string | null;
-  selectedRate: RateItem | null;
-  methodExtend: string | null;
-  method: string | null;
+  selectedRate?: TargetItem;
+  method?: string;
 }
 
 interface NotificationType {
@@ -48,7 +41,9 @@ interface NotificationType {
   en: string;
 }
 
-const FormCreateLoan: React.FC<FormCreateLoanProps> = ({theme}) => {
+const FormCreateLoanRequest: React.FC<FormCreateLoanRequestProps> = ({
+  theme,
+}) => {
   const currentLanguage = i18n.language;
   const {t} = useTranslation();
   const applicationId = '6ed5ada9-72dd-4a7a-a096-08a9071e613c';
@@ -57,54 +52,6 @@ const FormCreateLoan: React.FC<FormCreateLoanProps> = ({theme}) => {
     vi: 'Bạn đã tạo khoản vay thành công.\nVui lòng chờ nhân viên hỗ trợ tư vấn và xác nhận.',
     en: 'Your loan has been created successfully.\nPlease wait for staff support and confirmation.',
   };
-
-  const rates: RateItem[] = [
-    {
-      value: '1',
-      label: currentLanguage === 'vi' ? '1 tháng' : '1 month',
-      rate: '12%',
-    },
-    {
-      value: '2',
-      label: currentLanguage === 'vi' ? '3 tháng' : '3 months',
-      rate: '10.5%',
-    },
-    {
-      value: '3',
-      label: currentLanguage === 'vi' ? '12 tháng' : '12 months',
-      rate: '8%',
-    },
-  ];
-
-  const target_loan: TargetItem[] = [
-    {
-      value: '1',
-      label: currentLanguage === 'vi' ? 'Mua nhà' : 'Buy house',
-    },
-    {
-      value: '2',
-      label: currentLanguage === 'vi' ? 'Mua ô tô' : 'Buy car',
-    },
-    {
-      value: '3',
-      label: currentLanguage === 'vi' ? 'Vay tiêu dùng' : 'Consumer loan',
-    },
-  ];
-
-  const frequency_pay: TargetItem[] = [
-    {
-      value: '1',
-      label: currentLanguage === 'vi' ? 'Hàng tuần' : 'Weekly',
-    },
-    {
-      value: '2',
-      label: currentLanguage === 'vi' ? 'Hàng tháng' : 'Monthly',
-    },
-    {
-      value: '3',
-      label: currentLanguage === 'vi' ? '2 tháng' : '2 months',
-    },
-  ];
 
   const borrowerTypes = [
     {
@@ -155,10 +102,6 @@ const FormCreateLoan: React.FC<FormCreateLoanProps> = ({theme}) => {
       key1: '',
       key2: '',
     },
-    value: null,
-    selectedRate: null,
-    methodExtend: null,
-    method: null,
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -281,63 +224,6 @@ const FormCreateLoan: React.FC<FormCreateLoanProps> = ({theme}) => {
 
   return (
     <View>
-      <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>
-          {t('formCreateLoan.loanAmount')}
-        </Text>
-        <InputBackground
-          placeholder={t('formCreateLoan.loanRange')}
-          keyboardType="numeric"
-          onChangeText={(value: string) => handleOnchange('value', value)}
-          value={formData.value ?? undefined}
-        />
-      </View>
-
-      <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>{t('formCreateLoan.termRate')}</Text>
-        <DropdownComponent
-          value={formData.selectedRate?.value ?? null}
-          data={rates}
-          placeholder={t('formCreateLoan.selectTermRate')}
-          onChange={(value: RateItem) => handleOnchange('selectedRate', value)}
-        />
-
-        {formData.selectedRate ? (
-          <Text style={styles.rateText}>
-            {currentLanguage === 'vi'
-              ? `Lãi suất của kỳ hạn ${formData.selectedRate.label} là ${formData.selectedRate.rate}`
-              : `Interest rate for ${formData.selectedRate.label} is ${formData.selectedRate.rate}`}
-          </Text>
-        ) : (
-          <></>
-        )}
-      </View>
-
-      <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>{t('formCreateLoan.purpose')}</Text>
-        <DropdownComponent
-          value={formData.methodExtend}
-          data={target_loan}
-          placeholder={t('formCreateLoan.selectPurpose')}
-          onChange={(value: TargetItem) =>
-            handleOnchange('methodExtend', value.value)
-          }
-        />
-      </View>
-
-      <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>
-          {t('formCreateLoan.paymentFrequency')}
-        </Text>
-        <DropdownComponent
-          value={formData.method ?? null}
-          data={frequency_pay}
-          placeholder={t('formCreateLoan.selectPaymentFrequency')}
-          onChange={(value: TargetItem) =>
-            handleOnchange('method', value.value)
-          }
-        />
-      </View>
 
       <View style={styles.boxInput}>
         <Text style={styles.headingTitle}>
@@ -460,4 +346,4 @@ const FormCreateLoan: React.FC<FormCreateLoanProps> = ({theme}) => {
   );
 };
 
-export default FormCreateLoan;
+export default FormCreateLoanRequest;

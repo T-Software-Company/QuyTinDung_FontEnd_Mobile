@@ -283,8 +283,8 @@ const Header: React.FC<HeaderProps> = ({Navbar, navigation, name}) => {
         </View>
       )}
 
-      {/* Render header when navbar name CreateLoan */}
-      {Navbar === 'CreateLoan' && (
+      {/* Render header when navbar name CreateLoanRequest */}
+      {Navbar === 'CreateLoanRequest' && (
         <View style={styles.containHeading}>
           <TouchableOpacity
             style={styles.noBorderArrow}
@@ -292,7 +292,47 @@ const Header: React.FC<HeaderProps> = ({Navbar, navigation, name}) => {
             <Image source={AppIcons.back} style={styles.icon} />
           </TouchableOpacity>
           <View>
-            <Text style={styles.heading}>{t('formCreateLoan.title')}</Text>
+            <Text style={styles.heading}>
+              {t('formCreateLoan.loanRequest')}
+            </Text>
+          </View>
+          <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
+            <Image source={AppIcons.notification} style={styles.icon} />
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {/* Render header when navbar name CreateLoanPlan */}
+      {Navbar === 'CreateLoanPlan' && (
+        <View style={styles.containHeading}>
+          <TouchableOpacity
+            style={styles.noBorderArrow}
+            onPress={() => navigation.goBack()}>
+            <Image source={AppIcons.back} style={styles.icon} />
+          </TouchableOpacity>
+          <View>
+            <Text style={styles.heading}>
+              {t('formCreateLoan.loanPlan')}
+            </Text>
+          </View>
+          <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
+            <Image source={AppIcons.notification} style={styles.icon} />
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {/* Render header when navbar name CreateFinancialInfo */}
+      {Navbar === 'CreateFinancialInfo' && (
+        <View style={styles.containHeading}>
+          <TouchableOpacity
+            style={styles.noBorderArrow}
+            onPress={() => navigation.goBack()}>
+            <Image source={AppIcons.back} style={styles.icon} />
+          </TouchableOpacity>
+          <View>
+            <Text style={styles.heading}>
+              {t('formCreateLoan.financialInfo')}
+            </Text>
           </View>
           <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
             <Image source={AppIcons.notification} style={styles.icon} />

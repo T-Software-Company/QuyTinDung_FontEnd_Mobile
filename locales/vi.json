@@ -234,6 +234,9 @@
     },
     "formCreateLoan": {
         "title": "Tạo khoản vay",
+        "loanRequest": "Tạo yêu cầu vay",
+        "loanPlan": "Kế hoạch vay",
+        "financialInfo": "Thông tin tài chính",
         "introduce": "Giới thiệu sản phẩm vay",
         "loanAmount": "Số tiền cần vay",
         "loanRange": "Tối thiểu 1 triệu, tối đa 100 tỷ",
@@ -243,6 +246,7 @@
         "selectPurpose": "Chọn mục đích vay",
         "paymentFrequency": "Tần suất trả lãi",
         "selectPaymentFrequency": "Chọn tần suất trả lãi",
+        "next": "Tiếp theo",
         "submit": "Tạo"
     },
     "infoSave": {

@@ -233,7 +233,7 @@ const IntroduceLoan: React.FC<IntroduceLoanProps> = ({navigation}) => {
       const response = await initLoan({userId: user.id});
 
       if (response.code === 200) {
-        navigation.replace('CreateLoan');
+        navigation.replace('CreateLoanRequest');
       }
     } catch (error) {
       Alert.alert(

@@ -19,7 +19,9 @@ import InfoLoanScreen from '../screen/InfoLoan';
 import SentSaveScreen from '../screen/SentSave';
 import DepositScreen from '../screen/Deposit';
 import TransferScreen from '../screen/Transfer';
-import CreateLoanScreen from '../screen/CreateLoan';
+import CreateLoanRequestScreen from '../screen/CreateLoanRequest';
+import CreateLoanPlanScreen from '../screen/CreateLoanPlan';
+import CreateFinancialInfoScreen from '../screen/CreateFinancialInfo';
 import IntroduceLoanScreen from '../screen/IntroduceLoan';
 import NotificationScreen from '../screen/Notification';
 import InfoPersonScreen from '../screen/InfoPerson';
@@ -99,7 +101,9 @@ export type RootStackParamList = {
   Deposit: undefined;
   Transfer: undefined;
   SentSave: undefined;
-  CreateLoan: undefined;
+  CreateLoanRequest: undefined;
+  CreateLoanPlan: undefined;
+  CreateFinancialInfo: undefined;
   IntroduceLoan: undefined;
   LoadingWorkflowLoan: undefined;
   LanguageSetting: undefined;
@@ -232,7 +236,9 @@ const RootComponent: React.FC = () => {
         <Stack.Screen name="Deposit" component={DepositScreen} />
         <Stack.Screen name="Transfer" component={TransferScreen} />
         <Stack.Screen name="SentSave" component={SentSaveScreen} />
-        <Stack.Screen name="CreateLoan" component={CreateLoanScreen} />
+        <Stack.Screen name="CreateLoanRequest" component={CreateLoanRequestScreen} />
+        <Stack.Screen name="CreateLoanPlan" component={CreateLoanPlanScreen} />
+        <Stack.Screen name="CreateFinancialInfo" component={CreateFinancialInfoScreen} />
         <Stack.Screen name="LoadingWorkflowLoan" component={LoadingWorkflowLoanScreen} />
         <Stack.Screen name="IntroduceLoan" component={IntroduceLoanScreen} />
         <Stack.Screen

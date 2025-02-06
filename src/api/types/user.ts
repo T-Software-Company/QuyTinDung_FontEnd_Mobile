@@ -1,41 +1,44 @@
 export interface User {
-  id: string;
-  email: string;
-  username: string;
-  firstName: string;
-  lastName: string;
-  fullName: string;
-  phone?: string;
-  avatar?: string;
-  signaturePhoto?: string;
+  address: {
+    cityProvince: string;
+    country: string;
+    detail: string | null;
+    district: string;
+    streetAddress: string;
+    wardOrCommune: string;
+  };
+  code: number | null;
   createdAt: string;
+  createdBy: string;
+  deleted: boolean;
+  email: string;
+  enabled: boolean;
+  firstName: string;
+  id: string;
+  identityInfo: {
+    backPhotoUrl: string;
+    dateOfBirth: string;
+    ethnicity: string;
+    expirationDate: string;
+    frontPhotoUrl: string;
+    fullName: string;
+    gender: string;
+    identifyId: string;
+    issueDate: string;
+    issuingAuthority: string;
+    legalDocType: string;
+    nationality: string;
+    passPortType: string | null;
+    permanentAddress: string;
+    placeOfBirth: string;
+    religion: string;
+  };
+  lastModifiedBy: string;
+  lastName: string;
+  phone: string;
+  signaturePhoto: string;
   updatedAt: string;
-  address: Address;
-  identityInfo: IdentityInfo;
+  username: string;
 }
 
-interface Address {
-  country: string;
-  cityProvince: string;
-  district: string;
-  wardOrCommune: string;
-  streetAddress: string;
-  detail?: string;
-}
 
-interface IdentityInfo {
-  identifyId: string;
-  backPhotoUrl: string;
-  frontPhotoUrl: string;
-  dateOfBirth: string;
-  ethnicity: string;
-  expirationDate: string;
-  issueDate: string;
-  gender: string;
-  issuingAuthority: string;
-  legalDocType: string;
-  nationality: string;
-  permanentAddress: string;
-  placeOfBirth: string;
-  religion: string;
-}

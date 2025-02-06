@@ -20,7 +20,6 @@ interface User {
   identityInfo: {
     backPhotoUrl: string;
     dateOfBirth: string;
-
     ethnicity: string;
     expirationDate: string;
     frontPhotoUrl: string;
@@ -30,7 +29,6 @@ interface User {
     issueDate: string;
     issuingAuthority: string;
     legalDocType: string;
-
     nationality: string;
     passPortType: string | null;
     permanentAddress: string;
@@ -44,6 +42,7 @@ interface User {
   updatedAt: string;
   username: string;
 }
+
 interface UserState {
   userData: User | null;
   loading: boolean;

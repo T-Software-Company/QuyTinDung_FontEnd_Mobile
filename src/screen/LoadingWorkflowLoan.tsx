@@ -28,6 +28,14 @@ const stepToScreenMap: Record<WorkflowStepType, ScreenName> = {
   'add-asset-collateral': 'AssetCollateral',
 } as const;
 
+const stepPriority = [
+  'create-loan-request',
+  'create-loan-plan',
+  'create-financial-info',
+  'create-credit-rating',
+  'add-asset-collateral',
+];
+
 type LoadingWorkflowLoanScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   'LoadingWorkflowLoan'
@@ -52,29 +60,28 @@ const LoadingWorkflowLoan: React.FC<LoadingWorkflowLoanProps> = ({
         console.log('response', response);
 
         if (response.code === 200) {
-          const {currentSteps, prevSteps} = response.result;
+          const {nextSteps, prevSteps} = response.result;
           let nextScreen: ScreenName;
 
-          // Case 1: Empty currentSteps or empty prevSteps without init -> go to IntroduceLoan
-          if (currentSteps.length === 0 || (prevSteps.length === 0 && !prevSteps.includes('init'))) {
+          // Case: prevSteps does not include 'init' -> go to IntroduceLoan
+          if (!prevSteps.includes('init')) {
             nextScreen = 'IntroduceLoan';
-          }
-          // Case 2: Has init in prevSteps and currentSteps contains create-loan-request -> show CreateLoanRequest
-          else if (prevSteps.includes('init') && currentSteps.includes('create-loan-request') && !currentSteps.includes('create-loan-plan')) {
-            nextScreen = 'CreateLoanRequest';
-          }
-          // Case 3: Current steps has multiple steps - show screen based on the last valid step
-          else {
-            // Find the last valid step that has a screen mapping
-            const validStep = currentSteps.slice().reverse().find(step => step in stepToScreenMap);
-            if (validStep && validStep in stepToScreenMap) {
-              nextScreen = stepToScreenMap[validStep as WorkflowStepType];
+          } else {
+            // Sort currentSteps based on stepPriority
+            const sortedSteps = nextSteps.sort(
+              (a, b) => stepPriority.indexOf(a) - stepPriority.indexOf(b),
+            );
+
+            // Get the first step from sortedSteps as it represents the next active step
+            const nextActiveStep = sortedSteps[0];
+            if (nextActiveStep in stepToScreenMap) {
+              nextScreen = stepToScreenMap[nextActiveStep as WorkflowStepType];
             } else {
               nextScreen = 'IntroduceLoan'; // Fallback
             }
           }
 
-          await AsyncStorage.setItem('currentStep', currentSteps[0] || 'init');
+          await AsyncStorage.setItem('currentStep', nextSteps[0] || 'init');
           console.log('nextScreen', nextScreen);
           navigation.replace(nextScreen);
         }

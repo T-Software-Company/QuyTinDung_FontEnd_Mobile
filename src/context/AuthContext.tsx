@@ -12,6 +12,7 @@ import {
   clearTokens,
   getRefreshToken,
   getAccessToken,
+  isTokenExpired,
 } from '../../tokenStorage';
 import axios from 'axios';
 
@@ -113,16 +114,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       setLoading(true);
       const token = await getAccessToken();
       if (token) {
-        const isValid = await validateToken(token);
-        if (isValid) {
-          setIsAuthenticated(true);
-          return;
-        }
-        // Token invalid, try refresh
-        const refreshed = await refreshToken();
-        if (refreshed) {
-          setIsAuthenticated(true);
-          return;
+        if (isTokenExpired(token)) {
+          const refreshed = await refreshToken();
+          if (refreshed) {
+            setIsAuthenticated(true);
+            return;
+          }
+        } else {
+          const isValid = await validateToken(token);
+          if (isValid) {
+            setIsAuthenticated(true);
+            return;
+          }
         }
       }
       setIsAuthenticated(false);
@@ -303,7 +306,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         return true;
       }
       return false;
-      // eslint-disable-next-line no-catch-shadow, @typescript-eslint/no-shadow
+      // eslint-disable-next-line no-catch-shadow
     } catch (error) {
       console.error('Token refresh failed:', error);
       await clearTokens();

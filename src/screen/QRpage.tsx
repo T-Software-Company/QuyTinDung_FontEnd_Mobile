@@ -14,6 +14,7 @@ import {
   useCameraDevice,
   useCameraPermission,
 } from 'react-native-vision-camera';
+import Slider from '@react-native-community/slider';
 import {RouteProp} from '@react-navigation/native';
 import Header from '../components/Header/Header';
 import {useTranslation} from 'react-i18next'; // Add missing import
@@ -39,6 +40,7 @@ const QRScannerApp: React.FC<QRScannerAppProps> = ({navigation, route}) => {
   const {t} = useTranslation(); // Add missing translation hook
   const {formDataAddress, formDataUser} = route.params; // Lấy formData từ NotificationScan
 
+  const [zoom, setZoom] = useState(1); // Giá trị zoom mặc định
   console.log('QR Screen formData:', formDataAddress); // Debug log
 
   const [lastScannedCode, setLastScannedCode] = useState<string | null>(null);
@@ -47,6 +49,9 @@ const QRScannerApp: React.FC<QRScannerAppProps> = ({navigation, route}) => {
   const device = useCameraDevice('back');
   const [isCameraActive, setIsCameraActive] = useState<boolean>(true);
 
+  const handleZoomChange = (value: number) => {
+    setZoom(value);
+  };
   useEffect(() => {
     checkPermission();
 
@@ -60,6 +65,7 @@ const QRScannerApp: React.FC<QRScannerAppProps> = ({navigation, route}) => {
       setIsCameraActive(false);
       unsubscribe(); // Cleanup listener khi unmount
     };
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigation]);
 
@@ -123,6 +129,7 @@ const QRScannerApp: React.FC<QRScannerAppProps> = ({navigation, route}) => {
     if (!isScanning || codes.length === 0) return;
 
     const currentCode = codes[0].value ?? '';
+
     // eslint-disable-next-line curly
     if (isDuplicateCode(currentCode)) return; // Fix: Use isDuplicateCode function
 
@@ -178,6 +185,7 @@ const QRScannerApp: React.FC<QRScannerAppProps> = ({navigation, route}) => {
         style={StyleSheet.absoluteFill}
         device={device}
         isActive={isCameraActive}
+        zoom={zoom}
         codeScanner={{
           codeTypes: ['qr', 'ean-13', 'code-128', 'pdf-417'],
           onCodeScanned: handleCodeScanned,
@@ -208,6 +216,18 @@ const QRScannerApp: React.FC<QRScannerAppProps> = ({navigation, route}) => {
 
         {/* Bottom blur */}
         <View style={styles.overlaySection} />
+      </View>
+
+      <View style={styles.zoomContainer}>
+        <Text style={styles.zoomText}>Zoom: {zoom.toFixed(1)}x</Text>
+        <Slider
+          style={styles.slider}
+          minimumValue={1}
+          maximumValue={5}
+          step={0.1}
+          value={zoom}
+          onValueChange={handleZoomChange}
+        />
       </View>
 
       <Text style={styles.instructionText}>
@@ -338,6 +358,27 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  zoomContainer: {
+    position: 'absolute',
+    bottom: '10%',
+    left: 20,
+    right: 20,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    borderRadius: 10,
+    padding: 8,
+    marginBottom: 24,
+  },
+  zoomText: {
+    color: '#fff',
+    textAlign: 'center',
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  slider: {
+    width: '100%',
+    height: 40,
   },
 });
 

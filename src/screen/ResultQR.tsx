@@ -23,7 +23,7 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {launchImageLibrary, ImageLibraryOptions, MediaType} from 'react-native-image-picker';
 import UploadImage from '../components/UploadImage/UploadImage';
-import {uploadImage} from '../api/uploadImage';
+import {uploadImage} from '../api/services/uploadImage';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
 import {RootStackParamList, FormDataAddress} from '../navigators/RootNavigator';
@@ -461,11 +461,15 @@ const ResultQR: React.FC<ResultQRProps> = ({navigation, route}) => {
                   return;
                 }
 
-                if (response.assets && response.assets[0]) {
+                if (response.assets && response.assets[0] && response.assets[0].uri) {
                   const image = response.assets[0];
                   try {
                     // Upload image to server
-                    const uploadResult = await uploadImage(image);
+                    const uploadResult = await uploadImage({
+                      uri: image.uri,
+                      type: image.type || '',
+                      fileName: image.fileName || '',
+                    });
                     const imageUrl = uploadResult.url; // Adjust based on your API response
 
                     console.log('Uploaded image URL:', imageUrl); // Debug log

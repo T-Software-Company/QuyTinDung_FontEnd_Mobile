@@ -47,7 +47,7 @@ const LoadingWorkflowLoan: React.FC<LoadingWorkflowLoanProps> = ({
   useEffect(() => {
     const checkWorkflowStatus = async () => {
       try {
-        const appId = '6ed5ada9-72dd-4a7a-a096-08a9071e613c';
+        const appId = '2923a721-f018-40aa-a60e-0d911873f168';
         const response = await fetchWorkflowStatus(appId);
         console.log('response', response);
 
@@ -55,16 +55,24 @@ const LoadingWorkflowLoan: React.FC<LoadingWorkflowLoanProps> = ({
           const {currentSteps, prevSteps} = response.result;
           let nextScreen: ScreenName;
 
-          // Case 1: Empty currentSteps or empty prevSteps without init -> go to IntroduceLoan
-          if (currentSteps.length === 0 || (prevSteps.length === 0 && !prevSteps.includes('init'))) {
+          // Case 1: prevSteps includes 'init' -> go to CreateLoanRequest
+          if (prevSteps.includes('init')) {
+            nextScreen = 'CreateLoanRequest';
+          }
+          // Case 2: Empty currentSteps or empty prevSteps without init -> go to IntroduceLoan
+          else if (
+            currentSteps.length === 0 ||
+            (prevSteps.length === 0 && !prevSteps.includes('init'))
+          ) {
             nextScreen = 'IntroduceLoan';
           }
-          // Case 2: Check for the first step in currentSteps
+          // Case 3: Check for the first step in currentSteps
           else {
             // Get the first step from currentSteps as it represents the current active step
             const currentActiveStep = currentSteps[0];
             if (currentActiveStep in stepToScreenMap) {
-              nextScreen = stepToScreenMap[currentActiveStep as WorkflowStepType];
+              nextScreen =
+                stepToScreenMap[currentActiveStep as WorkflowStepType];
             } else {
               nextScreen = 'IntroduceLoan'; // Fallback
             }
@@ -76,7 +84,6 @@ const LoadingWorkflowLoan: React.FC<LoadingWorkflowLoanProps> = ({
         }
       } catch (error) {
         console.log('Error checking workflow status:', error);
-        console.error('Error checking workflow status:', error);
         navigation.replace('IntroduceLoan');
       }
     };

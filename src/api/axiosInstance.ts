@@ -29,7 +29,7 @@ const axiosInstance: AxiosInstance = axios.create({
   },
   httpAgent: {
     sslPinning: {
-      certs: ['your_cert.pem'], // Chỉ định file chứng chỉ
+      certs: ['server_cert'], // Chỉ định file chứng chỉ
     },
   },
 });

@@ -110,6 +110,10 @@ const InfoPerson: React.FC<InfoPersonProps> = ({navigation}) => {
       justifyContent: 'center',
       marginBottom: 16,
     },
+    boxSeparate: {
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+    },
     avatar: {
       width: 100,
       height: 100,
@@ -178,6 +182,8 @@ const InfoPerson: React.FC<InfoPersonProps> = ({navigation}) => {
       flexDirection: 'row',
       justifyContent: 'space-between',
       gap: 12,
+      paddingHorizontal: 20,
+      paddingVertical: 8,
     },
 
     btn: {
@@ -261,34 +267,6 @@ const InfoPerson: React.FC<InfoPersonProps> = ({navigation}) => {
                   </View>
 
                   <View style={styles.boxInput}>
-                    <Text style={styles.headingTitle}>{t('info.gender')}</Text>
-                    <TextInput
-                      placeholderTextColor="#aaa"
-                      value={userFormat.gender}
-                      style={[
-                        styles.textInput,
-                        isEditable ? styles.textEdit : '',
-                      ]}
-                      editable={isEditable} // Chỉ cho phép focus khi `isEditable` là true
-                    />
-                  </View>
-
-                  <View style={styles.boxInput}>
-                    <Text style={styles.headingTitle}>
-                      {t('info.dateOfBirth')}
-                    </Text>
-                    <TextInput
-                      placeholderTextColor="#aaa"
-                      value={userFormat.dateOfBirth}
-                      style={[
-                        styles.textInput,
-                        isEditable ? styles.textEdit : '',
-                      ]}
-                      editable={isEditable} // Chỉ cho phép focus khi `isEditable` là true
-                    />
-                  </View>
-
-                  <View style={styles.boxInput}>
                     <Text style={styles.headingTitle}>{t('info.address')}</Text>
                     <TextInput
                       placeholderTextColor="#aaa"
@@ -312,11 +290,30 @@ const InfoPerson: React.FC<InfoPersonProps> = ({navigation}) => {
                       placeholderTextColor="#aaa"
                       keyboardType="numeric"
                       value={user?.identityInfo?.identifyId}
-                      style={[
-                        styles.textInput,
-                        isEditable ? styles.textEdit : '',
-                      ]}
-                      editable={isEditable} // Chỉ cho phép focus khi `isEditable` là true
+                      style={[styles.textInput]}
+                      editable={false} // Chỉ cho phép focus khi `isEditable` là true
+                    />
+                  </View>
+
+                  <View style={styles.boxInput}>
+                    <Text style={styles.headingTitle}>{t('info.gender')}</Text>
+                    <TextInput
+                      placeholderTextColor="#aaa"
+                      value={userFormat.gender}
+                      style={[styles.textInput]}
+                      editable={false} // Chỉ cho phép focus khi `isEditable` là true
+                    />
+                  </View>
+
+                  <View style={styles.boxInput}>
+                    <Text style={styles.headingTitle}>
+                      {t('info.dateOfBirth')}
+                    </Text>
+                    <TextInput
+                      placeholderTextColor="#aaa"
+                      value={userFormat.dateOfBirth}
+                      style={[styles.textInput]}
+                      editable={false} // Chỉ cho phép focus khi `isEditable` là true
                     />
                   </View>
 
@@ -327,11 +324,8 @@ const InfoPerson: React.FC<InfoPersonProps> = ({navigation}) => {
                     <TextInput
                       placeholderTextColor="#aaa"
                       value={user?.identityInfo?.issuingAuthority}
-                      style={[
-                        styles.textInput,
-                        isEditable ? styles.textEdit : '',
-                      ]}
-                      editable={isEditable} // Chỉ cho phép focus khi `isEditable` là true
+                      style={[styles.textInput]}
+                      editable={false} // Chỉ cho phép focus khi `isEditable` là true
                     />
                   </View>
 
@@ -342,11 +336,8 @@ const InfoPerson: React.FC<InfoPersonProps> = ({navigation}) => {
                     <TextInput
                       placeholderTextColor="#aaa"
                       value={userFormat.issueDate}
-                      style={[
-                        styles.textInput,
-                        isEditable ? styles.textEdit : '',
-                      ]}
-                      editable={isEditable} // Chỉ cho phép focus khi `isEditable` là true
+                      style={[styles.textInput]}
+                      editable={false} // Chỉ cho phép focus khi `isEditable` là true
                     />
                   </View>
 
@@ -357,11 +348,8 @@ const InfoPerson: React.FC<InfoPersonProps> = ({navigation}) => {
                     <TextInput
                       placeholderTextColor="#aaa"
                       value={userFormat.expirationDate}
-                      style={[
-                        styles.textInput,
-                        isEditable ? styles.textEdit : '',
-                      ]}
-                      editable={isEditable} // Chỉ cho phép focus khi `isEditable` là true
+                      style={[styles.textInput]}
+                      editable={false} // Chỉ cho phép focus khi `isEditable` là true
                     />
                   </View>
 
@@ -372,42 +360,43 @@ const InfoPerson: React.FC<InfoPersonProps> = ({navigation}) => {
                     <TextInput
                       placeholderTextColor="#aaa"
                       value={user?.identityInfo?.permanentAddress}
-                      style={[
-                        styles.textInput,
-                        isEditable ? styles.textEdit : '',
-                      ]}
-                      editable={isEditable} // Chỉ cho phép focus khi `isEditable` là true
+                      style={[styles.textInput]}
+                      editable={false} // Chỉ cho phép focus khi `isEditable` là true
                     />
                   </View>
                 </View>
               )}
-              <View style={styles.wrapBtn}>
-                <TouchableOpacity
-                  style={[styles.btn, styles.btnNormal]}
-                  onPress={() => setIsEditable(true)}>
-                  <Text
-                    style={[
-                      styles.textWhite,
-                      {fontWeight: 'bold', textAlign: 'center', color: '#000'},
-                    ]}>
-                    {t('info.edit')}
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.btn, styles.btnPrimary]}
-                  onPress={handleSubmit}>
-                  <Text
-                    style={[
-                      styles.textWhite,
-                      {fontWeight: 'bold', textAlign: 'center'},
-                    ]}>
-                    {t('info.update')}
-                  </Text>
-                </TouchableOpacity>
-              </View>
             </View>
           </View>
         </ScrollView>
+        <View style={styles.wrapBtn}>
+          <TouchableOpacity
+            style={[styles.btn, styles.btnNormal]}
+            onPress={() => setIsEditable(true)}>
+            <Text
+              style={[
+                styles.textWhite,
+                {
+                  fontWeight: 'bold',
+                  textAlign: 'center',
+                  color: '#000',
+                },
+              ]}>
+              {t('info.edit')}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.btn, styles.btnPrimary]}
+            onPress={handleSubmit}>
+            <Text
+              style={[
+                styles.textWhite,
+                {fontWeight: 'bold', textAlign: 'center'},
+              ]}>
+              {t('info.update')}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );

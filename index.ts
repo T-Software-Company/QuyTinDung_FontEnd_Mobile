@@ -7,4 +7,4 @@ import App from './App';
 import {name as appName} from './app.json';
 
 // Register the main component with explicit typing
-AppRegistry.registerComponent(appName, (): React.FC => App);
+AppRegistry.registerComponent(appName, () => App);

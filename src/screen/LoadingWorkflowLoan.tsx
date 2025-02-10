@@ -28,14 +28,6 @@ const stepToScreenMap: Record<WorkflowStepType, ScreenName> = {
   'add-asset-collateral': 'AssetCollateral',
 } as const;
 
-const stepPriority = [
-  'create-loan-request',
-  'create-loan-plan',
-  'create-financial-info',
-  'create-credit-rating',
-  'add-asset-collateral',
-];
-
 type LoadingWorkflowLoanScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   'LoadingWorkflowLoan'
@@ -60,28 +52,25 @@ const LoadingWorkflowLoan: React.FC<LoadingWorkflowLoanProps> = ({
         console.log('response', response);
 
         if (response.code === 200) {
-          const {nextSteps, prevSteps} = response.result;
+          const {currentSteps, prevSteps} = response.result;
           let nextScreen: ScreenName;
 
-          // Case: prevSteps does not include 'init' -> go to IntroduceLoan
-          if (!prevSteps.includes('init')) {
+          // Case 1: Empty currentSteps or empty prevSteps without init -> go to IntroduceLoan
+          if (currentSteps.length === 0 || (prevSteps.length === 0 && !prevSteps.includes('init'))) {
             nextScreen = 'IntroduceLoan';
-          } else {
-            // Sort currentSteps based on stepPriority
-            const sortedSteps = nextSteps.sort(
-              (a, b) => stepPriority.indexOf(a) - stepPriority.indexOf(b),
-            );
-
-            // Get the first step from sortedSteps as it represents the next active step
-            const nextActiveStep = sortedSteps[0];
-            if (nextActiveStep in stepToScreenMap) {
-              nextScreen = stepToScreenMap[nextActiveStep as WorkflowStepType];
+          }
+          // Case 2: Check for the first step in currentSteps
+          else {
+            // Get the first step from currentSteps as it represents the current active step
+            const currentActiveStep = currentSteps[0];
+            if (currentActiveStep in stepToScreenMap) {
+              nextScreen = stepToScreenMap[currentActiveStep as WorkflowStepType];
             } else {
               nextScreen = 'IntroduceLoan'; // Fallback
             }
           }
 
-          await AsyncStorage.setItem('currentStep', nextSteps[0] || 'init');
+          await AsyncStorage.setItem('currentStep', currentSteps[0] || 'init');
           console.log('nextScreen', nextScreen);
           navigation.replace(nextScreen);
         }

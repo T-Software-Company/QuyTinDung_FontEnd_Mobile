@@ -15,6 +15,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../navigators/RootNavigator';
 import {useAppSelector, useAppDispatch} from '../store/hooks';
 import {setUserData, setLoading, setError} from '../store/slices/userSlice';
+import {getAccessToken, isTokenExpired} from '../../tokenStorage';
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 
@@ -33,19 +34,39 @@ interface Theme {
 const Home: React.FC<HomeProps> = ({navigation}) => {
   const {theme} = useTheme() as {theme: Theme};
   const {t} = useTranslation();
-  const {isAuthenticated} = useAuth();
+  const {isAuthenticated, refreshToken} = useAuth();
   const dispatch = useAppDispatch();
   const {userData} = useAppSelector(state => state.user);
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      navigation.replace('Login');
-      return;
-    }
-    loadData();
+    const checkTokenAndLoadData = async () => {
+      console.log('Checking token and loading data');
+      if (!isAuthenticated) {
+        console.log('User is not authenticated, navigating to Login');
+        navigation.replace('Login');
+        return;
+      }
+      const token = await getAccessToken();
+      console.log('Token: ', token);
+      if (token && isTokenExpired(token)) {
+        console.log('Token is expired, attempting to refresh');
+        const refreshed = await refreshToken();
+        console.log('Refreshed: ', refreshed);
+        if (!refreshed) {
+          console.log('Token refresh failed, navigating to Login');
+          navigation.replace('Login');
+          return;
+        }
+      }
+      console.log('Token is valid, loading data');
+      loadData();
+    };
+
+    checkTokenAndLoadData();
   }, [isAuthenticated, navigation]);
 
   const loadData = async (): Promise<void> => {
+    console.log('Loading user data');
     try {
       dispatch(setLoading(true));
       const result = await getUserData();
@@ -106,7 +127,7 @@ const Home: React.FC<HomeProps> = ({navigation}) => {
               <ButtonShortCut
                 name={t('home.createLoan')}
                 urlIcon={AppIcons.loan}
-                onPress={() => navigation.navigate('CreateLoan')}
+                onPress={() => navigation.navigate('LoadingWorkflowLoan')}
                 theme={theme}
               />
             </View>

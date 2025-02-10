@@ -1,5 +1,9 @@
 package com.mobileapp
 
+import com.facebook.react.modules.network.NetworkingModule
+import java.security.SecureRandom
+import java.security.cert.X509Certificate
+import javax.net.ssl.*
 import android.app.Application
 import com.facebook.react.PackageList
 import com.facebook.react.ReactApplication
@@ -42,5 +46,24 @@ class MainApplication : Application(), ReactApplication {
       // If you opted-in for the New Architecture, we load the native entry point for this app.
       load()
     }
+
+     // ⚠️ Bỏ qua SSL Pinning (KHÔNG dùng trong production)
+        try {
+            val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
+                override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
+                override fun checkServerTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
+                override fun getAcceptedIssuers(): Array<X509Certificate> = arrayOf()
+            })
+
+            val sslContext = SSLContext.getInstance("TLS")
+            sslContext.init(null, trustAllCerts, SecureRandom())
+            val sslSocketFactory = sslContext.socketFactory
+
+            HttpsURLConnection.setDefaultSSLSocketFactory(sslSocketFactory)
+            HttpsURLConnection.setDefaultHostnameVerifier { _, _ -> true }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
   }
+  
 }

@@ -12,8 +12,10 @@ import {
   clearTokens,
   getRefreshToken,
   getAccessToken,
+  isTokenExpired,
 } from '../../tokenStorage';
 import axios from 'axios';
+
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -113,16 +115,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       setLoading(true);
       const token = await getAccessToken();
       if (token) {
-        const isValid = await validateToken(token);
-        if (isValid) {
-          setIsAuthenticated(true);
-          return;
-        }
-        // Token invalid, try refresh
-        const refreshed = await refreshToken();
-        if (refreshed) {
-          setIsAuthenticated(true);
-          return;
+        if (isTokenExpired(token)) {
+          const refreshed = await refreshToken();
+          if (refreshed) {
+            setIsAuthenticated(true);
+            return;
+          }
+        } else {
+          const isValid = await validateToken(token);
+          if (isValid) {
+            setIsAuthenticated(true);
+            return;
+          }
         }
       }
       setIsAuthenticated(false);
@@ -148,7 +152,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
   ): Promise<boolean | {needsSetup: boolean}> => {
     setLoading(true);
     setError(null); // Reset error state
-
+    console.log('Login attempt:', username, password);
     try {
       const params = new URLSearchParams();
       params.append('grant_type', 'password');
@@ -160,9 +164,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       console.log(params.toString());
       const response = await axios({
         method: 'post',
-        url: `${keycloakConfig.url}/realms/${keycloakConfig.realm}/protocol/openid-connect/token`,
+        url: `${keycloakConfig.url}/realms/${keycloakConfig.realm}/protocol/openid-connect/token/`,
         headers: {
+          Accept: 'application/json',
           'Content-Type': 'application/x-www-form-urlencoded',
+          maxRedirects: 5,
+        },
+        validateStatus: status => {
+          console.log('Response status:', status);
+          return status >= 200 && status < 400; // Chấp nhận 3xx như hợp lệ
         },
         data: params.toString(),
       });
@@ -187,7 +197,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     } catch (err) {
       // eslint-disable-next-line @typescript-eslint/no-shadow
       const error = err as any; // using any here because axios errors have additional properties
-      console.log('Login error:', error.response);
+      console.log('Login error:', error);
+      if (error.response) {
+        console.log('Response data:', error.response.data);
+        console.log('Response status:', error.response.status);
+        console.log('Response headers:', error.response.headers);
+      } else if (error.request) {
+        console.log('Request:', error.request);
+      } else {
+        console.log('Error message:', error.message);
+      }
       setError(error.message);
       console.log(error.response.data);
       if (error.response?.data?.error === 'invalid_grant') {
@@ -303,7 +322,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         return true;
       }
       return false;
-      // eslint-disable-next-line no-catch-shadow, @typescript-eslint/no-shadow
+      // eslint-disable-next-line no-catch-shadow
     } catch (error) {
       console.error('Token refresh failed:', error);
       await clearTokens();

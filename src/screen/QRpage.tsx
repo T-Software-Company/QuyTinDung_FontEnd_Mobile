@@ -118,6 +118,7 @@ const QRScannerApp: React.FC<QRScannerAppProps> = ({navigation, route}) => {
   };
 
   const handleCodeScanned = (codes: Code[]) => {
+    console.log('Scanned codes:', codes);
     // eslint-disable-next-line curly
     if (!isScanning || codes.length === 0) return;
 
@@ -178,7 +179,7 @@ const QRScannerApp: React.FC<QRScannerAppProps> = ({navigation, route}) => {
         device={device}
         isActive={isCameraActive}
         codeScanner={{
-          codeTypes: ['qr'],
+          codeTypes: ['qr', 'ean-13', 'code-128', 'pdf-417'],
           onCodeScanned: handleCodeScanned,
         }}
       />

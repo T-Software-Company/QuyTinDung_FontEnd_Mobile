@@ -1,6 +1,11 @@
 import axiosInstance from '../axiosInstance';
+import {
+  CreateFinancialInfoRequest,
+  FinancialInfoResponse,
+} from '../types/financialInfo';
 import {LoanWorkflowResponse, UserInit} from '../types/loanInit';
-import { LoanRequestBody } from '../types/loanRequest';
+import {CreateLoanPlanRequest, LoanPlanResponse} from '../types/loanPlan';
+import {LoanRequestBody} from '../types/loanRequest';
 
 export const initLoan = async (
   params: UserInit,
@@ -37,6 +42,42 @@ export const loanRequest = async (
 
   const response = await axiosInstance.post(
     `/loan-requests?applicationId=${applicationId}`,
+    requestBody,
+  );
+  return response.data;
+};
+
+export const loanPlan = async (
+  applicationId: string,
+  loanPlanData: Omit<CreateLoanPlanRequest, 'application'>,
+): Promise<LoanPlanResponse> => {
+  const requestBody: CreateLoanPlanRequest = {
+    ...loanPlanData,
+    application: {
+      id: applicationId,
+    },
+  };
+
+  const response = await axiosInstance.post(
+    `/loan-plans?applicationId=${applicationId}`,
+    requestBody,
+  );
+  return response.data;
+};
+
+export const financialInfo = async (
+  applicationId: string,
+  financialInfoData: Omit<CreateFinancialInfoRequest, 'application'>,
+): Promise<FinancialInfoResponse> => {
+  const requestBody: CreateFinancialInfoRequest = {
+    ...financialInfoData,
+    application: {
+      id: applicationId,
+    },
+  };
+
+  const response = await axiosInstance.post(
+    `/financial-infos?applicationId=${applicationId}`,
     requestBody,
   );
   return response.data;

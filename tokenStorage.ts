@@ -77,5 +77,18 @@ export const clearTokens = async (): Promise<void> => {
   }
 };
 
+export const isTokenExpired = (token: string): boolean => {
+  try {
+    const [, payload] = token.split('.');
+    const decoded = JSON.parse(atob(payload));
+    console.log('Decoded token:', decoded);
+    const exp = decoded.exp * 1000; // Convert to milliseconds
+    return Date.now() > exp;
+  } catch (error) {
+    console.error('Error checking token expiration:', error);
+    return true;
+  }
+};
+
 // Initialize storage on import
 initStorage().catch(console.error);

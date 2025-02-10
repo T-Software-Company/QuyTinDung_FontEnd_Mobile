@@ -12,18 +12,18 @@ import {WorkflowStepType} from '../api/types/loanInit';
 // Add type for screen names
 type ScreenName =
   | 'IntroduceLoan'
-  | 'CreateLoan'
-  | 'LoanPlan'
-  | 'FinancialInfo'
+  | 'CreateLoanRequest'
+  | 'CreateLoanPlan'
+  | 'CreateFinancialInfo'
   | 'CreditRating'
   | 'AssetCollateral';
 
 // Define the step to screen mapping with proper types
 const stepToScreenMap: Record<WorkflowStepType, ScreenName> = {
   init: 'IntroduceLoan',
-  'create-loan-request': 'CreateLoan',
-  'create-loan-plan': 'LoanPlan',
-  'create-financial-info': 'FinancialInfo',
+  'create-loan-request': 'CreateLoanRequest',
+  'create-loan-plan': 'CreateLoanPlan',
+  'create-financial-info': 'CreateFinancialInfo',
   'create-credit-rating': 'CreditRating',
   'add-asset-collateral': 'AssetCollateral',
 } as const;
@@ -53,27 +53,21 @@ const LoadingWorkflowLoan: React.FC<LoadingWorkflowLoanProps> = ({
 
         if (response.code === 200) {
           const {currentSteps, prevSteps} = response.result;
-
           let nextScreen: ScreenName;
 
-          // When currentSteps is empty and prevSteps has 'init' -> go to LoanRequest
-          if (currentSteps.length === 0 && prevSteps.includes('init')) {
-            nextScreen = 'CreateLoan';
-          }
-          // When currentSteps is empty and prevSteps is empty -> go to IntroduceLoan
-          else if (currentSteps.length === 0 && prevSteps.length === 0) {
+          // Case 1: Empty currentSteps or empty prevSteps without init -> go to IntroduceLoan
+          if (currentSteps.length === 0 || (prevSteps.length === 0 && !prevSteps.includes('init'))) {
             nextScreen = 'IntroduceLoan';
           }
-          // For other cases, use the current step to determine screen
-          else if (
-            currentSteps.length > 0 &&
-            currentSteps[0] in stepToScreenMap
-          ) {
-            nextScreen = stepToScreenMap[currentSteps[0] as WorkflowStepType];
-          }
-          // Default fallback
+          // Case 2: Check for the first step in currentSteps
           else {
-            nextScreen = 'IntroduceLoan';
+            // Get the first step from currentSteps as it represents the current active step
+            const currentActiveStep = currentSteps[0];
+            if (currentActiveStep in stepToScreenMap) {
+              nextScreen = stepToScreenMap[currentActiveStep as WorkflowStepType];
+            } else {
+              nextScreen = 'IntroduceLoan'; // Fallback
+            }
           }
 
           await AsyncStorage.setItem('currentStep', currentSteps[0] || 'init');

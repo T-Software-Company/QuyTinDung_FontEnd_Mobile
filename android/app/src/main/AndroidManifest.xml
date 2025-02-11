@@ -27,10 +27,14 @@
       <!-- <meta-data
         android:name="com.swmansion.gesturehandler.react.handler"
         android:value="true" /> -->
-      <intent-filter android:label="AppAuth Redirect">
+      <!-- Đây là intent chính để khởi chạy app -->
+      <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
 
+      <!-- Intent riêng cho AppAuth Redirect -->
+      <intent-filter android:label="AppAuth Redirect">
         <action android:name="android.intent.action.VIEW" />
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />

@@ -27,11 +27,6 @@ const axiosInstance: AxiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  httpAgent: {
-    sslPinning: {
-      certs: ['server_cert'], // Chỉ định file chứng chỉ
-    },
-  },
 });
 
 axiosInstance.interceptors.request.use(

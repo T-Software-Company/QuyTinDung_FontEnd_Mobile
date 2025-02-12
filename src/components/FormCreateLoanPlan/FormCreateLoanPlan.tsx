@@ -16,64 +16,80 @@ import {Theme} from '../../theme/colors';
 import {CreateLoanPlanRequest} from '../../api/types/loanPlan';
 import {loanPlan} from '../../api/services/createLoan';
 import {StackNavigationProp} from '@react-navigation/stack';
-import { RootStackParamList } from '../../navigators/RootNavigator';
+import {RootStackParamList} from '../../navigators/RootNavigator';
 
 interface FormCreateLoanPlanProps {
   theme: Theme;
   navigation: StackNavigationProp<RootStackParamList, 'CreateLoanPlan'>;
+  appId: string;
 }
 
 interface FormData extends Omit<CreateLoanPlanRequest, 'application'> {
-  selectedLoanTerm: string | null;
+  selectedLoanTerm: number | undefined ;
+}
+
+interface LoanTermOption {
+  value: number;  // Changed from string to number
+  label: string;
+  interest: number;  // Changed from string to number
 }
 
 const FormCreateLoanPlan: React.FC<FormCreateLoanPlanProps> = ({
   theme,
   navigation,
+  appId,
 }) => {
   const currentLanguage = i18n.language;
   const {t} = useTranslation();
-  const applicationId = '6ed5ada9-72dd-4a7a-a096-08a9071e613c';
 
-  const loanTerms = [
+  const loanTerms: LoanTermOption[] = [
     {
-      value: '12 months',
+      value: 12,
       label: currentLanguage === 'vi' ? '12 tháng' : '12 months',
+      interest: 15,
     },
     {
-      value: '24 months',
+      value: 24,
       label: currentLanguage === 'vi' ? '24 tháng' : '24 months',
+      interest: 12,
     },
     {
-      value: '36 months',
+      value: 36,
       label: currentLanguage === 'vi' ? '36 tháng' : '36 months',
+      interest: 10,
     },
   ];
 
   const [formData, setFormData] = useState<FormData>({
-    loanNeeds: 'Expand business operations',
     totalCapitalRequirement: 0,
     ownCapital: 0,
     proposedLoanAmount: 0,
+    interestRate: 0,
     monthlyIncome: 0,
     repaymentPlan: '',
     note: '',
-    loanTerm: '',
+    loanTerm: 0,
     metadata: {
       key1: '',
       key2: '',
       key3: false,
     },
-    selectedLoanTerm: null,
+    selectedLoanTerm: 0,
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedInterest, setSelectedInterest] = useState<number | undefined>(undefined);
 
   const handleOnchange = (field: keyof FormData, value: any): void => {
     setFormData(prev => ({
       ...prev,
       [field]: value,
     }));
+
+    if (field === 'selectedLoanTerm') {
+      const selectedTerm = loanTerms.find(term => term.value === value);
+      setSelectedInterest(selectedTerm?.interest || undefined);
+    }
   };
 
   const handleSubmit = async () => {
@@ -81,18 +97,19 @@ const FormCreateLoanPlan: React.FC<FormCreateLoanPlanProps> = ({
       setIsLoading(true);
 
       const loanPlanData = {
-        loanNeeds: formData.loanNeeds,
         totalCapitalRequirement: formData.totalCapitalRequirement,
         ownCapital: formData.ownCapital,
         proposedLoanAmount: formData.proposedLoanAmount,
         monthlyIncome: formData.monthlyIncome,
         repaymentPlan: formData.repaymentPlan,
         note: formData.note,
-        loanTerm: formData.selectedLoanTerm || '',
+        loanTerm: formData.selectedLoanTerm || 0, // Ensure it's a number
+        interestRate: selectedInterest, // Already a number
         metadata: formData.metadata,
       };
+      console.log('loanPlanData', loanPlanData);
 
-      const response = await loanPlan(applicationId, loanPlanData);
+      const response = await loanPlan(appId, loanPlanData);
 
       if (response.code === 201) {
         Alert.alert(
@@ -103,7 +120,8 @@ const FormCreateLoanPlan: React.FC<FormCreateLoanPlanProps> = ({
           [
             {
               text: 'OK',
-              onPress: () => navigation.navigate('CreateFinancialInfo'),
+              onPress: () =>
+                navigation.navigate('CreateFinancialInfo', {appId}),
             },
           ],
         );
@@ -268,10 +286,25 @@ const FormCreateLoanPlan: React.FC<FormCreateLoanPlanProps> = ({
           value={formData.selectedLoanTerm}
           data={loanTerms}
           placeholder={currentLanguage === 'vi' ? 'Chọn kỳ hạn' : 'Select term'}
-          onChange={(item: any) =>
+          onChange={(item: LoanTermOption) =>
             handleOnchange('selectedLoanTerm', item.value)
           }
         />
+        {selectedInterest && (
+          <Text style={styles.rateText}>
+            {currentLanguage === 'vi'
+              ? `Lãi suất kỳ hạn vay ${
+                  loanTerms.find(
+                    term => term.value === formData.selectedLoanTerm,
+                  )?.label || ''
+                }: ${selectedInterest}%`
+              : `Interest rate for ${
+                  loanTerms.find(
+                    term => term.value === formData.selectedLoanTerm,
+                  )?.label || ''
+                }: ${selectedInterest}%`}
+          </Text>
+        )}
       </View>
 
       <View style={styles.boxInput}>

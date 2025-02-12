@@ -5,18 +5,23 @@ import FormCreateLoanPlan from '../components/FormCreateLoanPlan/FormCreateLoanP
 import {useTheme} from '../context/ThemeContext';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../navigators/RootNavigator';
+import {RouteProp} from '@react-navigation/native';
 
 type CreateLoanPlanNavigationProp = StackNavigationProp<
   RootStackParamList,
   'CreateLoanPlan'
 >;
 
+type CreateLoanPlanRouteProp = RouteProp<RootStackParamList, 'CreateLoanPlan'>;
+
 interface CreateLoanPlanProps {
   navigation: CreateLoanPlanNavigationProp;
+  route: CreateLoanPlanRouteProp;
 }
 
-const CreateLoanPlan: React.FC<CreateLoanPlanProps> = ({navigation}) => {
+const CreateLoanPlan: React.FC<CreateLoanPlanProps> = ({navigation, route}) => {
   const {theme} = useTheme();
+  const {appId} = route.params;
 
   const styles = StyleSheet.create({
     view: {
@@ -41,7 +46,7 @@ const CreateLoanPlan: React.FC<CreateLoanPlanProps> = ({navigation}) => {
           nestedScrollEnabled={true}
           showsVerticalScrollIndicator={false}>
           <View style={styles.body}>
-            <FormCreateLoanPlan theme={theme} navigation={navigation} />
+            <FormCreateLoanPlan theme={theme} navigation={navigation} appId={appId} />
           </View>
         </ScrollView>
       </View>

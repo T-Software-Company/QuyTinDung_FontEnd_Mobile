@@ -5,18 +5,29 @@ import FormCreateLoanRequest from '../components/FormCreateLoanRequest/FormCreat
 import {useTheme} from '../context/ThemeContext';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../navigators/RootNavigator';
+import {RouteProp} from '@react-navigation/native';
 
 type CreateLoanRequestNavigationProp = StackNavigationProp<
   RootStackParamList,
   'CreateLoanRequest'
 >;
 
+type CreateLoanRequestRouteProp = RouteProp<
+  RootStackParamList,
+  'CreateLoanRequest'
+>;
+
 interface CreateLoanRequestProps {
   navigation: CreateLoanRequestNavigationProp;
+  route: CreateLoanRequestRouteProp;
 }
 
-const CreateLoanRequest: React.FC<CreateLoanRequestProps> = ({navigation}) => {
+const CreateLoanRequest: React.FC<CreateLoanRequestProps> = ({
+  navigation,
+  route,
+}) => {
   const {theme} = useTheme();
+  const {appId} = route.params;
 
   const styles = StyleSheet.create({
     view: {
@@ -41,7 +52,11 @@ const CreateLoanRequest: React.FC<CreateLoanRequestProps> = ({navigation}) => {
           nestedScrollEnabled={true}
           showsVerticalScrollIndicator={false}>
           <View style={styles.body}>
-            <FormCreateLoanRequest theme={theme} />
+            <FormCreateLoanRequest
+              theme={theme}
+              appId={appId}
+              navigation={navigation}
+            />
           </View>
         </ScrollView>
       </View>

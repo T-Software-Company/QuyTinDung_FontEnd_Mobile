@@ -20,11 +20,14 @@ import {
   LoanCollateralType,
 } from '../../api/types/loanRequest';
 import {loanRequest} from '../../api/services/createLoan';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../../navigators/RootNavigator';
 
 interface FormCreateLoanRequestProps {
   theme: Theme;
+  appId: string;
+  navigation: StackNavigationProp<RootStackParamList, 'CreateLoanRequest'>;
 }
-
 
 interface TargetItem {
   value: string;
@@ -43,10 +46,11 @@ interface NotificationType {
 
 const FormCreateLoanRequest: React.FC<FormCreateLoanRequestProps> = ({
   theme,
+  appId,
+  navigation,
 }) => {
   const currentLanguage = i18n.language;
   const {t} = useTranslation();
-  const applicationId = '6ed5ada9-72dd-4a7a-a096-08a9071e613c';
 
   const notification: NotificationType = {
     vi: 'Bạn đã tạo khoản vay thành công.\nVui lòng chờ nhân viên hỗ trợ tư vấn và xác nhận.',
@@ -131,13 +135,19 @@ const FormCreateLoanRequest: React.FC<FormCreateLoanRequestProps> = ({
         },
       };
 
-      const response = await loanRequest(applicationId, loanData);
+      const response = await loanRequest(appId, loanData);
       console.log('Loan request response:', response);
 
       if (response.code === 200) {
         Alert.alert(
           currentLanguage === 'vi' ? 'Thông báo' : 'Notification',
           currentLanguage === 'vi' ? notification.vi : notification.en,
+          [
+            {
+              text: 'OK',
+              onPress: () => navigation.replace('CreateLoanPlan', {appId}),
+            },
+          ],
         );
       }
     } catch (error) {
@@ -224,7 +234,6 @@ const FormCreateLoanRequest: React.FC<FormCreateLoanRequestProps> = ({
 
   return (
     <View>
-
       <View style={styles.boxInput}>
         <Text style={styles.headingTitle}>
           {currentLanguage === 'vi' ? 'Số tiền vay' : 'Loan Amount'}
@@ -338,7 +347,7 @@ const FormCreateLoanRequest: React.FC<FormCreateLoanRequestProps> = ({
               styles.textWhite,
               {fontWeight: 'bold', textAlign: 'center'},
             ]}>
-            {t('formCreateLoan.submit')}
+            {t('formCreateLoan.next')}
           </Text>
         )}
       </TouchableOpacity>

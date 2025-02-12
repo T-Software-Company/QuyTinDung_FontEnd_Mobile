@@ -101,10 +101,12 @@ export type RootStackParamList = {
   Deposit: undefined;
   Transfer: undefined;
   SentSave: undefined;
-  CreateLoanRequest: undefined;
-  CreateLoanPlan: undefined;
-  CreateFinancialInfo: undefined;
-  IntroduceLoan: undefined;
+  CreateLoanRequest: { appId: string };
+  CreateLoanPlan: { appId: string };
+  CreateFinancialInfo: { appId: string };
+  CreditRating: { appId: string };
+  AssetCollateral: { appId: string };
+  IntroduceLoan: undefined;  // Changed this line
   LoadingWorkflowLoan: undefined;
   LanguageSetting: undefined;
   DarkModeSetting: undefined;

@@ -264,7 +264,6 @@ const ResultQR: React.FC<ResultQRProps> = ({navigation, route}) => {
         const result = await register(userData);
         console.log('Register result:', result); // Debug log
         if (result) {
-          // navigation.navigate('Login');
           navigation.reset({
             index: 0,
             routes: [{name: 'Login'}],

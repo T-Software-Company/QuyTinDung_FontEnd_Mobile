@@ -39,11 +39,6 @@ interface FormData extends Omit<LoanRequestBody, 'application'> {
   method?: string;
 }
 
-interface NotificationType {
-  vi: string;
-  en: string;
-}
-
 interface FormErrors {
   amount?: string;
   purpose?: string;
@@ -59,11 +54,6 @@ const FormCreateLoanRequest: React.FC<FormCreateLoanRequestProps> = ({
 }) => {
   const currentLanguage = i18n.language;
   const {t} = useTranslation();
-
-  const notification: NotificationType = {
-    vi: 'Bạn đã tạo khoản vay thành công.\nVui lòng chờ nhân viên hỗ trợ tư vấn và xác nhận.',
-    en: 'Your loan has been created successfully.\nPlease wait for staff support and confirmation.',
-  };
 
   const borrowerTypes = [
     {
@@ -205,16 +195,7 @@ const FormCreateLoanRequest: React.FC<FormCreateLoanRequestProps> = ({
       console.log('Loan request response:', response);
 
       if (response) {
-        Alert.alert(
-          currentLanguage === 'vi' ? 'Thông báo' : 'Notification',
-          currentLanguage === 'vi' ? notification.vi : notification.en,
-          [
-            {
-              text: 'OK',
-              onPress: () => navigation.replace('CreateLoanPlan', {appId}),
-            },
-          ],
-        );
+        navigation.replace('CreateLoanPlan', {appId});
       }
     } catch (error) {
       console.error('Error creating loan request:', error);

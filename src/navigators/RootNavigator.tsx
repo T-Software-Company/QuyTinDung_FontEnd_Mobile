@@ -1,6 +1,9 @@
 /* eslint-disable react/react-in-jsx-scope */
 import {Text, View, Image, StyleSheet} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
+import {
+  NavigationContainer,
+  NavigationContainerRef,
+} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import {TransitionPresets} from '@react-navigation/stack';
@@ -40,7 +43,7 @@ import TotalAssetsScreen from '../screen/TotalAssets';
 import DetailTransactionScreen from '../screen/DetailTransaction';
 import TransactionHistoryScreen from '../screen/TransactionHistory';
 import LoadingWorkflowLoanScreen from '../screen/LoadingWorkflowLoan';
-
+import React from 'react';
 
 export interface FormDataAddress {
   country: string;
@@ -101,12 +104,12 @@ export type RootStackParamList = {
   Deposit: undefined;
   Transfer: undefined;
   SentSave: undefined;
-  CreateLoanRequest: { appId: string };
-  CreateLoanPlan: { appId: string };
-  CreateFinancialInfo: { appId: string };
-  CreditRating: { appId: string };
-  AssetCollateral: { appId: string };
-  IntroduceLoan: undefined;  // Changed this line
+  CreateLoanRequest: {appId: string};
+  CreateLoanPlan: {appId: string};
+  CreateFinancialInfo: {appId: string};
+  CreditRating: {appId: string};
+  AssetCollateral: {appId: string};
+  IntroduceLoan: undefined; // Changed this line
   LoadingWorkflowLoan: undefined;
   LanguageSetting: undefined;
   DarkModeSetting: undefined;
@@ -212,12 +215,37 @@ const MyTabs = () => {
   );
 };
 
+export const navigationRef =
+  React.createRef<NavigationContainerRef<RootStackParamList>>();
+
 const RootComponent: React.FC = () => {
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
         initialRouteName="HomeTabs"
-        screenOptions={{headerShown: false}}>
+        screenOptions={{
+          headerShown: false,
+          gestureEnabled: true,
+          cardStyleInterpolator: ({ current, layouts }) => ({
+            cardStyle: {
+              opacity: current.progress,
+              transform: [
+                {
+                  translateX: current.progress.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [layouts.screen.width, 0],
+                  }),
+                },
+              ],
+            },
+            overlayStyle: {
+              opacity: current.progress.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, 0.5],
+              }),
+            },
+          }),
+        }}>
         <Stack.Screen name="HomeTabs" component={MyTabs} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
@@ -238,10 +266,19 @@ const RootComponent: React.FC = () => {
         <Stack.Screen name="Deposit" component={DepositScreen} />
         <Stack.Screen name="Transfer" component={TransferScreen} />
         <Stack.Screen name="SentSave" component={SentSaveScreen} />
-        <Stack.Screen name="CreateLoanRequest" component={CreateLoanRequestScreen} />
+        <Stack.Screen
+          name="CreateLoanRequest"
+          component={CreateLoanRequestScreen}
+        />
         <Stack.Screen name="CreateLoanPlan" component={CreateLoanPlanScreen} />
-        <Stack.Screen name="CreateFinancialInfo" component={CreateFinancialInfoScreen} />
-        <Stack.Screen name="LoadingWorkflowLoan" component={LoadingWorkflowLoanScreen} />
+        <Stack.Screen
+          name="CreateFinancialInfo"
+          component={CreateFinancialInfoScreen}
+        />
+        <Stack.Screen
+          name="LoadingWorkflowLoan"
+          component={LoadingWorkflowLoanScreen}
+        />
         <Stack.Screen name="IntroduceLoan" component={IntroduceLoanScreen} />
         <Stack.Screen
           name="LanguageSetting"
@@ -284,7 +321,10 @@ const RootComponent: React.FC = () => {
           name="DetailTransaction"
           component={DetailTransactionScreen}
         />
-        <Stack.Screen name="TransactionHistory" component={TransactionHistoryScreen} />
+        <Stack.Screen
+          name="TransactionHistory"
+          component={TransactionHistoryScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

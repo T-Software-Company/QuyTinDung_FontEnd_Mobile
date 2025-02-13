@@ -247,7 +247,7 @@ const FormCreateLoanPlan: React.FC<FormCreateLoanPlanProps> = ({
       <View style={styles.boxInput}>
         <Text style={styles.headingTitle}>
           {currentLanguage === 'vi'
-            ? 'Số tiền đề xuất vay'
+            ? 'Đề xuất hạn mức vay'
             : 'Proposed Loan Amount'}
         </Text>
         <InputBackground

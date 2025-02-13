@@ -44,6 +44,14 @@ interface NotificationType {
   en: string;
 }
 
+interface FormErrors {
+  amount?: string;
+  purpose?: string;
+  asset?: string;
+  note?: string;
+  loanCollateralTypes?: string;
+}
+
 const FormCreateLoanRequest: React.FC<FormCreateLoanRequestProps> = ({
   theme,
   appId,
@@ -100,7 +108,7 @@ const FormCreateLoanRequest: React.FC<FormCreateLoanRequestProps> = ({
     borrowerType: 'INDIVIDUAL',
     asset: '',
     loanSecurityType: 'UNSECURED',
-    loanCollateralTypes: ['VEHICLE'],
+    loanCollateralTypes: [],
     note: '',
     metadata: {
       key1: '',
@@ -109,6 +117,7 @@ const FormCreateLoanRequest: React.FC<FormCreateLoanRequestProps> = ({
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState<FormErrors>({});
 
   const handleOnchange = (field: keyof FormData, value: any): void => {
     setFormData(prev => ({
@@ -117,7 +126,63 @@ const FormCreateLoanRequest: React.FC<FormCreateLoanRequestProps> = ({
     }));
   };
 
+  const validateForm = (): boolean => {
+    const newErrors: FormErrors = {};
+    let isValid = true;
+
+    if (!formData.amount || formData.amount <= 1000000) {
+      newErrors.amount =
+        currentLanguage === 'vi'
+          ? 'Vui lòng nhập số tiền lớn hơn 1000000'
+          : 'Please enter a valid amount';
+      isValid = false;
+    }
+
+    if (!formData.purpose.trim()) {
+      newErrors.purpose =
+        currentLanguage === 'vi'
+          ? 'Vui lòng nhập mục đích vay'
+          : 'Please enter loan purpose';
+      isValid = false;
+    }
+
+    if (!formData.asset.trim()) {
+      newErrors.asset =
+        currentLanguage === 'vi'
+          ? 'Vui lòng nhập tài sản'
+          : 'Please enter asset';
+      isValid = false;
+    }
+
+    if (!formData.note.trim()) {
+      newErrors.note =
+        currentLanguage === 'vi'
+          ? 'Vui lòng nhập ghi chú'
+          : 'Please enter a note';
+      isValid = false;
+    }
+
+    if (
+      !formData.loanCollateralTypes ||
+      formData.loanCollateralTypes.length === 0
+    ) {
+      newErrors.loanCollateralTypes =
+        currentLanguage === 'vi'
+          ? 'Vui lòng chọn ít nhất một loại tài sản'
+          : 'Please select at least one collateral type';
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
   const handleSubmit = async () => {
+    console.log('Form data:', formData);
+    if (!validateForm()) {
+      return;
+    }
+
     try {
       setIsLoading(true);
 
@@ -130,15 +195,16 @@ const FormCreateLoanRequest: React.FC<FormCreateLoanRequestProps> = ({
         loanCollateralTypes: formData.loanCollateralTypes,
         note: formData.note,
         metadata: {
-          termRate: formData.selectedRate?.value || '',
-          paymentFrequency: formData.method || '',
+          key1: '',
+          key2: '',
         },
       };
+      console.log('Loan data:', loanData, appId);
 
       const response = await loanRequest(appId, loanData);
       console.log('Loan request response:', response);
 
-      if (response.code === 200) {
+      if (response) {
         Alert.alert(
           currentLanguage === 'vi' ? 'Thông báo' : 'Notification',
           currentLanguage === 'vi' ? notification.vi : notification.en,
@@ -230,7 +296,50 @@ const FormCreateLoanRequest: React.FC<FormCreateLoanRequestProps> = ({
     textWhite: {
       color: 'white',
     },
+    errorText: {
+      color: 'red',
+      fontSize: 12,
+      marginTop: 8,
+    },
+    checkboxContainer: {
+      flexDirection: 'column',
+      flexWrap: 'wrap',
+      gap: 12,
+    },
+    checkboxItem: {
+      // flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: '#f4f4f4',
+      padding: 10,
+      borderRadius: 8,
+      borderWidth: 1,
+      borderColor: '#ddd',
+    },
+    checkboxSelected: {
+      backgroundColor: '#e3f0ff',
+      borderColor: '#007BFF',
+    },
+    checkboxText: {
+      color: '#000',
+    },
+    checkboxTextSelected: {
+      color: '#007BFF',
+    },
   });
+
+  const handleCollateralTypeChange = (value: LoanCollateralType) => {
+    setFormData(prev => {
+      const currentTypes = prev.loanCollateralTypes || [];
+      const newTypes = currentTypes.includes(value)
+        ? currentTypes.filter(type => type !== value)
+        : [...currentTypes, value];
+
+      return {
+        ...prev,
+        loanCollateralTypes: newTypes,
+      };
+    });
+  };
 
   return (
     <View>
@@ -248,6 +357,7 @@ const FormCreateLoanRequest: React.FC<FormCreateLoanRequestProps> = ({
           }
           value={formData.amount.toString()}
         />
+        {errors.amount && <Text style={styles.errorText}>{errors.amount}</Text>}
       </View>
 
       <View style={styles.boxInput}>
@@ -261,6 +371,9 @@ const FormCreateLoanRequest: React.FC<FormCreateLoanRequestProps> = ({
           onChangeText={(value: string) => handleOnchange('purpose', value)}
           value={formData.purpose}
         />
+        {errors.purpose && (
+          <Text style={styles.errorText}>{errors.purpose}</Text>
+        )}
       </View>
 
       <View style={styles.boxInput}>
@@ -288,6 +401,7 @@ const FormCreateLoanRequest: React.FC<FormCreateLoanRequestProps> = ({
           onChangeText={(value: string) => handleOnchange('asset', value)}
           value={formData.asset}
         />
+        {errors.asset && <Text style={styles.errorText}>{errors.asset}</Text>}
       </View>
 
       <View style={styles.boxInput}>
@@ -312,16 +426,35 @@ const FormCreateLoanRequest: React.FC<FormCreateLoanRequestProps> = ({
             ? 'Loại tài sản đảm bảo'
             : 'Collateral Type'}
         </Text>
-        <DropdownComponent
-          value={formData.loanCollateralTypes[0]}
-          data={collateralTypes}
-          placeholder={currentLanguage === 'vi' ? 'Chọn loại' : 'Select type'}
-          onChange={(value: TargetItem) =>
-            handleOnchange('loanCollateralTypes', [
-              value.value as LoanCollateralType,
-            ])
-          }
-        />
+        <View style={styles.checkboxContainer}>
+          {collateralTypes.map(type => {
+            const isSelected = formData.loanCollateralTypes.includes(
+              type.value as LoanCollateralType,
+            );
+            return (
+              <TouchableOpacity
+                key={type.value}
+                style={[
+                  styles.checkboxItem,
+                  isSelected && styles.checkboxSelected,
+                ]}
+                onPress={() =>
+                  handleCollateralTypeChange(type.value as LoanCollateralType)
+                }>
+                <Text
+                  style={[
+                    styles.checkboxText,
+                    isSelected && styles.checkboxTextSelected,
+                  ]}>
+                  {type.label}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+        {errors.loanCollateralTypes && (
+          <Text style={styles.errorText}>{errors.loanCollateralTypes}</Text>
+        )}
       </View>
 
       <View style={styles.boxInput}>
@@ -333,6 +466,7 @@ const FormCreateLoanRequest: React.FC<FormCreateLoanRequestProps> = ({
           onChangeText={(value: string) => handleOnchange('note', value)}
           value={formData.note}
         />
+        {errors.note && <Text style={styles.errorText}>{errors.note}</Text>}
       </View>
 
       <TouchableOpacity

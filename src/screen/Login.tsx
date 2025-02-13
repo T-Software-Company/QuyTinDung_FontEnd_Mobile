@@ -36,7 +36,7 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
   const [invisible, setInvisible] = useState<boolean>(true);
   const {theme} = useTheme();
   const {t} = useTranslation();
-  const {login, loading, error} = useAuth();
+  const {login, loading} = useAuth();
 
   const handleChange = (field: keyof FormData, value: string): void => {
     setFormData(prev => ({
@@ -75,7 +75,7 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
     console.log('Result: ', result);
     if (result === true) {
       navigation.navigate('HomeTabs');
-    } else if (error) {
+    } else {
       Alert.alert(
         t('notification.title'),
         'Email / Số điện thoại hoặc mật khẩu không đúng !',

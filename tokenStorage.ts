@@ -1,94 +1,66 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-interface StorageError extends Error {
-  code?: string;
-}
-
 const TOKEN_KEYS = {
   ACCESS: 'accessToken',
   REFRESH: 'refreshToken',
 } as const;
 
-const initStorage = async (): Promise<boolean> => {
+// Đơn giản hóa error handling
+const handleStorageOperation = async <T>(
+  operation: () => Promise<T>,
+  errorMessage: string,
+): Promise<T | null> => {
   try {
-    await AsyncStorage.getItem('test');
-    return true;
-  } catch (error: unknown) {
-    console.error('AsyncStorage is not available:', error);
-    return false;
-  }
-};
-
-export const saveAccessToken = async (token: string): Promise<void> => {
-  if (!token) return;
-  try {
-    await AsyncStorage.setItem(TOKEN_KEYS.ACCESS, token);
+    return await operation();
   } catch (error) {
-    const storageError = error as StorageError;
-    console.error('Error saving access token:', storageError);
-    throw storageError;
-  }
-};
-
-export const getAccessToken = async (): Promise<string | null> => {
-  try {
-    return await AsyncStorage.getItem(TOKEN_KEYS.ACCESS);
-  } catch (error) {
-    const storageError = error as StorageError;
-    console.error('Error getting access token:', storageError);
+    console.error(`Error ${errorMessage}:`, error);
     return null;
   }
 };
 
-export const removeAccessToken = async (): Promise<void> => {
-  try {
-    await AsyncStorage.removeItem(TOKEN_KEYS.ACCESS);
-  } catch (error: unknown) {
-    const storageError = error as StorageError;
-    console.error('Error removing access token:', storageError);
-  }
-};
+export const saveAccessToken = (token: string) =>
+  handleStorageOperation(
+    () => AsyncStorage.setItem(TOKEN_KEYS.ACCESS, token),
+    'saving access token',
+  );
 
-export const saveRefreshToken = async (token: string): Promise<void> => {
-  try {
-    await AsyncStorage.setItem(TOKEN_KEYS.REFRESH, token);
-  } catch (error: unknown) {
-    const storageError = error as StorageError;
-    console.error('Error saving refresh token:', storageError);
-  }
-};
+export const getAccessToken = () =>
+  handleStorageOperation(
+    () => AsyncStorage.getItem(TOKEN_KEYS.ACCESS),
+    'getting access token',
+  );
 
-export const getRefreshToken = async (): Promise<string | null> => {
-  try {
-    return await AsyncStorage.getItem(TOKEN_KEYS.REFRESH);
-  } catch (error: unknown) {
-    const storageError = error as StorageError;
-    console.error('Error retrieving refresh token:', storageError);
-    return null;
-  }
-};
+export const removeAccessToken = () =>
+  handleStorageOperation(
+    () => AsyncStorage.removeItem(TOKEN_KEYS.ACCESS),
+    'removing access token',
+  );
 
-export const clearTokens = async (): Promise<void> => {
-  try {
-    await AsyncStorage.multiRemove([TOKEN_KEYS.ACCESS, TOKEN_KEYS.REFRESH]);
-  } catch (error: unknown) {
-    const storageError = error as StorageError;
-    console.error('Error clearing tokens:', storageError);
-  }
-};
+export const saveRefreshToken = (token: string) =>
+  handleStorageOperation(
+    () => AsyncStorage.setItem(TOKEN_KEYS.REFRESH, token),
+    'saving refresh token',
+  );
+
+export const getRefreshToken = () =>
+  handleStorageOperation(
+    () => AsyncStorage.getItem(TOKEN_KEYS.REFRESH),
+    'retrieving refresh token',
+  );
+
+export const clearTokens = () =>
+  handleStorageOperation(
+    () => AsyncStorage.multiRemove([TOKEN_KEYS.ACCESS, TOKEN_KEYS.REFRESH]),
+    'clearing tokens',
+  );
 
 export const isTokenExpired = (token: string): boolean => {
   try {
     const [, payload] = token.split('.');
     const decoded = JSON.parse(atob(payload));
-    console.log('Decoded token:', decoded);
-    const exp = decoded.exp * 1000; // Convert to milliseconds
-    return Date.now() > exp;
+    return Date.now() > decoded.exp * 1000;
   } catch (error) {
     console.error('Error checking token expiration:', error);
     return true;
   }
 };
-
-// Initialize storage on import
-initStorage().catch(console.error);

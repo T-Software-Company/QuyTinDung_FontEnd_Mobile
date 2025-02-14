@@ -11,6 +11,7 @@
         "errors": {
             "missingFields": "Vui lòng nhập đầy đủ thông tin!",
             "invalidEmail": "Email không hợp lệ!",
+            "invalidEmailOrPhone": "Email hoặc số điện thoại không hợp lệ!",
             "passwordLength": "Mật khẩu phải có ít nhất 6 ký tự!"
         }
     },

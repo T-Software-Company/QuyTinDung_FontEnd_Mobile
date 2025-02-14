@@ -1,6 +1,6 @@
-import axiosInstance, { ApiResponse } from '../axiosInstance';
-import { ApiEndpoints } from '../endpoints';
-import { UploadFile, UploadResponse, UploadErrorCode } from '../types/upload';
+import axiosInstance, {ApiResponse} from '../axiosInstance';
+import {ApiEndpoints} from '../endpoints';
+import {UploadFile, UploadResponse, UploadErrorCode} from '../types/upload';
 
 export class UploadError extends Error {
   constructor(message: string, public code?: number) {
@@ -9,7 +9,9 @@ export class UploadError extends Error {
   }
 }
 
-export const uploadImage = async (file: UploadFile): Promise<UploadResponse> => {
+export const uploadImage = async (
+  file: UploadFile,
+): Promise<UploadResponse> => {
   try {
     if (!file?.fileName) {
       throw new UploadError('File không hợp lệ');
@@ -30,7 +32,7 @@ export const uploadImage = async (file: UploadFile): Promise<UploadResponse> => 
           'Content-Type': 'multipart/form-data',
         },
         timeout: 30000,
-      }
+      },
     );
 
     if (!response.data?.result) {
@@ -39,18 +41,24 @@ export const uploadImage = async (file: UploadFile): Promise<UploadResponse> => 
 
     return response.data.result;
   } catch (error: any) {
-    console.error('Upload image error:', error);
+    console.error('Upload image error:', {error});
 
     if (error.response) {
       switch (error.response.status) {
         case UploadErrorCode.FILE_TOO_LARGE:
-          throw new UploadError('Kích thước file quá lớn', UploadErrorCode.FILE_TOO_LARGE);
+          throw new UploadError(
+            'Kích thước file quá lớn',
+            UploadErrorCode.FILE_TOO_LARGE,
+          );
         case UploadErrorCode.UNSUPPORTED_FORMAT:
-          throw new UploadError('Định dạng file không được hỗ trợ', UploadErrorCode.UNSUPPORTED_FORMAT);
+          throw new UploadError(
+            'Định dạng file không được hỗ trợ',
+            UploadErrorCode.UNSUPPORTED_FORMAT,
+          );
         default:
           throw new UploadError(
             `Lỗi upload: ${error.response.data?.message || 'Vui lòng thử lại'}`,
-            error.response.status
+            error.response.status,
           );
       }
     }

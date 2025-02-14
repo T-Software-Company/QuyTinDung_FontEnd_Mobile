@@ -183,6 +183,7 @@
         "errors": {
             "missingFields": "Please fill in all fields!",
             "invalidEmail": "Invalid email!",
+            "invalidEmailOrPhone": "Invalid email or phone number!",
             "passwordLength": "Password must be at least 6 characters!"
         }
     },

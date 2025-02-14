@@ -1,6 +1,6 @@
-export type BorrowerType = 'INDIVIDUAL' | 'BUSINESS';
-export type LoanSecurityType = 'MORTGAGE' | 'UNSECURED';
-export type LoanCollateralType = 'VEHICLE' | 'PROPERTY' | 'EQUIPMENT';
+export type BorrowerType = 'INDIVIDUAL' | 'ORGANIZATION';
+export type LoanSecurityType = 'MORTGAGE' | 'UNSECURED' | 'PLEDGE' | 'NONE';
+export type LoanCollateralType = 'VEHICLE' | 'LAND' | 'APARTMENT' | 'OTHER';
 
 export interface LoanRequestBody {
   purpose: string;

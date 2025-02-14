@@ -25,6 +25,7 @@ import TransferScreen from '../screen/Transfer';
 import CreateLoanRequestScreen from '../screen/CreateLoanRequest';
 import CreateLoanPlanScreen from '../screen/CreateLoanPlan';
 import CreateFinancialInfoScreen from '../screen/CreateFinancialInfo';
+import CreditRatingScreen from '../screen/CreditRating';
 import IntroduceLoanScreen from '../screen/IntroduceLoan';
 import NotificationScreen from '../screen/Notification';
 import InfoPersonScreen from '../screen/InfoPerson';
@@ -226,7 +227,7 @@ const RootComponent: React.FC = () => {
         screenOptions={{
           headerShown: false,
           gestureEnabled: true,
-          cardStyleInterpolator: ({ current, layouts }) => ({
+          cardStyleInterpolator: ({current, layouts}) => ({
             cardStyle: {
               opacity: current.progress,
               transform: [
@@ -275,6 +276,7 @@ const RootComponent: React.FC = () => {
           name="CreateFinancialInfo"
           component={CreateFinancialInfoScreen}
         />
+        <Stack.Screen name="CreditRating" component={CreditRatingScreen} />
         <Stack.Screen
           name="LoadingWorkflowLoan"
           component={LoadingWorkflowLoanScreen}

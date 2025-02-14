@@ -22,7 +22,7 @@ interface LoginProps {
 }
 
 interface FormData {
-  email: string;
+  username: string;
   password: string;
 }
 
@@ -30,7 +30,7 @@ const windowHeight = Dimensions.get('window').height;
 
 const Login: React.FC<LoginProps> = ({navigation}) => {
   const [formData, setFormData] = useState<FormData>({
-    email: 'demo@gmail.com',
+    username: 'demo@gmail.com',
     password: '123456',
   });
   const [invisible, setInvisible] = useState<boolean>(true);
@@ -47,21 +47,28 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
 
   // Hàm kiểm tra định dạng email
   const isValidEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex kiểm tra email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
+  // Hàm kiểm tra định dạng số điện thoại
+  const isValidPhone = (phone: string): boolean => {
+    const phoneRegex = /(84|0[3|5|7|8|9])+([0-9]{8})\b/;
+    return phoneRegex.test(phone);
+  };
+
   const handleSubmit = async (): Promise<void> => {
-    const {email, password} = formData;
+    const {username, password} = formData;
 
     // Validation checks
-    if (!email || !password) {
+    if (!username || !password) {
       Alert.alert(t('notification.title'), t('login.errors.missingFields'));
       return;
     }
 
-    if (!isValidEmail(email)) {
-      Alert.alert(t('notification.title'), t('login.errors.invalidEmail'));
+    // Kiểm tra username là email hoặc số điện thoại hợp lệ
+    if (!isValidEmail(username) && !isValidPhone(username)) {
+      Alert.alert(t('notification.title'), t('login.errors.invalidEmailOrPhone'));
       return;
     }
 
@@ -70,7 +77,7 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
       return;
     }
 
-    const result = await login(email, password);
+    const result = await login(username, password);
 
     console.log('Result: ', result);
     if (result === true) {
@@ -141,8 +148,8 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
               iconSource={AppIcons.email}
               placeholder={t('login.username')}
               keyboardType="email-address"
-              onSetValue={value => handleChange('email', value)}
-              value={formData.email}
+              onSetValue={value => handleChange('username', value)}
+              value={formData.username}
               theme={theme}
             />
 

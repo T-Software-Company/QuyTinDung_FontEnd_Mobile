@@ -329,7 +329,7 @@ const Header: React.FC<HeaderProps> = ({Navbar, navigation, name}) => {
           </TouchableOpacity>
           <View>
             <Text style={styles.heading}>
-              {t('formCreateLoan.financialInfo')}
+              {t('formCreateLoan.financialInfo.title')}
             </Text>
           </View>
           <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>

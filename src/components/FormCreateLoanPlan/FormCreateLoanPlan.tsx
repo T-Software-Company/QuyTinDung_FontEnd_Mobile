@@ -25,13 +25,13 @@ interface FormCreateLoanPlanProps {
 }
 
 interface FormData extends Omit<CreateLoanPlanRequest, 'application'> {
-  selectedLoanTerm: number | undefined ;
+  selectedLoanTerm: number | undefined;
 }
 
 interface LoanTermOption {
-  value: number;  // Changed from string to number
+  value: number; // Changed from string to number
   label: string;
-  interest: number;  // Changed from string to number
+  interest: number; // Changed from string to number
 }
 
 const FormCreateLoanPlan: React.FC<FormCreateLoanPlanProps> = ({
@@ -78,7 +78,9 @@ const FormCreateLoanPlan: React.FC<FormCreateLoanPlanProps> = ({
   });
 
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedInterest, setSelectedInterest] = useState<number | undefined>(undefined);
+  const [selectedInterest, setSelectedInterest] = useState<number | undefined>(
+    undefined,
+  );
 
   const handleOnchange = (field: keyof FormData, value: any): void => {
     setFormData(prev => ({
@@ -111,20 +113,8 @@ const FormCreateLoanPlan: React.FC<FormCreateLoanPlanProps> = ({
 
       const response = await loanPlan(appId, loanPlanData);
 
-      if (response.code === 201) {
-        Alert.alert(
-          currentLanguage === 'vi' ? 'Thông báo' : 'Notification',
-          currentLanguage === 'vi'
-            ? 'Tạo kế hoạch vay thành công'
-            : 'Loan plan created successfully',
-          [
-            {
-              text: 'OK',
-              onPress: () =>
-                navigation.navigate('CreateFinancialInfo', {appId}),
-            },
-          ],
-        );
+      if (response) {
+        navigation.navigate('CreateFinancialInfo', {appId});
       }
     } catch (error) {
       console.error('Error creating loan plan:', error);

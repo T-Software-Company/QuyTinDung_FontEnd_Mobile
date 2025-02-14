@@ -41,11 +41,15 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({
     login: async (username, password) => {
       setLoading(true);
       try {
-        await authService.login(username, password);
-        setIsAuthenticated(true);
-        return true;
+        const success = await authService.login(username, password);
+        if (success) {
+          setIsAuthenticated(true);
+          return true;
+        }
+        return false;
       } catch (err: any) {
         setError(err.message);
+        setIsAuthenticated(false);
         return false;
       } finally {
         setLoading(false);

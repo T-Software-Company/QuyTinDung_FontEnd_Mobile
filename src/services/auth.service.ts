@@ -42,18 +42,28 @@ class AuthService {
   }
 
   async login(username: string, password: string) {
-    const params = this.createAuthParams('password', {
-      username,
-      password,
-      scope: 'openid',
-    });
+    try {
+      const params = this.createAuthParams('password', {
+        username,
+        password,
+        scope: 'openid',
+      });
 
-    const response = await axios.post(this.keycloakTokenUrl, params, {
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-    });
+      const response = await axios.post(this.keycloakTokenUrl, params, {
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      });
 
-    await this.handleAuthResponse(response.data);
-    return response;
+      if (response.status !== 200 || !response.data.access_token) {
+        throw new Error('Invalid credentials');
+      }
+
+      await this.handleAuthResponse(response.data);
+      return true;
+    } catch (error: any) {
+      console.log('Login error:', error.response);
+      // Re-throw để component xử lý error
+      throw error;
+    }
   }
 
   async refreshToken() {
@@ -87,20 +97,29 @@ class AuthService {
   }
 
   async register(userData: UserData) {
-    const transformedData = this.transformUserData(userData);
+    try {
+      const transformedData = this.transformUserData(userData);
 
-    const response = await axios.post(
-      'https://tsoftware.store/api/v1/customers',
-      transformedData,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
+      const response = await axios.post(
+        'https://tsoftware.store/api/v1/customers',
+        transformedData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
         },
-      },
-    );
+      );
 
-    return response.status === 200;
+      if (response.status === 200) {
+        return true;
+      }
+
+      return false;
+    } catch (error: any) {
+      console.log('Error:', error.message);
+      console.log('Error:', error.response);
+    }
   }
 
   private transformUserData(userData: UserData) {

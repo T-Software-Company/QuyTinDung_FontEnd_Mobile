@@ -30,7 +30,7 @@ const windowHeight = Dimensions.get('window').height;
 
 const Login: React.FC<LoginProps> = ({navigation}) => {
   const [formData, setFormData] = useState<FormData>({
-    username: 'demo@gmail.com',
+    username: 'demo2@gmail.com',
     password: '123456',
   });
   const [invisible, setInvisible] = useState<boolean>(true);
@@ -68,7 +68,10 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
 
     // Kiểm tra username là email hoặc số điện thoại hợp lệ
     if (!isValidEmail(username) && !isValidPhone(username)) {
-      Alert.alert(t('notification.title'), t('login.errors.invalidEmailOrPhone'));
+      Alert.alert(
+        t('notification.title'),
+        t('login.errors.invalidEmailOrPhone'),
+      );
       return;
     }
 
@@ -76,7 +79,7 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
       Alert.alert(t('notification.title'), t('login.errors.passwordLength'));
       return;
     }
-
+    console.log('Login:', username, password);
     const result = await login(username, password);
 
     console.log('Result: ', result);

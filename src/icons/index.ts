@@ -26,6 +26,7 @@ const icons: IconGroups = {
     next: require('../../assets/images/arrow-right.png'),
     add: require('../../assets/images/add-icon.png'),
     downLoad: require('../../assets/images/download-icon.png'),
+    upLoad: require('../../assets/images/upload-icon.png'),
     copy: require('../../assets/images/copy-icon.png'),
     sent: require('../../assets/images/sent-icon.png'),
     chevronUp: require('../../assets/images/chevron-up.png'),
@@ -35,6 +36,7 @@ const icons: IconGroups = {
     withdrawIcon: require('../../assets/images/withdraw-icon.png'),
     transactionIcon: require('../../assets/images/transaction-icon.png'),
     supportIcon: require('../../assets/images/support-icon.png'),
+    infoIcon: require('../../assets/images/info-icon.png'),
   },
   qr: {
     qr: require('../../assets/images/QR.jpg'),

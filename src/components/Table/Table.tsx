@@ -7,7 +7,7 @@ import {useTranslation} from 'react-i18next';
 
 interface TableBox {
   key: string;
-  value: string;
+  value: string | number;
 }
 
 interface TableBoxList {
@@ -215,3 +215,4 @@ const Table: React.FC<TableProps> = ({name, data, navigation, detail}) => {
 };
 
 export default Table;
+

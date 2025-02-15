@@ -17,6 +17,8 @@ export interface Application {
   customer: {
     id: string;
   };
+  purpose: string | null;
+  borrowerType: string | null;
   metadata: any | null;
   deleted: boolean;
 }

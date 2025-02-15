@@ -259,7 +259,10 @@
             "uploadDocuments": "Tải lên tài liệu",
             "filePickerError": "Lỗi khi chọn tệp",
             "submit": "Tiếp theo",
-            "submitError": "Có lỗi xảy ra khi gửi thông tin tài chính"
+            "submitError": "Có lỗi xảy ra khi gửi thông tin tài chính",
+            "documents": "Tài liệu đính kèm",
+            "uploadDocument": "Tải lên tài liệu",
+            "filePickerError": "Không thể tải lên tài liệu"
         },
         "introduce": "Giới thiệu sản phẩm vay",
         "loanAmount": "Số tiền cần vay",

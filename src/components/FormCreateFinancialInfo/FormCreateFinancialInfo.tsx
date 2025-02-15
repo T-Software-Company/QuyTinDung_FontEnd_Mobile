@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Switch,
+  ScrollView,
+  Image,
 } from 'react-native';
 import React, {useState} from 'react';
 import InputBackground from '../InputBackground/InputBackground';
@@ -16,6 +18,11 @@ import {Theme} from '../../theme/colors';
 import {financialInfo} from '../../api/services/createLoan';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../navigators/RootNavigator';
+import DocumentPicker, {
+  DocumentPickerResponse,
+} from 'react-native-document-picker';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import {AppIcons} from '../../icons';
 
 interface FormCreateFinancialInfoProps {
   theme: Theme;
@@ -58,6 +65,11 @@ const FormCreateFinancialInfo: React.FC<FormCreateFinancialInfoProps> = ({
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState<DocumentPickerResponse[]>(
+    [],
+  );
+
+  console.log('selectedFiles:', selectedFiles);
 
   const handleOnchange = (field: keyof FormData, value: any): void => {
     setFormData(prev => ({
@@ -66,17 +78,58 @@ const FormCreateFinancialInfo: React.FC<FormCreateFinancialInfoProps> = ({
     }));
   };
 
+  const handleDocumentPick = async () => {
+    try {
+      const result = await DocumentPicker.pick({
+        type: [DocumentPicker.types.allFiles],
+      });
+
+      const file = result[0];
+      setSelectedFiles(prev => [...prev, file]);
+
+      const formData = new FormData();
+      formData.append('file', {
+        uri: file.uri,
+        name: file.name,
+        type: file.type,
+      });
+
+      const response = await fetch('https://your-api.com/upload', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      const uploadResult = await response.json();
+      setFormData(prev => ({
+        ...prev,
+        files: [...prev.files, uploadResult.data],
+      }));
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        // User cancelled the picker
+      } else {
+        Alert.alert('Error', 'Failed to upload document');
+      }
+    }
+  };
+
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
       const response = await financialInfo(appId, formData);
 
       if (response) {
-        navigation.navigate('CreditRating', {appId});
+        navigation.replace('CreditRating', {appId});
       }
     } catch (error) {
       console.error('Error submitting financial info:', error);
-      Alert.alert(t('notification.title'), t('formCreateLoan.financialInfo.submitError'));
+      Alert.alert(
+        t('notification.title'),
+        t('formCreateLoan.financialInfo.submitError'),
+      );
     } finally {
       setIsLoading(false);
     }
@@ -112,12 +165,89 @@ const FormCreateFinancialInfo: React.FC<FormCreateFinancialInfoProps> = ({
       textAlign: 'center',
       fontWeight: 'bold',
     },
+    uploadSection: {
+      // backgroundColor: theme.buttonSubmit,
+      borderRadius: 12,
+      paddingVertical: 12,
+    },
+    uploadButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      // backgroundColor: theme.buttonSubmit,
+      padding: 12,
+      borderRadius: 8,
+      borderWidth: 1,
+      borderStyle: 'dashed',
+      borderColor: 'rgba(255,255,255,0.5)',
+    },
+    uploadIcon: {
+      marginRight: 8,
+      width: 24,
+      height: 24,
+      tintColor: 'white',
+    },
+    uploadText: {
+      color: 'white',
+      fontSize: 14,
+      fontWeight: '600',
+    },
+    filesList: {
+      marginTop: 8,
+    },
+    fileItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: theme.backgroundBox || '#f5f5f5',
+      padding: 12,
+      borderRadius: 8,
+      marginBottom: 8,
+      borderWidth: 1,
+      borderColor: 'rgba(0,0,0,0.1)',
+    },
+    fileIcon: {
+      marginRight: 4,
+      width: 16,
+      height: 16,
+      tintColor: theme.noteText || '#666',
+    },
+    fileName: {
+      flex: 1,
+      color: theme.text,
+      fontSize: 14,
+    },
+    fileSize: {
+      color: theme.noteText || '#666',
+      fontSize: 12,
+      marginLeft: 8,
+    },
+    uploadInfo: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 8,
+    },
+    uploadInfoText: {
+      color: theme.noteText || '#666',
+      fontSize: 12,
+      marginLeft: 4,
+    },
   });
 
+  // Format file size
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
+  };
+
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>{t('formCreateLoan.financialInfo.jobTitle')}</Text>
+        <Text style={styles.headingTitle}>
+          {t('formCreateLoan.financialInfo.jobTitle')}
+        </Text>
         <InputBackground
           placeholder={t('formCreateLoan.financialInfo.jobTitlePlaceholder')}
           onChangeText={(value: string) => handleOnchange('jobTitle', value)}
@@ -141,7 +271,9 @@ const FormCreateFinancialInfo: React.FC<FormCreateFinancialInfoProps> = ({
           {t('formCreateLoan.financialInfo.companyAddress')}
         </Text>
         <InputBackground
-          placeholder={t('formCreateLoan.financialInfo.companyAddressPlaceholder')}
+          placeholder={t(
+            'formCreateLoan.financialInfo.companyAddressPlaceholder',
+          )}
           onChangeText={(value: string) =>
             handleOnchange('companyAddress', value)
           }
@@ -150,7 +282,9 @@ const FormCreateFinancialInfo: React.FC<FormCreateFinancialInfoProps> = ({
       </View>
 
       <View style={styles.switchContainer}>
-        <Text style={styles.headingTitle}>{t('formCreateLoan.financialInfo.hasMarried')}</Text>
+        <Text style={styles.headingTitle}>
+          {t('formCreateLoan.financialInfo.hasMarried')}
+        </Text>
         <Switch
           value={formData.hasMarried}
           onValueChange={value => handleOnchange('hasMarried', value)}
@@ -176,7 +310,9 @@ const FormCreateFinancialInfo: React.FC<FormCreateFinancialInfoProps> = ({
           {t('formCreateLoan.financialInfo.monthlyExpense')}
         </Text>
         <InputBackground
-          placeholder={t('formCreateLoan.financialInfo.monthlyExpensePlaceholder')}
+          placeholder={t(
+            'formCreateLoan.financialInfo.monthlyExpensePlaceholder',
+          )}
           keyboardType="numeric"
           onChangeText={(value: string) =>
             handleOnchange('monthlyExpense', Number(value))
@@ -190,7 +326,9 @@ const FormCreateFinancialInfo: React.FC<FormCreateFinancialInfoProps> = ({
           {t('formCreateLoan.financialInfo.monthlySaving')}
         </Text>
         <InputBackground
-          placeholder={t('formCreateLoan.financialInfo.monthlySavingPlaceholder')}
+          placeholder={t(
+            'formCreateLoan.financialInfo.monthlySavingPlaceholder',
+          )}
           keyboardType="numeric"
           onChangeText={(value: string) =>
             handleOnchange('monthlySaving', Number(value))
@@ -218,13 +356,56 @@ const FormCreateFinancialInfo: React.FC<FormCreateFinancialInfoProps> = ({
           {t('formCreateLoan.financialInfo.monthlyLoanPayment')}
         </Text>
         <InputBackground
-          placeholder={t('formCreateLoan.financialInfo.monthlyLoanPaymentPlaceholder')}
+          placeholder={t(
+            'formCreateLoan.financialInfo.monthlyLoanPaymentPlaceholder',
+          )}
           keyboardType="numeric"
           onChangeText={(value: string) =>
             handleOnchange('monthlyLoanPayment', Number(value))
           }
           value={formData.monthlyLoanPayment.toString()}
         />
+      </View>
+
+      <View style={styles.boxInput}>
+        <Text style={styles.headingTitle}>
+          {t('formCreateLoan.financialInfo.documents')}
+        </Text>
+
+        <View style={styles.uploadSection}>
+          <View style={styles.uploadInfo}>
+            <Image
+              source={AppIcons.infoIcon}
+              style={styles.fileIcon}
+            />
+            <Text style={styles.uploadInfoText}>
+              Hỗ trợ PDF, DOCX, JPG, PNG (Max: 5MB)
+            </Text>
+          </View>
+
+          <TouchableOpacity
+            style={styles.uploadButton}
+            onPress={handleDocumentPick}>
+            <Image source={AppIcons.upLoad} style={styles.uploadIcon} />
+            <Text style={styles.uploadText}>
+              {t('formCreateLoan.financialInfo.uploadDocument')}
+            </Text>
+          </TouchableOpacity>
+
+          <View style={styles.filesList}>
+            {selectedFiles.map((file, index) => (
+              <View key={index} style={styles.fileItem}>
+                <Image source={AppIcons.infoIcon} style={styles.fileIcon} />
+                <Text style={styles.fileName} numberOfLines={1}>
+                  {file.name}
+                </Text>
+                <Text style={styles.fileSize}>
+                  {formatFileSize(file.size || 0)}
+                </Text>
+              </View>
+            ))}
+          </View>
+        </View>
       </View>
 
       <TouchableOpacity
@@ -234,10 +415,12 @@ const FormCreateFinancialInfo: React.FC<FormCreateFinancialInfoProps> = ({
         {isLoading ? (
           <ActivityIndicator color="white" />
         ) : (
-          <Text style={styles.textWhite}>{t('formCreateLoan.financialInfo.submit')}</Text>
+          <Text style={styles.textWhite}>
+            {t('formCreateLoan.financialInfo.submit')}
+          </Text>
         )}
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 

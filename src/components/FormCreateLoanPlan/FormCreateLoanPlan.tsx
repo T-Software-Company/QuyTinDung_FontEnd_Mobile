@@ -114,10 +114,10 @@ const FormCreateLoanPlan: React.FC<FormCreateLoanPlanProps> = ({
       const response = await loanPlan(appId, loanPlanData);
 
       if (response) {
-        navigation.navigate('CreateFinancialInfo', {appId});
+        navigation.replace('CreateFinancialInfo', {appId});
       }
     } catch (error) {
-      console.error('Error creating loan plan:', error);
+      console.error('Error creating loan plan:', {error});
       Alert.alert(
         currentLanguage === 'vi' ? 'Lỗi' : 'Error',
         currentLanguage === 'vi'

@@ -153,7 +153,10 @@
             "uploadDocuments": "Upload Documents",
             "filePickerError": "Error picking file",
             "submit": "Next",
-            "submitError": "Error submitting financial information"
+            "submitError": "Error submitting financial information",
+            "documents": "Attached Documents",
+            "uploadDocument": "Upload Documents",
+            "filePickerError": "Cannot upload document"
         }
     },
     "infoSave": {

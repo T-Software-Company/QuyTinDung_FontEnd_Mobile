@@ -35,19 +35,19 @@ const FormCreateSave: React.FC = () => {
 
   const rates: RateItem[] = [
     {
-      value: '1',
+      value: '5',
       label: `5 ${t('formCreateSave.month')}`,
       rate: '4%',
     },
     {
-      value: '2',
-      label: `8  ${t('formCreateSave.month')}`,
+      value: '8',
+      label: `8 ${t('formCreateSave.month')}`,
       rate: '5%',
     },
 
     {
-      value: '3',
-      label: `12  ${t('formCreateSave.month')}`,
+      value: '12',
+      label: `12 ${t('formCreateSave.month')}`,
       rate: '5.5%',
     },
   ];
@@ -147,6 +147,12 @@ const FormCreateSave: React.FC = () => {
       fontSize: 14,
       color: '#007BFF',
     },
+
+    boxRate: {
+      flexDirection: 'column',
+      gap: 4,
+    },
+
     textWhite: {
       color: 'white',
     },
@@ -186,11 +192,24 @@ const FormCreateSave: React.FC = () => {
         />
 
         {formData.selectedRate ? (
-          <Text style={styles.rateText}>
-            {currentLanguage === 'vi'
-              ? `Lãi suất của kỳ hạn ${formData.selectedRate.label} là ${formData.selectedRate.rate}`
-              : `Interest rate for ${formData.selectedRate.label} is ${formData.selectedRate.rate}`}
-          </Text>
+          <View style={styles.boxRate}>
+            <Text style={styles.rateText}>
+              {currentLanguage === 'vi'
+                ? `Lãi suất của kỳ hạn ${formData.selectedRate.label} là ${formData.selectedRate.rate}`
+                : `Interest rate for ${formData.selectedRate.label} is ${formData.selectedRate.rate}`}
+            </Text>
+            <Text style={styles.rateText}>
+              {`Tiền lời dự kiến kỳ hạn ${
+                formData.selectedRate.label
+              } là ${Math.round(
+                ((Number(formData.value) *
+                  parseFloat(formData.selectedRate.rate)) /
+                  100 /
+                  12) *
+                  Number(formData.selectedRate.value),
+              )}đ`}
+            </Text>
+          </View>
         ) : (
           <></>
         )}

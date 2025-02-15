@@ -1,5 +1,5 @@
 export interface UploadFile {
-  uri: string;
+  uri: string | undefined;
   type: string;
   fileName: string;
 }

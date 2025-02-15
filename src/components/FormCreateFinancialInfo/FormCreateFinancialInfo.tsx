@@ -6,104 +6,70 @@ import {
   Alert,
   TouchableOpacity,
   ActivityIndicator,
+  Switch,
+  ScrollView,
+  Image,
 } from 'react-native';
 import React, {useState} from 'react';
-import DropdownComponent from '../DropdownComponent/DropdownComponent';
 import InputBackground from '../InputBackground/InputBackground';
 import {useTranslation} from 'react-i18next';
 import i18n from '../../../i18n';
 import {Theme} from '../../theme/colors';
-import {
-  LoanRequestBody,
-  BorrowerType,
-  LoanSecurityType,
-  LoanCollateralType,
-} from '../../api/types/loanRequest';
-import {loanRequest} from '../../api/services/createLoan';
+import {financialInfo} from '../../api/services/createLoan';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../../navigators/RootNavigator';
+import DocumentPicker, {
+  DocumentPickerResponse,
+} from 'react-native-document-picker';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import {AppIcons} from '../../icons';
 
 interface FormCreateFinancialInfoProps {
   theme: Theme;
+  navigation: StackNavigationProp<RootStackParamList, 'CreateFinancialInfo'>;
+  appId: string;
 }
 
-interface TargetItem {
-  value: string;
-  label: string;
-}
-
-interface FormData extends Omit<LoanRequestBody, 'application'> {
-  selectedRate?: TargetItem;
-  method?: string;
-}
-
-interface NotificationType {
-  vi: string;
-  en: string;
+interface FormData {
+  jobTitle: string;
+  companyName: string;
+  companyAddress: string;
+  hasMarried: boolean;
+  totalIncome: number;
+  monthlyExpense: number;
+  monthlySaving: number;
+  monthlyDebt: number;
+  monthlyLoanPayment: number;
+  files: string[];
 }
 
 const FormCreateFinancialInfo: React.FC<FormCreateFinancialInfoProps> = ({
   theme,
+  navigation,
+  appId,
 }) => {
   const currentLanguage = i18n.language;
   const {t} = useTranslation();
-  const applicationId = '6ed5ada9-72dd-4a7a-a096-08a9071e613c';
-
-  const notification: NotificationType = {
-    vi: 'Bạn đã tạo khoản vay thành công.\nVui lòng chờ nhân viên hỗ trợ tư vấn và xác nhận.',
-    en: 'Your loan has been created successfully.\nPlease wait for staff support and confirmation.',
-  };
-
-  const borrowerTypes = [
-    {
-      value: 'INDIVIDUAL',
-      label: currentLanguage === 'vi' ? 'Cá nhân' : 'Individual',
-    },
-    {
-      value: 'BUSINESS',
-      label: currentLanguage === 'vi' ? 'Doanh nghiệp' : 'Business',
-    },
-  ];
-
-  const securityTypes = [
-    {
-      value: 'MORTGAGE',
-      label: currentLanguage === 'vi' ? 'Thế chấp' : 'Mortgage',
-    },
-    {
-      value: 'UNSECURED',
-      label: currentLanguage === 'vi' ? 'Tín chấp' : 'Unsecured',
-    },
-  ];
-
-  const collateralTypes = [
-    {
-      value: 'VEHICLE',
-      label: currentLanguage === 'vi' ? 'Phương tiện' : 'Vehicle',
-    },
-    {
-      value: 'PROPERTY',
-      label: currentLanguage === 'vi' ? 'Bất động sản' : 'Property',
-    },
-    {
-      value: 'EQUIPMENT',
-      label: currentLanguage === 'vi' ? 'Thiết bị' : 'Equipment',
-    },
-  ];
 
   const [formData, setFormData] = useState<FormData>({
-    purpose: '',
-    amount: 0,
-    borrowerType: 'INDIVIDUAL',
-    asset: '',
-    loanSecurityType: 'UNSECURED',
-    loanCollateralTypes: ['VEHICLE'],
-    note: '',
-    metadata: {
-      key1: '',
-      key2: '',
-    },
+    jobTitle: '',
+    companyName: '',
+    companyAddress: '',
+    hasMarried: false,
+    totalIncome: 0,
+    monthlyExpense: 0,
+    monthlySaving: 0,
+    monthlyDebt: 0,
+    monthlyLoanPayment: 0,
+    files: [],
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState<DocumentPickerResponse[]>(
+    [],
+  );
+
+  console.log('selectedFiles:', selectedFiles);
 
   const handleOnchange = (field: keyof FormData, value: any): void => {
     setFormData(prev => ({
@@ -112,40 +78,57 @@ const FormCreateFinancialInfo: React.FC<FormCreateFinancialInfoProps> = ({
     }));
   };
 
+  const handleDocumentPick = async () => {
+    try {
+      const result = await DocumentPicker.pick({
+        type: [DocumentPicker.types.allFiles],
+      });
+
+      const file = result[0];
+      setSelectedFiles(prev => [...prev, file]);
+
+      const formData = new FormData();
+      formData.append('file', {
+        uri: file.uri,
+        name: file.name,
+        type: file.type,
+      });
+
+      const response = await fetch('https://your-api.com/upload', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      const uploadResult = await response.json();
+      setFormData(prev => ({
+        ...prev,
+        files: [...prev.files, uploadResult.data],
+      }));
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        // User cancelled the picker
+      } else {
+        Alert.alert('Error', 'Failed to upload document');
+      }
+    }
+  };
+
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
+      const response = await financialInfo(appId, formData);
 
-      const loanData = {
-        purpose: formData.purpose,
-        amount: formData.amount,
-        borrowerType: formData.borrowerType,
-        asset: formData.asset,
-        loanSecurityType: formData.loanSecurityType,
-        loanCollateralTypes: formData.loanCollateralTypes,
-        note: formData.note,
-        metadata: {
-          termRate: formData.selectedRate?.value || '',
-          paymentFrequency: formData.method || '',
-        },
-      };
-
-      const response = await loanRequest(applicationId, loanData);
-      console.log('Loan request response:', response);
-
-      if (response.code === 200) {
-        Alert.alert(
-          currentLanguage === 'vi' ? 'Thông báo' : 'Notification',
-          currentLanguage === 'vi' ? notification.vi : notification.en,
-        );
+      if (response) {
+        navigation.replace('CreditRating', {appId});
       }
     } catch (error) {
-      console.error('Error creating loan request:', error);
+      console.error('Error submitting financial info:', error);
       Alert.alert(
-        currentLanguage === 'vi' ? 'Lỗi' : 'Error',
-        currentLanguage === 'vi'
-          ? 'Có lỗi xảy ra khi tạo khoản vay'
-          : 'Error occurred while creating loan request',
+        t('notification.title'),
+        t('formCreateLoan.financialInfo.submitError'),
       );
     } finally {
       setIsLoading(false);
@@ -153,38 +136,23 @@ const FormCreateFinancialInfo: React.FC<FormCreateFinancialInfoProps> = ({
   };
 
   const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+    },
     boxInput: {
       marginBottom: 12,
     },
-
     headingTitle: {
       fontWeight: 'bold',
       marginBottom: 8,
       color: theme.text,
     },
-    textInput: {
-      backgroundColor: '#f4f4f4',
-      borderRadius: 8,
-      height: 40,
-      paddingLeft: 15,
-      paddingRight: 15,
-      paddingTop: 10,
-      paddingBottom: 10,
-      color: '#000',
-      paddingVertical: 0,
-      textAlignVertical: 'center',
+    switchContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: 12,
     },
-
-    placeholderStyle: {
-      color: '#aaa',
-      fontSize: 14,
-    },
-
-    selectedTextStyle: {
-      color: '#000',
-      fontSize: 14,
-    },
-
     btn: {
       width: '100%',
       backgroundColor: '#007BFF',
@@ -192,136 +160,252 @@ const FormCreateFinancialInfo: React.FC<FormCreateFinancialInfoProps> = ({
       borderRadius: 12,
       marginTop: 8,
     },
-
-    hidden: {
-      opacity: 0,
-      pointerEvents: 'none',
-    },
-
-    dropdown: {
-      borderColor: '#ccc',
-      borderWidth: 1,
-      borderRadius: 5,
-      height: 50,
-      zIndex: 5000,
-    },
-    dropdownContainer: {
-      borderColor: '#ccc',
-      zIndex: 5000,
-      position: 'absolute',
-    },
-
-    rateText: {
-      marginTop: 12,
-      fontSize: 14,
-      color: '#007BFF',
-    },
     textWhite: {
       color: 'white',
+      textAlign: 'center',
+      fontWeight: 'bold',
+    },
+    uploadSection: {
+      // backgroundColor: theme.buttonSubmit,
+      borderRadius: 12,
+      paddingVertical: 12,
+    },
+    uploadButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      // backgroundColor: theme.buttonSubmit,
+      padding: 12,
+      borderRadius: 8,
+      borderWidth: 1,
+      borderStyle: 'dashed',
+      borderColor: 'rgba(255,255,255,0.5)',
+    },
+    uploadIcon: {
+      marginRight: 8,
+      width: 24,
+      height: 24,
+      tintColor: 'white',
+    },
+    uploadText: {
+      color: 'white',
+      fontSize: 14,
+      fontWeight: '600',
+    },
+    filesList: {
+      marginTop: 8,
+    },
+    fileItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: theme.backgroundBox || '#f5f5f5',
+      padding: 12,
+      borderRadius: 8,
+      marginBottom: 8,
+      borderWidth: 1,
+      borderColor: 'rgba(0,0,0,0.1)',
+    },
+    fileIcon: {
+      marginRight: 4,
+      width: 16,
+      height: 16,
+      tintColor: theme.noteText || '#666',
+    },
+    fileName: {
+      flex: 1,
+      color: theme.text,
+      fontSize: 14,
+    },
+    fileSize: {
+      color: theme.noteText || '#666',
+      fontSize: 12,
+      marginLeft: 8,
+    },
+    uploadInfo: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 8,
+    },
+    uploadInfoText: {
+      color: theme.noteText || '#666',
+      fontSize: 12,
+      marginLeft: 4,
     },
   });
 
+  // Format file size
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
+  };
+
   return (
-    <View>
+    <ScrollView style={styles.container}>
       <View style={styles.boxInput}>
         <Text style={styles.headingTitle}>
-          {currentLanguage === 'vi' ? 'Số tiền vay' : 'Loan Amount'}
+          {t('formCreateLoan.financialInfo.jobTitle')}
         </Text>
         <InputBackground
-          placeholder={
-            currentLanguage === 'vi' ? 'Nhập số tiền' : 'Enter amount'
+          placeholder={t('formCreateLoan.financialInfo.jobTitlePlaceholder')}
+          onChangeText={(value: string) => handleOnchange('jobTitle', value)}
+          value={formData.jobTitle}
+        />
+      </View>
+
+      <View style={styles.boxInput}>
+        <Text style={styles.headingTitle}>
+          {t('formCreateLoan.financialInfo.companyName')}
+        </Text>
+        <InputBackground
+          placeholder={t('formCreateLoan.financialInfo.companyNamePlaceholder')}
+          onChangeText={(value: string) => handleOnchange('companyName', value)}
+          value={formData.companyName}
+        />
+      </View>
+
+      <View style={styles.boxInput}>
+        <Text style={styles.headingTitle}>
+          {t('formCreateLoan.financialInfo.companyAddress')}
+        </Text>
+        <InputBackground
+          placeholder={t(
+            'formCreateLoan.financialInfo.companyAddressPlaceholder',
+          )}
+          onChangeText={(value: string) =>
+            handleOnchange('companyAddress', value)
           }
+          value={formData.companyAddress}
+        />
+      </View>
+
+      <View style={styles.switchContainer}>
+        <Text style={styles.headingTitle}>
+          {t('formCreateLoan.financialInfo.hasMarried')}
+        </Text>
+        <Switch
+          value={formData.hasMarried}
+          onValueChange={value => handleOnchange('hasMarried', value)}
+        />
+      </View>
+
+      <View style={styles.boxInput}>
+        <Text style={styles.headingTitle}>
+          {t('formCreateLoan.financialInfo.totalIncome')}
+        </Text>
+        <InputBackground
+          placeholder={t('formCreateLoan.financialInfo.totalIncomePlaceholder')}
           keyboardType="numeric"
           onChangeText={(value: string) =>
-            handleOnchange('amount', Number(value))
+            handleOnchange('totalIncome', Number(value))
           }
-          value={formData.amount.toString()}
+          value={formData.totalIncome.toString()}
         />
       </View>
 
       <View style={styles.boxInput}>
         <Text style={styles.headingTitle}>
-          {currentLanguage === 'vi' ? 'Mục đích vay' : 'Loan Purpose'}
+          {t('formCreateLoan.financialInfo.monthlyExpense')}
         </Text>
         <InputBackground
-          placeholder={
-            currentLanguage === 'vi' ? 'Nhập mục đích' : 'Enter purpose'
+          placeholder={t(
+            'formCreateLoan.financialInfo.monthlyExpensePlaceholder',
+          )}
+          keyboardType="numeric"
+          onChangeText={(value: string) =>
+            handleOnchange('monthlyExpense', Number(value))
           }
-          onChangeText={(value: string) => handleOnchange('purpose', value)}
-          value={formData.purpose}
+          value={formData.monthlyExpense.toString()}
         />
       </View>
 
       <View style={styles.boxInput}>
         <Text style={styles.headingTitle}>
-          {currentLanguage === 'vi' ? 'Loại người vay' : 'Borrower Type'}
-        </Text>
-        <DropdownComponent
-          value={formData.borrowerType}
-          data={borrowerTypes}
-          placeholder={currentLanguage === 'vi' ? 'Chọn loại' : 'Select type'}
-          onChange={(value: TargetItem) =>
-            handleOnchange('borrowerType', value.value as BorrowerType)
-          }
-        />
-      </View>
-
-      <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>
-          {currentLanguage === 'vi' ? 'Tài sản' : 'Asset'}
+          {t('formCreateLoan.financialInfo.monthlySaving')}
         </Text>
         <InputBackground
-          placeholder={
-            currentLanguage === 'vi' ? 'Nhập tài sản' : 'Enter asset'
+          placeholder={t(
+            'formCreateLoan.financialInfo.monthlySavingPlaceholder',
+          )}
+          keyboardType="numeric"
+          onChangeText={(value: string) =>
+            handleOnchange('monthlySaving', Number(value))
           }
-          onChangeText={(value: string) => handleOnchange('asset', value)}
-          value={formData.asset}
+          value={formData.monthlySaving.toString()}
         />
       </View>
 
       <View style={styles.boxInput}>
         <Text style={styles.headingTitle}>
-          {currentLanguage === 'vi' ? 'Hình thức bảo đảm' : 'Security Type'}
-        </Text>
-        <DropdownComponent
-          value={formData.loanSecurityType}
-          data={securityTypes}
-          placeholder={
-            currentLanguage === 'vi' ? 'Chọn hình thức' : 'Select type'
-          }
-          onChange={(value: TargetItem) =>
-            handleOnchange('loanSecurityType', value.value as LoanSecurityType)
-          }
-        />
-      </View>
-
-      <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>
-          {currentLanguage === 'vi'
-            ? 'Loại tài sản đảm bảo'
-            : 'Collateral Type'}
-        </Text>
-        <DropdownComponent
-          value={formData.loanCollateralTypes[0]}
-          data={collateralTypes}
-          placeholder={currentLanguage === 'vi' ? 'Chọn loại' : 'Select type'}
-          onChange={(value: TargetItem) =>
-            handleOnchange('loanCollateralTypes', [
-              value.value as LoanCollateralType,
-            ])
-          }
-        />
-      </View>
-
-      <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>
-          {currentLanguage === 'vi' ? 'Ghi chú' : 'Note'}
+          {t('formCreateLoan.financialInfo.monthlyDebt')}
         </Text>
         <InputBackground
-          placeholder={currentLanguage === 'vi' ? 'Nhập ghi chú' : 'Enter note'}
-          onChangeText={(value: string) => handleOnchange('note', value)}
-          value={formData.note}
+          placeholder={t('formCreateLoan.financialInfo.monthlyDebtPlaceholder')}
+          keyboardType="numeric"
+          onChangeText={(value: string) =>
+            handleOnchange('monthlyDebt', Number(value))
+          }
+          value={formData.monthlyDebt.toString()}
         />
+      </View>
+
+      <View style={styles.boxInput}>
+        <Text style={styles.headingTitle}>
+          {t('formCreateLoan.financialInfo.monthlyLoanPayment')}
+        </Text>
+        <InputBackground
+          placeholder={t(
+            'formCreateLoan.financialInfo.monthlyLoanPaymentPlaceholder',
+          )}
+          keyboardType="numeric"
+          onChangeText={(value: string) =>
+            handleOnchange('monthlyLoanPayment', Number(value))
+          }
+          value={formData.monthlyLoanPayment.toString()}
+        />
+      </View>
+
+      <View style={styles.boxInput}>
+        <Text style={styles.headingTitle}>
+          {t('formCreateLoan.financialInfo.documents')}
+        </Text>
+
+        <View style={styles.uploadSection}>
+          <View style={styles.uploadInfo}>
+            <Image
+              source={AppIcons.infoIcon}
+              style={styles.fileIcon}
+            />
+            <Text style={styles.uploadInfoText}>
+              Hỗ trợ PDF, DOCX, JPG, PNG (Max: 5MB)
+            </Text>
+          </View>
+
+          <TouchableOpacity
+            style={styles.uploadButton}
+            onPress={handleDocumentPick}>
+            <Image source={AppIcons.upLoad} style={styles.uploadIcon} />
+            <Text style={styles.uploadText}>
+              {t('formCreateLoan.financialInfo.uploadDocument')}
+            </Text>
+          </TouchableOpacity>
+
+          <View style={styles.filesList}>
+            {selectedFiles.map((file, index) => (
+              <View key={index} style={styles.fileItem}>
+                <Image source={AppIcons.infoIcon} style={styles.fileIcon} />
+                <Text style={styles.fileName} numberOfLines={1}>
+                  {file.name}
+                </Text>
+                <Text style={styles.fileSize}>
+                  {formatFileSize(file.size || 0)}
+                </Text>
+              </View>
+            ))}
+          </View>
+        </View>
       </View>
 
       <TouchableOpacity
@@ -331,16 +415,12 @@ const FormCreateFinancialInfo: React.FC<FormCreateFinancialInfoProps> = ({
         {isLoading ? (
           <ActivityIndicator color="white" />
         ) : (
-          <Text
-            style={[
-              styles.textWhite,
-              {fontWeight: 'bold', textAlign: 'center'},
-            ]}>
-            {t('formCreateLoan.submit')}
+          <Text style={styles.textWhite}>
+            {t('formCreateLoan.financialInfo.submit')}
           </Text>
         )}
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 

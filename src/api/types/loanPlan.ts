@@ -7,14 +7,14 @@ export interface LoanPlanApplication {
 }
 
 export interface CreateLoanPlanRequest {
-  loanNeeds: string;
   totalCapitalRequirement: number;
   ownCapital: number;
   proposedLoanAmount: number;
   monthlyIncome: number;
   repaymentPlan: string;
   note: string;
-  loanTerm: string;
+  loanTerm: number;
+  interestRate: number | undefined;
   metadata: LoanPlanMetadata;
   application: LoanPlanApplication;
 }

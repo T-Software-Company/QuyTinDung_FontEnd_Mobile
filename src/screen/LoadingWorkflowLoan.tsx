@@ -8,6 +8,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../navigators/RootNavigator';
 import {useTheme} from '../context/ThemeContext';
 import {WorkflowStepType} from '../api/types/loanInit';
+import {getApplication} from '../api/services/getApplicationsLoan';
 
 // Add type for screen names
 type ScreenName =
@@ -42,46 +43,105 @@ const LoadingWorkflowLoan: React.FC<LoadingWorkflowLoanProps> = ({
 }) => {
   const {theme} = useTheme();
   const user = useSelector((state: RootState) => state.user.userData);
-  console.log('user', user);
+  const sortScreen = ['CreateLoanRequest', 'CreateLoanPlan', 'CreateFinancialInfo', 'CreditRating', 'AssetCollateral'];
+
+  const findNextScreen = (prevSteps: string[], nextSteps: string[]): ScreenName => {
+    if (!prevSteps.includes('init')) {
+      return 'IntroduceLoan';
+    }
+
+    // Convert workflow steps to screen names
+    const completedScreens = prevSteps.map(step => stepToScreenMap[step as WorkflowStepType]);
+    const nextScreens = nextSteps.map(step => stepToScreenMap[step as WorkflowStepType]);
+
+    // Find the first screen in sortScreen that hasn't been completed
+    for (const screenName of sortScreen) {
+      if (!completedScreens.includes(screenName as ScreenName) && nextScreens.includes(screenName as ScreenName)) {
+        return screenName as ScreenName;
+      }
+    }
+
+    return 'IntroduceLoan';
+  };
+
+  const navigateToScreen = (screen: ScreenName, appId: string) => {
+    switch (screen) {
+      case 'IntroduceLoan':
+        navigation.replace('IntroduceLoan'); // No params for IntroduceLoan
+        break;
+      case 'CreateLoanRequest':
+        navigation.replace('CreateLoanRequest', {appId});
+        break;
+      case 'CreateLoanPlan':
+        navigation.replace('CreateLoanPlan', {appId});
+        break;
+      case 'CreateFinancialInfo':
+        navigation.replace('CreateFinancialInfo', {appId});
+        break;
+      case 'CreditRating':
+        navigation.replace('CreditRating', {appId});
+        break;
+      case 'AssetCollateral':
+        navigation.replace('AssetCollateral', {appId});
+        break;
+    }
+  };
 
   useEffect(() => {
-    const checkWorkflowStatus = async () => {
+    const checkWorkflowStatus = async (retryCount = 0) => {
+      // Check if user exists
+      if (!user?.id) {
+        console.log('No user found');
+        navigation.replace('IntroduceLoan');
+        return;
+      }
+
       try {
-        const appId = '6ed5ada9-72dd-4a7a-a096-08a9071e613c';
-        const response = await fetchWorkflowStatus(appId);
-        console.log('response', response);
-
-        if (response.code === 200) {
-          const {currentSteps, prevSteps} = response.result;
-          let nextScreen: ScreenName;
-
-          // Case 1: Empty currentSteps or empty prevSteps without init -> go to IntroduceLoan
-          if (currentSteps.length === 0 || (prevSteps.length === 0 && !prevSteps.includes('init'))) {
-            nextScreen = 'IntroduceLoan';
+        // Get application with retry
+        const appId = await getApplication(user.id);
+        if (!appId?.id) {
+          if (retryCount < 1) {
+            console.log('Application not found, retrying...');
+            setTimeout(() => checkWorkflowStatus(retryCount + 1), 1000);
+            return;
           }
-          // Case 2: Check for the first step in currentSteps
-          else {
-            // Get the first step from currentSteps as it represents the current active step
-            const currentActiveStep = currentSteps[0];
-            if (currentActiveStep in stepToScreenMap) {
-              nextScreen = stepToScreenMap[currentActiveStep as WorkflowStepType];
-            } else {
-              nextScreen = 'IntroduceLoan'; // Fallback
-            }
-          }
-
-          await AsyncStorage.setItem('currentStep', currentSteps[0] || 'init');
-          console.log('nextScreen', nextScreen);
-          navigation.replace(nextScreen);
+          console.log('Application not found after retry');
+          navigation.replace('IntroduceLoan');
+          return;
         }
+
+        // Fetch workflow status with retry
+        const response = await fetchWorkflowStatus(appId.id);
+        if (!response || response.code !== 200) {
+          if (retryCount < 1) {
+            console.log('Workflow status failed, retrying...');
+            setTimeout(() => checkWorkflowStatus(retryCount + 1), 1000);
+            return;
+          }
+          console.log('Workflow status failed after retry');
+          navigation.replace('IntroduceLoan');
+          return;
+        }
+        console.log('Workflow status:', response);
+        const {prevSteps, nextSteps} = response.result;
+        const nextScreen = findNextScreen(prevSteps, nextSteps);
+
+        await AsyncStorage.setItem('currentStep', nextSteps[0] || 'init');
+        console.log('Navigating to:', nextScreen);
+        navigateToScreen(nextScreen, appId.id);
       } catch (error) {
-        console.log('Error checking workflow status:', error);
-        console.error('Error checking workflow status:', error);
+        if (retryCount < 1) {
+          console.log('Error occurred, retrying...', error);
+          setTimeout(() => checkWorkflowStatus(retryCount + 1), 1000);
+          return;
+        }
+        console.log('Error occurred after retry:', error);
         navigation.replace('IntroduceLoan');
       }
     };
 
     checkWorkflowStatus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, navigation]);
 
   const styles = StyleSheet.create({
@@ -101,7 +161,7 @@ const LoadingWorkflowLoan: React.FC<LoadingWorkflowLoanProps> = ({
   return (
     <View style={styles.container}>
       <ActivityIndicator size="large" color={theme.text} />
-      <Text style={styles.loadingText}>Đang kiểm tra...</Text>
+      <Text style={styles.loadingText}>Đang lấy dữ liệu...</Text>
     </View>
   );
 };

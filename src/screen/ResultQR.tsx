@@ -1,7 +1,7 @@
 /* eslint-disable curly */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-shadow */
-import React, { useState, useMemo, useCallback} from 'react';
+import React, {useState, useMemo, useCallback} from 'react';
 import {
   View,
   Text,
@@ -21,13 +21,17 @@ import {AppIcons} from '../icons';
 import {useAuth} from '../context/AuthContext';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-import {launchImageLibrary, ImageLibraryOptions, MediaType} from 'react-native-image-picker';
+import {
+  launchImageLibrary,
+  ImageLibraryOptions,
+  MediaType,
+} from 'react-native-image-picker';
 import UploadImage from '../components/UploadImage/UploadImage';
-import {uploadImage} from '../api/uploadImage';
+import {uploadImage} from '../api/services/uploadImage';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
 import {RootStackParamList, FormDataAddress} from '../navigators/RootNavigator';
-import { Asset } from 'react-native-image-picker';
+import {Asset} from 'react-native-image-picker';
 
 interface ImageResponse extends Asset {
   uri: string;
@@ -70,7 +74,6 @@ interface FormValues {
   password: string;
   address: FormDataAddress;
 }
-
 
 // Remove InitialFormValues interface and use FormValues directly
 const ResultQR: React.FC<ResultQRProps> = ({navigation, route}) => {
@@ -191,15 +194,15 @@ const ResultQR: React.FC<ResultQRProps> = ({navigation, route}) => {
         nationality: Yup.string().required(
           t('register.resultScreen.validationErrors.nationality'),
         ),
-        signatureImage: Yup.string().required(
-          t('register.resultScreen.validationErrors.signatureImage'),
-        ),
-        frontImage: Yup.string().required(
-          t('register.resultScreen.validationErrors.frontImage'),
-        ),
-        backImage: Yup.string().required(
-          t('register.resultScreen.validationErrors.backImage'),
-        ),
+        // signatureImage: Yup.string().required(
+        //   t('register.resultScreen.validationErrors.signatureImage'),
+        // ),
+        // frontImage: Yup.string().required(
+        //   t('register.resultScreen.validationErrors.frontImage'),
+        // ),
+        // backImage: Yup.string().required(
+        //   t('register.resultScreen.validationErrors.backImage'),
+        // ),
       }),
     [t],
   );
@@ -239,9 +242,9 @@ const ResultQR: React.FC<ResultQRProps> = ({navigation, route}) => {
       expirationDate: '',
       issuingAuthority: '',
       legalDocType: 'CCCD',
-      signatureImage: '',
-      frontImage: '',
-      backImage: '',
+      signatureImage: 'https://via.placeholder.com/150',
+      frontImage: 'https://via.placeholder.com/150',
+      backImage: 'https://via.placeholder.com/150',
     };
   }, [qrData, formDataUser, formDataAddress, splitName]);
   // }, []);
@@ -264,7 +267,6 @@ const ResultQR: React.FC<ResultQRProps> = ({navigation, route}) => {
         const result = await register(userData);
         console.log('Register result:', result); // Debug log
         if (result) {
-          // navigation.navigate('Login');
           navigation.reset({
             index: 0,
             routes: [{name: 'Login'}],
@@ -423,7 +425,6 @@ const ResultQR: React.FC<ResultQRProps> = ({navigation, route}) => {
             touched,
             isSubmitting,
           }) => {
-
             // Map fields with showDatePicker
             const fieldConfigs = inputFields.map(field => ({
               ...field,
@@ -461,11 +462,19 @@ const ResultQR: React.FC<ResultQRProps> = ({navigation, route}) => {
                   return;
                 }
 
-                if (response.assets && response.assets[0]) {
+                if (
+                  response.assets &&
+                  response.assets[0] &&
+                  response.assets[0].uri
+                ) {
                   const image = response.assets[0];
                   try {
                     // Upload image to server
-                    const uploadResult = await uploadImage(image);
+                    const uploadResult = await uploadImage({
+                      uri: image.uri,
+                      type: image.type || '',
+                      fileName: image.fileName || '',
+                    });
                     const imageUrl = uploadResult.url; // Adjust based on your API response
 
                     console.log('Uploaded image URL:', imageUrl); // Debug log
@@ -535,12 +544,18 @@ const ResultQR: React.FC<ResultQRProps> = ({navigation, route}) => {
                         if (!field.notChange) {
                           setFieldValue(field.name, value);
                         }
-                      } }
-                      error={touched[field.name] && errors[field.name] ? String(errors[field.name]) : undefined}
+                      }}
+                      error={
+                        touched[field.name] && errors[field.name]
+                          ? String(errors[field.name])
+                          : undefined
+                      }
                       theme={theme}
                       onPress={field.onPress}
                       pointerEvents={field.pointerEvents}
-                      notChange={field.notChange} placeholder={''}                    />
+                      notChange={field.notChange}
+                      placeholder={''}
+                    />
                   ))}
                   <UploadImage
                     title={t('register.resultScreen.signatureImage')}
@@ -662,5 +677,3 @@ const ResultQR: React.FC<ResultQRProps> = ({navigation, route}) => {
 };
 
 export default ResultQR;
-
-

@@ -24,7 +24,7 @@ export const fetchWorkflowStatus = async (
 ): Promise<LoanWorkflowResponse> => {
   await new Promise(resolve => setTimeout(resolve, 500)); // Add 5s delay
   const response = await axiosInstance.get(
-    `/onboarding-workflows/${userId}?1.73720794742933E9`,
+    `/onboarding-workflows/${userId}`,
   );
   return response.data;
 };

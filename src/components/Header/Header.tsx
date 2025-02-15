@@ -311,9 +311,7 @@ const Header: React.FC<HeaderProps> = ({Navbar, navigation, name}) => {
             <Image source={AppIcons.back} style={styles.icon} />
           </TouchableOpacity>
           <View>
-            <Text style={styles.heading}>
-              {t('formCreateLoan.loanPlan')}
-            </Text>
+            <Text style={styles.heading}>{t('formCreateLoan.loanPlan')}</Text>
           </View>
           <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
             <Image source={AppIcons.notification} style={styles.icon} />
@@ -331,8 +329,42 @@ const Header: React.FC<HeaderProps> = ({Navbar, navigation, name}) => {
           </TouchableOpacity>
           <View>
             <Text style={styles.heading}>
-              {t('formCreateLoan.financialInfo')}
+              {t('formCreateLoan.financialInfo.title')}
             </Text>
+          </View>
+          <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
+            <Image source={AppIcons.notification} style={styles.icon} />
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {/* Render header when navbar name CreditRating */}
+      {Navbar === 'CreditRating' && (
+        <View style={styles.containHeading}>
+          <TouchableOpacity
+            style={styles.noBorderArrow}
+            onPress={() => navigation.goBack()}>
+            <Image source={AppIcons.back} style={styles.icon} />
+          </TouchableOpacity>
+          <View>
+            <Text style={styles.heading}>Xếp hạng tín dụng</Text>
+          </View>
+          <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
+            <Image source={AppIcons.notification} style={styles.icon} />
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {/* Render header when navbar name AssetCollateral */}
+      {Navbar === 'AssetCollateral' && (
+        <View style={styles.containHeading}>
+          <TouchableOpacity
+            style={styles.noBorderArrow}
+            onPress={() => navigation.goBack()}>
+            <Image source={AppIcons.back} style={styles.icon} />
+          </TouchableOpacity>
+          <View>
+            <Text style={styles.heading}>Tài sản thế chấp</Text>
           </View>
           <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
             <Image source={AppIcons.notification} style={styles.icon} />

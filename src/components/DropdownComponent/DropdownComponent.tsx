@@ -3,7 +3,7 @@ import {Dropdown} from 'react-native-element-dropdown';
 import React from 'react';
 
 interface DropdownItem {
-  value: string;
+  value: string | number | undefined;
   label: string;
   rate?: string;
 }
@@ -11,7 +11,7 @@ interface DropdownItem {
 interface DropdownComponentProps<T> {
   data: T[];
   placeholder: string;
-  value: string | null;
+  value: string | number | undefined;
   onChange: (item: T) => void;
 }
 
@@ -30,7 +30,7 @@ const DropdownComponent = <T extends DropdownItem>({
   };
 
   return (
-    <Dropdown<T>
+    <Dropdown
       style={styles.textInput}
       selectedTextStyle={styles.selectedTextStyle}
       placeholderStyle={styles.placeholderStyle}

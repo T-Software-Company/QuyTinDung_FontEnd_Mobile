@@ -1,4 +1,4 @@
-import { ImageRequireSource } from 'react-native';
+import {ImageRequireSource} from 'react-native';
 
 type IconCategory = {
   [key: string]: ImageRequireSource;
@@ -37,6 +37,7 @@ const icons: IconGroups = {
     transactionIcon: require('../../assets/images/transaction-icon.png'),
     supportIcon: require('../../assets/images/support-icon.png'),
     infoIcon: require('../../assets/images/info-icon.png'),
+    closeIcon: require('../../assets/images/close-icon.png'),
   },
   qr: {
     qr: require('../../assets/images/QR.jpg'),
@@ -63,10 +64,13 @@ const icons: IconGroups = {
 };
 
 // Flatten icons object for backward compatibility
-export const AppIcons = Object.entries(icons).reduce((acc, [_, value]) => ({
-  ...acc,
-  ...value,
-}), {}) as Record<string, ImageRequireSource>;
+export const AppIcons = Object.entries(icons).reduce(
+  (acc, [_, value]) => ({
+    ...acc,
+    ...value,
+  }),
+  {},
+) as Record<string, ImageRequireSource>;
 
 // Export grouped icons for better organization if needed
 export const Icons = icons;

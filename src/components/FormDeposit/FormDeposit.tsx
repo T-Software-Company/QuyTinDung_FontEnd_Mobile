@@ -3,7 +3,7 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity,
+  Pressable,
   Alert,
   Image,
   LayoutAnimation,
@@ -331,34 +331,46 @@ const FormDeposit: React.FC<FormDepositProps> = ({theme}) => {
     },
   });
 
-  const BankField: React.FC<BankFieldProps> = ({label, value, icon}) => (
-    <TouchableOpacity
-      style={styles.wrapField}
-      onPress={() => handleCopy(value)}>
-      <View style={styles.wrapTitleBank}>
-        <Text style={styles.titleBank}>{label}</Text>
-        <Text style={styles.descBank}>{value}</Text>
-      </View>
-      {icon && (
-        <TouchableOpacity onPress={() => handleCopy(value)}>
-          <Image style={styles.iconDownload} source={AppIcons.copy} />
-        </TouchableOpacity>
-      )}
-    </TouchableOpacity>
-  );
+  const BankField: React.FC<BankFieldProps> = ({label, value, icon}) => {
+    const content = (
+      <>
+        <View style={styles.wrapTitleBank}>
+          <Text style={styles.titleBank}>{label}</Text>
+          <Text style={styles.descBank}>{value}</Text>
+        </View>
+        {icon && <Image style={styles.iconDownload} source={AppIcons.copy} />}
+      </>
+    );
+
+    return icon ? (
+      <Pressable
+        style={styles.wrapField}
+        onPress={() => handleCopy(value)}
+        android_ripple={{color: 'rgba(0,0,0,0.1)'}}>
+        {content}
+      </Pressable>
+    ) : (
+      <View style={styles.wrapField}>{content}</View>
+    );
+  };
 
   return (
     <View style={styles.form}>
       <View style={styles.wrapFunction}>
         {/* Nút bấm để toggle */}
-        <TouchableOpacity onPress={toggleQRContent} style={styles.toggleButton}>
+        <Pressable
+          onPress={toggleQRContent}
+          style={({pressed}) => [
+            styles.toggleButton,
+            pressed && {opacity: 0.6}, // Optional: add pressed state effect
+          ]}>
           <Text style={styles.buttonText}>{t('deposit.scanQR')}</Text>
           {activeSection === 'qr' ? (
             <Image style={styles.icon} source={AppIcons.chevronUp} />
           ) : (
             <Image style={styles.icon} source={AppIcons.chevronDown} />
           )}
-        </TouchableOpacity>
+        </Pressable>
 
         {/* Nội dung có animation */}
         <View style={styles.content}>
@@ -371,7 +383,7 @@ const FormDeposit: React.FC<FormDepositProps> = ({theme}) => {
                 <View style={styles.wrapImageQr}>
                   <Image style={styles.qr} source={AppIcons.qr} />
                 </View>
-                <TouchableOpacity style={styles.wrapDownload}>
+                <Pressable style={styles.wrapDownload}>
                   <Image
                     style={styles.iconDownload}
                     source={AppIcons.downLoad}
@@ -379,9 +391,9 @@ const FormDeposit: React.FC<FormDepositProps> = ({theme}) => {
                   <Text style={styles.textDownload}>
                     {t('deposit.downloadQR')}
                   </Text>
-                </TouchableOpacity>
+                </Pressable>
               </View>
-              <TouchableOpacity
+              <Pressable
                 style={styles.wrapTransfer}
                 onPress={() => handleCopy('Pham Minh Quang 99MC9999')}>
                 <View style={styles.wrapQrText}>
@@ -397,11 +409,11 @@ const FormDeposit: React.FC<FormDepositProps> = ({theme}) => {
                     Pham Minh Quang 99MC9999
                   </Text>
                 </View>
-                <TouchableOpacity
+                <Pressable
                   onPress={() => handleCopy('Pham Minh Quang 99MC9999')}>
                   <Image style={styles.iconDownload} source={AppIcons.copy} />
-                </TouchableOpacity>
-              </TouchableOpacity>
+                </Pressable>
+              </Pressable>
             </>
           )}
         </View>
@@ -409,16 +421,19 @@ const FormDeposit: React.FC<FormDepositProps> = ({theme}) => {
 
       <View style={styles.wrapFunction}>
         {/* Nút bấm để toggle */}
-        <TouchableOpacity
+        <Pressable
           onPress={toggleBankContent}
-          style={styles.toggleButton}>
+          style={({pressed}) => [
+            styles.toggleButton,
+            pressed && {opacity: 0.6}, // Optional: add pressed state effect
+          ]}>
           <Text style={styles.buttonText}>{t('deposit.transferFromBank')}</Text>
           {activeSection === 'bank' ? (
             <Image style={styles.icon} source={AppIcons.chevronUp} />
           ) : (
             <Image style={styles.icon} source={AppIcons.chevronDown} />
           )}
-        </TouchableOpacity>
+        </Pressable>
 
         {/* Nội dung có animation */}
         <View style={styles.content}>
@@ -429,7 +444,7 @@ const FormDeposit: React.FC<FormDepositProps> = ({theme}) => {
               </Text>
 
               <View style={styles.wrapBank}>
-                <TouchableOpacity
+                <Pressable
                   style={[
                     styles.borderBank,
                     selectedBank === 'TPBank' && styles.activeBank,
@@ -437,8 +452,8 @@ const FormDeposit: React.FC<FormDepositProps> = ({theme}) => {
                   onPress={() => setSelectedBank('TPBank')}>
                   <Image style={styles.iconBank} source={AppIcons.tpBank} />
                   <Text style={styles.textBank}>TPBank</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
+                </Pressable>
+                <Pressable
                   style={[
                     styles.borderBank,
                     selectedBank === 'BIDV' && styles.activeBank,
@@ -446,7 +461,7 @@ const FormDeposit: React.FC<FormDepositProps> = ({theme}) => {
                   onPress={() => setSelectedBank('BIDV')}>
                   <Image style={styles.iconBank} source={AppIcons.tpBIDV} />
                   <Text style={styles.textBank}>BIDV</Text>
-                </TouchableOpacity>
+                </Pressable>
               </View>
 
               <View style={styles.wrapBankTransfer}>

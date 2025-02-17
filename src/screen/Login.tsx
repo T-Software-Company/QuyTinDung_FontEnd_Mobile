@@ -192,12 +192,14 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
                     color: theme.textActive,
                     fontWeight: 'bold',
                     fontSize: 14,
+                    padding: 5,
                   }}>
                   {t('login.register')}
                 </Text>
               </TouchableOpacity>
             </View>
             <TouchableOpacity
+              style={{ alignSelf: 'center', marginTop: 20}}
               onPress={() => {
                 navigation.navigate('ForgetPassword');
               }}>
@@ -207,7 +209,7 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
                   fontWeight: 'bold',
                   fontSize: 14,
                   textAlign: 'center',
-                  marginTop: 20,
+                  padding: 8,
                 }}>
                 {t('login.forgotPassword')}
               </Text>

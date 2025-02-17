@@ -43,14 +43,16 @@ const BoxTotalAssets: React.FC<BoxTotalAssetsProps> = ({hide, onSetHide}) => {
       fontWeight: 'bold',
     },
     icon: {
-      width: 15,
-      height: 15,
+      width: 24,
+      height: 24,
       resizeMode: 'stretch',
+      padding: 4,
     },
     iconClose: {
-      width: 15,
-      height: 15,
+      width: 24,
+      height: 24,
       resizeMode: 'stretch',
+      padding: 4,
     },
     wrapOption: {
       //   display: 'flex',

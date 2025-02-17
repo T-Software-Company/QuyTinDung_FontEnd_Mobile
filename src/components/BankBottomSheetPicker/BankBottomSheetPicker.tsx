@@ -95,6 +95,7 @@ const BankBottomSheetPicker: React.FC<BankBottomSheetPickerProps> = ({
   });
 
   const banks: Bank[] = [
+    {label: 'DigiFund', value: 'digi'},
     {label: 'Vietcombank', value: 'vcb'},
     {label: 'Techcombank', value: 'tcb'},
     {label: 'TPBank', value: 'tpb'},

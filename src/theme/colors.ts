@@ -60,7 +60,7 @@ export const lightTheme: Theme = {
   //profit
   profit: '#18DD12',
   interest: '#ddb813',
-  error: '#f7132e',
+  error: '#ff4444',
 
   tabBarBackground: '#FFFFFF',
   tabBarInactive: '#ddd',
@@ -92,7 +92,7 @@ export const darkTheme: Theme = {
   //profit
   profit: '#76FA39',
   interest: '#f2df37',
-  error: '#ff2d46',
+  error: '#ff6666',
 
   tabBarBackground: '#121212',
   tabBarInactive: '#fff',

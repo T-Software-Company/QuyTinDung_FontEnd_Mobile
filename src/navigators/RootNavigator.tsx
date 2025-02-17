@@ -337,6 +337,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: 60,
+    height: 'auto',
   },
   icon: {
     width: 24,

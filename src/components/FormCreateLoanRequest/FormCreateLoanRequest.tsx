@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import DropdownComponent from '../DropdownComponent/DropdownComponent';
 import InputBackground from '../InputBackground/InputBackground';
 import {useTranslation} from 'react-i18next';
@@ -22,6 +22,7 @@ import {
 import {loanRequest} from '../../api/services/createLoan';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../navigators/RootNavigator';
+import CustomMultiSelect from '../CustomMultiSelect/CustomMultiSelect';
 
 interface FormCreateLoanRequestProps {
   theme: Theme;
@@ -61,7 +62,7 @@ const FormCreateLoanRequest: React.FC<FormCreateLoanRequestProps> = ({
       label: currentLanguage === 'vi' ? 'Cá nhân' : 'Individual',
     },
     {
-      value: 'BUSINESS',
+      value: 'ORGANIZATION',
       label: currentLanguage === 'vi' ? 'Doanh nghiệp' : 'Business',
     },
   ];
@@ -83,12 +84,12 @@ const FormCreateLoanRequest: React.FC<FormCreateLoanRequestProps> = ({
       label: currentLanguage === 'vi' ? 'Phương tiện' : 'Vehicle',
     },
     {
-      value: 'PROPERTY',
+      value: 'LAND',
       label: currentLanguage === 'vi' ? 'Bất động sản' : 'Property',
     },
     {
-      value: 'EQUIPMENT',
-      label: currentLanguage === 'vi' ? 'Thiết bị' : 'Equipment',
+      value: 'APARTMENT',
+      label: currentLanguage === 'vi' ? 'Căn hộ' : 'Equipment',
     },
   ];
 
@@ -108,7 +109,10 @@ const FormCreateLoanRequest: React.FC<FormCreateLoanRequestProps> = ({
 
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
+  const [isOpen, setIsOpen] = useState(false);
+  const multiSelectRef = useRef<View>(null);
 
+  console.log('Form data:', formData);
   const handleOnchange = (field: keyof FormData, value: any): void => {
     setFormData(prev => ({
       ...prev,
@@ -120,7 +124,7 @@ const FormCreateLoanRequest: React.FC<FormCreateLoanRequestProps> = ({
     const newErrors: FormErrors = {};
     let isValid = true;
 
-    if (!formData.amount || formData.amount <= 1000000) {
+    if (!formData.amount || formData.amount <= 999999) {
       newErrors.amount =
         currentLanguage === 'vi'
           ? 'Vui lòng nhập số tiền lớn hơn 1000000'
@@ -407,32 +411,20 @@ const FormCreateLoanRequest: React.FC<FormCreateLoanRequestProps> = ({
             ? 'Loại tài sản đảm bảo'
             : 'Collateral Type'}
         </Text>
-        <View style={styles.checkboxContainer}>
-          {collateralTypes.map(type => {
-            const isSelected = formData.loanCollateralTypes.includes(
-              type.value as LoanCollateralType,
-            );
-            return (
-              <TouchableOpacity
-                key={type.value}
-                style={[
-                  styles.checkboxItem,
-                  isSelected && styles.checkboxSelected,
-                ]}
-                onPress={() =>
-                  handleCollateralTypeChange(type.value as LoanCollateralType)
-                }>
-                <Text
-                  style={[
-                    styles.checkboxText,
-                    isSelected && styles.checkboxTextSelected,
-                  ]}>
-                  {type.label}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
+        <CustomMultiSelect
+          ref={multiSelectRef}
+          value={formData.loanCollateralTypes}
+          options={collateralTypes}
+          placeholder={
+            currentLanguage === 'vi'
+              ? 'Chọn loại tài sản'
+              : 'Select collateral types'
+          }
+          onChange={value => handleOnchange('loanCollateralTypes', value)}
+          onItemSelect={handleCollateralTypeChange}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+        />
         {errors.loanCollateralTypes && (
           <Text style={styles.errorText}>{errors.loanCollateralTypes}</Text>
         )}

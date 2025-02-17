@@ -21,7 +21,6 @@ import {RootStackParamList} from '../../navigators/RootNavigator';
 import DocumentPicker, {
   DocumentPickerResponse,
 } from 'react-native-document-picker';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import {AppIcons} from '../../icons';
 
 interface FormCreateFinancialInfoProps {
@@ -69,7 +68,7 @@ const FormCreateFinancialInfo: React.FC<FormCreateFinancialInfoProps> = ({
     [],
   );
 
-  console.log('selectedFiles:', selectedFiles);
+  console.log('selectedFiles:', formData);
 
   const handleOnchange = (field: keyof FormData, value: any): void => {
     setFormData(prev => ({
@@ -114,6 +113,14 @@ const FormCreateFinancialInfo: React.FC<FormCreateFinancialInfoProps> = ({
         Alert.alert('Error', 'Failed to upload document');
       }
     }
+  };
+
+  const handleRemoveFile = (index: number) => {
+    setSelectedFiles(prev => prev.filter((_, i) => i !== index));
+    setFormData(prev => ({
+      ...prev,
+      files: prev.files.filter((_, i) => i !== index),
+    }));
   };
 
   const handleSubmit = async () => {
@@ -195,7 +202,7 @@ const FormCreateFinancialInfo: React.FC<FormCreateFinancialInfoProps> = ({
     filesList: {
       marginTop: 8,
     },
-    fileItem: {
+    fileItemContainer: {
       flexDirection: 'row',
       alignItems: 'center',
       backgroundColor: theme.backgroundBox || '#f5f5f5',
@@ -204,6 +211,11 @@ const FormCreateFinancialInfo: React.FC<FormCreateFinancialInfoProps> = ({
       marginBottom: 8,
       borderWidth: 1,
       borderColor: 'rgba(0,0,0,0.1)',
+    },
+    fileContent: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
     },
     fileIcon: {
       marginRight: 4,
@@ -230,6 +242,17 @@ const FormCreateFinancialInfo: React.FC<FormCreateFinancialInfoProps> = ({
       color: theme.noteText || '#666',
       fontSize: 12,
       marginLeft: 4,
+    },
+    removeButton: {
+      padding: 2,
+      borderRadius: 12,
+      backgroundColor: theme.error || '#ff4444',
+      marginLeft: 8,
+    },
+    removeIcon: {
+      width: 16,
+      height: 16,
+      tintColor: 'white',
     },
   });
 
@@ -374,10 +397,7 @@ const FormCreateFinancialInfo: React.FC<FormCreateFinancialInfoProps> = ({
 
         <View style={styles.uploadSection}>
           <View style={styles.uploadInfo}>
-            <Image
-              source={AppIcons.infoIcon}
-              style={styles.fileIcon}
-            />
+            <Image source={AppIcons.infoIcon} style={styles.fileIcon} />
             <Text style={styles.uploadInfoText}>
               Hỗ trợ PDF, DOCX, JPG, PNG (Max: 5MB)
             </Text>
@@ -394,14 +414,24 @@ const FormCreateFinancialInfo: React.FC<FormCreateFinancialInfoProps> = ({
 
           <View style={styles.filesList}>
             {selectedFiles.map((file, index) => (
-              <View key={index} style={styles.fileItem}>
-                <Image source={AppIcons.infoIcon} style={styles.fileIcon} />
-                <Text style={styles.fileName} numberOfLines={1}>
-                  {file.name}
-                </Text>
-                <Text style={styles.fileSize}>
-                  {formatFileSize(file.size || 0)}
-                </Text>
+              <View key={index} style={styles.fileItemContainer}>
+                <View style={styles.fileContent}>
+                  <Image source={AppIcons.infoIcon} style={styles.fileIcon} />
+                  <Text style={styles.fileName} numberOfLines={1}>
+                    {file.name}
+                  </Text>
+                  <Text style={styles.fileSize}>
+                    {formatFileSize(file.size || 0)}
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  style={styles.removeButton}
+                  onPress={() => handleRemoveFile(index)}>
+                  <Image
+                    source={AppIcons.closeIcon}
+                    style={styles.removeIcon}
+                  />
+                </TouchableOpacity>
               </View>
             ))}
           </View>

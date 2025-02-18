@@ -547,7 +547,7 @@ const Header: React.FC<HeaderProps> = ({Navbar, navigation, name}) => {
             <Image source={AppIcons.back} style={styles.icon} />
           </TouchableOpacity>
           <View>
-            <Text style={styles.heading}>Tổng tài sản</Text>
+            <Text style={styles.heading}>{t('totalAssets.title')}</Text>
           </View>
           <TouchableOpacity style={[styles.noBorderArrow, styles.hidden]} />
         </View>

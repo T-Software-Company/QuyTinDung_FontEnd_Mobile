@@ -257,7 +257,6 @@
             "monthlyLoanPayment": "Trả góp hàng tháng",
             "monthlyLoanPaymentPlaceholder": "Nhập số tiền trả góp hàng tháng",
             "uploadDocuments": "Tải lên tài liệu",
-            "filePickerError": "Lỗi khi chọn tệp",
             "submit": "Tiếp theo",
             "submitError": "Có lỗi xảy ra khi gửi thông tin tài chính",
             "documents": "Tài liệu đính kèm",
@@ -355,6 +354,60 @@
     },
     "privacy": {
         "title": "Chính sách quyền riêng tư"
+    },
+    "totalAssets": {
+        "title": "Tổng tài sản",
+        "totalSave": "Tổng tiền tiết kiệm",
+        "totalLoan": "Tổng tiền khoản vay",
+        "totalBalance": "Tổng số dư",
+        "totalSavingInterest": "Tổng lãi tiết kiệm",
+        "totalLoanInterest": "Tổng lãi khoản vay",
+        "allocate": {
+            "title": "Phân bổ",
+            "originalAmount": "Số tiền gốc",
+            "estimatedInterest": "Tiền lãi tạm tính",
+            "titles": {
+                "savings": "Tổng tiền tiết kiệm",
+                "loan": "Tổng tiền khoản vay"
+            }
+        },
+        "transaction": {
+            "status": "Trạng thái",
+            "date": "Ngày giao dịch",
+            "code": "Mã giao dịch",
+            "amount": "Số tiền",
+            "source": "Nguồn tiền",
+            "support": {
+                "issue": "Bạn đang gặp sự cố?",
+                "contact": "Liên hệ {{phone}} để được hỗ trợ"
+            },
+            "types": {
+                "deposit": "Nạp tiền",
+                "withdraw": "Rút tiền",
+                "transfer": "Chuyển tiền"
+            },
+            "statuses": {
+                "success": "Thành công",
+                "failed": "Thất bại",
+                "pending": "Đang xử lý"
+            },
+            "sources": {
+                "amount": "Tài khoản số dư",
+                "bank": "Ngân hàng",
+                "savings": "Tài khoản tiết kiệm"
+            },
+            "recentTransactions": "Giao dịch gần đây",
+            "viewAll": "Xem tất cả",
+            "history": {
+                "title": "Lịch sử giao dịch",
+                "filterAll": "Tất cả",
+                "filterDeposit": "Nạp tiền",
+                "filterWithdraw": "Rút tiền",
+                "currentMonth": "Tháng hiện tại",
+                "selectMonth": "Chọn tháng",
+                "months": "Tháng {{month}}",
+                "year": "Năm {{year}}"
+            }
+        }
     }
-    
 }

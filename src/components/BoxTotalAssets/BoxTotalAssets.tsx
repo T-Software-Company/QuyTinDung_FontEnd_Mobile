@@ -117,7 +117,7 @@ const BoxTotalAssets: React.FC<BoxTotalAssetsProps> = ({hide, onSetHide}) => {
     <View style={[styles.boxShow, {backgroundColor: theme.backgroundBox}]}>
       <View style={styles.wrapTitle}>
         <Text style={[styles.titleText, {color: theme.text}]}>
-          {t('home.boxTitle')}
+          {t('totalAssets.title')}
         </Text>
 
         <View style={styles.handleMoney}>
@@ -157,7 +157,7 @@ const BoxTotalAssets: React.FC<BoxTotalAssetsProps> = ({hide, onSetHide}) => {
       <View style={styles.separate} />
 
       <View style={styles.wrapMoney}>
-        <Text style={styles.titleNote}>Tổng số dư</Text>
+        <Text style={styles.titleNote}>{t('totalAssets.totalBalance')}</Text>
         {hide ? (
           <Text style={[styles.hide, {color: theme.text}]}>*** ***</Text>
         ) : (
@@ -165,7 +165,7 @@ const BoxTotalAssets: React.FC<BoxTotalAssetsProps> = ({hide, onSetHide}) => {
         )}
       </View>
       <View style={styles.wrapMoney}>
-        <Text style={styles.titleNote}>Tổng lãi tiết kiệm</Text>
+        <Text style={styles.titleNote}>{t('totalAssets.totalSavingInterest')}</Text>
         {hide ? (
           <Text style={[styles.hide, {color: theme.text}]}>*** ***</Text>
         ) : (
@@ -173,7 +173,7 @@ const BoxTotalAssets: React.FC<BoxTotalAssetsProps> = ({hide, onSetHide}) => {
         )}
       </View>
       <View style={styles.wrapMoney}>
-        <Text style={styles.titleNote}>Tổng lãi khoản vay</Text>
+        <Text style={styles.titleNote}>{t('totalAssets.totalLoanInterest')}</Text>
         {hide ? (
           <Text style={[styles.hide, {color: theme.text}]}>*** ***</Text>
         ) : (

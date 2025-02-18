@@ -199,7 +199,7 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
               </TouchableOpacity>
             </View>
             <TouchableOpacity
-              style={{ alignSelf: 'center', marginTop: 20}}
+              style={{ alignSelf: 'center', marginTop: 8}}
               onPress={() => {
                 navigation.navigate('ForgetPassword');
               }}>

@@ -360,5 +360,72 @@
     },
     "privacy": {
         "title": "Privacy Policy"
+    },
+    "totalAssets": {
+        "title": "Total Assets",
+        "totalSave": "Total Savings",
+        "totalLoan": "Total Loan",
+        "totalBalance": "Total Balance", 
+        "totalSavingInterest": "Total Saving Interest",
+        "totalLoanInterest": "Total Loan Interest",
+        "allocate": {
+            "title": "Allocation",
+            "originalAmount": "Original Amount",
+            "estimatedInterest": "Estimated Interest",
+            "titles": {
+                "savings": "Total Savings",
+                "loan": "Total Loan"
+            }
+        },
+        "transaction": {
+            "status": "Status",
+            "date": "Transaction Date",
+            "code": "Transaction Code", 
+            "amount": "Amount",
+            "source": "Source",
+            "support": {
+                "issue": "Having issues?",
+                "contact": "Contact {{phone}} for support"
+            },
+            "types": {
+                "deposit": "Deposit",
+                "withdraw": "Withdraw",
+                "transfer": "Transfer"
+            },
+            "statuses": {
+                "success": "Success",
+                "failed": "Failed",
+                "pending": "Processing"
+            },
+            "sources": {
+                "cash": "Cash",
+                "amount": "Balance Account",
+                "bank": "Bank Account",
+                "savings": "Savings Account"
+            },
+            "recentTransactions": "Recent Transactions",
+            "viewAll": "View all",
+            "history": {
+                "title": "Transaction History",
+                "filterAll": "All",
+                "filterDeposit": "Deposit",
+                "filterWithdraw": "Withdraw",
+                "currentMonth": "Current Month",
+                "selectMonth": "Select Month",
+                "months": "Month {{month}}",
+                "year": "Year {{year}}"
+            }
+        }
+    },
+    "transaction": {
+        "status": "Status",
+        "date": "Transaction Date",
+        "code": "Transaction Code",
+        "amount": "Amount",
+        "source": "Source",
+        "support": {
+            "issue": "Having issues?",
+            "contact": "Contact {{phone}} for support"
+        }
     }
 }

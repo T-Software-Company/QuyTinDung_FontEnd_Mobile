@@ -3,7 +3,11 @@ import {
   CreateFinancialInfoRequest,
   FinancialInfoResponse,
 } from '../types/financialInfo';
-import {LoanWorkflowResponse, UserInit} from '../types/loanInit';
+import {
+  LoanWorkflowResponse,
+  UserInit,
+  CancelLoanResponse,
+} from '../types/loanInit';
 import {CreateLoanPlanRequest, LoanPlanResponse} from '../types/loanPlan';
 import {LoanRequestBody} from '../types/loanRequest';
 
@@ -23,9 +27,7 @@ export const fetchWorkflowStatus = async (
   userId: string,
 ): Promise<LoanWorkflowResponse> => {
   await new Promise(resolve => setTimeout(resolve, 500)); // Add 5s delay
-  const response = await axiosInstance.get(
-    `/onboarding-workflows/${userId}`,
-  );
+  const response = await axiosInstance.get(`/onboarding-workflows/${userId}`);
   return response.data;
 };
 
@@ -79,6 +81,15 @@ export const financialInfo = async (
   const response = await axiosInstance.post(
     `/financial-infos?applicationId=${applicationId}`,
     requestBody,
+  );
+  return response.data;
+};
+
+export const cancelLoan = async (
+  applicationId: string,
+): Promise<CancelLoanResponse> => {
+  const response = await axiosInstance.post(
+    `/applications/${applicationId}/cancel`,
   );
   return response.data;
 };

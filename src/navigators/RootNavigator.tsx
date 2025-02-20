@@ -26,6 +26,7 @@ import CreateLoanRequestScreen from '../screen/CreateLoanRequest';
 import CreateLoanPlanScreen from '../screen/CreateLoanPlan';
 import CreateFinancialInfoScreen from '../screen/CreateFinancialInfo';
 import CreditRatingScreen from '../screen/CreditRating';
+import InfoCreateLoanScreen from '../screen/InfoCreateLoan';
 import IntroduceLoanScreen from '../screen/IntroduceLoan';
 import NotificationScreen from '../screen/Notification';
 import InfoPersonScreen from '../screen/InfoPerson';
@@ -45,6 +46,7 @@ import DetailTransactionScreen from '../screen/DetailTransaction';
 import TransactionHistoryScreen from '../screen/TransactionHistory';
 import LoadingWorkflowLoanScreen from '../screen/LoadingWorkflowLoan';
 import React from 'react';
+import {useAuth} from '../context/AuthContext';
 
 export interface FormDataAddress {
   country: string;
@@ -110,6 +112,7 @@ export type RootStackParamList = {
   CreateFinancialInfo: {appId: string};
   CreditRating: {appId: string};
   AssetCollateral: {appId: string};
+  InfoCreateLoan: {appId: string};
   IntroduceLoan: undefined; // Changed this line
   LoadingWorkflowLoan: undefined;
   LanguageSetting: undefined;
@@ -219,115 +222,115 @@ const MyTabs = () => {
 export const navigationRef =
   React.createRef<NavigationContainerRef<RootStackParamList>>();
 
-const RootComponent: React.FC = () => {
-  return (
-    <NavigationContainer ref={navigationRef}>
-      <Stack.Navigator
-        initialRouteName="HomeTabs"
-        screenOptions={{
-          headerShown: false,
-          gestureEnabled: true,
-          cardStyleInterpolator: ({current, layouts}) => ({
-            cardStyle: {
-              opacity: current.progress,
-              transform: [
-                {
-                  translateX: current.progress.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [layouts.screen.width, 0],
-                  }),
-                },
-              ],
-            },
-            overlayStyle: {
-              opacity: current.progress.interpolate({
+const AuthStack = () => (
+  <Stack.Navigator screenOptions={{headerShown: false}}>
+    <Stack.Screen name="Login" component={LoginScreen} />
+    <Stack.Screen name="Register" component={RegisterScreen} />
+    <Stack.Screen name="RegisterAddress" component={RegisterAddressScreen} />
+    <Stack.Screen name="ForgetPassword" component={ForgetPasswordScreen} />
+    <Stack.Screen name="QrScreen" component={QRScannerApp} />
+    <Stack.Screen name="ResultQR" component={ResultQRApp} />
+    <Stack.Screen name="NotificationScan" component={NotificationScanScreen} />
+  </Stack.Navigator>
+);
+
+const AppStack = () => (
+  <Stack.Navigator
+    initialRouteName="HomeTabs"
+    screenOptions={{
+      headerShown: false,
+      gestureEnabled: true,
+      cardStyleInterpolator: ({current, layouts}) => ({
+        cardStyle: {
+          opacity: current.progress,
+          transform: [
+            {
+              translateX: current.progress.interpolate({
                 inputRange: [0, 1],
-                outputRange: [0, 0.5],
+                outputRange: [layouts.screen.width, 0],
               }),
             },
+          ],
+        },
+        overlayStyle: {
+          opacity: current.progress.interpolate({
+            inputRange: [0, 1],
+            outputRange: [0, 0.5],
           }),
-        }}>
-        <Stack.Screen name="HomeTabs" component={MyTabs} />
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Register" component={RegisterScreen} />
-        <Stack.Screen
-          name="RegisterAddress"
-          component={RegisterAddressScreen}
-        />
-        <Stack.Screen name="ForgetPassword" component={ForgetPasswordScreen} />
-        <Stack.Screen name="QrScreen" component={QRScannerApp} />
-        <Stack.Screen name="ResultQR" component={ResultQRApp} />
-        <Stack.Screen
-          name="NotificationScan"
-          component={NotificationScanScreen}
-        />
-        <Stack.Screen name="InfoSave" component={InfoSaveScreen} />
-        <Stack.Screen name="InfoLoan" component={InfoLoanScreen} />
-        <Stack.Screen name="InfoPerson" component={InfoPersonScreen} />
-        <Stack.Screen name="Deposit" component={DepositScreen} />
-        <Stack.Screen name="Transfer" component={TransferScreen} />
-        <Stack.Screen name="SentSave" component={SentSaveScreen} />
-        <Stack.Screen
-          name="CreateLoanRequest"
-          component={CreateLoanRequestScreen}
-        />
-        <Stack.Screen name="CreateLoanPlan" component={CreateLoanPlanScreen} />
-        <Stack.Screen
-          name="CreateFinancialInfo"
-          component={CreateFinancialInfoScreen}
-        />
-        <Stack.Screen name="CreditRating" component={CreditRatingScreen} />
-        <Stack.Screen
-          name="LoadingWorkflowLoan"
-          component={LoadingWorkflowLoanScreen}
-        />
-        <Stack.Screen name="IntroduceLoan" component={IntroduceLoanScreen} />
-        <Stack.Screen
-          name="LanguageSetting"
-          component={LanguageSettingScreen}
-        />
-        <Stack.Screen
-          name="DarkModeSetting"
-          component={DarkModeSettingScreen}
-        />
-        <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
-        <Stack.Screen
-          name="Notification"
-          component={NotificationScreen}
-          options={{
-            ...TransitionPresets.ModalSlideFromBottomIOS,
-            gestureDirection: 'vertical',
-            cardStyleInterpolator: ({
-              current,
-              layouts,
-            }: {
-              current: any;
-              layouts: any;
-            }) => ({
-              cardStyle: {
-                transform: [
-                  {
-                    translateY: current.progress.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [layouts.screen.height, 0],
-                    }),
-                  },
-                ],
+        },
+      }),
+    }}>
+    <Stack.Screen name="HomeTabs" component={MyTabs} />
+
+    <Stack.Screen name="InfoSave" component={InfoSaveScreen} />
+    <Stack.Screen name="InfoLoan" component={InfoLoanScreen} />
+    <Stack.Screen name="InfoPerson" component={InfoPersonScreen} />
+    <Stack.Screen name="Deposit" component={DepositScreen} />
+    <Stack.Screen name="Transfer" component={TransferScreen} />
+    <Stack.Screen name="SentSave" component={SentSaveScreen} />
+    <Stack.Screen
+      name="CreateLoanRequest"
+      component={CreateLoanRequestScreen}
+    />
+    <Stack.Screen name="CreateLoanPlan" component={CreateLoanPlanScreen} />
+    <Stack.Screen
+      name="CreateFinancialInfo"
+      component={CreateFinancialInfoScreen}
+    />
+    <Stack.Screen name="CreditRating" component={CreditRatingScreen} />
+    <Stack.Screen name="InfoCreateLoan" component={InfoCreateLoanScreen} />
+
+    <Stack.Screen
+      name="LoadingWorkflowLoan"
+      component={LoadingWorkflowLoanScreen}
+    />
+    <Stack.Screen name="IntroduceLoan" component={IntroduceLoanScreen} />
+    <Stack.Screen name="LanguageSetting" component={LanguageSettingScreen} />
+    <Stack.Screen name="DarkModeSetting" component={DarkModeSettingScreen} />
+    <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
+    <Stack.Screen
+      name="Notification"
+      component={NotificationScreen}
+      options={{
+        ...TransitionPresets.ModalSlideFromBottomIOS,
+        gestureDirection: 'vertical',
+        cardStyleInterpolator: ({
+          current,
+          layouts,
+        }: {
+          current: any;
+          layouts: any;
+        }) => ({
+          cardStyle: {
+            transform: [
+              {
+                translateY: current.progress.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [layouts.screen.height, 0],
+                }),
               },
-            }),
-          }}
-        />
-        <Stack.Screen name="Privacy" component={PrivacyScreen} />
-        <Stack.Screen name="TotalAssets" component={TotalAssetsScreen} />
-        <Stack.Screen
-          name="DetailTransaction"
-          component={DetailTransactionScreen}
-        />
-        <Stack.Screen
-          name="TransactionHistory"
-          component={TransactionHistoryScreen}
-        />
-      </Stack.Navigator>
+            ],
+          },
+        }),
+      }}
+    />
+    <Stack.Screen name="Privacy" component={PrivacyScreen} />
+    <Stack.Screen name="TotalAssets" component={TotalAssetsScreen} />
+    <Stack.Screen
+      name="DetailTransaction"
+      component={DetailTransactionScreen}
+    />
+    <Stack.Screen
+      name="TransactionHistory"
+      component={TransactionHistoryScreen}
+    />
+  </Stack.Navigator>
+);
+const RootComponent: React.FC = () => {
+  const {isAuthenticated} = useAuth();
+  return (
+    <NavigationContainer ref={navigationRef}>
+      {isAuthenticated ? <AppStack /> : <AuthStack />}
     </NavigationContainer>
   );
 };

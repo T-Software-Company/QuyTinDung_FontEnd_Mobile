@@ -2,8 +2,6 @@ import React, {createContext, useState, useContext, useEffect} from 'react';
 import {AuthContextType, UserData} from '../types/auth.types';
 import {authService} from '../services/auth.service';
 import {getAccessToken, isTokenExpired} from '../../tokenStorage';
-import {navigationRef} from '../navigators/RootNavigator';
-import {CommonActions} from '@react-navigation/native';
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -57,24 +55,14 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({
     },
     logout: async () => {
       try {
-        // 1. Set auth state to false first
-        setIsAuthenticated(false);
-
-        // 2. Small delay to let UI update
-        await new Promise(resolve => setTimeout(resolve, 10));
-
-        // 3. Reset navigation with custom transition
-        navigationRef.current?.dispatch(
-          CommonActions.reset({
-            routes: [{name: 'Login'}],
-            index: 0,
-          }),
-        );
-
-        // 4. Clear tokens after navigation starts
         await authService.logout();
-      } catch (error) {
-        console.error('Logout error:', error);
+        setIsAuthenticated(false);
+      } catch (err) {
+        // Vẫn set isAuthenticated về false ngay cả khi có lỗi
+        // vì người dùng có ý định logout
+        setIsAuthenticated(false);
+        setError('Có lỗi xảy ra khi đăng xuất');
+        console.log('Logout error:', err);
       }
     },
     refreshToken: authService.refreshToken.bind(authService),

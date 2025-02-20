@@ -145,7 +145,7 @@ const Header: React.FC<HeaderProps> = ({Navbar, navigation, name}) => {
         <View style={styles.containHeading}>
           <TouchableOpacity
             style={styles.borderArrow}
-            onPress={() => navigation.navigate('IntroduceLoan')}>
+            onPress={() => navigation.navigate('LoadingWorkflowLoan')}>
             <Image source={AppIcons.add} style={styles.icon} />
           </TouchableOpacity>
           <View>
@@ -365,6 +365,23 @@ const Header: React.FC<HeaderProps> = ({Navbar, navigation, name}) => {
           </TouchableOpacity>
           <View>
             <Text style={styles.heading}>Tài sản thế chấp</Text>
+          </View>
+          <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
+            <Image source={AppIcons.notification} style={styles.icon} />
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {/* Render header when navbar name InfoCreateLoan */}
+      {Navbar === 'InfoCreateLoan' && (
+        <View style={styles.containHeading}>
+          <TouchableOpacity
+            style={styles.noBorderArrow}
+            onPress={() => navigation.goBack()}>
+            <Image source={AppIcons.back} style={styles.icon} />
+          </TouchableOpacity>
+          <View>
+            <Text style={styles.heading}>Khoản vay đang tạo</Text>
           </View>
           <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
             <Image source={AppIcons.notification} style={styles.icon} />

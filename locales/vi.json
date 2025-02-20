@@ -168,6 +168,7 @@
         "totalAssets": "Tổng số tiền vay",
         "add": "Vay thêm",
         "loanList": "Danh sách khoản vay",
+        "spendingLoan": "Khoản vay chờ xác nhận",
         "fields": {
             "status": "Trạng thái",
             "spending": "Chờ xác nhận",
@@ -273,7 +274,15 @@
         "paymentFrequency": "Tần suất trả lãi",
         "selectPaymentFrequency": "Chọn tần suất trả lãi",
         "next": "Tiếp theo",
-        "submit": "Tạo"
+        "submit": "Tạo",
+        "steps": {
+            "init": "Đồng ý điều khoản",
+            "create-loan-request": "Tạo yêu cầu vay",
+            "create-loan-plan": "Tạo kế hoạch vay",
+            "create-financial-info": "Thông tin tài chính",
+            "create-credit-rating": "Xếp hạng tín dụng",
+            "add-asset-collateral": "Tài sản đảm bảo"
+        }
     },
     "infoSave": {
         "title": "Thông tin sổ tiết kiệm",

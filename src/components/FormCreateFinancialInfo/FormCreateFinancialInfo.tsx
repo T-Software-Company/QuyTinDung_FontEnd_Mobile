@@ -15,7 +15,7 @@ import InputBackground from '../InputBackground/InputBackground';
 import {useTranslation} from 'react-i18next';
 import i18n from '../../../i18n';
 import {Theme} from '../../theme/colors';
-import {financialInfo} from '../../api/services/createLoan';
+import {financialInfo} from '../../api/services/loan';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../navigators/RootNavigator';
 import DocumentPicker, {

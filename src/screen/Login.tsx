@@ -84,7 +84,7 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
 
     console.log('Result: ', result);
     if (result === true) {
-      navigation.navigate('HomeTabs');
+      // navigation.navigate('HomeTabs');
     } else {
       Alert.alert(
         t('notification.title'),
@@ -199,7 +199,7 @@ const Login: React.FC<LoginProps> = ({navigation}) => {
               </TouchableOpacity>
             </View>
             <TouchableOpacity
-              style={{ alignSelf: 'center', marginTop: 8}}
+              style={{alignSelf: 'center', marginTop: 8}}
               onPress={() => {
                 navigation.navigate('ForgetPassword');
               }}>

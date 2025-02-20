@@ -14,7 +14,7 @@ import {useTranslation} from 'react-i18next';
 import i18n from '../../../i18n';
 import {Theme} from '../../theme/colors';
 import {CreateLoanPlanRequest} from '../../api/types/loanPlan';
-import {loanPlan} from '../../api/services/createLoan';
+import {loanPlan} from '../../api/services/loan';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../navigators/RootNavigator';
 

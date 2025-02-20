@@ -157,6 +157,14 @@
             "documents": "Attached Documents",
             "uploadDocument": "Upload Documents",
             "filePickerError": "Cannot upload document"
+        },
+        "steps": {
+            "init": "Terms Agreement",
+            "create-loan-request": "Create Loan Request",
+            "create-loan-plan": "Create Loan Plan",
+            "create-financial-info": "Financial Info",
+            "create-credit-rating": "Credit Rating",
+            "add-asset-collateral": "Collateral Assets"
         }
     },
     "infoSave": {

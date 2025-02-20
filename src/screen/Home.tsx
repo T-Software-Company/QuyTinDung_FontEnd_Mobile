@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {SafeAreaView, StyleSheet, View, ScrollView, Alert} from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useCallback} from 'react';
 import Header from '../components/Header/Header';
 import ButtonShortCut from '../components/ButtonShortCut/ButtonShortCut';
 import WrapProductHome from '../components/WrapProductHome/WrapProductHome';
@@ -16,6 +16,7 @@ import {RootStackParamList} from '../navigators/RootNavigator';
 import {useAppSelector, useAppDispatch} from '../store/hooks';
 import {setUserData, setLoading, setError} from '../store/slices/userSlice';
 import {getAccessToken, isTokenExpired} from '../../tokenStorage';
+import {useFocusEffect} from '@react-navigation/native';
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 
@@ -38,32 +39,34 @@ const Home: React.FC<HomeProps> = ({navigation}) => {
   const dispatch = useAppDispatch();
   const {userData} = useAppSelector(state => state.user);
 
-  useEffect(() => {
-    const checkTokenAndLoadData = async () => {
-      console.log('Checking token and loading data');
-      if (!isAuthenticated) {
-        console.log('User is not authenticated, navigating to Login');
-        navigation.replace('Login');
-        return;
-      }
-      const token = await getAccessToken();
-      console.log('Token: ', token);
-      if (token && isTokenExpired(token)) {
-        console.log('Token is expired, attempting to refresh');
-        const refreshed = await refreshToken();
-        console.log('Refreshed: ', refreshed);
-        if (!refreshed) {
-          console.log('Token refresh failed, navigating to Login');
+  useFocusEffect(
+    useCallback(() => {
+      const checkTokenAndLoadData = async () => {
+        console.log('Checking token and loading data');
+        if (!isAuthenticated) {
+          console.log('User is not authenticated, navigating to Login');
           navigation.replace('Login');
           return;
         }
-      }
-      console.log('Token is valid, loading data');
-      loadData();
-    };
+        const token = await getAccessToken();
+        console.log('Token: ', token);
+        if (token && isTokenExpired(token)) {
+          console.log('Token is expired, attempting to refresh');
+          const refreshed = await refreshToken();
+          console.log('Refreshed: ', refreshed);
+          if (!refreshed) {
+            console.log('Token refresh failed, navigating to Login');
+            navigation.replace('Login');
+            return;
+          }
+        }
+        console.log('Token is valid, loading data');
+        loadData();
+      };
 
-    checkTokenAndLoadData();
-  }, [isAuthenticated, navigation]);
+      checkTokenAndLoadData();
+    }, [isAuthenticated, navigation]),
+  );
 
   const loadData = async (): Promise<void> => {
     console.log('Loading user data');

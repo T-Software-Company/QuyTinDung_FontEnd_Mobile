@@ -3,12 +3,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useEffect} from 'react';
 import {useSelector} from 'react-redux';
 import {RootState} from '../store/store';
-import {fetchWorkflowStatus} from '../api/services/createLoan';
+import {fetchWorkflowStatus} from '../api/services/loan';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../navigators/RootNavigator';
 import {useTheme} from '../context/ThemeContext';
-import {WorkflowStepType} from '../api/types/loanInit';
+import {StepName} from '../api/types/loanInit';
 import {getApplication} from '../api/services/getApplicationsLoan';
+import {getAccessToken} from '../../tokenStorage';
 
 // Add type for screen names
 type ScreenName =
@@ -20,7 +21,7 @@ type ScreenName =
   | 'AssetCollateral';
 
 // Define the step to screen mapping with proper types
-const stepToScreenMap: Record<WorkflowStepType, ScreenName> = {
+const stepToScreenMap: Record<StepName, ScreenName> = {
   init: 'IntroduceLoan',
   'create-loan-request': 'CreateLoanRequest',
   'create-loan-plan': 'CreateLoanPlan',
@@ -43,20 +44,36 @@ const LoadingWorkflowLoan: React.FC<LoadingWorkflowLoanProps> = ({
 }) => {
   const {theme} = useTheme();
   const user = useSelector((state: RootState) => state.user.userData);
-  const sortScreen = ['CreateLoanRequest', 'CreateLoanPlan', 'CreateFinancialInfo', 'CreditRating', 'AssetCollateral'];
+  const sortScreen = [
+    'CreateLoanRequest',
+    'CreateLoanPlan',
+    'CreateFinancialInfo',
+    'CreditRating',
+    'AssetCollateral',
+  ];
 
-  const findNextScreen = (prevSteps: string[], nextSteps: string[]): ScreenName => {
+  const findNextScreen = (
+    prevSteps: string[],
+    nextSteps: string[],
+  ): ScreenName => {
     if (!prevSteps.includes('init')) {
       return 'IntroduceLoan';
     }
 
     // Convert workflow steps to screen names
-    const completedScreens = prevSteps.map(step => stepToScreenMap[step as WorkflowStepType]);
-    const nextScreens = nextSteps.map(step => stepToScreenMap[step as WorkflowStepType]);
+    const completedScreens = prevSteps.map(
+      step => stepToScreenMap[step as StepName],
+    );
+    const nextScreens = nextSteps.map(
+      step => stepToScreenMap[step as StepName],
+    );
 
     // Find the first screen in sortScreen that hasn't been completed
     for (const screenName of sortScreen) {
-      if (!completedScreens.includes(screenName as ScreenName) && nextScreens.includes(screenName as ScreenName)) {
+      if (
+        !completedScreens.includes(screenName as ScreenName) &&
+        nextScreens.includes(screenName as ScreenName)
+      ) {
         return screenName as ScreenName;
       }
     }
@@ -89,14 +106,22 @@ const LoadingWorkflowLoan: React.FC<LoadingWorkflowLoanProps> = ({
 
   useEffect(() => {
     const checkWorkflowStatus = async (retryCount = 0) => {
-      // Check if user exists
-      if (!user?.id) {
-        console.log('No user found');
-        navigation.replace('IntroduceLoan');
-        return;
-      }
-
       try {
+        // Check for token first
+        const token = await getAccessToken();
+        if (!token) {
+          console.log('No token found, redirecting to login');
+          navigation.replace('Login');
+          return;
+        }
+
+        // Check if user exists
+        if (!user?.id) {
+          console.log('No user found');
+          navigation.replace('Login');
+          return;
+        }
+
         // Get application with retry
         const appId = await getApplication(user.id);
         if (!appId?.id) {
@@ -136,7 +161,7 @@ const LoadingWorkflowLoan: React.FC<LoadingWorkflowLoanProps> = ({
           return;
         }
         console.log('Error occurred after retry:', error);
-        navigation.replace('IntroduceLoan');
+        navigation.replace('Login');
       }
     };
 

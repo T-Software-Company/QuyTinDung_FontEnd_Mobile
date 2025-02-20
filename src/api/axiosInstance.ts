@@ -62,6 +62,19 @@ let failedQueue: Array<{
   reject: (err: unknown) => void;
 }> = [];
 
+// Add navigation reference
+// let navigationRef: any = null;
+
+// export const setNavigationRef = (ref: any) => {
+//   navigationRef = ref;
+// };
+
+// const navigateToLogin = () => {
+//   if (navigationRef) {
+//     navigationRef.navigate('Login');
+//   }
+// };
+
 const processQueue = (error: unknown | null, token: string | null = null) => {
   failedQueue.forEach(prom => {
     if (error) {
@@ -78,13 +91,16 @@ axiosInstance.interceptors.response.use(
   async (error: AxiosError<ApiError>) => {
     const originalRequest = error.config as RetryConfig;
 
-    if (
-      error.response?.status === 401 &&
-      originalRequest &&
-      !originalRequest._retry
-    ) {
+    // Handle 401 errors
+    if (error.response?.status === 401) {
+      if (!originalRequest || originalRequest._retry) {
+        // If we've already tried to refresh, navigate to login
+        await authService.logout();
+        // navigateToLogin();
+        return Promise.reject(error);
+      }
+
       if (isRefreshing) {
-        // Nếu đang refresh thì queue request
         try {
           const token = await new Promise((resolve, reject) => {
             failedQueue.push({resolve, reject});
@@ -92,6 +108,8 @@ axiosInstance.interceptors.response.use(
           originalRequest.headers['Authorization'] = `Bearer ${token}`;
           return axiosInstance(originalRequest);
         } catch (err) {
+          await authService.logout();
+          // navigateToLogin();
           return Promise.reject(err);
         }
       }
@@ -101,7 +119,9 @@ axiosInstance.interceptors.response.use(
 
       try {
         const refreshToken = await getRefreshToken();
-        if (!refreshToken) throw new Error('No refresh token available');
+        if (!refreshToken) {
+          throw new Error('No refresh token available');
+        }
 
         const params = new URLSearchParams();
         params.append('grant_type', 'refresh_token');
@@ -128,17 +148,15 @@ axiosInstance.interceptors.response.use(
         return axiosInstance(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError);
-        // Sửa cách gọi logout
         await authService.logout();
+        // navigateToLogin();
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
       }
     }
 
-    const errorMessage =
-      error.response?.data?.message || error.message || 'API Error';
-    return Promise.reject(new Error(errorMessage));
+    return Promise.reject(error);
   },
 );
 

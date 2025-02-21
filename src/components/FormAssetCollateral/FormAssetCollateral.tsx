@@ -1,659 +1,511 @@
-/* eslint-disable react-native/no-inline-styles */
+import React, {useState} from 'react';
 import {
-  StyleSheet,
-  Text,
   View,
-  Alert,
+  Text,
   TouchableOpacity,
+  StyleSheet,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
-import React, {useState, useRef} from 'react';
-import DropdownComponent from '../DropdownComponent/DropdownComponent';
-import InputBackground from '../InputBackground/InputBackground';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import {useTranslation} from 'react-i18next';
-import i18n from '../../../i18n';
+import InputBackground from '../InputBackground/InputBackground';
+import {addAssetCollateral} from '../../api/services/loan';
+import {ApartmentAsset, AssetApiError} from '../../api/types/addAssets';
 import {Theme} from '../../theme/colors';
-import {
-  LoanRequestBody,
-  BorrowerType,
-  LoanSecurityType,
-  LoanCollateralType,
-} from '../../api/types/loanRequest';
-import {loanRequest} from '../../api/services/loan';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamList} from '../../navigators/RootNavigator';
-import CustomMultiSelect from '../CustomMultiSelect/CustomMultiSelect';
+
+// Add type for apartment fields
+type OwnerInfo = keyof ApartmentAsset['apartment']['ownerInfo'];
 
 interface FormAssetCollateralProps {
   theme: Theme;
   appId: string;
-  navigation: StackNavigationProp<RootStackParamList, 'AssetCollateral'>;
-}
-
-interface TargetItem {
-  value: string;
-  label: string;
-}
-
-interface FormData extends Omit<LoanRequestBody, 'application'> {
-  selectedRate?: TargetItem;
-  method?: string;
-}
-
-interface FormErrors {
-  amount?: string;
-  purpose?: string;
-  asset?: string;
-  note?: string;
-  loanCollateralTypes?: string;
+  onSuccess: () => void;
 }
 
 const FormAssetCollateral: React.FC<FormAssetCollateralProps> = ({
   theme,
   appId,
-  navigation,
+  onSuccess,
 }) => {
-  const currentLanguage = i18n.language;
-  const {t} = useTranslation();
-
-  const borrowerTypes = [
-    {
-      value: 'INDIVIDUAL',
-      label: currentLanguage === 'vi' ? 'Cá nhân' : 'Individual',
-    },
-    {
-      value: 'BUSINESS',
-      label: currentLanguage === 'vi' ? 'Doanh nghiệp' : 'Business',
-    },
-  ];
-
-  const securityTypes = [
-    {
-      value: 'MORTGAGE',
-      label: currentLanguage === 'vi' ? 'Thế chấp' : 'Mortgage',
-    },
-    {
-      value: 'UNSECURED',
-      label: currentLanguage === 'vi' ? 'Tín chấp' : 'Unsecured',
-    },
-  ];
-
-  const collateralTypes = [
-    {
-      value: 'VEHICLE',
-      label: currentLanguage === 'vi' ? 'Phương tiện' : 'Vehicle',
-    },
-    {
-      value: 'PROPERTY',
-      label: currentLanguage === 'vi' ? 'Bất động sản' : 'Property',
-    },
-    {
-      value: 'EQUIPMENT',
-      label: currentLanguage === 'vi' ? 'Thiết bị' : 'Equipment',
-    },
-  ];
-
-  const [formData, setFormData] = useState<FormData>({
-    purpose: '',
-    amount: 0,
-    borrowerType: 'INDIVIDUAL',
-    asset: '',
-    loanSecurityType: 'UNSECURED',
-    loanCollateralTypes: [],
-    note: '',
-    metadata: {
-      key1: '',
-      key2: '',
+  const [formData, setFormData] = useState<ApartmentAsset>({
+    assetType: 'APARTMENT',
+    title: '',
+    ownershipType: 'INDIVIDUAL',
+    proposedValue: 0,
+    documents: [],
+    application: {id: appId},
+    apartment: {
+      plotNumber: '',
+      mapNumber: '',
+      address: '',
+      area: 0,
+      purpose: '',
+      name: '',
+      floorArea: 0,
+      typeOfHousing: '',
+      typeOfOwnership: '',
+      certificateNumber: '',
+      certificateBookNumber: '',
+      issuingAuthority: '',
+      ownerInfo: {
+        fullName: '',
+        dayOfBirth: '',
+        idCardNumber: '',
+        permanentAddress: '',
+      },
     },
   });
 
   const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState<FormErrors>({});
-  const [isOpen, setIsOpen] = useState(false);
-  const multiSelectRef = useRef<View>(null);
+  const {i18n} = useTranslation();
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [tempDate, setTempDate] = useState<Date>(new Date());
 
-  const handleOnchange = (field: keyof FormData, value: any): void => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value,
-    }));
+  // Add maximum date calculation (18 years ago from today)
+  const getMaxDate = () => {
+    const today = new Date();
+    return new Date(
+      today.getFullYear() - 18,
+      today.getMonth(),
+      today.getDate(),
+    );
   };
 
-  const validateForm = (): boolean => {
-    const newErrors: FormErrors = {};
-    let isValid = true;
+  // Add type guard for field access
+  const handleChange = (field: string, value: any) => {
+    setFormData(prev => {
+      if (field.startsWith('apartment.ownerInfo.')) {
+        const ownerField = field.split('.')[2] as keyof OwnerInfo;
+        return {
+          ...prev,
+          apartment: {
+            ...prev.apartment,
+            ownerInfo: {
+              ...prev.apartment.ownerInfo,
+              [ownerField]: value,
+            },
+          },
+        };
+      }
 
-    if (!formData.amount || formData.amount <= 1000000) {
-      newErrors.amount =
-        currentLanguage === 'vi'
-          ? 'Vui lòng nhập số tiền lớn hơn 1000000'
-          : 'Please enter a valid amount';
-      isValid = false;
-    }
+      if (field.startsWith('apartment.')) {
+        const apartmentField = field.split(
+          '.',
+        )[1] as keyof ApartmentAsset['apartment'];
+        return {
+          ...prev,
+          apartment: {
+            ...prev.apartment,
+            [apartmentField]: value,
+          },
+        };
+      }
 
-    if (!formData.purpose.trim()) {
-      newErrors.purpose =
-        currentLanguage === 'vi'
-          ? 'Vui lòng nhập mục đích vay'
-          : 'Please enter loan purpose';
-      isValid = false;
-    }
-
-    if (!formData.asset.trim()) {
-      newErrors.asset =
-        currentLanguage === 'vi'
-          ? 'Vui lòng nhập tài sản'
-          : 'Please enter asset';
-      isValid = false;
-    }
-
-    if (!formData.note.trim()) {
-      newErrors.note =
-        currentLanguage === 'vi'
-          ? 'Vui lòng nhập ghi chú'
-          : 'Please enter a note';
-      isValid = false;
-    }
-
-    if (
-      !formData.loanCollateralTypes ||
-      formData.loanCollateralTypes.length === 0
-    ) {
-      newErrors.loanCollateralTypes =
-        currentLanguage === 'vi'
-          ? 'Vui lòng chọn ít nhất một loại tài sản'
-          : 'Please select at least one collateral type';
-      isValid = false;
-    }
-
-    setErrors(newErrors);
-    return isValid;
+      const topLevelField = field as keyof ApartmentAsset;
+      return {
+        ...prev,
+        [topLevelField]: value,
+      };
+    });
   };
 
+  const handleDatePress = () => {
+    setShowDatePicker(true);
+    // Set initial date to 18 years ago if no date is selected
+    if (!tempDate) {
+      setTempDate(getMaxDate());
+    }
+  };
+
+  const handleDateChange = (event: any, selectedDate?: Date) => {
+    if (Platform.OS === 'android') {
+      setShowDatePicker(false);
+    }
+
+    if (selectedDate) {
+      setTempDate(selectedDate);
+      const isoDate = selectedDate.toISOString();
+      handleChange('apartment.ownerInfo.dayOfBirth', isoDate);
+    }
+  };
+
+  const handleConfirmDate = () => {
+    if (tempDate) {
+      const isoDate = tempDate.toISOString();
+      handleChange('apartment.ownerInfo.dayOfBirth', isoDate);
+    }
+    setShowDatePicker(false);
+  };
+
+  // Format date for display
+  const formatDisplayDate = (dateString: string) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString(i18n.language === 'vi' ? 'vi-VN' : 'en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    });
+  };
+
+  console.log('formData', formData);
   const handleSubmit = async () => {
-    console.log('Form data:', formData);
-    if (!validateForm()) {
-      return;
-    }
-
     try {
       setIsLoading(true);
-
-      const loanData = {
-        purpose: formData.purpose,
-        amount: formData.amount,
-        borrowerType: formData.borrowerType,
-        asset: formData.asset,
-        loanSecurityType: formData.loanSecurityType,
-        loanCollateralTypes: formData.loanCollateralTypes,
-        note: formData.note,
-        metadata: {
-          key1: '',
-          key2: '',
-        },
-      };
-      console.log('Loan data:', loanData, appId);
-
-      const response = await loanRequest(appId, loanData);
-      console.log('Loan request response:', response);
-
-      if (response) {
-        navigation.replace('CreateLoanPlan', {appId});
-      }
-    } catch (error) {
-      console.error('Error creating loan request:', error);
-      Alert.alert(
-        currentLanguage === 'vi' ? 'Lỗi' : 'Error',
-        currentLanguage === 'vi'
-          ? 'Có lỗi xảy ra khi tạo khoản vay'
-          : 'Error occurred while creating loan request',
-      );
+      await addAssetCollateral(appId, formData);
+      onSuccess();
+    } catch (error: unknown) {
+      const assetError = error as AssetApiError;
+      console.log(assetError.response);
     } finally {
       setIsLoading(false);
     }
   };
 
+  const getInputValue = (value: any): string => {
+    if (value === undefined || value === null) return '';
+    return String(value);
+  };
+
   const styles = StyleSheet.create({
-    boxInput: {
-      marginBottom: 12,
+    view: {
+      flex: 1,
+      backgroundColor: theme.background,
     },
-
-    headingTitle: {
-      fontWeight: 'bold',
-      marginBottom: 8,
-      color: theme.text,
-    },
-    textInput: {
-      backgroundColor: '#f4f4f4',
-      borderRadius: 8,
-      height: 40,
-      paddingLeft: 15,
-      paddingRight: 15,
-      paddingTop: 10,
-      paddingBottom: 10,
-      color: '#000',
-      paddingVertical: 0,
-      textAlignVertical: 'center',
-    },
-
-    selectedTextStyle: {
-      color: '#000',
-      fontSize: 14,
-    },
-
-    btn: {
+    container: {
       width: '100%',
-      backgroundColor: '#007BFF',
-      padding: 12,
-      borderRadius: 12,
-      marginTop: 8,
-    },
-
-    hidden: {
-      opacity: 0,
-      pointerEvents: 'none',
-    },
-
-    // dropdown: {
-    //   borderColor: '#ccc',
-    //   borderWidth: 1,
-    //   borderRadius: 5,
-    //   height: 50,
-    //   zIndex: 5000,
-    // },
-    dropdownContainer: {
-      borderColor: '#ccc',
-      zIndex: 5000,
-      position: 'absolute',
-    },
-
-    rateText: {
-      marginTop: 12,
-      fontSize: 14,
-      color: '#007BFF',
-    },
-    textWhite: {
-      color: 'white',
-    },
-    errorText: {
-      color: 'red',
-      fontSize: 12,
-      marginTop: 8,
-    },
-    checkboxContainer: {
+      height: '100%',
+      display: 'flex',
       flexDirection: 'column',
-      flexWrap: 'wrap',
-      gap: 12,
+      justifyContent: 'space-between',
+      paddingBottom: 20,
     },
-    checkboxItem: {
-      // flexDirection: 'row',
-      alignItems: 'center',
-      backgroundColor: '#f4f4f4',
-      padding: 10,
+    body: {
+      paddingTop: 8,
+      marginTop: 12,
+      paddingHorizontal: 20,
+      paddingBottom: 8,
+    },
+    section: {
+      marginBottom: 24,
+      backgroundColor: theme.backgroundBox,
+      borderRadius: 12,
+      padding: 16,
+    },
+    sectionTitle: {
+      fontSize: 16,
+      fontWeight: '600',
+      marginBottom: 16,
+      color: theme.text,
+      borderLeftWidth: 3,
+      borderLeftColor: theme.buttonSubmit,
+      paddingLeft: 8,
+    },
+    fieldContainer: {
+      marginBottom: 16,
+    },
+    label: {
+      fontSize: 14,
+      marginBottom: 8,
+      color: theme.noteText,
+      fontWeight: '500',
+    },
+    dateInput: {
+      backgroundColor: theme.text,
+      padding: 12,
       borderRadius: 8,
       borderWidth: 1,
-      borderColor: '#ddd',
+      borderColor: theme.tableBorderColor,
     },
-    checkboxSelected: {
-      backgroundColor: '#e3f0ff',
-      borderColor: '#007BFF',
-    },
-    checkboxText: {
+    dateText: {
       color: '#000',
-    },
-    checkboxTextSelected: {
-      color: '#007BFF',
-    },
-    multiSelect: {
-      backgroundColor: '#f4f4f4',
-      borderRadius: 8,
-      minHeight: 50,
-      paddingHorizontal: 8,
-      paddingVertical: 4,
-    },
-    selectedItemsContainer: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      alignItems: 'center',
-    },
-    selectedItem: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      backgroundColor: '#e3f0ff',
-      borderRadius: 4,
-      paddingHorizontal: 8,
-      paddingVertical: 4,
-      margin: 2,
-    },
-    selectedItemText: {
       fontSize: 14,
-      color: '#007BFF',
-      marginRight: 4,
     },
-    deleteButton: {
-      padding: 2,
+    datePlaceholder: {
+      color: theme.noteText,
+      fontSize: 14,
     },
-    deleteButtonText: {
-      color: '#007BFF',
+    submitButton: {
+      backgroundColor: theme.buttonSubmit,
+      padding: 16,
+      borderRadius: 12,
+      alignItems: 'center',
+      // marginHorizontal: 20,
+    },
+    buttonText: {
+      color: '#fff',
       fontSize: 16,
+      fontWeight: '600',
     },
-    clearAllButton: {
-      marginLeft: 'auto',
-      padding: 4,
-    },
-    selectedStyle: {
-      flexDirection: 'row',
+    datePickerOverlay: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
       justifyContent: 'center',
       alignItems: 'center',
-      borderRadius: 20, // More rounded corners
-      backgroundColor: '#007BFF',
-      paddingHorizontal: 12,
-      paddingVertical: 6,
-      margin: 4,
+      zIndex: 1000,
+    },
+    datePickerContainer: {
+      backgroundColor: theme.background,
+      width: '90%',
+      maxWidth: 340,
+      borderRadius: 12,
+      alignSelf: 'center',
+      padding: 16,
       shadowColor: '#000',
       shadowOffset: {
         width: 0,
         height: 2,
       },
-      shadowOpacity: 0.1,
-      shadowRadius: 2,
-      elevation: 2,
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 5,
     },
-    placeholderStyle: {
-      fontSize: 14,
-      color: '#aaa',
+    datePickerWrapper: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: 8,
     },
-    chipContainer: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      padding: 4,
-    },
-    closeIcon: {
-      color: '#fff',
-      fontSize: 16,
-      marginLeft: 4,
-    },
-    dropdownStyle: {
-      backgroundColor: '#fff',
-      borderRadius: 12,
-      marginTop: 8,
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 4,
-      },
-      shadowOpacity: 0.2,
-      shadowRadius: 5,
-      elevation: 8,
-      borderWidth: 1,
-      borderColor: 'rgba(0,0,0,0.05)',
-    },
-    itemStyle: {
-      padding: 16,
+    datePickerButtons: {
       flexDirection: 'row',
       justifyContent: 'space-between',
+      paddingHorizontal: 16,
+      paddingTop: 8,
+      borderTopWidth: 1,
+      borderTopColor: theme.tableBorderColor,
+    },
+    datePickerButton: {
+      padding: 10,
+      minWidth: 80,
       alignItems: 'center',
-      borderBottomWidth: 1,
-      borderBottomColor: 'rgba(0,0,0,0.05)',
     },
-    itemText: {
-      fontSize: 14,
-      color: '#333',
-      fontWeight: '500',
-    },
-    itemSelected: {
-      backgroundColor: 'rgba(0,123,255,0.05)',
-    },
-    noDataText: {
-      textAlign: 'center',
-      padding: 16,
-      color: '#666',
-    },
-    searchInput: {
-      backgroundColor: '#f8f9fa',
-      padding: 12,
-      borderRadius: 8,
-      marginHorizontal: 8,
-      marginVertical: 4,
-    },
-    multiSelectContainer: {
-      position: 'relative',
-    },
-    inputContainer: {
-      backgroundColor: '#f4f4f4',
-      borderRadius: 8,
-      padding: 8,
-      minHeight: 45,
-      flexDirection: 'row',
-      alignItems: 'center',
-      position: 'relative',
-    },
-    tag: {
-      backgroundColor: '#e3f0ff',
-      borderRadius: 16,
-      flexDirection: 'row',
-      alignItems: 'center',
-      paddingVertical: 4,
-      paddingHorizontal: 8,
-    },
-    tagText: {
-      color: '#007BFF',
-      fontSize: 14,
-      marginRight: 4,
-    },
-    removeTag: {
-      color: '#007BFF',
-      fontSize: 16,
-      fontWeight: '600',
-    },
-    clearAll: {
-      padding: 8,
-      marginRight: 4,
-    },
-    clearAllText: {
-      color: '#666',
+    datePickerButtonText: {
+      color: theme.buttonSubmit,
       fontSize: 16,
       fontWeight: '500',
-    },
-    tagsContainer: {
-      flex: 1,
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      gap: 6,
-    },
-    placeholder: {
-      color: '#999',
-      fontSize: 14,
-    },
-    dropdown: {
-      position: 'absolute',
-      top: '100%',
-      left: 0,
-      right: 0,
-      backgroundColor: 'white',
-      marginTop: 4,
-      borderRadius: 8,
-      padding: 8,
-      shadowColor: '#000',
-      shadowOffset: {width: 0, height: 2},
-      shadowOpacity: 0.1,
-      shadowRadius: 8,
-      elevation: 3,
-      zIndex: 1000,
-    },
-    option: {
-      padding: 12,
-      borderRadius: 6,
-      marginVertical: 2,
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-    },
-    optionSelected: {
-      backgroundColor: '#f0f9ff',
-    },
-    optionText: {
-      fontSize: 14,
-      color: '#333',
-    },
-    checkmark: {
-      color: '#007BFF',
-      fontWeight: 'bold',
-    },
-    arrowIcon: {
-      padding: 8,
-      color: '#666',
-    },
-    rightContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
     },
   });
 
-  const handleCollateralTypeChange = (value: LoanCollateralType) => {
-    setFormData(prev => {
-      const currentTypes = prev.loanCollateralTypes || [];
-      const newTypes = currentTypes.includes(value)
-        ? currentTypes.filter(type => type !== value)
-        : [...currentTypes, value];
-
-      return {
-        ...prev,
-        loanCollateralTypes: newTypes,
-      };
-    });
-  };
+  // Update the apartment fields mapping with proper types
+  const apartmentFields: Array<{
+    field: keyof ApartmentAsset['apartment'];
+    label: string;
+    placeholder: string;
+    numeric?: boolean;
+  }> = [
+    {field: 'plotNumber', label: 'Số thửa', placeholder: 'Nhập số thửa'},
+    {
+      field: 'mapNumber',
+      label: 'Số tờ bản đồ',
+      placeholder: 'Nhập số tờ bản đồ',
+    },
+    {
+      field: 'address',
+      label: 'Địa chỉ',
+      placeholder: 'Nhập địa chỉ',
+    },
+    {
+      field: 'area',
+      label: 'Diện tích (m²)',
+      placeholder: 'Nhập diện tích',
+      numeric: true,
+    },
+    {
+      field: 'purpose',
+      label: 'Mục đích sử dụng',
+      placeholder: 'Nhập mục đích sử dụng',
+    },
+    {
+      field: 'name',
+      label: 'Tên căn hộ',
+      placeholder: 'Nhập tên căn hộ',
+    },
+    {
+      field: 'floorArea',
+      label: 'Diện tích sàn (m²)',
+      placeholder: 'Nhập diện tích sàn',
+      numeric: true,
+    },
+    {
+      field: 'typeOfHousing',
+      label: 'Loại nhà ở',
+      placeholder: 'Nhập loại nhà ở',
+    },
+    {
+      field: 'typeOfOwnership',
+      label: 'Hình thức sở hữu',
+      placeholder: 'Nhập hình thức sở hữu',
+    },
+    {
+      field: 'certificateNumber',
+      label: 'Số giấy chứng nhận',
+      placeholder: 'Nhập số giấy chứng nhận',
+    },
+    {
+      field: 'certificateBookNumber',
+      label: 'Số vào sổ cấp GCN',
+      placeholder: 'Nhập số vào sổ',
+    },
+    {
+      field: 'issuingAuthority',
+      label: 'Cơ quan cấp',
+      placeholder: 'Nhập cơ quan cấp',
+    },
+  ];
 
   return (
-    <View>
-      <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>
-          {currentLanguage === 'vi' ? 'Số tiền vay' : 'Loan Amount'}
-        </Text>
-        <InputBackground
-          placeholder={
-            currentLanguage === 'vi' ? 'Nhập số tiền' : 'Enter amount'
-          }
-          keyboardType="numeric"
-          onChangeText={(value: string) =>
-            handleOnchange('amount', Number(value))
-          }
-          value={formData.amount.toString()}
-        />
-        {errors.amount && <Text style={styles.errorText}>{errors.amount}</Text>}
+    <View style={styles.container}>
+      {/* Basic Information */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Thông tin cơ bản</Text>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.label}>Tên tài sản</Text>
+          <InputBackground
+            value={getInputValue(formData.title)}
+            onChangeText={value => handleChange('title', value)}
+            placeholder="Nhập tên tài sản"
+          />
+        </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.label}>Giá trị đề xuất</Text>
+          <InputBackground
+            value={getInputValue(formData.proposedValue)}
+            onChangeText={value => handleChange('proposedValue', Number(value))}
+            placeholder="Nhập giá trị"
+            keyboardType="numeric"
+          />
+        </View>
       </View>
 
-      <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>
-          {currentLanguage === 'vi' ? 'Mục đích vay' : 'Loan Purpose'}
-        </Text>
-        <InputBackground
-          placeholder={
-            currentLanguage === 'vi' ? 'Nhập mục đích' : 'Enter purpose'
-          }
-          onChangeText={(value: string) => handleOnchange('purpose', value)}
-          value={formData.purpose}
-        />
-        {errors.purpose && (
-          <Text style={styles.errorText}>{errors.purpose}</Text>
-        )}
+      {/* Apartment Information */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Thông tin căn hộ</Text>
+        {apartmentFields.map(({field, label, placeholder, numeric}) => (
+          <View key={field} style={styles.fieldContainer}>
+            <Text style={styles.label}>{label}</Text>
+            <InputBackground
+              value={getInputValue(formData.apartment[field])}
+              onChangeText={value =>
+                handleChange(
+                  `apartment.${field}`,
+                  numeric ? Number(value) : value,
+                )
+              }
+              placeholder={placeholder}
+              keyboardType={numeric ? 'numeric' : 'default'}
+            />
+          </View>
+        ))}
       </View>
 
-      <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>
-          {currentLanguage === 'vi' ? 'Loại người vay' : 'Borrower Type'}
-        </Text>
-        <DropdownComponent
-          value={formData.borrowerType}
-          data={borrowerTypes}
-          placeholder={currentLanguage === 'vi' ? 'Chọn loại' : 'Select type'}
-          onChange={(value: TargetItem) =>
-            handleOnchange('borrowerType', value.value as BorrowerType)
-          }
-        />
-      </View>
+      {/* Owner Information */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Thông tin chủ sở hữu</Text>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.label}>Họ và tên</Text>
+          <InputBackground
+            value={formData.apartment.ownerInfo.fullName}
+            onChangeText={value =>
+              handleChange('apartment.ownerInfo.fullName', value)
+            }
+            placeholder="Nhập họ và tên"
+          />
+        </View>
 
-      <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>
-          {currentLanguage === 'vi' ? 'Tài sản' : 'Asset'}
-        </Text>
-        <InputBackground
-          placeholder={
-            currentLanguage === 'vi' ? 'Nhập tài sản' : 'Enter asset'
-          }
-          onChangeText={(value: string) => handleOnchange('asset', value)}
-          value={formData.asset}
-        />
-        {errors.asset && <Text style={styles.errorText}>{errors.asset}</Text>}
-      </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.label}>Ngày sinh</Text>
+          <TouchableOpacity style={styles.dateInput} onPress={handleDatePress}>
+            <Text
+              style={
+                formData.apartment.ownerInfo.dayOfBirth
+                  ? styles.dateText
+                  : styles.datePlaceholder
+              }>
+              {formData.apartment.ownerInfo.dayOfBirth
+                ? formatDisplayDate(formData.apartment.ownerInfo.dayOfBirth)
+                : 'Chọn ngày sinh'}
+            </Text>
+          </TouchableOpacity>
+        </View>
 
-      <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>
-          {currentLanguage === 'vi' ? 'Hình thức bảo đảm' : 'Security Type'}
-        </Text>
-        <DropdownComponent
-          value={formData.loanSecurityType}
-          data={securityTypes}
-          placeholder={
-            currentLanguage === 'vi' ? 'Chọn hình thức' : 'Select type'
-          }
-          onChange={(value: TargetItem) =>
-            handleOnchange('loanSecurityType', value.value as LoanSecurityType)
-          }
-        />
-      </View>
+        {/* Platform specific date picker */}
+        {showDatePicker &&
+          (Platform.OS === 'ios' ? (
+            <View style={styles.datePickerOverlay}>
+              <View style={styles.datePickerContainer}>
+                <View style={styles.datePickerWrapper}>
+                  <DateTimePicker
+                    value={tempDate}
+                    mode="date"
+                    display="spinner"
+                    onChange={(event, date) => {
+                      if (date) setTempDate(date);
+                    }}
+                    maximumDate={getMaxDate()}
+                    locale={i18n.language === 'vi' ? 'vi-VN' : 'en-US'}
+                    textColor={theme.text}
+                  />
+                </View>
+                <View style={styles.datePickerButtons}>
+                  <TouchableOpacity
+                    style={styles.datePickerButton}
+                    onPress={() => setShowDatePicker(false)}>
+                    <Text style={styles.datePickerButtonText}>Hủy</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.datePickerButton}
+                    onPress={handleConfirmDate}>
+                    <Text style={styles.datePickerButtonText}>Xác nhận</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          ) : (
+            <DateTimePicker
+              value={tempDate}
+              mode="date"
+              display="default"
+              onChange={handleDateChange}
+              maximumDate={getMaxDate()}
+              locale={i18n.language === 'vi' ? 'vi-VN' : 'en-US'}
+            />
+          ))}
 
-      <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>
-          {currentLanguage === 'vi'
-            ? 'Loại tài sản đảm bảo'
-            : 'Collateral Type'}
-        </Text>
-        <CustomMultiSelect
-          ref={multiSelectRef}
-          value={formData.loanCollateralTypes}
-          options={collateralTypes}
-          placeholder={
-            currentLanguage === 'vi'
-              ? 'Chọn loại tài sản'
-              : 'Select collateral types'
-          }
-          onChange={value => handleOnchange('loanCollateralTypes', value)}
-          onItemSelect={handleCollateralTypeChange}
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-        />
-        {errors.loanCollateralTypes && (
-          <Text style={styles.errorText}>{errors.loanCollateralTypes}</Text>
-        )}
-      </View>
+        <View style={styles.fieldContainer}>
+          <Text style={styles.label}>Số CMND/CCCD</Text>
+          <InputBackground
+            value={formData.apartment.ownerInfo.idCardNumber}
+            onChangeText={value =>
+              handleChange('apartment.ownerInfo.idCardNumber', value)
+            }
+            placeholder="Nhập số CMND/CCCD"
+          />
+        </View>
 
-      <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>
-          {currentLanguage === 'vi' ? 'Ghi chú' : 'Note'}
-        </Text>
-        <InputBackground
-          placeholder={currentLanguage === 'vi' ? 'Nhập ghi chú' : 'Enter note'}
-          onChangeText={(value: string) => handleOnchange('note', value)}
-          value={formData.note}
-        />
-        {errors.note && <Text style={styles.errorText}>{errors.note}</Text>}
+        <View style={styles.fieldContainer}>
+          <Text style={styles.label}>Địa chỉ thường trú</Text>
+          <InputBackground
+            value={formData.apartment.ownerInfo.permanentAddress}
+            onChangeText={value =>
+              handleChange('apartment.ownerInfo.permanentAddress', value)
+            }
+            placeholder="Nhập địa chỉ thường trú"
+          />
+        </View>
       </View>
 
       <TouchableOpacity
-        style={[styles.btn, isLoading && {opacity: 0.7}]}
+        style={styles.submitButton}
         onPress={handleSubmit}
         disabled={isLoading}>
         {isLoading ? (
-          <ActivityIndicator color="white" />
+          <ActivityIndicator color="#fff" />
         ) : (
-          <Text
-            style={[
-              styles.textWhite,
-              {fontWeight: 'bold', textAlign: 'center'},
-            ]}>
-            {t('formCreateLoan.next')}
-          </Text>
+          <Text style={styles.buttonText}>Tiếp tục</Text>
         )}
       </TouchableOpacity>
     </View>

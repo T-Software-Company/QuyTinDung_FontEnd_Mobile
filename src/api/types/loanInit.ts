@@ -5,16 +5,12 @@ export type WorkflowStatus =
   | 'COMPLETED'
   | 'CANCELLED';
 export type StepName =
+  | 'init'
   | 'create-loan-request'
+  | 'add-asset-collateral'
   | 'create-loan-plan'
   | 'create-financial-info'
-  | 'add-asset-collateral'
-  | 'create-credit-rating'
-  | 'init'
-  // | 'create-valuation-meting'
-  // | 'create-valuation-report'
-  // | 'create-appraisal-meting'
-  // | 'create-appraisal-report';
+  | 'create-credit-rating';
 export interface UserInit {
   userId: string | undefined;
 }

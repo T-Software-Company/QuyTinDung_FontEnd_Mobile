@@ -313,6 +313,18 @@ const InfoCreateLoan: React.FC<InfoCreateLoanProps> = ({navigation, route}) => {
     </View>
   );
 
+  const filterAllowedSteps = (steps: string[]) => {
+    const allowedSteps = [
+      'init',
+      'create-loan-request',
+      'add-asset-collateral',
+      'create-loan-plan',
+      'create-financial-info',
+      'create-credit-rating',
+    ];
+    return steps.filter(step => allowedSteps.includes(step));
+  };
+
   return (
     <SafeAreaView style={styles.view}>
       <View style={styles.container}>
@@ -321,11 +333,18 @@ const InfoCreateLoan: React.FC<InfoCreateLoanProps> = ({navigation, route}) => {
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <Legend />
           <View style={styles.optionsContainer}>
-            {loanSteps?.prevSteps?.map(step => renderStep(step, 'completed'))}
-            {loanSteps?.currentSteps?.map(step =>
-              renderStep(step, 'processing'),
-            )}
-            {loanSteps?.nextSteps?.map(step => renderStep(step, 'pending'))}
+            {loanSteps?.prevSteps &&
+              filterAllowedSteps(loanSteps.prevSteps).map(step =>
+                renderStep(step, 'completed'),
+              )}
+            {loanSteps?.currentSteps &&
+              filterAllowedSteps(loanSteps.currentSteps).map(step =>
+                renderStep(step, 'processing'),
+              )}
+            {loanSteps?.nextSteps &&
+              filterAllowedSteps(loanSteps.nextSteps).map(step =>
+                renderStep(step, 'pending'),
+              )}
           </View>
         </ScrollView>
 

@@ -26,6 +26,7 @@ import CreateLoanRequestScreen from '../screen/CreateLoanRequest';
 import CreateLoanPlanScreen from '../screen/CreateLoanPlan';
 import CreateFinancialInfoScreen from '../screen/CreateFinancialInfo';
 import CreditRatingScreen from '../screen/CreditRating';
+import AssetCollateralScreen from '../screen/AssetCollateral';
 import InfoCreateLoanScreen from '../screen/InfoCreateLoan';
 import IntroduceLoanScreen from '../screen/IntroduceLoan';
 import NotificationScreen from '../screen/Notification';
@@ -278,6 +279,7 @@ const AppStack = () => (
       component={CreateFinancialInfoScreen}
     />
     <Stack.Screen name="CreditRating" component={CreditRatingScreen} />
+    <Stack.Screen name="AssetCollateral" component={AssetCollateralScreen} />
     <Stack.Screen name="InfoCreateLoan" component={InfoCreateLoanScreen} />
 
     <Stack.Screen

@@ -42,30 +42,48 @@ const Home: React.FC<HomeProps> = ({navigation}) => {
   useFocusEffect(
     useCallback(() => {
       const checkTokenAndLoadData = async () => {
-        console.log('Checking token and loading data');
-        if (!isAuthenticated) {
-          console.log('User is not authenticated, navigating to Login');
-          navigation.replace('Login');
-          return;
-        }
-        const token = await getAccessToken();
-        console.log('Token: ', token);
-        if (token && isTokenExpired(token)) {
-          console.log('Token is expired, attempting to refresh');
-          const refreshed = await refreshToken();
-          console.log('Refreshed: ', refreshed);
-          if (!refreshed) {
-            console.log('Token refresh failed, navigating to Login');
+        try {
+          console.log('Checking token and loading data');
+          if (!isAuthenticated) {
+            console.log('User is not authenticated, navigating to Login');
             navigation.replace('Login');
             return;
           }
+
+          const token = await getAccessToken();
+          console.log('Token: ', token);
+
+          if (token && isTokenExpired(token)) {
+            console.log('Token is expired, attempting to refresh');
+            const refreshed = await refreshToken();
+            console.log('Refresh result:', refreshed);
+
+            if (!refreshed) {
+              console.log('Token refresh failed, navigating to Login');
+              Alert.alert(
+                'Session Expired',
+                'Your session has expired. Please login again.',
+                [
+                  {
+                    text: 'OK',
+                    onPress: () => navigation.replace('Login'),
+                  },
+                ],
+              );
+              return;
+            }
+          }
+
+          console.log('Token is valid, loading data');
+          await loadData();
+        } catch (error) {
+          console.error('Error in checkTokenAndLoadData:', error);
+          navigation.replace('Login');
         }
-        console.log('Token is valid, loading data');
-        loadData();
       };
 
       checkTokenAndLoadData();
-    }, [isAuthenticated, navigation]),
+    }, [isAuthenticated, navigation, refreshToken]),
   );
 
   const loadData = async (): Promise<void> => {

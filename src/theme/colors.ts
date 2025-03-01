@@ -6,6 +6,7 @@ export interface Theme {
   text: string; // Primary text color
   noteText: string; // Secondary/note text color
   tint: string; // Tint color for various UI elements
+  inputBackground: string;
 
   // Header related colors
   headerBackground: string;
@@ -56,6 +57,7 @@ export const lightTheme: Theme = {
   backgroundBox: '#f4f4f4',
   textActive: '#007BFF',
   buttonSubmit: '#007BFF',
+  inputBackground: '#ffffff',
 
   //profit
   profit: '#18DD12',
@@ -88,6 +90,7 @@ export const darkTheme: Theme = {
   backgroundBox: '#444950',
   textActive: '#ffffff',
   buttonSubmit: '#007BFF',
+  inputBackground: '#f4f4f4',
 
   //profit
   profit: '#76FA39',

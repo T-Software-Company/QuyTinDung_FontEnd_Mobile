@@ -40,10 +40,30 @@ export interface ApartmentAsset extends BaseAsset {
     floorArea: number;
     typeOfHousing: string;
     typeOfOwnership: string;
+    ownershipTerm: string;
+    notes: string;
+    sharedFacilities: string;
     certificateNumber: string;
     certificateBookNumber: string;
     issuingAuthority: string;
+    issueDate: string;
+    expirationDate: string;
+    originOfUsage: string;
+    metadata: {
+      parkingSpace: string;
+      floor: number;
+      view: string;
+      renovationStatus: string;
+    };
     ownerInfo: OwnerInfo;
+    transferInfo: {
+      fullName: string;
+      dayOfBirth: string;
+      idCardNumber: string;
+      permanentAddress: string;
+      transferDate: string;
+      transferRecordNumber: string;
+    };
   };
 }
 
@@ -59,13 +79,35 @@ export interface LandAsset extends BaseAsset {
     expirationDate: string;
     originOfUsage: string;
     ownerInfo: OwnerInfo;
+    transferInfo: {
+      fullName: string;
+      dayOfBirth: string;
+      idCardNumber: string;
+      permanentAddress: string;
+      transferDate: string;
+      transferRecordNumber: string;
+    };
+    metadata: {
+      zoning: string;
+      frontage: string;
+      landUseRights: string;
+      developmentPotential: string;
+    };
   };
 }
 
 // Vehicle Asset
+interface VehicleMetadata {
+  fuelType: string;
+  transmission: string;
+  lastService: string;
+  warranty: string;
+}
+
 export interface VehicleAsset extends BaseAsset {
   assetType: 'VEHICLE';
   vehicle: {
+    model: string;
     ownerName: string;
     address: string;
     engineNumber: string;
@@ -82,8 +124,10 @@ export interface VehicleAsset extends BaseAsset {
     firstRegistrationDate: string;
     issueDate: string;
     registrationCertificateNumber: string;
+    note: string;
     kilometersDriven: number;
     inspectionCertificateNumber: string;
+    metadata: VehicleMetadata;
   };
 }
 
@@ -101,6 +145,13 @@ export interface MarketStallsAsset extends BaseAsset {
     location: string;
     contactNumber: string;
     isOccupied: boolean;
+    note: string;
+    metadata: {
+      utilities: string;
+      stallNumber: string;
+      refrigeration: string;
+      storageSpace: string;
+    };
   };
 }
 
@@ -117,6 +168,13 @@ export interface MachineryAsset extends BaseAsset {
     serialNumber: string;
     location: string;
     status: string;
+    note: string;
+    metadata: {
+      warranty: string;
+      maintenanceSchedule: string;
+      powerConsumption: string;
+      precision: string;
+    };
   };
 }
 
@@ -143,17 +201,38 @@ export interface LandAndImprovementAsset extends BaseAsset {
   };
 }
 
-// Other Asset
+export interface ArtPiece {
+  name: string;
+  artist: string;
+  year: number;
+  medium: string;
+  dimensions: string;
+  value: number;
+}
+
+interface Insurance {
+  provider: string;
+  policyNumber: string;
+  coverage: number;
+}
+
+interface Storage {
+  location: string;
+  security: string;
+}
+
+export interface OtherAssetMetadata {
+  assetType: string;
+  location: string;
+  pieces: ArtPiece[];
+  insurance: Insurance;
+  storage: Storage;
+}
+
 export interface OtherAsset extends BaseAsset {
   assetType: 'OTHER';
   otherAsset: {
-    metadata: {
-      assetDescription: string;
-      category: string;
-      specifications: string;
-      condition: string;
-      [key: string]: any;
-    };
+    metadata: OtherAssetMetadata;
   };
 }
 

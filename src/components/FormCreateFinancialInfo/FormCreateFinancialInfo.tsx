@@ -86,8 +86,8 @@ const FormCreateFinancialInfo: React.FC<FormCreateFinancialInfoProps> = ({
       const file = result[0];
       setSelectedFiles(prev => [...prev, file]);
 
-      const formData = new FormData();
-      formData.append('file', {
+      const formDataFile = new FormData();
+      formDataFile.append('file', {
         uri: file.uri,
         name: file.name,
         type: file.type,
@@ -95,7 +95,7 @@ const FormCreateFinancialInfo: React.FC<FormCreateFinancialInfoProps> = ({
 
       const response = await fetch('https://your-api.com/upload', {
         method: 'POST',
-        body: formData,
+        body: formDataFile,
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -129,7 +129,7 @@ const FormCreateFinancialInfo: React.FC<FormCreateFinancialInfoProps> = ({
       const response = await financialInfo(appId, formData);
 
       if (response) {
-        navigation.replace('CreditRating', {appId});
+        navigation.replace('AssetCollateral', {appId});
       }
     } catch (error) {
       console.error('Error submitting financial info:', error);

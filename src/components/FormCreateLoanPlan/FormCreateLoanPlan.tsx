@@ -118,6 +118,7 @@ const FormCreateLoanPlan: React.FC<FormCreateLoanPlanProps> = ({
       }
     } catch (error) {
       console.error('Error creating loan plan:', {error});
+      console.log('Error creating loan plan:', error.response);
       Alert.alert(
         currentLanguage === 'vi' ? 'Lỗi' : 'Error',
         currentLanguage === 'vi'

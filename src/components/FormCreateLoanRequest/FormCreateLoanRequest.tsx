@@ -91,6 +91,22 @@ const FormCreateLoanRequest: React.FC<FormCreateLoanRequestProps> = ({
       value: 'APARTMENT',
       label: currentLanguage === 'vi' ? 'Căn hộ' : 'Equipment',
     },
+    {
+      value: 'MACHINERY',
+      label: currentLanguage === 'vi' ? 'Máy móc' : 'Machinery',
+    },
+    {
+      value: 'MARKET_STALLS',
+      label: currentLanguage === 'vi' ? 'Quầy hàng' : 'Market Stalls',
+    },
+    {
+      value: 'LAND_AND_IMPROVEMENT',
+      label: currentLanguage === 'vi' ? 'Đất và cải tạo' : 'Land and Improvement',
+    },
+    {
+      value: 'OTHER',
+      label: currentLanguage === 'vi' ? 'Khác' : 'Other',
+    },
   ];
 
   const [formData, setFormData] = useState<FormData>({

@@ -1,5 +1,6 @@
 import {StyleSheet, TextInput, TextInputProps, View} from 'react-native';
 import React from 'react';
+import {useTheme} from '../../context/ThemeContext';
 
 interface InputBackgroundProps extends Omit<TextInputProps, 'onChangeText'> {
   value?: string;
@@ -17,6 +18,23 @@ const InputBackground: React.FC<InputBackgroundProps> = ({
 }) => {
   // Convert undefined/null to empty string to avoid uncontrolled input warning
   const inputValue = value ?? '';
+  const {theme} = useTheme(); // Add type assertion here
+
+  const styles = StyleSheet.create({
+    container: {
+      backgroundColor: theme.inputBackground,
+      borderRadius: 8,
+      overflow: 'hidden',
+      borderWidth: 1,
+    },
+    input: {
+      height: 40,
+      paddingHorizontal: 15,
+      fontSize: 14,
+      color: '#000',
+      width: '100%',
+    },
+  });
 
   return (
     <View style={styles.container}>
@@ -34,20 +52,5 @@ const InputBackground: React.FC<InputBackgroundProps> = ({
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#f4f4f4',
-    borderRadius: 8,
-    overflow: 'hidden',
-  },
-  input: {
-    height: 40,
-    paddingHorizontal: 15,
-    fontSize: 14,
-    color: '#000',
-    width: '100%',
-  },
-});
 
 export default InputBackground;

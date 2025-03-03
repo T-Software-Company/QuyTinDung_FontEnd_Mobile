@@ -10,9 +10,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Alert,
-  Platform,
 } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import Header from '../components/Header/Header';
 import InputBorder from '../components/InputBorder/InputBorder';
 import {useTranslation} from 'react-i18next';
@@ -32,6 +30,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
 import {RootStackParamList, FormDataAddress} from '../navigators/RootNavigator';
 import {Asset} from 'react-native-image-picker';
+import CustomDatePicker from '../components/CustomDatePicker/CustomDatePicker';
 
 interface ImageResponse extends Asset {
   uri: string;
@@ -78,7 +77,7 @@ interface FormValues {
 // Remove InitialFormValues interface and use FormValues directly
 const ResultQR: React.FC<ResultQRProps> = ({navigation, route}) => {
   const {theme} = useTheme();
-  const {t, i18n} = useTranslation(); // Add i18n from useTranslation
+  const {t} = useTranslation(); // Add i18n from useTranslation
   const {formDataAddress, formDataUser, qrData} = route.params;
   const {register} = useAuth();
   const [isDatePickerVisible, setDatePickerVisible] = useState(false);
@@ -89,12 +88,8 @@ const ResultQR: React.FC<ResultQRProps> = ({navigation, route}) => {
   const [frontImage, setFrontImage] = useState<ImageResponse | null>(null);
   const [backImage, setBackImage] = useState<ImageResponse | null>(null);
   const [tempDate, setTempDate] = useState<Date | null>(null);
-  const [show, setShow] = useState(false);
 
   const showDatePicker = useCallback((fieldName: string) => {
-    if (Platform.OS === 'android') {
-      setShow(true);
-    }
     setSelectedField(fieldName);
     setDatePickerVisible(true);
     setTempDate(new Date());
@@ -246,7 +241,7 @@ const ResultQR: React.FC<ResultQRProps> = ({navigation, route}) => {
       frontImage: 'https://via.placeholder.com/150',
       backImage: 'https://via.placeholder.com/150',
     };
-  }, [qrData, formDataUser, formDataAddress, splitName]);
+    }, [qrData, formDataUser, formDataAddress, splitName]);
   // }, []);
 
   // Update Alert messages to use translations
@@ -346,45 +341,6 @@ const ResultQR: React.FC<ResultQRProps> = ({navigation, route}) => {
     },
     buttonDisabled: {
       opacity: 0.7,
-    },
-    datePickerContainer: {
-      backgroundColor: 'white',
-      borderRadius: 12,
-      height: Platform.OS === 'ios' ? 260 : 'auto',
-      padding: 20,
-      width: '90%',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    datePickerOverlay: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    datePickerWrapper: {
-      height: 200,
-      justifyContent: 'center',
-    },
-    datePickerButtons: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      width: '100%',
-      marginTop: 20,
-    },
-    datePickerButton: {
-      padding: 10,
-      minWidth: 100,
-      alignItems: 'center',
-    },
-    datePickerButtonText: {
-      color: theme.buttonSubmit,
-      fontSize: 16,
-      fontWeight: '500',
     },
     imagePickerContainer: {
       marginBottom: 20,
@@ -531,6 +487,14 @@ const ResultQR: React.FC<ResultQRProps> = ({navigation, route}) => {
               handleSubmit();
             };
 
+            // Handler for date confirmation
+            const handleDateConfirm = (date: Date) => {
+              if (selectedField) {
+                const formattedDate = date.toISOString().split('T')[0];
+                setFieldValue(selectedField, formattedDate);
+              }
+            };
+
             return (
               <>
                 <ScrollView style={styles.body}>
@@ -585,77 +549,15 @@ const ResultQR: React.FC<ResultQRProps> = ({navigation, route}) => {
                   />
                 </ScrollView>
 
-                {Platform.OS === 'ios'
-                  ? // iOS DatePicker
-                    isDatePickerVisible &&
-                    tempDate && (
-                      <View style={styles.datePickerOverlay}>
-                        <View style={styles.datePickerContainer}>
-                          <View style={styles.datePickerWrapper}>
-                            <DateTimePicker
-                              value={tempDate}
-                              mode="date"
-                              display="spinner"
-                              onChange={(event, date) => {
-                                if (date) {
-                                  setTempDate(date);
-                                }
-                              }}
-                              minimumDate={new Date()}
-                              locale={
-                                i18n.language === 'vi' ? 'vi-VN' : 'en-US'
-                              } // Set locale based on current language
-                              textColor="black"
-                            />
-                          </View>
-                          <View style={styles.datePickerButtons}>
-                            <TouchableOpacity
-                              style={styles.datePickerButton}
-                              onPress={() => setDatePickerVisible(false)}>
-                              <Text style={styles.datePickerButtonText}>
-                                {t('register.resultScreen.datePicker.cancel')}
-                              </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                              style={styles.datePickerButton}
-                              onPress={() => {
-                                const formattedDate = tempDate
-                                  .toISOString()
-                                  .split('T')[0];
-                                if (selectedField) {
-                                  setFieldValue(selectedField, formattedDate);
-                                }
-                                setDatePickerVisible(false);
-                              }}>
-                              <Text style={styles.datePickerButtonText}>
-                                {t('register.resultScreen.datePicker.confirm')}
-                              </Text>
-                            </TouchableOpacity>
-                          </View>
-                        </View>
-                      </View>
-                    )
-                  : // Android DatePicker
-                    show && (
-                      <DateTimePicker
-                        value={tempDate || new Date()}
-                        mode="date"
-                        is24Hour={true}
-                        display="spinner"
-                        onChange={(event, date) => {
-                          setShow(false); // Ẩn picker sau khi chọn
-                          if (event.type === 'set' && date && selectedField) {
-                            const formattedDate = date
-                              .toISOString()
-                              .split('T')[0];
-                            setFieldValue(selectedField, formattedDate);
-                            setTempDate(date);
-                          }
-                        }}
-                        minimumDate={new Date()}
-                        locale={i18n.language === 'vi' ? 'vi-VN' : 'en-US'} // Set locale for Android too
-                      />
-                    )}
+                {/* Replace the old DatePicker implementation with the new CustomDatePicker */}
+                <CustomDatePicker
+                  isVisible={isDatePickerVisible}
+                  onClose={() => setDatePickerVisible(false)}
+                  onConfirm={handleDateConfirm}
+                  selectedDate={tempDate}
+                  minimumDate={new Date()}
+                  theme={theme}
+                />
 
                 <TouchableOpacity
                   style={[styles.button, isSubmitting && styles.buttonDisabled]}

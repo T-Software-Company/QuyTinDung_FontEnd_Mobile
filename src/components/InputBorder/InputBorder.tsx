@@ -49,6 +49,13 @@ const InputBorder: React.FC<InputBorderProps> = ({
   notChange,
   error,
 }) => {
+  // Create a dedicated press handler for touchable fields
+  const handlePress = () => {
+    if (onPress) {
+      onPress();
+    }
+  };
+
   const styles = StyleSheet.create({
     heading: {
       fontSize: 14,
@@ -67,7 +74,6 @@ const InputBorder: React.FC<InputBorderProps> = ({
       position: 'absolute',
       right: 0,
     },
-
     textInput: {
       borderBottomColor: theme.noteText,
       borderBottomWidth: 1,
@@ -90,49 +96,64 @@ const InputBorder: React.FC<InputBorderProps> = ({
       fontSize: 12,
       marginTop: 4,
     },
-    iconEyesOpen: {},
     iconEyes: {
       bottom: Platform.OS === 'ios' ? 4 : 4,
       paddingVertical: 0,
-      // textAlignVertical: 'center',
       tintColor: theme.iconColor,
       width: 24,
       height: 24,
     },
   });
 
-  const inputElement = (
-    <TextInput
-      placeholder={placeholder}
-      placeholderTextColor={theme.noteText}
-      keyboardType={keyboardType}
-      onChangeText={onSetValue}
-      secureTextEntry={secureVisible}
-      value={value}
-      style={styles.textInput}
-      autoCapitalize="none"
-      editable={!notChange}
-      // textContentType={textContentType}
-      pointerEvents={pointerEvents}
-    />
-  );
+  // For touchable inputs (like date fields), return a completely different component structure
+  if (onPress) {
+    return (
+      <View style={{marginBottom: 20}}>
+        <Text style={styles.heading}>{name}</Text>
+        <View style={styles.inputContainer}>
+          <Image source={iconSource} style={styles.icon} />
 
+          {/* Wrap the entire input area with TouchableOpacity */}
+          <TouchableOpacity
+            onPress={handlePress}
+            activeOpacity={0.7}
+            style={styles.touchableContainer}>
+            {/* Explicitly make TextInput non-interactive for Android */}
+            <TextInput
+              placeholder={placeholder}
+              placeholderTextColor={theme.noteText}
+              value={value}
+              style={styles.textInput}
+              editable={false} // Force non-editable for touchable fields
+              pointerEvents="none"
+              autoCapitalize="none"
+            />
+          </TouchableOpacity>
+
+          {error && <Text style={styles.errorText}>{error}</Text>}
+        </View>
+      </View>
+    );
+  }
+
+  // For regular, non-touchable inputs
   return (
-    // eslint-disable-next-line react-native/no-inline-styles
     <View style={{marginBottom: 20}}>
       <Text style={styles.heading}>{name}</Text>
       <View style={styles.inputContainer}>
         <Image source={iconSource} style={styles.icon} />
-        {onPress ? (
-          <TouchableOpacity
-            onPress={onPress}
-            activeOpacity={0.7}
-            style={styles.touchableContainer}>
-            {inputElement}
-          </TouchableOpacity>
-        ) : (
-          inputElement
-        )}
+        <TextInput
+          placeholder={placeholder}
+          placeholderTextColor={theme.noteText}
+          keyboardType={keyboardType}
+          onChangeText={onSetValue}
+          secureTextEntry={secureVisible}
+          value={value}
+          style={styles.textInput}
+          autoCapitalize="none"
+          editable={!notChange}
+          pointerEvents={pointerEvents}
+        />
         {touchEyes && (
           <TouchableOpacity style={styles.iconPosition} onPress={onPressIcon}>
             {secureVisible ? (

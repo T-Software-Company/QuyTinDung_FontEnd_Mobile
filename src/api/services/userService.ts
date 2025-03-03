@@ -11,7 +11,7 @@ export const getUserData = async (): Promise<User> => {
     console.log('User data:', response.data.result);
     return response.data.result;
   } catch (error) {
-    console.error('Error fetching user data:', error);
+    console.error('Error fetching user data:', error.response);
     throw error;
   }
 };

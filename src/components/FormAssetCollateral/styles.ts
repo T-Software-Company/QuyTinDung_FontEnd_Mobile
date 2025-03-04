@@ -47,8 +47,8 @@ export const createStyles = (theme: Theme) =>
       borderRadius: 8,
       marginTop: 4,
       backgroundColor: theme.inputBackground,
-      // borderWidth: 1,
-      // borderColor: theme.border,
+      borderWidth: 1,
+      borderColor: theme.borderInputBackground,
     },
     dateInputText: {
       fontSize: 14,

@@ -95,6 +95,7 @@ export const landFields = [
     field: 'expirationDate',
     label: 'Ngày hết hạn',
     placeholder: 'Nhập ngày hết hạn',
+    isDate: true,
   },
   {
     field: 'originOfUsage',

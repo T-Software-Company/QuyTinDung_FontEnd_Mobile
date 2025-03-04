@@ -26,6 +26,7 @@ const InputBackground: React.FC<InputBackgroundProps> = ({
       borderRadius: 8,
       overflow: 'hidden',
       borderWidth: 1,
+      borderColor: theme.borderInputBackground,
     },
     input: {
       height: 40,

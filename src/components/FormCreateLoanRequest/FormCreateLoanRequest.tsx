@@ -101,7 +101,8 @@ const FormCreateLoanRequest: React.FC<FormCreateLoanRequestProps> = ({
     },
     {
       value: 'LAND_AND_IMPROVEMENT',
-      label: currentLanguage === 'vi' ? 'Đất và cải tạo' : 'Land and Improvement',
+      label:
+        currentLanguage === 'vi' ? 'Đất và cải tạo' : 'Land and Improvement',
     },
     {
       value: 'OTHER',
@@ -407,22 +408,6 @@ const FormCreateLoanRequest: React.FC<FormCreateLoanRequestProps> = ({
 
       <View style={styles.boxInput}>
         <Text style={styles.headingTitle}>
-          {currentLanguage === 'vi' ? 'Hình thức bảo đảm' : 'Security Type'}
-        </Text>
-        <DropdownComponent
-          value={formData.loanSecurityType}
-          data={securityTypes}
-          placeholder={
-            currentLanguage === 'vi' ? 'Chọn hình thức' : 'Select type'
-          }
-          onChange={(value: TargetItem) =>
-            handleOnchange('loanSecurityType', value.value as LoanSecurityType)
-          }
-        />
-      </View>
-
-      <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>
           {currentLanguage === 'vi'
             ? 'Loại tài sản đảm bảo'
             : 'Collateral Type'}
@@ -440,10 +425,27 @@ const FormCreateLoanRequest: React.FC<FormCreateLoanRequestProps> = ({
           onItemSelect={handleCollateralTypeChange}
           isOpen={isOpen}
           setIsOpen={setIsOpen}
+          theme={theme}
         />
         {errors.loanCollateralTypes && (
           <Text style={styles.errorText}>{errors.loanCollateralTypes}</Text>
         )}
+      </View>
+
+      <View style={styles.boxInput}>
+        <Text style={styles.headingTitle}>
+          {currentLanguage === 'vi' ? 'Hình thức bảo đảm' : 'Security Type'}
+        </Text>
+        <DropdownComponent
+          value={formData.loanSecurityType}
+          data={securityTypes}
+          placeholder={
+            currentLanguage === 'vi' ? 'Chọn hình thức' : 'Select type'
+          }
+          onChange={(value: TargetItem) =>
+            handleOnchange('loanSecurityType', value.value as LoanSecurityType)
+          }
+        />
       </View>
 
       <View style={styles.boxInput}>

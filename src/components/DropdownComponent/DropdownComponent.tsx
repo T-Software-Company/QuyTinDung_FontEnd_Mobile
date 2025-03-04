@@ -45,6 +45,7 @@ const DropdownComponent = <T extends DropdownItem>({
       paddingVertical: 0,
       textAlignVertical: 'center',
       borderWidth: 1,
+      borderColor: theme.borderInputBackground,
     },
 
     placeholderStyle: {

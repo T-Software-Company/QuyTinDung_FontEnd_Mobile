@@ -231,11 +231,11 @@ const FormLandFields: React.FC<FormLandFieldsProps> = ({
         {/* Land Fields */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Thông tin đất</Text>
-          {landFields.map(({field, label, placeholder, numeric}) => (
+          {landFields.map(({field, label, placeholder, numeric, isDate}) => (
             <View key={field} style={styles.fieldContainer}>
               <Text style={styles.label}>{label}</Text>
               {renderField(
-                {field, label, placeholder, numeric},
+                {field, label, placeholder, numeric, isDate},
                 getInputValue(
                   formData.landAsset[field as keyof typeof formData.landAsset],
                 ),

@@ -196,8 +196,6 @@ const Promotions: React.FC<PromotionsProps> = ({navigation}) => {
       paddingHorizontal: 16,
       paddingTop: 8, // Add padding at top
       paddingBottom: 20, // Increase bottom padding
-      borderBottomWidth: 0.5, // Add subtle divider
-      borderBottomColor: theme.tableBorderColor, // Use theme color for divider
     },
     title: {
       fontSize: 22, // Reduced from 24 for better harmony

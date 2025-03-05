@@ -32,6 +32,10 @@ import IntroduceLoanScreen from '../screen/IntroduceLoan';
 import NotificationScreen from '../screen/Notification';
 import InfoPersonScreen from '../screen/InfoPerson';
 import LanguageSettingScreen from '../screen/LanguageSetting';
+import LinkingBankScreen from '../screen/LinkingBank';
+import ServicesScreen from '../screen/Services';
+import MobileTopUpScreen from '../screen/MobileTopUp';
+import PromotionsScreen from '../screen/Promotions';
 import DarkModeSettingScreen from '../screen/DarkModeSetting';
 import ChangePasswordScreen from '../screen/ChangePassword';
 import QRScannerApp from '../screen/QRpage';
@@ -46,6 +50,7 @@ import TotalAssetsScreen from '../screen/TotalAssets';
 import DetailTransactionScreen from '../screen/DetailTransaction';
 import TransactionHistoryScreen from '../screen/TransactionHistory';
 import LoadingWorkflowLoanScreen from '../screen/LoadingWorkflowLoan';
+import MobileTopUp from '../screen/MobileTopUp';
 import React from 'react';
 import {useAuth} from '../context/AuthContext';
 
@@ -117,6 +122,10 @@ export type RootStackParamList = {
   IntroduceLoan: undefined; // Changed this line
   LoadingWorkflowLoan: undefined;
   LanguageSetting: undefined;
+  LinkingBank: undefined;
+  Services: undefined;
+  MobileTopUp: undefined;
+  Promotions: undefined;
   DarkModeSetting: undefined;
   ChangePassword: undefined;
   Notification: undefined;
@@ -288,6 +297,11 @@ const AppStack = () => (
     />
     <Stack.Screen name="IntroduceLoan" component={IntroduceLoanScreen} />
     <Stack.Screen name="LanguageSetting" component={LanguageSettingScreen} />
+    <Stack.Screen name="LinkingBank" component={LinkingBankScreen} />
+    <Stack.Screen name="Services" component={ServicesScreen} />
+    <Stack.Screen name="MobileTopUp" component={MobileTopUpScreen} />
+    <Stack.Screen name="Promotions" component={PromotionsScreen} />
+
     <Stack.Screen name="DarkModeSetting" component={DarkModeSettingScreen} />
     <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
     <Stack.Screen

@@ -202,6 +202,74 @@ const Header: React.FC<HeaderProps> = ({Navbar, navigation, name}) => {
         </View>
       )}
 
+      {/* Render header when navbar name LinkingBank */}
+      {Navbar === 'LinkingBank' && (
+        <View style={styles.containHeading}>
+          <TouchableOpacity
+            style={styles.noBorderArrow}
+            onPress={() => navigation.goBack()}>
+            <Image source={AppIcons.back} style={styles.icon} />
+          </TouchableOpacity>
+          <View>
+            <Text style={styles.heading}>{t('linkBank.title')}</Text>
+          </View>
+          <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
+            <Image source={AppIcons.notification} style={styles.icon} />
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {/* Render header when navbar name Services */}
+      {Navbar === 'Services' && (
+        <View style={styles.containHeading}>
+          <TouchableOpacity
+            style={styles.noBorderArrow}
+            onPress={() => navigation.goBack()}>
+            <Image source={AppIcons.back} style={styles.icon} />
+          </TouchableOpacity>
+          <View>
+            <Text style={styles.heading}>{t('services.title')}</Text>
+          </View>
+          <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
+            <Image source={AppIcons.notification} style={styles.icon} />
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {/* Render header when navbar name Services */}
+      {Navbar === 'Promotions' && (
+        <View style={styles.containHeading}>
+          <TouchableOpacity
+            style={styles.noBorderArrow}
+            onPress={() => navigation.goBack()}>
+            <Image source={AppIcons.back} style={styles.icon} />
+          </TouchableOpacity>
+          <View>
+            <Text style={styles.heading}>{t('services.promotions.title')}</Text>
+          </View>
+          <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
+            <Image source={AppIcons.notification} style={styles.icon} />
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {/* Render header when navbar name Services */}
+      {Navbar === 'MobileTopUp' && (
+        <View style={styles.containHeading}>
+          <TouchableOpacity
+            style={styles.noBorderArrow}
+            onPress={() => navigation.goBack()}>
+            <Image source={AppIcons.back} style={styles.icon} />
+          </TouchableOpacity>
+          <View>
+            <Text style={styles.heading}>{t('mobileTopUp.title')}</Text>
+          </View>
+          <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
+            <Image source={AppIcons.notification} style={styles.icon} />
+          </TouchableOpacity>
+        </View>
+      )}
+
       {/* Render header when navbar name LanguageSetting */}
       {Navbar === 'LanguageSetting' && (
         <View style={styles.containHeading}>

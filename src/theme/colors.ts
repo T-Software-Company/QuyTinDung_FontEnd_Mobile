@@ -27,6 +27,7 @@ export interface Theme {
 
   // Button colors
   buttonSubmit: string;
+  textButtonSubmit: string;
 
   // Special indicators
   profit: string;
@@ -58,9 +59,9 @@ export const lightTheme: Theme = {
   backgroundBox: '#f7faff',
   textActive: '#007BFF',
   buttonSubmit: '#007BFF',
+  textButtonSubmit: '#fff',
   inputBackground: '#ffffff',
   borderInputBackground: '#007BFF',
-
 
   //profit
   profit: '#18DD12',
@@ -93,6 +94,7 @@ export const darkTheme: Theme = {
   backgroundBox: '#444950',
   textActive: '#ffffff',
   buttonSubmit: '#007BFF',
+  textButtonSubmit: '#fff',
   inputBackground: '#f4f4f4',
   borderInputBackground: '#f4f4f4',
 

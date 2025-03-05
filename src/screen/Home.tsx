@@ -140,15 +140,15 @@ const Home: React.FC<HomeProps> = ({navigation}) => {
                 theme={theme}
               />
               <ButtonShortCut
-                name={t('home.makeADeposit')}
-                urlIcon={AppIcons.saveSent}
-                onPress={() => navigation.navigate('SentSave')}
+                name={t('home.linkBank')}
+                urlIcon={AppIcons.linkingBankIcon}
+                onPress={() => navigation.navigate('LinkingBank')}
                 theme={theme}
               />
               <ButtonShortCut
-                name={t('home.createLoan')}
-                urlIcon={AppIcons.loan}
-                onPress={() => navigation.navigate('LoadingWorkflowLoan')}
+                name={t('home.services')}
+                urlIcon={AppIcons.servicesIcon}
+                onPress={() => navigation.navigate('Services')}
                 theme={theme}
               />
             </View>

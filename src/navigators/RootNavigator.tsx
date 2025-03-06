@@ -35,6 +35,7 @@ import LanguageSettingScreen from '../screen/LanguageSetting';
 import LinkingBankScreen from '../screen/LinkingBank';
 import ServicesScreen from '../screen/Services';
 import MobileTopUpScreen from '../screen/MobileTopUp';
+import WaterBillScreen from '../screen/WaterBill';
 import PromotionsScreen from '../screen/Promotions';
 import DarkModeSettingScreen from '../screen/DarkModeSetting';
 import ChangePasswordScreen from '../screen/ChangePassword';
@@ -50,7 +51,6 @@ import TotalAssetsScreen from '../screen/TotalAssets';
 import DetailTransactionScreen from '../screen/DetailTransaction';
 import TransactionHistoryScreen from '../screen/TransactionHistory';
 import LoadingWorkflowLoanScreen from '../screen/LoadingWorkflowLoan';
-import MobileTopUp from '../screen/MobileTopUp';
 import React from 'react';
 import {useAuth} from '../context/AuthContext';
 
@@ -125,6 +125,7 @@ export type RootStackParamList = {
   LinkingBank: undefined;
   Services: undefined;
   MobileTopUp: undefined;
+  WaterBill: undefined;
   Promotions: undefined;
   DarkModeSetting: undefined;
   ChangePassword: undefined;
@@ -300,6 +301,7 @@ const AppStack = () => (
     <Stack.Screen name="LinkingBank" component={LinkingBankScreen} />
     <Stack.Screen name="Services" component={ServicesScreen} />
     <Stack.Screen name="MobileTopUp" component={MobileTopUpScreen} />
+    <Stack.Screen name="WaterBill" component={WaterBillScreen} />
     <Stack.Screen name="Promotions" component={PromotionsScreen} />
 
     <Stack.Screen name="DarkModeSetting" component={DarkModeSettingScreen} />

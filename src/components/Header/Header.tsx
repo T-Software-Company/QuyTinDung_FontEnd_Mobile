@@ -236,7 +236,7 @@ const Header: React.FC<HeaderProps> = ({Navbar, navigation, name}) => {
         </View>
       )}
 
-      {/* Render header when navbar name Services */}
+      {/* Render header when navbar name Promotions */}
       {Navbar === 'Promotions' && (
         <View style={styles.containHeading}>
           <TouchableOpacity
@@ -253,7 +253,7 @@ const Header: React.FC<HeaderProps> = ({Navbar, navigation, name}) => {
         </View>
       )}
 
-      {/* Render header when navbar name Services */}
+      {/* Render header when navbar name MobileTopUp */}
       {Navbar === 'MobileTopUp' && (
         <View style={styles.containHeading}>
           <TouchableOpacity
@@ -263,6 +263,23 @@ const Header: React.FC<HeaderProps> = ({Navbar, navigation, name}) => {
           </TouchableOpacity>
           <View>
             <Text style={styles.heading}>{t('mobileTopUp.title')}</Text>
+          </View>
+          <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
+            <Image source={AppIcons.notification} style={styles.icon} />
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {/* Render header when navbar name WaterBill */}
+      {Navbar === 'WaterBill' && (
+        <View style={styles.containHeading}>
+          <TouchableOpacity
+            style={styles.noBorderArrow}
+            onPress={() => navigation.goBack()}>
+            <Image source={AppIcons.back} style={styles.icon} />
+          </TouchableOpacity>
+          <View>
+            <Text style={styles.heading}>{t('waterBill.title')}</Text>
           </View>
           <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
             <Image source={AppIcons.notification} style={styles.icon} />

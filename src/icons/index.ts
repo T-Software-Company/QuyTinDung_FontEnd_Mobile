@@ -56,6 +56,12 @@ const icons: IconGroups = {
     mobifoneIcon: require('../../assets/images/mobifone-icon.png'),
     vinaphoneIcon: require('../../assets/images/vinaphone-icon.png'),
     vietnamobileIcon: require('../../assets/images/vietnamobile-icon.png'),
+    waterThuDuc: require('../../assets/images/nc-thuduc.png'),
+    waterBenThanh: require('../../assets/images/nc-benthanh.png'),
+    waterCanGio: require('../../assets/images/nc-cangio.png'),
+    waterGiaDinh: require('../../assets/images/nc-giadinh.png'),
+    waterPhuHoaTan: require('../../assets/images/nc-phuhoatan.png'),
+    waterTanHoa: require('../../assets/images/nc-tanhoa.png'),
   },
   form: {
     email: require('../../assets/images/email-icon.png'),

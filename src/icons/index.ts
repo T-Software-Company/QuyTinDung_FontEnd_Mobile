@@ -62,6 +62,10 @@ const icons: IconGroups = {
     waterGiaDinh: require('../../assets/images/nc-giadinh.png'),
     waterPhuHoaTan: require('../../assets/images/nc-phuhoatan.png'),
     waterTanHoa: require('../../assets/images/nc-tanhoa.png'),
+    evn: require('../../assets/images/evn.png'),
+    viettelTele: require('../../assets/images/viettel-tele.png'),
+    fpt: require('../../assets/images/fpt.png'),
+    vnpt: require('../../assets/images/vnpt.png'),
   },
   form: {
     email: require('../../assets/images/email-icon.png'),

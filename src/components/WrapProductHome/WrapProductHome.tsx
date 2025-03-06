@@ -20,7 +20,7 @@ interface ContentItem {
 }
 
 const WrapProductHome: React.FC<WrapProductHomeProps> = ({name, theme}) => {
-  const {t, i18n} = useTranslation();
+  const {i18n} = useTranslation();
 
   // Reduced to just 4 core loan categories
   const headers: ContentItem[] = [
@@ -73,6 +73,7 @@ const WrapProductHome: React.FC<WrapProductHomeProps> = ({name, theme}) => {
       header: header[i18n.language === 'vi' ? 'vi' : 'en'],
       desc: getRandomItem(descriptions),
     }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [i18n.language]); // Regenerate when language changes
 
   return (

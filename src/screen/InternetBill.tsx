@@ -26,22 +26,22 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../navigators/RootNavigator';
 import {AppIcons} from '../icons';
 
-type WaterBillNavigationProp = StackNavigationProp<
+type InternetBillNavigationProp = StackNavigationProp<
   RootStackParamList,
-  'WaterBill'
+  'InternetBill'
 >;
 
-interface WaterBillProps {
-  navigation: WaterBillNavigationProp;
+interface InternetBillProps {
+  navigation: InternetBillNavigationProp;
 }
 
-interface WaterProvider {
+interface InternetProvider {
   id: string;
   name: string;
-  icon: any; // Add icon property
+  icon: any; // Icon property
 }
 
-const WaterBill: React.FC<WaterBillProps> = ({navigation}) => {
+const InternetBill: React.FC<InternetBillProps> = ({navigation}) => {
   const {t} = useTranslation();
   const {theme} = useTheme();
   const modalRef = useRef<Animated.Value>(
@@ -57,54 +57,46 @@ const WaterBill: React.FC<WaterBillProps> = ({navigation}) => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [selectedProvider, setSelectedProvider] =
-    useState<WaterProvider | null>(null);
+    useState<InternetProvider | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [customerFound, setCustomerFound] = useState<boolean>(false);
 
-  // Enhanced water providers with icons
-  const waterProviders: WaterProvider[] = [
+  // Internet providers with icons
+  const internetProviders: InternetProvider[] = [
     {
       id: '1',
-      name: 'Cấp nước Thủ Đức',
-      icon: AppIcons.waterThuDuc, // You'll need to add these icon assets
+      name: 'VNPT',
+      icon: AppIcons.vnpt,
     },
     {
       id: '2',
-      name: 'Cấp nước Tân Hòa',
-      icon: AppIcons.waterTanHoa,
+      name: 'Viettel Telecom',
+      icon: AppIcons.viettelTele,
     },
     {
       id: '3',
-      name: 'Cấp nước Bến Thành',
-      icon: AppIcons.waterBenThanh,
+      name: 'FPT Telecom',
+      icon: AppIcons.fpt,
     },
-    {
-      id: '4',
-      name: 'Cấp nước Cần Giờ',
-      icon: AppIcons.waterCanGio,
-    },
-    {
-      id: '5',
-      name: 'Cấp nước Gia Định',
-      icon: AppIcons.waterGiaDinh,
-    },
-    {
-      id: '6',
-      name: 'Cấp nước Phú Hòa Tân',
-      icon: AppIcons.waterPhuHoaTan,
-    },
+
   ];
 
   // Handle look up customer information
   const handleLookupCustomer = () => {
     // Validate fields before lookup
     if (!customerCode || customerCode.length < 5) {
-      setErrors({...errors, customerCode: t('waterBill.invalidCustomerCode')});
+      setErrors({
+        ...errors,
+        customerCode: t('internetBill.invalidCustomerCode'),
+      });
       return;
     }
 
     if (!selectedProvider) {
-      setErrors({...errors, provider: t('waterBill.selectProviderRequired')});
+      setErrors({
+        ...errors,
+        provider: t('internetBill.selectProviderRequired'),
+      });
       return;
     }
 
@@ -122,7 +114,7 @@ const WaterBill: React.FC<WaterBillProps> = ({navigation}) => {
       // Simulate customer found
       setCustomerName('Nguyen Van A');
       setBillPeriod('05/2023');
-      setAmount('320000');
+      setAmount('399000');
       setCustomerAddress('123 Le Loi St., District 1, Ho Chi Minh City');
       setCustomerFound(true);
     }, 1000);
@@ -144,10 +136,10 @@ const WaterBill: React.FC<WaterBillProps> = ({navigation}) => {
   const handlePayment = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!customerCode) newErrors.customerCode = t('waterBill.requiredField');
+    if (!customerCode) newErrors.customerCode = t('internetBill.requiredField');
     if (!selectedProvider)
-      newErrors.provider = t('waterBill.selectProviderRequired');
-    if (!amount) newErrors.amount = t('waterBill.requiredField');
+      newErrors.provider = t('internetBill.selectProviderRequired');
+    if (!amount) newErrors.amount = t('internetBill.requiredField');
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -156,15 +148,17 @@ const WaterBill: React.FC<WaterBillProps> = ({navigation}) => {
 
     // Navigate to payment confirmation or processing screen
     Alert.alert(
-      t('waterBill.confirmPayment'),
-      t('waterBill.confirmPaymentMessage', {amount: formatCurrency(amount)}),
+      t('internetBill.confirmPayment'),
+      t('internetBill.confirmPaymentMessage', {
+        amount: formatCurrency(amount),
+      }),
       [
         {
-          text: t('waterBill.cancel'),
+          text: t('internetBill.cancel'),
           style: 'cancel',
         },
         {
-          text: t('waterBill.confirm'),
+          text: t('internetBill.confirm'),
           onPress: () => {
             // Show loading state
             setIsLoading(true);
@@ -173,8 +167,8 @@ const WaterBill: React.FC<WaterBillProps> = ({navigation}) => {
             setTimeout(() => {
               setIsLoading(false);
               Alert.alert(
-                t('waterBill.paymentSuccess'),
-                t('waterBill.paymentProcessed'),
+                t('internetBill.paymentSuccess'),
+                t('internetBill.paymentProcessed'),
               );
               resetForm();
             }, 1500);
@@ -184,7 +178,7 @@ const WaterBill: React.FC<WaterBillProps> = ({navigation}) => {
     );
   };
 
-  // Improved modal animation
+  // Modal animation
   const showModal = () => {
     setModalVisible(true);
     Animated.timing(modalRef.current, {
@@ -223,7 +217,7 @@ const WaterBill: React.FC<WaterBillProps> = ({navigation}) => {
     // };
   }, [modalVisible]);
 
-  const selectProvider = (provider: WaterProvider) => {
+  const selectProvider = (provider: InternetProvider) => {
     setSelectedProvider(provider);
     hideModal();
     setErrors({...errors, provider: ''});
@@ -407,7 +401,7 @@ const WaterBill: React.FC<WaterBillProps> = ({navigation}) => {
       borderTopLeftRadius: 20,
       borderTopRightRadius: 20,
       padding: 16,
-      paddingTop: 20, // Adjusted padding top
+      paddingTop: 20,
       maxHeight: '70%',
       position: 'relative',
     },
@@ -417,7 +411,7 @@ const WaterBill: React.FC<WaterBillProps> = ({navigation}) => {
       justifyContent: 'center',
       marginBottom: 16,
       position: 'relative',
-      height: 40, // Fixed height for the header
+      height: 40,
     },
     modalTitle: {
       fontSize: 18,
@@ -457,19 +451,6 @@ const WaterBill: React.FC<WaterBillProps> = ({navigation}) => {
       color: theme.text,
       fontSize: 16,
       flex: 1,
-    },
-    closeButton: {
-      marginTop: 16,
-      alignItems: 'center',
-      padding: 12,
-      backgroundColor: theme.backgroundBox,
-      borderRadius: 8,
-      borderWidth: 1,
-      borderColor: theme.tableBorderColor,
-    },
-    closeButtonText: {
-      color: theme.text,
-      fontWeight: 'bold',
     },
     loaderContainer: {
       backgroundColor: theme.background,
@@ -511,20 +492,23 @@ const WaterBill: React.FC<WaterBillProps> = ({navigation}) => {
   const isFormValid =
     customerFound && customerCode && selectedProvider && amount;
 
-
   return (
     <SafeAreaView style={styles.container}>
-      <Header Navbar="WaterBill" navigation={navigation} />
+      <Header Navbar="InternetBill" navigation={navigation} />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{flex: 1}}>
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-          <Text style={styles.sectionTitle}>{t('waterBill.customerInfo')}</Text>
+          <Text style={styles.sectionTitle}>
+            {t('internetBill.customerInfo')}
+          </Text>
 
-          {/* Water Provider Selection */}
+          {/* Internet Provider Selection */}
           <View style={styles.formGroup}>
-            <Text style={styles.label}>{t('waterBill.waterProvider')}</Text>
+            <Text style={styles.label}>
+              {t('internetBill.internetProvider')}
+            </Text>
             <TouchableOpacity
               style={styles.providerSelector}
               onPress={showModal}>
@@ -541,7 +525,7 @@ const WaterBill: React.FC<WaterBillProps> = ({navigation}) => {
                 </>
               ) : (
                 <Text style={styles.providerPlaceholderText}>
-                  {t('waterBill.selectProvider')}
+                  {t('internetBill.selectProvider')}
                 </Text>
               )}
             </TouchableOpacity>
@@ -551,13 +535,13 @@ const WaterBill: React.FC<WaterBillProps> = ({navigation}) => {
           </View>
 
           <View style={styles.formGroup}>
-            <Text style={styles.label}>{t('waterBill.customerCode')}</Text>
+            <Text style={styles.label}>{t('internetBill.customerCode')}</Text>
             <View style={styles.inputRow}>
               <TextInput
                 style={styles.input}
                 value={customerCode}
                 onChangeText={setCustomerCode}
-                placeholder={t('waterBill.enterCustomerCode')}
+                placeholder={t('internetBill.enterCustomerCode')}
                 placeholderTextColor={theme.noteText}
                 keyboardType="numeric"
               />
@@ -569,7 +553,7 @@ const WaterBill: React.FC<WaterBillProps> = ({navigation}) => {
                 onPress={handleLookupCustomer}
                 disabled={isLoading}>
                 <Text style={styles.lookupButtonText}>
-                  {t('waterBill.lookup')}
+                  {t('internetBill.lookup')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -592,14 +576,14 @@ const WaterBill: React.FC<WaterBillProps> = ({navigation}) => {
               <View style={styles.customerInfoSection}>
                 <View style={styles.customerInfoRow}>
                   <Text style={styles.customerInfoLabel}>
-                    {t('waterBill.customerName')}:
+                    {t('internetBill.customerName')}:
                   </Text>
                   <Text style={styles.customerInfoValue}>{customerName}</Text>
                 </View>
 
                 <View style={styles.customerInfoRow}>
                   <Text style={styles.customerInfoLabel}>
-                    {t('waterBill.address')}:
+                    {t('internetBill.address')}:
                   </Text>
                   <Text style={styles.customerInfoValue}>
                     {customerAddress}
@@ -608,7 +592,7 @@ const WaterBill: React.FC<WaterBillProps> = ({navigation}) => {
 
                 <View style={styles.customerInfoRow}>
                   <Text style={styles.customerInfoLabel}>
-                    {t('waterBill.period')}:
+                    {t('internetBill.period')}:
                   </Text>
                   <Text style={styles.customerInfoValue}>{billPeriod}</Text>
                 </View>
@@ -616,13 +600,13 @@ const WaterBill: React.FC<WaterBillProps> = ({navigation}) => {
 
               {/* Payment details section */}
               <Text style={styles.sectionTitle}>
-                {t('waterBill.paymentDetails')}
+                {t('internetBill.paymentDetails')}
               </Text>
 
               <View style={styles.paymentSection}>
                 <View style={styles.amountRow}>
                   <Text style={styles.amountLabel}>
-                    {t('waterBill.billAmount')}
+                    {t('internetBill.billAmount')}
                   </Text>
                   <Text style={styles.amount}>
                     {formatCurrency(amount)} VND
@@ -631,7 +615,7 @@ const WaterBill: React.FC<WaterBillProps> = ({navigation}) => {
 
                 <View style={styles.feeRow}>
                   <Text style={styles.feeLabel}>
-                    {t('waterBill.serviceFee')}
+                    {t('internetBill.serviceFee')}
                   </Text>
                   <Text style={styles.fee}>
                     {serviceFee.toLocaleString()} VND
@@ -642,7 +626,7 @@ const WaterBill: React.FC<WaterBillProps> = ({navigation}) => {
 
                 <View style={styles.totalRow}>
                   <Text style={styles.totalLabel}>
-                    {t('waterBill.totalAmount')}
+                    {t('internetBill.totalAmount')}
                   </Text>
                   <Text style={styles.totalAmount}>
                     {total.toLocaleString()} VND
@@ -657,14 +641,16 @@ const WaterBill: React.FC<WaterBillProps> = ({navigation}) => {
                 ]}
                 onPress={handlePayment}
                 disabled={!isFormValid || isLoading}>
-                <Text style={styles.payButtonText}>{t('waterBill.pay')}</Text>
+                <Text style={styles.payButtonText}>
+                  {t('internetBill.pay')}
+                </Text>
               </TouchableOpacity>
             </>
           )}
         </ScrollView>
       </KeyboardAvoidingView>
 
-      {/* Water Provider Selection Modal - with background dismiss */}
+      {/* Internet Provider Selection Modal */}
       <Modal
         visible={modalVisible}
         transparent={true}
@@ -679,10 +665,10 @@ const WaterBill: React.FC<WaterBillProps> = ({navigation}) => {
                   styles.modalContent,
                   {transform: [{translateY: modalRef.current}]},
                 ]}>
-                {/* Restructured header with centered title and aligned close button */}
+                {/* Header with centered title and close button */}
                 <View style={styles.modalTitleContainer}>
                   <Text style={styles.modalTitle}>
-                    {t('waterBill.selectWaterProvider')}
+                    {t('internetBill.selectInternetProvider')}
                   </Text>
 
                   <TouchableOpacity
@@ -698,7 +684,7 @@ const WaterBill: React.FC<WaterBillProps> = ({navigation}) => {
                 </View>
 
                 <FlatList
-                  data={waterProviders}
+                  data={internetProviders}
                   keyExtractor={item => item.id}
                   renderItem={({item}) => (
                     <TouchableOpacity
@@ -723,4 +709,4 @@ const WaterBill: React.FC<WaterBillProps> = ({navigation}) => {
   );
 };
 
-export default WaterBill;
+export default InternetBill;

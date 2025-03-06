@@ -6,6 +6,8 @@ import {
   View,
   Image,
   ScrollView,
+  Modal,
+  Alert,
 } from 'react-native';
 
 import React from 'react';
@@ -34,11 +36,17 @@ interface ServiceOption {
 }
 
 const Services: React.FC<ServicesProps> = ({navigation}) => {
-  const {t} = useTranslation();
+  const {t, i18n} = useTranslation();
   const {theme} = useTheme();
+
+  // Get current language for conditional rendering
+  const currentLanguage = i18n.language;
+  const isEnglish = currentLanguage.startsWith('en');
 
   // Mock promotions count - this would normally come from an API or context
   const [promotionsCount, setPromotionsCount] = React.useState<number>(3);
+  const [showDevMessage, setShowDevMessage] = React.useState<boolean>(false);
+  const [devMessageTitle, setDevMessageTitle] = React.useState<string>('');
 
   // Define service options with theme-aware colors
   const serviceOptions: ServiceOption[] = [
@@ -87,13 +95,26 @@ const Services: React.FC<ServicesProps> = ({navigation}) => {
   ];
 
   const handleServicePress = (service: ServiceOption) => {
-    // Navigate to the appropriate screen
-    navigation.navigate(service.screen as keyof RootStackParamList);
+    // Check if the service is under development
+    if (service.screen === 'Insurance' || service.screen === 'TuitionFee') {
+      setDevMessageTitle(service.title);
+      setShowDevMessage(true);
+    } else {
+      // Navigate to the appropriate screen
+      navigation.navigate(service.screen as keyof RootStackParamList);
+    }
   };
 
   const handleOpenPromotions = () => {
     navigation.navigate('Promotions' as keyof RootStackParamList);
   };
+
+  // Development message texts
+  const developmentMessage = isEnglish
+    ? 'This feature is under development and will be available soon.'
+    : 'Tính năng này đang được phát triển và sẽ sớm ra mắt.';
+
+  const closeButtonText = isEnglish ? 'Close' : 'Đóng';
 
   const styles = StyleSheet.create({
     view: {
@@ -212,6 +233,50 @@ const Services: React.FC<ServicesProps> = ({navigation}) => {
       resizeMode: 'contain',
       tintColor: theme.buttonSubmit, // Use theme color instead of hardcoded
     },
+    developmentModal: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0,0,0,0.5)',
+    },
+    developmentBox: {
+      width: '80%',
+      backgroundColor: theme.backgroundBox,
+      borderRadius: 12,
+      padding: 20,
+      alignItems: 'center',
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 5,
+    },
+    developmentTitle: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      color: theme.text,
+      marginBottom: 12,
+    },
+    developmentText: {
+      fontSize: 14,
+      color: theme.noteText,
+      textAlign: 'center',
+      marginBottom: 16,
+    },
+    closeButton: {
+      backgroundColor: theme.buttonSubmit,
+      paddingHorizontal: 24,
+      paddingVertical: 10,
+      borderRadius: 8,
+    },
+    closeButtonText: {
+      color: theme.textButtonSubmit,
+      fontSize: 14,
+      fontWeight: '500',
+    },
   });
 
   return (
@@ -282,6 +347,25 @@ const Services: React.FC<ServicesProps> = ({navigation}) => {
             ))}
           </View>
         </ScrollView>
+
+        {/* Development Modal */}
+        <Modal
+          visible={showDevMessage}
+          transparent={true}
+          animationType="fade"
+          onRequestClose={() => setShowDevMessage(false)}>
+          <View style={styles.developmentModal}>
+            <View style={styles.developmentBox}>
+              <Text style={styles.developmentTitle}>{devMessageTitle}</Text>
+              <Text style={styles.developmentText}>{developmentMessage}</Text>
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={() => setShowDevMessage(false)}>
+                <Text style={styles.closeButtonText}>{closeButtonText}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </View>
     </SafeAreaView>
   );

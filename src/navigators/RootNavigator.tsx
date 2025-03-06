@@ -36,6 +36,9 @@ import LinkingBankScreen from '../screen/LinkingBank';
 import ServicesScreen from '../screen/Services';
 import MobileTopUpScreen from '../screen/MobileTopUp';
 import WaterBillScreen from '../screen/WaterBill';
+import ElectricityBillScreen from '../screen/ElectricityBill';
+import InternetBillScreen from '../screen/InternetBill';
+
 import PromotionsScreen from '../screen/Promotions';
 import DarkModeSettingScreen from '../screen/DarkModeSetting';
 import ChangePasswordScreen from '../screen/ChangePassword';
@@ -126,6 +129,8 @@ export type RootStackParamList = {
   Services: undefined;
   MobileTopUp: undefined;
   WaterBill: undefined;
+  ElectricityBill: undefined;
+  InternetBill: undefined;
   Promotions: undefined;
   DarkModeSetting: undefined;
   ChangePassword: undefined;
@@ -303,7 +308,8 @@ const AppStack = () => (
     <Stack.Screen name="MobileTopUp" component={MobileTopUpScreen} />
     <Stack.Screen name="WaterBill" component={WaterBillScreen} />
     <Stack.Screen name="Promotions" component={PromotionsScreen} />
-
+    <Stack.Screen name="ElectricityBill" component={ElectricityBillScreen} />
+    <Stack.Screen name="InternetBill" component={InternetBillScreen} />
     <Stack.Screen name="DarkModeSetting" component={DarkModeSettingScreen} />
     <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
     <Stack.Screen

@@ -17,6 +17,7 @@ import {
 } from './formFields';
 import {createStyles} from './styles';
 import {Theme} from '../../theme/colors';
+import KeyboardWrapper from '../KeyboardWrapper/KeyboardWrapper';
 
 interface FormMachineryFieldsProps {
   theme: Theme;
@@ -197,79 +198,81 @@ const FormMachineryFields: React.FC<FormMachineryFieldsProps> = ({
   };
 
   return (
-    <View style={styles.wrapper}>
-      <ScrollView style={styles.container} scrollEnabled={!selectedDateField}>
-        {/* Common Fields */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Thông tin cơ bản</Text>
-          {commonFields.map(({field, label, placeholder, numeric}) => (
-            <View key={field} style={styles.fieldContainer}>
-              <Text style={styles.label}>{label}</Text>
-              {renderField(
-                {field, label, placeholder, numeric},
-                getFieldValue(field),
-                field,
-              )}
-            </View>
-          ))}
-        </View>
-
-        {/* Machinery Fields */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Thông tin máy móc</Text>
-          {machineryFields.map(
-            ({field, label, placeholder, isDate, numeric}) => (
+    <KeyboardWrapper>
+      <View style={styles.wrapper}>
+        <ScrollView style={styles.container} scrollEnabled={!selectedDateField}>
+          {/* Common Fields */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Thông tin cơ bản</Text>
+            {commonFields.map(({field, label, placeholder, numeric}) => (
               <View key={field} style={styles.fieldContainer}>
                 <Text style={styles.label}>{label}</Text>
                 {renderField(
-                  {field, label, placeholder, isDate, numeric},
-                  getFieldValue(`machinery.${field}`),
-                  `machinery.${field}`,
+                  {field, label, placeholder, numeric},
+                  getFieldValue(field),
+                  field,
                 )}
               </View>
-            ),
-          )}
-        </View>
+            ))}
+          </View>
 
-        {/* Metadata Fields */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Thông tin bổ sung</Text>
-          {machineryMetadataFields.map(({field, label, placeholder}) => (
-            <View key={field} style={styles.fieldContainer}>
-              <Text style={styles.label}>{label}</Text>
-              {renderField(
-                {field, label, placeholder},
-                getFieldValue(`machinery.metadata.${field}`),
-                `machinery.metadata.${field}`,
-              )}
-            </View>
-          ))}
-        </View>
+          {/* Machinery Fields */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Thông tin máy móc</Text>
+            {machineryFields.map(
+              ({field, label, placeholder, isDate, numeric}) => (
+                <View key={field} style={styles.fieldContainer}>
+                  <Text style={styles.label}>{label}</Text>
+                  {renderField(
+                    {field, label, placeholder, isDate, numeric},
+                    getFieldValue(`machinery.${field}`),
+                    `machinery.${field}`,
+                  )}
+                </View>
+              ),
+            )}
+          </View>
 
-        <TouchableOpacity
-          style={styles.submitButton}
-          onPress={handleSubmit}
-          disabled={isLoading}>
-          {isLoading ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={styles.buttonText}>Tiếp tục</Text>
-          )}
-        </TouchableOpacity>
-      </ScrollView>
+          {/* Metadata Fields */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Thông tin bổ sung</Text>
+            {machineryMetadataFields.map(({field, label, placeholder}) => (
+              <View key={field} style={styles.fieldContainer}>
+                <Text style={styles.label}>{label}</Text>
+                {renderField(
+                  {field, label, placeholder},
+                  getFieldValue(`machinery.metadata.${field}`),
+                  `machinery.metadata.${field}`,
+                )}
+              </View>
+            ))}
+          </View>
 
-      {selectedDateField && (
-        <DatePicker
-          isVisible={!!selectedDateField}
-          onClose={() => setSelectedDateField(null)}
-          onConfirm={handleDateConfirm}
-          value={tempDate}
-          onChange={handleDateChange}
-          theme={theme}
-          locale="vi-VN"
-        />
-      )}
-    </View>
+          <TouchableOpacity
+            style={styles.submitButton}
+            onPress={handleSubmit}
+            disabled={isLoading}>
+            {isLoading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.buttonText}>Tiếp tục</Text>
+            )}
+          </TouchableOpacity>
+        </ScrollView>
+
+        {selectedDateField && (
+          <DatePicker
+            isVisible={!!selectedDateField}
+            onClose={() => setSelectedDateField(null)}
+            onConfirm={handleDateConfirm}
+            value={tempDate}
+            onChange={handleDateChange}
+            theme={theme}
+            locale="vi-VN"
+          />
+        )}
+      </View>
+    </KeyboardWrapper>
   );
 };
 

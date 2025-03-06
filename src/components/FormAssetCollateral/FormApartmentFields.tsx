@@ -18,6 +18,7 @@ import {
 import {createStyles} from './styles';
 import {Theme} from '../../theme/colors';
 import DatePicker from '../DatePicker/DatePicker';
+import KeyboardWrapper from '../KeyboardWrapper/KeyboardWrapper';
 
 interface FormApartmentFieldsProps {
   theme: Theme;
@@ -119,87 +120,42 @@ const FormApartmentFields: React.FC<FormApartmentFieldsProps> = ({
   };
 
   return (
-    <View style={styles.wrapper}>
-      <ScrollView style={styles.container} scrollEnabled={!selectedDateField}>
-        {/* Common Fields */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Thông tin cơ bản</Text>
-          {commonFields.map(({field, label, placeholder, numeric}) => (
-            <View key={field} style={styles.fieldContainer}>
-              <Text style={styles.label}>{label}</Text>
-              <InputBackground
-                value={getInputValue(formData[field])}
-                onChangeText={value =>
-                  handleChange(field, numeric ? Number(value) : value)
-                }
-                placeholder={placeholder}
-                keyboardType={numeric ? 'numeric' : 'default'}
-              />
-            </View>
-          ))}
-        </View>
+    <KeyboardWrapper>
+      <View style={styles.wrapper}>
+        <ScrollView style={styles.container} scrollEnabled={!selectedDateField}>
+          {/* Common Fields */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Thông tin cơ bản</Text>
+            {commonFields.map(({field, label, placeholder, numeric}) => (
+              <View key={field} style={styles.fieldContainer}>
+                <Text style={styles.label}>{label}</Text>
+                <InputBackground
+                  value={getInputValue(formData[field])}
+                  onChangeText={value =>
+                    handleChange(field, numeric ? Number(value) : value)
+                  }
+                  placeholder={placeholder}
+                  keyboardType={numeric ? 'numeric' : 'default'}
+                />
+              </View>
+            ))}
+          </View>
 
-        {/* Apartment Fields */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Thông tin căn hộ</Text>
-          {apartmentFields.map(({field, label, placeholder, numeric}) => (
-            <View key={field} style={styles.fieldContainer}>
-              <Text style={styles.label}>{label}</Text>
-              <InputBackground
-                value={getInputValue(
-                  formData.apartment[field as keyof typeof formData.apartment],
-                )}
-                onChangeText={value =>
-                  handleChange(
-                    `apartment.${field}`,
-                    numeric ? Number(value) : value,
-                  )
-                }
-                placeholder={placeholder}
-                keyboardType={numeric ? 'numeric' : 'default'}
-              />
-            </View>
-          ))}
-        </View>
-
-        {/* Owner Info Fields */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Thông tin chủ sở hữu</Text>
-          {ownerInfoFields.map(({field, label, placeholder, isDate}) => (
-            <View key={field} style={styles.fieldContainer}>
-              <Text style={styles.label}>{label}</Text>
-              <InputBackground
-                value={getInputValue(
-                  formData.apartment.ownerInfo[
-                    field as keyof typeof formData.apartment.ownerInfo
-                  ],
-                )}
-                onChangeText={value =>
-                  handleChange(`apartment.ownerInfo.${field}`, value)
-                }
-                placeholder={placeholder}
-                keyboardType="default"
-              />
-            </View>
-          ))}
-        </View>
-
-        {/* Metadata Fields */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Thông tin bổ sung</Text>
-          {apartmentMetadataFields.map(
-            ({field, label, placeholder, numeric}) => (
+          {/* Apartment Fields */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Thông tin căn hộ</Text>
+            {apartmentFields.map(({field, label, placeholder, numeric}) => (
               <View key={field} style={styles.fieldContainer}>
                 <Text style={styles.label}>{label}</Text>
                 <InputBackground
                   value={getInputValue(
-                    formData.apartment.metadata[
-                      field as keyof typeof formData.apartment.metadata
+                    formData.apartment[
+                      field as keyof typeof formData.apartment
                     ],
                   )}
                   onChangeText={value =>
                     handleChange(
-                      `apartment.metadata.${field}`,
+                      `apartment.${field}`,
                       numeric ? Number(value) : value,
                     )
                   }
@@ -207,57 +163,106 @@ const FormApartmentFields: React.FC<FormApartmentFieldsProps> = ({
                   keyboardType={numeric ? 'numeric' : 'default'}
                 />
               </View>
-            ),
-          )}
-        </View>
+            ))}
+          </View>
 
-        {/* Transfer Info Fields */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Thông tin chuyển nhượng</Text>
-          {transferInfoFields.map(({field, label, placeholder, isDate}) => (
-            <View key={field} style={styles.fieldContainer}>
-              <Text style={styles.label}>{label}</Text>
-              <InputBackground
-                value={getInputValue(
-                  formData.apartment.transferInfo[
-                    field as keyof typeof formData.apartment.transferInfo
-                  ],
-                )}
-                onChangeText={value =>
-                  handleChange(`apartment.transferInfo.${field}`, value)
-                }
-                placeholder={placeholder}
-                keyboardType="default"
-              />
-            </View>
-          ))}
-        </View>
+          {/* Owner Info Fields */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Thông tin chủ sở hữu</Text>
+            {ownerInfoFields.map(({field, label, placeholder, isDate}) => (
+              <View key={field} style={styles.fieldContainer}>
+                <Text style={styles.label}>{label}</Text>
+                <InputBackground
+                  value={getInputValue(
+                    formData.apartment.ownerInfo[
+                      field as keyof typeof formData.apartment.ownerInfo
+                    ],
+                  )}
+                  onChangeText={value =>
+                    handleChange(`apartment.ownerInfo.${field}`, value)
+                  }
+                  placeholder={placeholder}
+                  keyboardType="default"
+                />
+              </View>
+            ))}
+          </View>
 
-        {/* Submit Button */}
-        <TouchableOpacity
-          style={styles.submitButton}
-          onPress={handleSubmit}
-          disabled={isLoading}>
-          {isLoading ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={styles.buttonText}>Tiếp tục</Text>
-          )}
-        </TouchableOpacity>
-      </ScrollView>
+          {/* Metadata Fields */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Thông tin bổ sung</Text>
+            {apartmentMetadataFields.map(
+              ({field, label, placeholder, numeric}) => (
+                <View key={field} style={styles.fieldContainer}>
+                  <Text style={styles.label}>{label}</Text>
+                  <InputBackground
+                    value={getInputValue(
+                      formData.apartment.metadata[
+                        field as keyof typeof formData.apartment.metadata
+                      ],
+                    )}
+                    onChangeText={value =>
+                      handleChange(
+                        `apartment.metadata.${field}`,
+                        numeric ? Number(value) : value,
+                      )
+                    }
+                    placeholder={placeholder}
+                    keyboardType={numeric ? 'numeric' : 'default'}
+                  />
+                </View>
+              ),
+            )}
+          </View>
 
-      {selectedDateField && (
-        <DatePicker
-          isVisible={!!selectedDateField}
-          onClose={() => setSelectedDateField(null)}
-          onConfirm={handleDateConfirm}
-          value={tempDate}
-          onChange={handleDateChange}
-          theme={theme}
-          locale="vi-VN"
-        />
-      )}
-    </View>
+          {/* Transfer Info Fields */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Thông tin chuyển nhượng</Text>
+            {transferInfoFields.map(({field, label, placeholder, isDate}) => (
+              <View key={field} style={styles.fieldContainer}>
+                <Text style={styles.label}>{label}</Text>
+                <InputBackground
+                  value={getInputValue(
+                    formData.apartment.transferInfo[
+                      field as keyof typeof formData.apartment.transferInfo
+                    ],
+                  )}
+                  onChangeText={value =>
+                    handleChange(`apartment.transferInfo.${field}`, value)
+                  }
+                  placeholder={placeholder}
+                  keyboardType="default"
+                />
+              </View>
+            ))}
+          </View>
+
+          {/* Submit Button */}
+          <TouchableOpacity
+            style={styles.submitButton}
+            onPress={handleSubmit}
+            disabled={isLoading}>
+            {isLoading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.buttonText}>Tiếp tục</Text>
+            )}
+          </TouchableOpacity>
+        </ScrollView>
+
+        {selectedDateField && (
+          <DatePicker
+            isVisible={!!selectedDateField}
+            onClose={() => setSelectedDateField(null)}
+            onConfirm={handleDateConfirm}
+            value={tempDate}
+            onChange={handleDateChange}
+            theme={theme}
+            locale="vi-VN"
+          />
+        )}
+      </View>
+    </KeyboardWrapper>
   );
 };
 

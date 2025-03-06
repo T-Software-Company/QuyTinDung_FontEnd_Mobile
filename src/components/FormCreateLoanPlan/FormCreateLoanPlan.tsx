@@ -17,6 +17,7 @@ import {CreateLoanPlanRequest} from '../../api/types/loanPlan';
 import {loanPlan} from '../../api/services/loan';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../navigators/RootNavigator';
+import KeyboardWrapper from '../KeyboardWrapper/KeyboardWrapper';
 
 interface FormCreateLoanPlanProps {
   theme: Theme;
@@ -117,7 +118,7 @@ const FormCreateLoanPlan: React.FC<FormCreateLoanPlanProps> = ({
         navigation.replace('CreateFinancialInfo', {appId});
       }
     } catch (error) {
-      console.error('Error creating loan plan:', {error});
+      console.log('Error creating loan plan:', {error});
       console.log('Error creating loan plan:', error.response);
       Alert.alert(
         currentLanguage === 'vi' ? 'Lỗi' : 'Error',
@@ -200,7 +201,7 @@ const FormCreateLoanPlan: React.FC<FormCreateLoanPlanProps> = ({
   });
 
   return (
-    <View>
+    <KeyboardWrapper>
       <View style={styles.boxInput}>
         <Text style={styles.headingTitle}>
           {currentLanguage === 'vi'
@@ -340,7 +341,7 @@ const FormCreateLoanPlan: React.FC<FormCreateLoanPlanProps> = ({
           </Text>
         )}
       </TouchableOpacity>
-    </View>
+    </KeyboardWrapper>
   );
 };
 

@@ -13,7 +13,6 @@ import {
 import React, {useState} from 'react';
 import InputBackground from '../InputBackground/InputBackground';
 import {useTranslation} from 'react-i18next';
-import i18n from '../../../i18n';
 import {Theme} from '../../theme/colors';
 import {financialInfo} from '../../api/services/loan';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -22,6 +21,7 @@ import DocumentPicker, {
   DocumentPickerResponse,
 } from 'react-native-document-picker';
 import {AppIcons} from '../../icons';
+import KeyboardWrapper from '../KeyboardWrapper/KeyboardWrapper';
 
 interface FormCreateFinancialInfoProps {
   theme: Theme;
@@ -47,7 +47,6 @@ const FormCreateFinancialInfo: React.FC<FormCreateFinancialInfoProps> = ({
   navigation,
   appId,
 }) => {
-  const currentLanguage = i18n.language;
   const {t} = useTranslation();
 
   const [formData, setFormData] = useState<FormData>({
@@ -186,16 +185,16 @@ const FormCreateFinancialInfo: React.FC<FormCreateFinancialInfoProps> = ({
       borderRadius: 8,
       borderWidth: 1,
       borderStyle: 'dashed',
-      borderColor: 'rgba(255,255,255,0.5)',
+      borderColor: theme.borderInputBackground,
     },
     uploadIcon: {
       marginRight: 8,
       width: 24,
       height: 24,
-      tintColor: 'white',
+      tintColor: theme.borderInputBackground,
     },
     uploadText: {
-      color: 'white',
+      color: theme.borderInputBackground,
       fontSize: 14,
       fontWeight: '600',
     },
@@ -266,191 +265,201 @@ const FormCreateFinancialInfo: React.FC<FormCreateFinancialInfoProps> = ({
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>
-          {t('formCreateLoan.financialInfo.jobTitle')}
-        </Text>
-        <InputBackground
-          placeholder={t('formCreateLoan.financialInfo.jobTitlePlaceholder')}
-          onChangeText={(value: string) => handleOnchange('jobTitle', value)}
-          value={formData.jobTitle}
-        />
-      </View>
+    <KeyboardWrapper>
+      <ScrollView style={styles.container}>
+        <View style={styles.boxInput}>
+          <Text style={styles.headingTitle}>
+            {t('formCreateLoan.financialInfo.jobTitle')}
+          </Text>
+          <InputBackground
+            placeholder={t('formCreateLoan.financialInfo.jobTitlePlaceholder')}
+            onChangeText={(value: string) => handleOnchange('jobTitle', value)}
+            value={formData.jobTitle}
+          />
+        </View>
 
-      <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>
-          {t('formCreateLoan.financialInfo.companyName')}
-        </Text>
-        <InputBackground
-          placeholder={t('formCreateLoan.financialInfo.companyNamePlaceholder')}
-          onChangeText={(value: string) => handleOnchange('companyName', value)}
-          value={formData.companyName}
-        />
-      </View>
+        <View style={styles.boxInput}>
+          <Text style={styles.headingTitle}>
+            {t('formCreateLoan.financialInfo.companyName')}
+          </Text>
+          <InputBackground
+            placeholder={t(
+              'formCreateLoan.financialInfo.companyNamePlaceholder',
+            )}
+            onChangeText={(value: string) =>
+              handleOnchange('companyName', value)
+            }
+            value={formData.companyName}
+          />
+        </View>
 
-      <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>
-          {t('formCreateLoan.financialInfo.companyAddress')}
-        </Text>
-        <InputBackground
-          placeholder={t(
-            'formCreateLoan.financialInfo.companyAddressPlaceholder',
-          )}
-          onChangeText={(value: string) =>
-            handleOnchange('companyAddress', value)
-          }
-          value={formData.companyAddress}
-        />
-      </View>
+        <View style={styles.boxInput}>
+          <Text style={styles.headingTitle}>
+            {t('formCreateLoan.financialInfo.companyAddress')}
+          </Text>
+          <InputBackground
+            placeholder={t(
+              'formCreateLoan.financialInfo.companyAddressPlaceholder',
+            )}
+            onChangeText={(value: string) =>
+              handleOnchange('companyAddress', value)
+            }
+            value={formData.companyAddress}
+          />
+        </View>
 
-      <View style={styles.switchContainer}>
-        <Text style={styles.headingTitle}>
-          {t('formCreateLoan.financialInfo.hasMarried')}
-        </Text>
-        <Switch
-          value={formData.hasMarried}
-          onValueChange={value => handleOnchange('hasMarried', value)}
-        />
-      </View>
+        <View style={styles.switchContainer}>
+          <Text style={styles.headingTitle}>
+            {t('formCreateLoan.financialInfo.hasMarried')}
+          </Text>
+          <Switch
+            value={formData.hasMarried}
+            onValueChange={value => handleOnchange('hasMarried', value)}
+          />
+        </View>
 
-      <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>
-          {t('formCreateLoan.financialInfo.totalIncome')}
-        </Text>
-        <InputBackground
-          placeholder={t('formCreateLoan.financialInfo.totalIncomePlaceholder')}
-          keyboardType="numeric"
-          onChangeText={(value: string) =>
-            handleOnchange('totalIncome', Number(value))
-          }
-          value={formData.totalIncome.toString()}
-        />
-      </View>
+        <View style={styles.boxInput}>
+          <Text style={styles.headingTitle}>
+            {t('formCreateLoan.financialInfo.totalIncome')}
+          </Text>
+          <InputBackground
+            placeholder={t(
+              'formCreateLoan.financialInfo.totalIncomePlaceholder',
+            )}
+            keyboardType="numeric"
+            onChangeText={(value: string) =>
+              handleOnchange('totalIncome', Number(value))
+            }
+            value={formData.totalIncome.toString()}
+          />
+        </View>
 
-      <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>
-          {t('formCreateLoan.financialInfo.monthlyExpense')}
-        </Text>
-        <InputBackground
-          placeholder={t(
-            'formCreateLoan.financialInfo.monthlyExpensePlaceholder',
-          )}
-          keyboardType="numeric"
-          onChangeText={(value: string) =>
-            handleOnchange('monthlyExpense', Number(value))
-          }
-          value={formData.monthlyExpense.toString()}
-        />
-      </View>
+        <View style={styles.boxInput}>
+          <Text style={styles.headingTitle}>
+            {t('formCreateLoan.financialInfo.monthlyExpense')}
+          </Text>
+          <InputBackground
+            placeholder={t(
+              'formCreateLoan.financialInfo.monthlyExpensePlaceholder',
+            )}
+            keyboardType="numeric"
+            onChangeText={(value: string) =>
+              handleOnchange('monthlyExpense', Number(value))
+            }
+            value={formData.monthlyExpense.toString()}
+          />
+        </View>
 
-      <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>
-          {t('formCreateLoan.financialInfo.monthlySaving')}
-        </Text>
-        <InputBackground
-          placeholder={t(
-            'formCreateLoan.financialInfo.monthlySavingPlaceholder',
-          )}
-          keyboardType="numeric"
-          onChangeText={(value: string) =>
-            handleOnchange('monthlySaving', Number(value))
-          }
-          value={formData.monthlySaving.toString()}
-        />
-      </View>
+        <View style={styles.boxInput}>
+          <Text style={styles.headingTitle}>
+            {t('formCreateLoan.financialInfo.monthlySaving')}
+          </Text>
+          <InputBackground
+            placeholder={t(
+              'formCreateLoan.financialInfo.monthlySavingPlaceholder',
+            )}
+            keyboardType="numeric"
+            onChangeText={(value: string) =>
+              handleOnchange('monthlySaving', Number(value))
+            }
+            value={formData.monthlySaving.toString()}
+          />
+        </View>
 
-      <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>
-          {t('formCreateLoan.financialInfo.monthlyDebt')}
-        </Text>
-        <InputBackground
-          placeholder={t('formCreateLoan.financialInfo.monthlyDebtPlaceholder')}
-          keyboardType="numeric"
-          onChangeText={(value: string) =>
-            handleOnchange('monthlyDebt', Number(value))
-          }
-          value={formData.monthlyDebt.toString()}
-        />
-      </View>
+        <View style={styles.boxInput}>
+          <Text style={styles.headingTitle}>
+            {t('formCreateLoan.financialInfo.monthlyDebt')}
+          </Text>
+          <InputBackground
+            placeholder={t(
+              'formCreateLoan.financialInfo.monthlyDebtPlaceholder',
+            )}
+            keyboardType="numeric"
+            onChangeText={(value: string) =>
+              handleOnchange('monthlyDebt', Number(value))
+            }
+            value={formData.monthlyDebt.toString()}
+          />
+        </View>
 
-      <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>
-          {t('formCreateLoan.financialInfo.monthlyLoanPayment')}
-        </Text>
-        <InputBackground
-          placeholder={t(
-            'formCreateLoan.financialInfo.monthlyLoanPaymentPlaceholder',
-          )}
-          keyboardType="numeric"
-          onChangeText={(value: string) =>
-            handleOnchange('monthlyLoanPayment', Number(value))
-          }
-          value={formData.monthlyLoanPayment.toString()}
-        />
-      </View>
+        <View style={styles.boxInput}>
+          <Text style={styles.headingTitle}>
+            {t('formCreateLoan.financialInfo.monthlyLoanPayment')}
+          </Text>
+          <InputBackground
+            placeholder={t(
+              'formCreateLoan.financialInfo.monthlyLoanPaymentPlaceholder',
+            )}
+            keyboardType="numeric"
+            onChangeText={(value: string) =>
+              handleOnchange('monthlyLoanPayment', Number(value))
+            }
+            value={formData.monthlyLoanPayment.toString()}
+          />
+        </View>
 
-      <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>
-          {t('formCreateLoan.financialInfo.documents')}
-        </Text>
+        <View style={styles.boxInput}>
+          <Text style={styles.headingTitle}>
+            {t('formCreateLoan.financialInfo.documents')}
+          </Text>
 
-        <View style={styles.uploadSection}>
-          <View style={styles.uploadInfo}>
-            <Image source={AppIcons.infoIcon} style={styles.fileIcon} />
-            <Text style={styles.uploadInfoText}>
-              Hỗ trợ PDF, DOCX, JPG, PNG (Max: 5MB)
-            </Text>
-          </View>
+          <View style={styles.uploadSection}>
+            <View style={styles.uploadInfo}>
+              <Image source={AppIcons.infoIcon} style={styles.fileIcon} />
+              <Text style={styles.uploadInfoText}>
+                Hỗ trợ PDF, DOCX, JPG, PNG (Max: 5MB)
+              </Text>
+            </View>
 
-          <TouchableOpacity
-            style={styles.uploadButton}
-            onPress={handleDocumentPick}>
-            <Image source={AppIcons.upLoad} style={styles.uploadIcon} />
-            <Text style={styles.uploadText}>
-              {t('formCreateLoan.financialInfo.uploadDocument')}
-            </Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.uploadButton}
+              onPress={handleDocumentPick}>
+              <Image source={AppIcons.upLoad} style={styles.uploadIcon} />
+              <Text style={styles.uploadText}>
+                {t('formCreateLoan.financialInfo.uploadDocument')}
+              </Text>
+            </TouchableOpacity>
 
-          <View style={styles.filesList}>
-            {selectedFiles.map((file, index) => (
-              <View key={index} style={styles.fileItemContainer}>
-                <View style={styles.fileContent}>
-                  <Image source={AppIcons.infoIcon} style={styles.fileIcon} />
-                  <Text style={styles.fileName} numberOfLines={1}>
-                    {file.name}
-                  </Text>
-                  <Text style={styles.fileSize}>
-                    {formatFileSize(file.size || 0)}
-                  </Text>
+            <View style={styles.filesList}>
+              {selectedFiles.map((file, index) => (
+                <View key={index} style={styles.fileItemContainer}>
+                  <View style={styles.fileContent}>
+                    <Image source={AppIcons.infoIcon} style={styles.fileIcon} />
+                    <Text style={styles.fileName} numberOfLines={1}>
+                      {file.name}
+                    </Text>
+                    <Text style={styles.fileSize}>
+                      {formatFileSize(file.size || 0)}
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    style={styles.removeButton}
+                    onPress={() => handleRemoveFile(index)}>
+                    <Image
+                      source={AppIcons.closeIcon}
+                      style={styles.removeIcon}
+                    />
+                  </TouchableOpacity>
                 </View>
-                <TouchableOpacity
-                  style={styles.removeButton}
-                  onPress={() => handleRemoveFile(index)}>
-                  <Image
-                    source={AppIcons.closeIcon}
-                    style={styles.removeIcon}
-                  />
-                </TouchableOpacity>
-              </View>
-            ))}
+              ))}
+            </View>
           </View>
         </View>
-      </View>
 
-      <TouchableOpacity
-        style={[styles.btn, isLoading && {opacity: 0.7}]}
-        onPress={handleSubmit}
-        disabled={isLoading}>
-        {isLoading ? (
-          <ActivityIndicator color="white" />
-        ) : (
-          <Text style={styles.textWhite}>
-            {t('formCreateLoan.financialInfo.submit')}
-          </Text>
-        )}
-      </TouchableOpacity>
-    </ScrollView>
+        <TouchableOpacity
+          style={[styles.btn, isLoading && {opacity: 0.7}]}
+          onPress={handleSubmit}
+          disabled={isLoading}>
+          {isLoading ? (
+            <ActivityIndicator color="white" />
+          ) : (
+            <Text style={styles.textWhite}>
+              {t('formCreateLoan.financialInfo.submit')}
+            </Text>
+          )}
+        </TouchableOpacity>
+      </ScrollView>
+    </KeyboardWrapper>
   );
 };
 

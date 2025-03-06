@@ -23,6 +23,7 @@ import {loanRequest} from '../../api/services/loan';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../navigators/RootNavigator';
 import CustomMultiSelect from '../CustomMultiSelect/CustomMultiSelect';
+import KeyboardWrapper from '../KeyboardWrapper/KeyboardWrapper';
 
 interface FormCreateLoanRequestProps {
   theme: Theme;
@@ -344,7 +345,7 @@ const FormCreateLoanRequest: React.FC<FormCreateLoanRequestProps> = ({
   };
 
   return (
-    <View>
+    <KeyboardWrapper>
       <View style={styles.boxInput}>
         <Text style={styles.headingTitle}>
           {currentLanguage === 'vi' ? 'Số tiền vay' : 'Loan Amount'}
@@ -476,7 +477,7 @@ const FormCreateLoanRequest: React.FC<FormCreateLoanRequestProps> = ({
           </Text>
         )}
       </TouchableOpacity>
-    </View>
+    </KeyboardWrapper>
   );
 };
 

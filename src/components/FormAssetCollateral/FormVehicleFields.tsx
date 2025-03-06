@@ -13,6 +13,7 @@ import {addAssetCollateral} from '../../api/services/loan';
 import {vehicleFields, vehicleMetadataFields, commonFields} from './formFields';
 import {createStyles} from './styles';
 import {Theme} from '../../theme/colors';
+import KeyboardWrapper from '../KeyboardWrapper/KeyboardWrapper';
 
 interface FormVehicleFieldsProps {
   theme: Theme;
@@ -198,80 +199,86 @@ const FormVehicleFields: React.FC<FormVehicleFieldsProps> = ({
   };
 
   return (
-    <View style={styles.wrapper}>
-      <ScrollView style={styles.container} scrollEnabled={!selectedDateField}>
-        {/* Common Fields */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Thông tin cơ bản</Text>
-          {commonFields.map(({field, label, placeholder, numeric}) => (
-            <View key={field} style={styles.fieldContainer}>
-              <Text style={styles.label}>{label}</Text>
-              {renderField(
-                {field, label, placeholder, numeric},
-                getInputValue(formData[field]),
-                field,
-              )}
-            </View>
-          ))}
-        </View>
+    <KeyboardWrapper>
+      <View style={[styles.wrapper, {minHeight: '100%'}]}>
+        <ScrollView style={styles.container} scrollEnabled={!selectedDateField}>
+          {/* Common Fields */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Thông tin cơ bản</Text>
+            {commonFields.map(({field, label, placeholder, numeric}) => (
+              <View key={field} style={styles.fieldContainer}>
+                <Text style={styles.label}>{label}</Text>
+                {renderField(
+                  {field, label, placeholder, numeric},
+                  getInputValue(formData[field]),
+                  field,
+                )}
+              </View>
+            ))}
+          </View>
 
-        {/* Vehicle Fields */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Thông tin xe</Text>
-          {vehicleFields.map(({field, label, placeholder, numeric, isDate}) => (
-            <View key={field} style={styles.fieldContainer}>
-              <Text style={styles.label}>{label}</Text>
-              {renderField(
-                {field, label, placeholder, numeric, isDate},
-                getInputValue(
-                  formData.vehicle[field as keyof typeof formData.vehicle],
-                ),
-                `vehicle.${field}`,
-              )}
-            </View>
-          ))}
-        </View>
+          {/* Vehicle Fields */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Thông tin xe</Text>
+            {vehicleFields.map(
+              ({field, label, placeholder, numeric, isDate}) => (
+                <View key={field} style={styles.fieldContainer}>
+                  <Text style={styles.label}>{label}</Text>
+                  {renderField(
+                    {field, label, placeholder, numeric, isDate},
+                    getInputValue(
+                      formData.vehicle[field as keyof typeof formData.vehicle],
+                    ),
+                    `vehicle.${field}`,
+                  )}
+                </View>
+              ),
+            )}
+          </View>
 
-        {/* Vehicle Metadata */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Thông tin bổ sung</Text>
-          {vehicleMetadataFields.map(({field, label, placeholder, isDate}) => (
-            <View key={field} style={styles.fieldContainer}>
-              <Text style={styles.label}>{label}</Text>
-              {renderField(
-                {field, label, placeholder, isDate},
-                getInputValue(formData.vehicle.metadata[field]),
-                `vehicle.metadata.${field}`,
-              )}
-            </View>
-          ))}
-        </View>
+          {/* Vehicle Metadata */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Thông tin bổ sung</Text>
+            {vehicleMetadataFields.map(
+              ({field, label, placeholder, isDate}) => (
+                <View key={field} style={styles.fieldContainer}>
+                  <Text style={styles.label}>{label}</Text>
+                  {renderField(
+                    {field, label, placeholder, isDate},
+                    getInputValue(formData.vehicle.metadata[field]),
+                    `vehicle.metadata.${field}`,
+                  )}
+                </View>
+              ),
+            )}
+          </View>
 
-        {/* Submit Button */}
-        <TouchableOpacity
-          style={styles.submitButton}
-          onPress={handleSubmit}
-          disabled={isLoading}>
-          {isLoading ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={styles.buttonText}>Tiếp tục</Text>
-          )}
-        </TouchableOpacity>
-      </ScrollView>
+          {/* Submit Button */}
+          <TouchableOpacity
+            style={styles.submitButton}
+            onPress={handleSubmit}
+            disabled={isLoading}>
+            {isLoading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.buttonText}>Tiếp tục</Text>
+            )}
+          </TouchableOpacity>
+        </ScrollView>
 
-      {selectedDateField && (
-        <DatePicker
-          isVisible={!!selectedDateField}
-          onClose={() => setSelectedDateField(null)}
-          onConfirm={handleDateConfirm}
-          value={tempDate}
-          onChange={handleDateChange}
-          theme={theme}
-          locale="vi-VN"
-        />
-      )}
-    </View>
+        {selectedDateField && (
+          <DatePicker
+            isVisible={!!selectedDateField}
+            onClose={() => setSelectedDateField(null)}
+            onConfirm={handleDateConfirm}
+            value={tempDate}
+            onChange={handleDateChange}
+            theme={theme}
+            locale="vi-VN"
+          />
+        )}
+      </View>
+    </KeyboardWrapper>
   );
 };
 

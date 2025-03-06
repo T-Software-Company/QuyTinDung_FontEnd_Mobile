@@ -50,7 +50,7 @@ const CustomMultiSelect = forwardRef(
     // Calculate the available space below the input
     const spaceBelow = SCREEN_HEIGHT - (inputLayout.pageY + inputLayout.height);
     // Determine dropdown height based on available space
-    const dropdownHeight = Math.min(spaceBelow - 40, MAX_DROPDOWN_HEIGHT);
+    const dropdownHeight = Math.min(spaceBelow - 100, MAX_DROPDOWN_HEIGHT);
 
     const styles = StyleSheet.create({
       multiSelectContainer: {
@@ -158,7 +158,7 @@ const CustomMultiSelect = forwardRef(
       },
       modalContent: {
         position: 'absolute',
-        top: inputLayout.pageY + inputLayout.height + 4, // 4px spacing from input
+        top: inputLayout.pageY + inputLayout.height + 6, // 6px spacing from input
         left: 16,
         right: 16,
         backgroundColor: 'white',

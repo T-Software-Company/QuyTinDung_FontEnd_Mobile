@@ -78,6 +78,7 @@ const DropdownComponent = <T extends DropdownItem>({
 
     dropDownContainer: {
       backgroundColor: '#fff',
+      borderRadius: 8,
     },
   });
 
@@ -88,7 +89,7 @@ const DropdownComponent = <T extends DropdownItem>({
       placeholderStyle={styles.placeholderStyle}
       iconStyle={styles.iconStyle}
       containerStyle={styles.dropDownContainer} // Changed from dropDownContainerStyle
-      activeColor="#eaeaea"
+      activeColor="#e3f0ff"
       maxHeight={200}
       value={value}
       data={data}

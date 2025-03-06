@@ -19,6 +19,7 @@ import {
 } from './formFields';
 import {createStyles} from './styles';
 import {Theme} from '../../theme/colors';
+import KeyboardWrapper from '../KeyboardWrapper/KeyboardWrapper';
 
 interface FormLandFieldsProps {
   theme: Theme;
@@ -208,126 +209,128 @@ const FormLandFields: React.FC<FormLandFieldsProps> = ({
   };
 
   return (
-    <View style={styles.wrapper}>
-      <ScrollView
-        style={styles.container}
-        scrollEnabled={!selectedDateField} // Disable scroll when date picker is visible
-      >
-        {/* Common Fields */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Thông tin cơ bản</Text>
-          {commonFields.map(({field, label, placeholder, numeric}) => (
-            <View key={field} style={styles.fieldContainer}>
-              <Text style={styles.label}>{label}</Text>
-              {renderField(
-                {field, label, placeholder, numeric},
-                getInputValue(formData[field]),
-                field,
-              )}
-            </View>
-          ))}
-        </View>
-
-        {/* Land Fields */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Thông tin đất</Text>
-          {landFields.map(({field, label, placeholder, numeric, isDate}) => (
-            <View key={field} style={styles.fieldContainer}>
-              <Text style={styles.label}>{label}</Text>
-              {renderField(
-                {field, label, placeholder, numeric, isDate},
-                getInputValue(
-                  formData.landAsset[field as keyof typeof formData.landAsset],
-                ),
-                `landAsset.${field}`,
-              )}
-            </View>
-          ))}
-        </View>
-
-        {/* Owner Info Fields */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Thông tin chủ sở hữu</Text>
-          {ownerInfoFields.map(({field, label, placeholder, isDate}) => (
-            <View key={field} style={styles.fieldContainer}>
-              <Text style={styles.label}>{label}</Text>
-              {renderField(
-                {field, label, placeholder, isDate},
-                getInputValue(
-                  formData.landAsset.ownerInfo[
-                    field as keyof typeof formData.landAsset.ownerInfo
-                  ],
-                ),
-                `landAsset.ownerInfo.${field}`,
-              )}
-            </View>
-          ))}
-        </View>
-
-        {/* Land Metadata Fields */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Thông tin bổ sung</Text>
-          {landMetadataFields.map(({field, label, placeholder}) => (
-            <View key={field} style={styles.fieldContainer}>
-              <Text style={styles.label}>{label}</Text>
-              {renderField(
-                {field, label, placeholder},
-                getInputValue(
-                  formData.landAsset.metadata[
-                    field as keyof typeof formData.landAsset.metadata
-                  ],
-                ),
-                `landAsset.metadata.${field}`,
-              )}
-            </View>
-          ))}
-        </View>
-
-        {/* Transfer Info Fields */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Thông tin chuyển nhượng</Text>
-          {transferInfoFields.map(({field, label, placeholder, isDate}) => (
-            <View key={field} style={styles.fieldContainer}>
-              <Text style={styles.label}>{label}</Text>
-              {renderField(
-                {field, label, placeholder, isDate},
-                getInputValue(
-                  formData.landAsset.transferInfo[
-                    field as keyof typeof formData.landAsset.transferInfo
-                  ],
-                ),
-                `landAsset.transferInfo.${field}`,
-              )}
-            </View>
-          ))}
-        </View>
-
-        {/* Submit Button */}
-        <TouchableOpacity
-          style={styles.submitButton}
-          onPress={handleSubmit}
-          disabled={isLoading}>
-          {isLoading ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={styles.buttonText}>Tiếp tục</Text>
-          )}
-        </TouchableOpacity>
-      </ScrollView>
-
-      {/* Move DatePicker outside ScrollView */}
-      {selectedDateField && (
-        <DatePicker
-          isVisible={!!selectedDateField}
-          onClose={() => setSelectedDateField(null)}
-          onConfirm={handleDateConfirm}
-          value={tempDate}
-          onChange={handleDateChange}
-          theme={theme}
-          locale="vi-VN"
-        />
-      )}
-    </View>
+    <KeyboardWrapper>
+      <View style={styles.wrapper}>
+        <ScrollView
+          style={styles.container}
+          scrollEnabled={!selectedDateField} // Disable scroll when date picker is visible
+        >
+          {/* Common Fields */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Thông tin cơ bản</Text>
+            {commonFields.map(({field, label, placeholder, numeric}) => (
+              <View key={field} style={styles.fieldContainer}>
+                <Text style={styles.label}>{label}</Text>
+                {renderField(
+                  {field, label, placeholder, numeric},
+                  getInputValue(formData[field]),
+                  field,
+                )}
+              </View>
+            ))}
+          </View>
+  
+          {/* Land Fields */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Thông tin đất</Text>
+            {landFields.map(({field, label, placeholder, numeric, isDate}) => (
+              <View key={field} style={styles.fieldContainer}>
+                <Text style={styles.label}>{label}</Text>
+                {renderField(
+                  {field, label, placeholder, numeric, isDate},
+                  getInputValue(
+                    formData.landAsset[field as keyof typeof formData.landAsset],
+                  ),
+                  `landAsset.${field}`,
+                )}
+              </View>
+            ))}
+          </View>
+  
+          {/* Owner Info Fields */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Thông tin chủ sở hữu</Text>
+            {ownerInfoFields.map(({field, label, placeholder, isDate}) => (
+              <View key={field} style={styles.fieldContainer}>
+                <Text style={styles.label}>{label}</Text>
+                {renderField(
+                  {field, label, placeholder, isDate},
+                  getInputValue(
+                    formData.landAsset.ownerInfo[
+                      field as keyof typeof formData.landAsset.ownerInfo
+                    ],
+                  ),
+                  `landAsset.ownerInfo.${field}`,
+                )}
+              </View>
+            ))}
+          </View>
+  
+          {/* Land Metadata Fields */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Thông tin bổ sung</Text>
+            {landMetadataFields.map(({field, label, placeholder}) => (
+              <View key={field} style={styles.fieldContainer}>
+                <Text style={styles.label}>{label}</Text>
+                {renderField(
+                  {field, label, placeholder},
+                  getInputValue(
+                    formData.landAsset.metadata[
+                      field as keyof typeof formData.landAsset.metadata
+                    ],
+                  ),
+                  `landAsset.metadata.${field}`,
+                )}
+              </View>
+            ))}
+          </View>
+  
+          {/* Transfer Info Fields */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Thông tin chuyển nhượng</Text>
+            {transferInfoFields.map(({field, label, placeholder, isDate}) => (
+              <View key={field} style={styles.fieldContainer}>
+                <Text style={styles.label}>{label}</Text>
+                {renderField(
+                  {field, label, placeholder, isDate},
+                  getInputValue(
+                    formData.landAsset.transferInfo[
+                      field as keyof typeof formData.landAsset.transferInfo
+                    ],
+                  ),
+                  `landAsset.transferInfo.${field}`,
+                )}
+              </View>
+            ))}
+          </View>
+  
+          {/* Submit Button */}
+          <TouchableOpacity
+            style={styles.submitButton}
+            onPress={handleSubmit}
+            disabled={isLoading}>
+            {isLoading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.buttonText}>Tiếp tục</Text>
+            )}
+          </TouchableOpacity>
+        </ScrollView>
+  
+        {/* Move DatePicker outside ScrollView */}
+        {selectedDateField && (
+          <DatePicker
+            isVisible={!!selectedDateField}
+            onClose={() => setSelectedDateField(null)}
+            onConfirm={handleDateConfirm}
+            value={tempDate}
+            onChange={handleDateChange}
+            theme={theme}
+            locale="vi-VN"
+          />
+        )}
+      </View>
+    </KeyboardWrapper>
   );
 };
 

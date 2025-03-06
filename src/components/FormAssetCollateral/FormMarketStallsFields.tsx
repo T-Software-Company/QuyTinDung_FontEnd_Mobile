@@ -18,6 +18,7 @@ import {
 } from './formFields';
 import {createStyles} from './styles';
 import {Theme} from '../../theme/colors';
+import KeyboardWrapper from '../KeyboardWrapper/KeyboardWrapper';
 
 interface FormMarketStallsFieldsProps {
   theme: Theme;
@@ -163,82 +164,82 @@ const FormMarketStallsFields: React.FC<FormMarketStallsFieldsProps> = ({
   };
 
   return (
-    <View style={styles.wrapper}>
-      <ScrollView style={styles.container} scrollEnabled={!selectedDateField}>
-        {/* Common Fields */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Thông tin cơ bản</Text>
-          {commonFields.map(({field, label, placeholder, numeric}) => (
-            <View key={field} style={styles.fieldContainer}>
-              <Text style={styles.label}>{label}</Text>
-              {renderField(
-                {field, label, placeholder, numeric},
-                getFieldValue(field),
-                field,
-              )}
-            </View>
-          ))}
-        </View>
-
-        {/* Market Stall Fields */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Thông tin gian hàng</Text>
-          {marketStallFields.map(
-            ({field, label, placeholder, isDate, numeric, isBoolean}) => (
+    <KeyboardWrapper>
+      <View style={styles.wrapper}>
+        <ScrollView style={styles.container} scrollEnabled={!selectedDateField}>
+          {/* Common Fields */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Thông tin cơ bản</Text>
+            {commonFields.map(({field, label, placeholder, numeric}) => (
               <View key={field} style={styles.fieldContainer}>
                 <Text style={styles.label}>{label}</Text>
                 {renderField(
-                  {field, label, placeholder, isDate, numeric, isBoolean},
-                  getFieldValue(`marketStalls.${field}`),
-                  `marketStalls.${field}`,
+                  {field, label, placeholder, numeric},
+                  getFieldValue(field),
+                  field,
                 )}
               </View>
-            ),
-          )}
-        </View>
+            ))}
+          </View>
 
-        {/* Metadata Fields */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Thông tin bổ sung</Text>
-          {marketStallMetadataFields.map(({field, label, placeholder}) => (
-            <View key={field} style={styles.fieldContainer}>
-              <Text style={styles.label}>{label}</Text>
-              {renderField(
-                {field, label, placeholder},
-                getFieldValue(`marketStalls.metadata.${field}`),
-                `marketStalls.metadata.${field}`,
-              )}
-            </View>
-          ))}
-        </View>
+          {/* Market Stall Fields */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Thông tin gian hàng</Text>
+            {marketStallFields.map(
+              ({field, label, placeholder, isDate, numeric, isBoolean}) => (
+                <View key={field} style={styles.fieldContainer}>
+                  <Text style={styles.label}>{label}</Text>
+                  {renderField(
+                    {field, label, placeholder, isDate, numeric, isBoolean},
+                    getFieldValue(`marketStalls.${field}`),
+                    `marketStalls.${field}`,
+                  )}
+                </View>
+              ),
+            )}
+          </View>
 
-        <TouchableOpacity
-          style={styles.submitButton}
-          onPress={handleSubmit}
-          disabled={isLoading}>
-          {isLoading ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={styles.buttonText}>Tiếp tục</Text>
-          )}
-        </TouchableOpacity>
-      </ScrollView>
+          {/* Metadata Fields */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Thông tin bổ sung</Text>
+            {marketStallMetadataFields.map(({field, label, placeholder}) => (
+              <View key={field} style={styles.fieldContainer}>
+                <Text style={styles.label}>{label}</Text>
+                {renderField(
+                  {field, label, placeholder},
+                  getFieldValue(`marketStalls.metadata.${field}`),
+                  `marketStalls.metadata.${field}`,
+                )}
+              </View>
+            ))}
+          </View>
 
-      {selectedDateField && (
-        <DatePicker
-          isVisible={!!selectedDateField}
-          onClose={() => setSelectedDateField(null)}
-          onConfirm={date => handleChange(selectedDateField, date)}
-          value={tempDate}
-          onChange={setTempDate}
-          theme={theme}
-          locale="vi-VN"
-        />
-      )}
-    </View>
+          <TouchableOpacity
+            style={styles.submitButton}
+            onPress={handleSubmit}
+            disabled={isLoading}>
+            {isLoading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.buttonText}>Tiếp tục</Text>
+            )}
+          </TouchableOpacity>
+        </ScrollView>
+
+        {selectedDateField && (
+          <DatePicker
+            isVisible={!!selectedDateField}
+            onClose={() => setSelectedDateField(null)}
+            onConfirm={date => handleChange(selectedDateField, date)}
+            value={tempDate}
+            onChange={setTempDate}
+            theme={theme}
+            locale="vi-VN"
+          />
+        )}
+      </View>
+    </KeyboardWrapper>
   );
 };
 
 export default FormMarketStallsFields;
-
-

@@ -1,4 +1,4 @@
-import { ImageRequireSource } from 'react-native';
+import {ImageRequireSource} from 'react-native';
 
 type IconCategory = {
   [key: string]: ImageRequireSource;
@@ -37,11 +37,35 @@ const icons: IconGroups = {
     transactionIcon: require('../../assets/images/transaction-icon.png'),
     supportIcon: require('../../assets/images/support-icon.png'),
     infoIcon: require('../../assets/images/info-icon.png'),
+    closeIcon: require('../../assets/images/close-icon.png'),
+    linkingBankIcon: require('../../assets/images/linking-bank.png'),
+    servicesIcon: require('../../assets/images/services.png'),
+    searchIcon: require('../../assets/images/search-icon.png'),
+    waterIcon: require('../../assets/images/water-icon.png'),
+    electricityIcon: require('../../assets/images/electricity-icon.png'),
+    internetIcon: require('../../assets/images/internet-icon.png'),
+    insuranceIcon: require('../../assets/images/insurance-icon.png'),
+    educationIcon: require('../../assets/images/education-icon.png'),
+    promotionsIcon: require('../../assets/images/promotions-icon.png'),
   },
   qr: {
     qr: require('../../assets/images/QR.jpg'),
     tpBank: require('../../assets/images/icon-TPBank.png'),
     tpBIDV: require('../../assets/images/icon-BIDV.png'),
+    viettelIcon: require('../../assets/images/viettel-icon.png'),
+    mobifoneIcon: require('../../assets/images/mobifone-icon.png'),
+    vinaphoneIcon: require('../../assets/images/vinaphone-icon.png'),
+    vietnamobileIcon: require('../../assets/images/vietnamobile-icon.png'),
+    waterThuDuc: require('../../assets/images/nc-thuduc.png'),
+    waterBenThanh: require('../../assets/images/nc-benthanh.png'),
+    waterCanGio: require('../../assets/images/nc-cangio.png'),
+    waterGiaDinh: require('../../assets/images/nc-giadinh.png'),
+    waterPhuHoaTan: require('../../assets/images/nc-phuhoatan.png'),
+    waterTanHoa: require('../../assets/images/nc-tanhoa.png'),
+    evn: require('../../assets/images/evn.png'),
+    viettelTele: require('../../assets/images/viettel-tele.png'),
+    fpt: require('../../assets/images/fpt.png'),
+    vnpt: require('../../assets/images/vnpt.png'),
   },
   form: {
     email: require('../../assets/images/email-icon.png'),
@@ -63,10 +87,13 @@ const icons: IconGroups = {
 };
 
 // Flatten icons object for backward compatibility
-export const AppIcons = Object.entries(icons).reduce((acc, [_, value]) => ({
-  ...acc,
-  ...value,
-}), {}) as Record<string, ImageRequireSource>;
+export const AppIcons = Object.entries(icons).reduce(
+  (acc, [_, value]) => ({
+    ...acc,
+    ...value,
+  }),
+  {},
+) as Record<string, ImageRequireSource>;
 
 // Export grouped icons for better organization if needed
 export const Icons = icons;

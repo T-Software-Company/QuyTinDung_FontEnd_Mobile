@@ -1,6 +1,7 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {Theme} from '../../theme/colors';
+import {useTranslation} from 'react-i18next';
 
 interface DataType {
   title: string;
@@ -14,6 +15,8 @@ interface AllocateAssetsProps {
 }
 
 const AllocateAssets: React.FC<AllocateAssetsProps> = ({data, theme, hide}) => {
+  const {t} = useTranslation();
+
   const styles = StyleSheet.create({
     wrapBox: {
       marginTop: 30,
@@ -61,16 +64,16 @@ const AllocateAssets: React.FC<AllocateAssetsProps> = ({data, theme, hide}) => {
   });
   return (
     <View style={styles.wrapBox}>
-      <Text style={[styles.title, styles.colorText]}>Phân bổ</Text>
+      <Text style={[styles.title, styles.colorText]}>{t('totalAssets.allocate.title')}</Text>
 
       <View style={styles.boxContainer}>
         {data.map((item, index) => (
           <View key={index} style={styles.boxSave}>
             <Text style={[styles.titleBox, styles.colorText]}>
-              {item.title}
+              {t(`totalAssets.allocate.titles.${item.title === 'Tổng tiền khoản vay' ? 'loan' : 'savings'}`)}
             </Text>
             <View style={styles.boxSaveContent}>
-              <Text style={styles.colorText}>Số tiền gốc</Text>
+              <Text style={styles.colorText}>{t('totalAssets.allocate.originalAmount')}</Text>
               {hide ? (
                 <Text style={[styles.colorText, styles.hide]}>*** ***</Text>
               ) : (
@@ -78,7 +81,7 @@ const AllocateAssets: React.FC<AllocateAssetsProps> = ({data, theme, hide}) => {
               )}
             </View>
             <View style={styles.boxSaveContent}>
-              <Text style={styles.colorText}>Tiền lãi tạm tính</Text>
+              <Text style={styles.colorText}>{t('totalAssets.allocate.estimatedInterest')}</Text>
               {hide ? (
                 <Text style={[styles.colorText, styles.hide]}>*** ***</Text>
               ) : (

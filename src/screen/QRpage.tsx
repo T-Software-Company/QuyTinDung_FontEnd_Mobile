@@ -1,31 +1,24 @@
-import React, {useState, useEffect} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Alert,
-  Button,
-  SafeAreaView,
-  Dimensions,
-} from 'react-native';
-import {
-  Camera,
-  Code,
-  useCameraDevice,
-  useCameraPermission,
-} from 'react-native-vision-camera';
-import Slider from '@react-native-community/slider';
+import React, {useState, useEffect, useRef} from 'react';
+import {View, Text, StyleSheet, Alert, Dimensions, Platform, BackHandler} from 'react-native';
+import {Camera, CameraType} from 'react-native-camera-kit';
 import {RouteProp} from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 import Header from '../components/Header/Header';
-import {useTranslation} from 'react-i18next'; // Add missing import
-import {RootStackParamList} from '../navigators/RootNavigator'; // Add this import
+import {useTranslation} from 'react-i18next';
+import {RootStackParamList} from '../navigators/RootNavigator';
 import {StackNavigationProp} from '@react-navigation/stack';
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
+const SCREEN_HEIGHT = Dimensions.get('window').height;
+const scanAreaSize = Math.min(SCREEN_WIDTH * 0.75, SCREEN_HEIGHT * 0.35);
+
+// Fixed zoom level - 1.0 is the maximum in the library (approximates 3x zoom)
+const FIXED_ZOOM = 2.0;
 
 type QRScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   'QrScreen'
 >;
-
 type QRScreenRouteProp = RouteProp<RootStackParamList, 'QrScreen'>;
 
 interface QRScannerAppProps {
@@ -33,206 +26,119 @@ interface QRScannerAppProps {
   route: QRScreenRouteProp;
 }
 
-const SCREEN_WIDTH = Dimensions.get('window').width;
-const scanAreaSize = SCREEN_WIDTH * 0.7; // Scanner area is 70% of screen width
-
 const QRScannerApp: React.FC<QRScannerAppProps> = ({navigation, route}) => {
-  const {t} = useTranslation(); // Add missing translation hook
-  const {formDataAddress, formDataUser} = route.params; // Lấy formData từ NotificationScan
-
-  const [zoom, setZoom] = useState(1); // Giá trị zoom mặc định
-  console.log('QR Screen formData:', formDataAddress); // Debug log
+  const {t} = useTranslation();
+  const {formDataAddress, formDataUser} = route.params;
 
   const [lastScannedCode, setLastScannedCode] = useState<string | null>(null);
   const [isScanning, setIsScanning] = useState<boolean>(true);
-  const {hasPermission, requestPermission} = useCameraPermission();
-  const device = useCameraDevice('back');
-  const [isCameraActive, setIsCameraActive] = useState<boolean>(true);
-
-  const handleZoomChange = (value: number) => {
-    setZoom(value);
-  };
-  useEffect(() => {
-    checkPermission();
-
-    // Thêm focus listener
-    const unsubscribe = navigation.addListener('focus', () => {
-      setIsCameraActive(true);
-      setIsScanning(true);
-    });
-
-    return () => {
-      setIsCameraActive(false);
-      unsubscribe(); // Cleanup listener khi unmount
-    };
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [navigation]);
-
-  const checkPermission = async () => {
-    try {
-      await requestPermission();
-    } catch (error) {
-      Alert.alert('Error', 'Failed to request camera permission');
-    }
-  };
 
   const isDuplicateCode = (code: string) => {
     return lastScannedCode === code;
   };
 
   const formatDate = (dateStr: string) => {
-    // Xử lý chuỗi 8 ký tự dạng "DDMMYYYY"
     if (dateStr.length === 8) {
       const day = dateStr.substring(0, 2);
       const month = dateStr.substring(2, 4);
       const year = dateStr.substring(4, 8);
       return `${day}/${month}/${year}`;
     }
-
-    // Xử lý chuỗi 6 ký tự dạng "DDMMYY"
     if (dateStr.length === 6) {
       const day = dateStr.substring(0, 2);
       const month = dateStr.substring(2, 4);
       const year = '20' + dateStr.substring(4, 6);
       return `${day}/${month}/${year}`;
     }
-
-    return dateStr; // Trả về nguyên gốc nếu không match format nào
+    return dateStr;
   };
 
+  // Xử lý dữ liệu QR trên CCCD
   const processQRData = (rawData: string) => {
-    // Bước 1: Chuẩn hóa data gốc
-    let cleanData = rawData.trim();
-    // Bước 2: Loại bỏ dấu {} nếu có
-    cleanData = cleanData.replace(/^{|}$/g, '');
-    // Bước 3: Split và xử lý từng phần tử
-    const dataArray = cleanData
-      .split('|')
-      // eslint-disable-next-line semi
-      .map(item => item.trim()); // loại bỏ khoảng trắng đầu cuối
-    // .filter(item => item !== ''); // loại bỏ phần tử rỗng
-
-    console.log('QR Data Array:', dataArray); // Debug log
-    // Format lại date ở index 2 (ngày sinh) và 5 (ngày cấp)
+    let cleanData = rawData.trim().replace(/^{|}$/g, '');
+    const dataArray = cleanData.split('|').map(item => item.trim());
     if (dataArray.length > 6) {
       dataArray[3] = formatDate(dataArray[3]);
       dataArray[6] = formatDate(dataArray[6]);
     }
-
     return dataArray;
   };
 
-  const handleCodeScanned = (codes: Code[]) => {
-    console.log('Scanned codes:', codes);
-    // eslint-disable-next-line curly
-    if (!isScanning || codes.length === 0) return;
-
-    const currentCode = codes[0].value ?? '';
-
-    // eslint-disable-next-line curly
-    if (isDuplicateCode(currentCode)) return; // Fix: Use isDuplicateCode function
+  const handleCodeScanned = (event: {
+    nativeEvent: {codeStringValue: string};
+  }) => {
+    const currentCode = event.nativeEvent.codeStringValue;
+    if (!isScanning || !currentCode || isDuplicateCode(currentCode)) return;
 
     try {
       const qrData = processQRData(currentCode);
-      setLastScannedCode(currentCode); // Fix: Update last scanned code
+      setLastScannedCode(currentCode);
       setIsScanning(false);
-      setIsCameraActive(false); // Deactivate camera before navigation
-
-      // console.log('Navigating to ResultQR with:', {formData, qrData}); // Debug log
-
       navigation.navigate('ResultQR', {
         formDataUser: formDataUser,
         formDataAddress: formDataAddress,
         qrData: qrData,
       });
     } catch (error) {
-      console.error('Scanning error:', error);
+      console.log('Scanning error:', error);
       Alert.alert('Error', 'Failed to process QR code');
     }
   };
 
-  // Handle cases where camera is not available
-  if (device == null) {
-    return (
-      <SafeAreaView style={styles.containerNotAvailable}>
-        <Text style={styles.centerText}>
-          {t('register.camera.notAvailable')}
-        </Text>
-      </SafeAreaView>
-    );
-  }
+  // Reset scanner state when component is focused (coming back from ResultQR screen)
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log('Screen focused, resetting scanner state');
+      setLastScannedCode(null);
+      setIsScanning(true);
 
-  if (!hasPermission) {
-    return (
-      <SafeAreaView>
-        <View style={styles.container}>
-          <Text style={styles.centerText}>
-            {t('register.camera.permissionRequired')}
-          </Text>
-          <Button
-            title={t('register.camera.requestPermission')}
-            onPress={checkPermission}
-          />
-        </View>
-      </SafeAreaView>
-    );
-  }
+      return () => {
+        // This runs when the screen is unfocused
+        console.log('Screen unfocused');
+      };
+    }, []),
+  );
+
+  // Add a reset function that can be called manually if needed
+  const resetScanner = () => {
+    setLastScannedCode(null);
+    setIsScanning(true);
+  };
 
   return (
     <View style={styles.container}>
-      <Camera
-        style={StyleSheet.absoluteFill}
-        device={device}
-        isActive={isCameraActive}
-        zoom={zoom}
-        codeScanner={{
-          codeTypes: ['qr', 'ean-13', 'code-128', 'pdf-417'],
-          onCodeScanned: handleCodeScanned,
-        }}
-      />
       <Header Navbar="ScanQR" navigation={navigation} />
 
-      {/* Overlay with blurred background and clear center */}
-      <View style={styles.overlay}>
-        {/* Top blur */}
-        <View style={styles.overlaySection} />
-
-        <View style={styles.centerRow}>
-          {/* Left blur */}
-          <View style={styles.overlaySection} />
-
-          {/* Clear scanner area */}
-          <View style={styles.scannerArea}>
-            <View style={styles.cornerTL} />
-            <View style={styles.cornerTR} />
-            <View style={styles.cornerBL} />
-            <View style={styles.cornerBR} />
-          </View>
-
-          {/* Right blur */}
-          <View style={styles.overlaySection} />
+      <View style={styles.contentContainer}>
+        <View style={styles.squareFrame}>
+          <Camera
+            scanBarcode={true}
+            onReadCode={handleCodeScanned}
+            laserColor="red" // (default red) optional, color of laser in scanner frame
+            frameColor="white" // (default white) optional, color of border of scanner frame
+            showFrame={false}
+            style={styles.camera}
+            cameraType={CameraType.Back}
+            flashMode="off"
+            ratioOverlay="1:1"
+            zoom={FIXED_ZOOM} // Set fixed 3x zoom (1.0 = max zoom in the library)
+            onZoom={e => console.log(e.nativeEvent.zoom)}
+          />
         </View>
 
-        {/* Bottom blur */}
-        <View style={styles.overlaySection} />
-      </View>
+        <Text style={styles.instructionText}>
+          {t('register.camera.scanScreen.instruction') ||
+            'Vui lòng đặt QR để quét'}
+        </Text>
 
-      <View style={styles.zoomContainer}>
-        <Text style={styles.zoomText}>Zoom: {zoom.toFixed(1)}x</Text>
-        <Slider
-          style={styles.slider}
-          minimumValue={1}
-          maximumValue={5}
-          step={0.1}
-          value={zoom}
-          onValueChange={handleZoomChange}
-        />
-      </View>
+        {/* Zoom indicator
+        <Text style={styles.zoomIndicator}>3x Zoom</Text> */}
 
-      <Text style={styles.instructionText}>
-        {t('register.camera.scanScreen.instruction')}
-      </Text>
+        {/* Scan status indicator - useful for debugging */}
+        <Text style={styles.scanStatus}>
+          {isScanning ? 'Ready to scan' : 'QR detected'}
+        </Text>
+      </View>
     </View>
   );
 };
@@ -240,145 +146,58 @@ const QRScannerApp: React.FC<QRScannerAppProps> = ({navigation, route}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    // zIndex: 2
+    backgroundColor: '#000',
   },
-  view: {
-    flex: 1,
-    // backgroundColor: 'rgba(0,0,0,0.6)',
-    zIndex: 1,
-  },
-  camera: {
-    flex: 1,
-  },
-  centerText: {
-    fontSize: 18,
-    padding: 16,
-    textAlign: 'center',
-    color: '#777',
-  },
-  dataContainer: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#f5f5f5',
-  },
-  header: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  itemContainer: {
-    backgroundColor: 'white',
-    padding: 10,
-    marginBottom: 10,
-    borderRadius: 8,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-  },
-  itemText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  dataText: {
-    fontSize: 14,
-    color: '#444',
-    marginLeft: 10,
-  },
-  overlay: {
-    flex: 1,
-    backgroundColor: 'transparent',
-  },
-  overlaySection: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.6)',
-  },
-  centerRow: {
-    flexDirection: 'row',
-    height: scanAreaSize,
-  },
-  scannerArea: {
-    width: scanAreaSize,
-    height: scanAreaSize,
-    borderRadius: 10,
-    backgroundColor: 'transparent',
-  },
-  cornerTL: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: 40,
-    height: 40,
-    borderLeftWidth: 3,
-    borderTopWidth: 3,
-    borderColor: '#FFF',
-  },
-  cornerTR: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    width: 40,
-    height: 40,
-    borderRightWidth: 3,
-    borderTopWidth: 3,
-    borderColor: '#FFF',
-  },
-  cornerBL: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    width: 40,
-    height: 40,
-    borderLeftWidth: 3,
-    borderBottomWidth: 3,
-    borderColor: '#FFF',
-  },
-  cornerBR: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    width: 40,
-    height: 40,
-    borderRightWidth: 3,
-    borderBottomWidth: 3,
-    borderColor: '#FFF',
-  },
-  instructionText: {
-    fontSize: 18,
-    padding: 16,
-    textAlign: 'center',
-    color: '#FFF',
-    backgroundColor: 'rgba(0,0,0,0.6)',
-    paddingBottom: 50,
-  },
-  containerNotAvailable: {
+  contentContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-
-  zoomContainer: {
-    position: 'absolute',
-    bottom: '10%',
-    left: 20,
-    right: 20,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+  squareFrame: {
+    width: scanAreaSize,
+    height: scanAreaSize,
+    borderWidth: 3,
+    borderColor: '#FFFFFF',
     borderRadius: 10,
-    padding: 8,
-    marginBottom: 24,
+    backgroundColor: 'black',
+    overflow: 'hidden',
   },
-  zoomText: {
-    color: '#fff',
-    textAlign: 'center',
-    fontSize: 16,
-    marginBottom: 5,
-  },
-  slider: {
+  camera: {
     width: '100%',
-    height: 40,
+    height: '100%',
+  },
+  instructionText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    padding: 16,
+    textAlign: 'center',
+    color: '#FFF',
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    marginTop: 15,
+    borderRadius: 8,
+    width: '90%',
+  },
+  zoomIndicator: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    color: '#FFF',
+    fontSize: 12,
+    fontWeight: 'bold',
+    padding: 6,
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+  scanStatus: {
+    position: 'absolute',
+    bottom: 10,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    color: '#FFF',
+    fontSize: 12,
+    padding: 6,
+    borderRadius: 12,
+    opacity: 0.7,
   },
 });
 

@@ -10,7 +10,7 @@ import {
   Linking,
 } from 'react-native';
 import Header from '../components/Header/Header';
-// import {useTranslation} from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import {useTheme} from '../context/ThemeContext';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../navigators/RootNavigator';
@@ -38,7 +38,7 @@ const DetailTransaction: React.FC<DetailTransactionProps> = ({
   navigation,
   route,
 }) => {
-  // const {t} = useTranslation();
+  const {t} = useTranslation();
   const currentLanguage = i18n.language;
   const {theme} = useTheme();
   const [iconTransaction, setIconTransaction] = useState(AppIcons.depositIcon);
@@ -228,40 +228,44 @@ const DetailTransaction: React.FC<DetailTransactionProps> = ({
     <SafeAreaView style={styles.view}>
       <View style={styles.container}>
         <Header Navbar="DetailTransaction" navigation={navigation} />
-
         <View style={styles.detailsContainer}>
           <View style={styles.containerHeading}>
             <Image source={iconTransaction} style={styles.icon} />
             <View style={styles.textHeading}>
-              <Text style={styles.colorText}>{transactionData.title}</Text>
+              <Text style={styles.colorText}>
+                {t(`totalAssets.transaction.types.${transactionData.title}`)}
+              </Text>
               <Text style={[styles.colorText, styles.money]}>
                 {transactionData.money}
               </Text>
             </View>
           </View>
           <View style={styles.containerStatus}>
-            <Text style={[styles.colorText, styles.noteText]}>Trạng thái</Text>
+            <Text style={[styles.colorText, styles.noteText]}>
+              {t('totalAssets.transaction.status')}
+            </Text>
             <Text
               style={[
                 styles.colorText,
-                transactionData.status === 'Thành công'
+                transactionData.status === 'success'
                   ? styles.success
                   : styles.error,
               ]}>
-              {transactionData.status}
+              {t(`totalAssets.transaction.statuses.${transactionData.status}`)}
             </Text>
           </View>
         </View>
 
+        {/* Update other translation paths similarly */}
         <View style={[styles.detailsContainer, styles.gapDetails]}>
           <View style={styles.wrapText}>
-            <Text style={styles.colorText}>Ngày giao dịch</Text>
+            <Text style={styles.colorText}>{t('totalAssets.transaction.date')}</Text>
             <Text style={[styles.colorText, styles.valueDetail]}>
               {transactionData.date}
             </Text>
           </View>
           <View style={styles.wrapText}>
-            <Text style={styles.colorText}>Mã giao dịch</Text>
+            <Text style={styles.colorText}>{t('totalAssets.transaction.code')}</Text>
             <View style={styles.wrapCode}>
               <Text style={[styles.colorText, styles.valueDetail]}>
                 {transactionData.code}
@@ -273,27 +277,27 @@ const DetailTransaction: React.FC<DetailTransactionProps> = ({
             </View>
           </View>
           <View style={styles.wrapText}>
-            <Text style={styles.colorText}>Số tiền</Text>
+            <Text style={styles.colorText}>{t('totalAssets.transaction.amount')}</Text>
             <Text style={[styles.colorText, styles.valueDetail]}>
               {transactionData.money.split(' ')[1]}
             </Text>
           </View>
           <View style={styles.wrapText}>
-            <Text style={styles.colorText}>Nguồn tiền</Text>
+            <Text style={styles.colorText}>{t('totalAssets.transaction.source')}</Text>
             <Text style={[styles.colorText, styles.valueDetail]}>
-              {transactionData.source}
+              {t(`totalAssets.transaction.sources.${transactionData.source}`)}
             </Text>
           </View>
         </View>
 
         <View style={styles.wrapSupport}>
-          <Text style={styles.noteText}>Bạn đang gặp sự cố?</Text>
-          <TouchableOpacity
-            onPress={confirmAndMakeCall}
-            style={styles.wrapContact}>
+          <Text style={styles.noteText}>
+            {t('totalAssets.transaction.support.issue')}
+          </Text>
+          <TouchableOpacity onPress={confirmAndMakeCall} style={styles.wrapContact}>
             <Image source={AppIcons.supportIcon} style={styles.iconCode} />
             <Text style={styles.colorText}>
-              Liên hệ {phoneNumber} để được hỗ trợ
+              {t('totalAssets.transaction.support.contact', {phone: phoneNumber})}
             </Text>
           </TouchableOpacity>
         </View>

@@ -17,6 +17,7 @@ import {useTheme} from '../context/ThemeContext';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../navigators/RootNavigator';
 import {AppIcons} from '../icons';
+import {useTranslation} from 'react-i18next';
 
 type TransactionHistoryNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -37,116 +38,117 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({
   const slideAnim = useRef(new Animated.Value(0)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const screenHeight = Dimensions.get('window').height;
+  const {t} = useTranslation();
 
   const transactionData = useMemo(
     () => [
       {
         id: '1',
-        title: 'Nạp tiền',
+        title: 'deposit',
         money: '+ 1,000,000 đ',
         date: '12/12/2024',
-        status: 'Thành công',
+        status: 'success',
         code: 'TRX123456789',
-        source: 'Ví điện tử',
+        source: 'amount',
       },
       {
         id: '2',
-        title: 'Rút tiền',
+        title: 'withdraw',
         money: '- 500,000 đ',
         date: '11/12/2024',
-        status: 'Thành công',
+        status: 'success',
         code: 'TRX987654321',
-        source: 'Ngân hàng',
+        source: 'bank',
       },
       {
         id: '3',
-        title: 'Nạp tiền',
+        title: 'deposit',
         money: '+ 100,000,000 đ',
         date: '11/1/2025',
-        status: 'Thành công',
+        status: 'success',
         code: 'TRX987654321',
-        source: 'Ngân hàng',
+        source: 'bank',
       },
       {
         id: '4',
-        title: 'Rút tiền',
+        title: 'withdraw',
         money: '- 100,000,000 đ',
         date: '11/1/2025',
-        status: 'Thành công',
+        status: 'success',
         code: 'TRX987654321',
-        source: 'Ngân hàng',
+        source: 'bank',
       },
       {
         id: '5',
-        title: 'Rút tiền',
+        title: 'withdraw',
         money: '- 500,000,000 đ',
         date: '13/1/2025',
-        status: 'Thành công',
+        status: 'success',
         code: 'TRX987654321',
-        source: 'Ngân hàng',
+        source: 'bank',
       },
       {
         id: '6',
-        title: 'Rút tiền',
+        title: 'withdraw',
         money: '- 500,000,000 đ',
         date: '12/1/2025',
-        status: 'Thất bại',
+        status: 'failed',
         code: 'TRX987654321',
-        source: 'Ngân hàng',
+        source: 'bank',
       },
       {
         id: '7',
-        title: 'Rút tiền',
+        title: 'withdraw',
         money: '- 500,000,000 đ',
         date: '11/1/2025',
-        status: 'Thất bại',
+        status: 'failed',
         code: 'TRX987654321',
-        source: 'Ngân hàng',
+        source: 'bank',
       },
       {
         id: '8',
-        title: 'Nạp tiền',
+        title: 'deposit',
         money: '+ 500,000,000 đ',
         date: '16/1/2025',
-        status: 'Thành công',
+        status: 'success',
         code: 'TRX987654321',
-        source: 'Ngân hàng',
+        source: 'bank',
       },
       {
         id: '9',
-        title: 'Rút tiền',
+        title: 'withdraw',
         money: '- 500,000,000 đ',
         date: '11/1/2025',
-        status: 'Thành công',
+        status: 'success',
         code: 'TRX987654321',
-        source: 'Ngân hàng',
+        source: 'bank',
       },
       {
         id: '10',
-        title: 'Rút tiền',
+        title: 'withdraw',
         money: '- 500,000,000 đ',
         date: '21/1/2025',
-        status: 'Thành công',
+        status: 'success',
         code: 'TRX987654321',
-        source: 'Ngân hàng',
+        source: 'bank',
       },
       {
         id: '11',
-        title: 'Nạp tiền',
+        title: 'deposit',
         money: '+ 300,000,000 đ',
         date: '11/1/2025',
-        status: 'Thành công',
+        status: 'success',
         code: 'TRX987654321',
-        source: 'Ngân hàng',
+        source: 'bank',
       },
       {
         id: '12',
-        title: 'Rút tiền',
+        title: 'withdraw',
         money: '- 500,000,000 đ',
         date: '11/1/2025',
-        status: 'Thành công',
+        status: 'success',
         code: 'TRX987654321',
-        source: 'Ngân hàng',
+        source: 'bank',
       },
 
       // Add more transaction items as needed
@@ -229,8 +231,8 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({
 
     if (activeFilter !== 'all') {
       filtered = filtered.filter(item => {
-        if (activeFilter === 'deposit') return item.title === 'Nạp tiền';
-        if (activeFilter === 'withdraw') return item.title === 'Rút tiền';
+        if (activeFilter === 'deposit') return item.title === 'deposit';
+        if (activeFilter === 'withdraw') return item.title === 'withdraw';
         return true;
       });
     }
@@ -287,7 +289,7 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({
       }>
       <View style={styles.itemLeft}>
         <View style={styles.itemInfo}>
-          <Text style={styles.title}>{item.title}</Text>
+          <Text style={styles.title}>{t(`totalAssets.transaction.types.${item.title}`)}</Text>
           <Text style={styles.date}>{item.date}</Text>
         </View>
       </View>
@@ -296,9 +298,9 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({
         <Text
           style={[
             styles.status,
-            item.status === 'Thành công' ? styles.success : styles.failed,
+            item.status === 'success' ? styles.success : styles.failed,
           ]}>
-          {item.status}
+          {t(`totalAssets.transaction.statuses.${item.status}`)}
         </Text>
       </View>
     </TouchableOpacity>

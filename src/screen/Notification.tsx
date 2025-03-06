@@ -5,7 +5,7 @@ import {
   ScrollView,
   Platform,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import Header from '../components/Header/Header';
 import ContentNotification from '../components/ContentNotification/ContentNotification';
 import i18n from '../../i18n';
@@ -13,6 +13,7 @@ import i18n from '../../i18n';
 import {useTheme} from '../context/ThemeContext';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../navigators/RootNavigator';
+import {getNotifications} from '../api/services/getNotifications';
 
 type NotificationNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -35,6 +36,18 @@ const Notification: React.FC<NotificationProps> = ({navigation}) => {
   const currentLanguage = i18n.language;
   // const {t} = useTranslation();
   const {theme} = useTheme();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getNotifications();
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
 
   const notificationsVietnam: NotificationItem[] = [
     {

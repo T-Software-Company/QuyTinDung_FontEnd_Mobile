@@ -47,6 +47,7 @@ const BoxTotalNav: React.FC<BoxTotalNav> = ({navigation}) => {
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
+      alignItems: 'center',
     },
     icon: {
       width: 15,
@@ -65,6 +66,8 @@ const BoxTotalNav: React.FC<BoxTotalNav> = ({navigation}) => {
       alignItems: 'center',
       justifyContent: 'flex-end',
       minWidth: 50,
+      paddingVertical: 4,
+      paddingHorizontal: 8,
     },
     wrapMoney: {
       marginTop: 12,
@@ -82,12 +85,13 @@ const BoxTotalNav: React.FC<BoxTotalNav> = ({navigation}) => {
       // alignItems: "center"
     },
     borderArrowHandle: {
-      width: 16,
-      height: 16,
+      width: 24,
+      height: 24,
       // backgroundColor: 'white',
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: 9999,
+      padding: 0,
     },
     profit: {
       color: '#76FA39',
@@ -97,8 +101,10 @@ const BoxTotalNav: React.FC<BoxTotalNav> = ({navigation}) => {
     },
     iconStyle: {
       tintColor: theme.iconColor,
-      width: 16,
-      height: 16,
+      width: 24,
+      height: 24,
+      padding: 8,
+      paddingLeft: 0,
     },
   });
 

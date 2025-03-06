@@ -3,6 +3,7 @@ import React from 'react';
 import {Theme} from '../../theme/colors';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../navigators/RootNavigator';
+import {useTranslation} from 'react-i18next';
 
 type TotalAssetsScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -15,32 +16,35 @@ interface RecentPaymentProps {
 }
 
 const RecentPayment: React.FC<RecentPaymentProps> = ({theme, navigation}) => {
+  const {t} = useTranslation();
+
   const dataRecentPayment = [
     {
-      title: 'Rút tiền',
+      title: 'withdraw',
       money: '- 50,000,000 đ',
       date: '08/01/2025',
-      status: 'Thất bại',
+      status: 'failed',
       code: 'NSKOEIF3KJF',
-      source: 'Tài khoản số dư',
+      source: 'amount',
     },
     {
-      title: 'Trả tiền khoản vay',
+      title: 'transfer',
       money: '+ 100,000,000 đ',
       date: '25/12/2024',
-      status: 'Thành công',
+      status: 'success',
       code: 'NSKOEIF3KJF',
-      source: 'Tài khoản số dư',
+      source: 'bank',
     },
     {
-      title: 'Nạp tiền',
+      title: 'deposit',
       money: '+ 100,000 đ',
       date: '23/12/2024',
-      status: 'Thành công',
+      status: 'success',
       code: 'NSKOEIF3KJF',
-      source: 'Tài khoản ngân hàng',
+      source: 'savings',
     },
   ];
+
   const styles = StyleSheet.create({
     boxContent: {
       marginTop: 20,
@@ -81,12 +85,18 @@ const RecentPayment: React.FC<RecentPaymentProps> = ({theme, navigation}) => {
       fontSize: 12,
     },
   });
+
   return (
     <View style={styles.boxContent}>
       <View style={styles.wrapBox}>
-        <Text style={styles.title}>Giao dịch gần đây</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('TransactionHistory')}>
-          <Text style={styles.seeAll}>Xem tất cả</Text>
+        <Text style={styles.title}>
+          {t('totalAssets.transaction.recentTransactions')}
+        </Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('TransactionHistory')}>
+          <Text style={styles.seeAll}>
+            {t('totalAssets.transaction.viewAll')}
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -98,16 +108,16 @@ const RecentPayment: React.FC<RecentPaymentProps> = ({theme, navigation}) => {
             navigation.navigate('DetailTransaction', {dataTransaction: item})
           }>
           <View style={styles.wrapBox}>
-            <Text style={styles.colorText}>{item.title}</Text>
+            <Text style={styles.colorText}>
+              {t(`totalAssets.transaction.types.${item.title}`)}
+            </Text>
             <Text style={styles.colorText}>{item.money}</Text>
           </View>
           <View style={styles.wrapBox}>
             <Text style={styles.noteText}>{item.date}</Text>
             <Text
-              style={
-                item.status === 'Thành công' ? styles.profit : styles.error
-              }>
-              {item.status}
+              style={item.status === 'success' ? styles.profit : styles.error}>
+              {t(`totalAssets.transaction.statuses.${item.status}`)}
             </Text>
           </View>
         </TouchableOpacity>

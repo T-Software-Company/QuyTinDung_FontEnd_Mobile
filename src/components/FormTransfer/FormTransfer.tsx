@@ -51,6 +51,7 @@ const FormTransfer: React.FC = () => {
       return currentLanguage === 'vi' ? 'Chọn ngân hàng' : 'Select bank';
 
     const banks: BankNames = {
+      digi: {vi: 'DigiFund', en: 'DigiFund'},
       vcb: {vi: 'Vietcombank', en: 'Vietcombank'},
       tcb: {vi: 'Techcombank', en: 'Techcombank'},
       tpb: {vi: 'TPBank', en: 'TPBank'},

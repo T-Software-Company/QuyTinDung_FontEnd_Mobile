@@ -6,9 +6,16 @@ import {
   TouchableOpacity,
   Image,
   Modal,
+  ScrollView,
+  Dimensions,
 } from 'react-native';
 import {LoanCollateralType} from '../../api/types/loanRequest';
 import {AppIcons} from '../../icons';
+import {Theme} from '../../theme/colors';
+
+// Get screen dimensions for better responsive behavior
+const SCREEN_HEIGHT = Dimensions.get('window').height;
+const MAX_DROPDOWN_HEIGHT = SCREEN_HEIGHT * 0.4; // 40% of screen height maximum
 
 interface CustomMultiSelectProps {
   value: string[];
@@ -18,6 +25,7 @@ interface CustomMultiSelectProps {
   onItemSelect: (value: LoanCollateralType) => void;
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  theme: Theme;
 }
 
 const CustomMultiSelect = forwardRef(
@@ -30,6 +38,7 @@ const CustomMultiSelect = forwardRef(
       onItemSelect,
       isOpen,
       setIsOpen,
+      theme,
     }: CustomMultiSelectProps,
     ref: ForwardedRef<View>,
   ) => {
@@ -38,12 +47,17 @@ const CustomMultiSelect = forwardRef(
       height: 0,
     });
 
+    // Calculate the available space below the input
+    const spaceBelow = SCREEN_HEIGHT - (inputLayout.pageY + inputLayout.height);
+    // Determine dropdown height based on available space
+    const dropdownHeight = Math.min(spaceBelow - 100, MAX_DROPDOWN_HEIGHT);
+
     const styles = StyleSheet.create({
       multiSelectContainer: {
         position: 'relative',
       },
       inputContainer: {
-        backgroundColor: '#f4f4f4',
+        backgroundColor: theme.inputBackground,
         borderRadius: 8,
         paddingHorizontal: 15,
         paddingVertical: 8,
@@ -51,6 +65,8 @@ const CustomMultiSelect = forwardRef(
         flexDirection: 'row',
         alignItems: 'center',
         position: 'relative',
+        borderWidth: 1,
+        borderColor: theme.borderInputBackground,
       },
       tagsContainer: {
         flex: 1,
@@ -142,7 +158,7 @@ const CustomMultiSelect = forwardRef(
       },
       modalContent: {
         position: 'absolute',
-        top: inputLayout.pageY + inputLayout.height + 4, // 4px spacing from input
+        top: inputLayout.pageY + inputLayout.height + 6, // 6px spacing from input
         left: 16,
         right: 16,
         backgroundColor: 'white',
@@ -153,13 +169,24 @@ const CustomMultiSelect = forwardRef(
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
-        maxHeight: 300, // Giới hạn chiều cao tối đa
+        maxHeight: dropdownHeight, // Dynamic max height
       },
       optionsContainer: {
         width: '100%',
       },
       optionsScrollView: {
-        maxHeight: 280, // Để có thể scroll nếu nhiều options
+        width: '100%', // Ensure full width
+      },
+      optionItem: {
+        padding: 12,
+        borderBottomWidth: 1,
+        borderBottomColor: '#f0f0f0',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+      },
+      lastOptionItem: {
+        borderBottomWidth: 0,
       },
     });
 
@@ -239,18 +266,23 @@ const CustomMultiSelect = forwardRef(
             activeOpacity={1}
             onPress={() => setIsOpen(false)}>
             <View style={styles.modalContent}>
-              <View style={styles.optionsContainer}>
-                {options.map(item => {
+              <ScrollView
+                style={styles.optionsScrollView}
+                showsVerticalScrollIndicator={true}
+                bounces={false}
+                contentContainerStyle={{paddingBottom: 5}}>
+                {options.map((item, index) => {
                   const isSelected = value.includes(item.value);
+                  const isLastItem = index === options.length - 1;
                   return (
                     <TouchableOpacity
                       key={item.value}
                       style={[
-                        styles.option,
+                        styles.optionItem,
                         isSelected && styles.optionSelected,
+                        isLastItem && styles.lastOptionItem,
                       ]}
-                      onPress={e => {
-                        e.stopPropagation(); // Ngăn không cho sự kiện bubble lên trên
+                      onPress={() => {
                         onItemSelect(item.value as LoanCollateralType);
                       }}>
                       <Text style={styles.optionText}>{item.label}</Text>
@@ -258,7 +290,7 @@ const CustomMultiSelect = forwardRef(
                     </TouchableOpacity>
                   );
                 })}
-              </View>
+              </ScrollView>
             </View>
           </TouchableOpacity>
         </Modal>

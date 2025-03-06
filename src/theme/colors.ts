@@ -6,6 +6,8 @@ export interface Theme {
   text: string; // Primary text color
   noteText: string; // Secondary/note text color
   tint: string; // Tint color for various UI elements
+  inputBackground: string;
+  borderInputBackground: string;
 
   // Header related colors
   headerBackground: string;
@@ -25,6 +27,7 @@ export interface Theme {
 
   // Button colors
   buttonSubmit: string;
+  textButtonSubmit: string;
 
   // Special indicators
   profit: string;
@@ -50,17 +53,20 @@ export const lightTheme: Theme = {
   tint: '#000000',
   headerBackground: '#FFFFFF',
   headerShadow: '#171717',
-  backgroundIcon: '#f4f4f4',
+  backgroundIcon: '#f7faff',
   iconColor: '#888',
   iconColorActive: '#007BFF',
-  backgroundBox: '#f4f4f4',
+  backgroundBox: '#f7faff',
   textActive: '#007BFF',
   buttonSubmit: '#007BFF',
+  textButtonSubmit: '#fff',
+  inputBackground: '#ffffff',
+  borderInputBackground: '#007BFF',
 
   //profit
   profit: '#18DD12',
   interest: '#ddb813',
-  error: '#f7132e',
+  error: '#ff4444',
 
   tabBarBackground: '#FFFFFF',
   tabBarInactive: '#ddd',
@@ -69,9 +75,9 @@ export const lightTheme: Theme = {
   textInactive: '#000',
 
   // table
-  tableHeaderBackground: '#f4f4f4',
+  tableHeaderBackground: '#f7faff',
   tableChildBackground: '#fff',
-  tableBorderColor: '#f4f4f4',
+  tableBorderColor: '#f7faff',
 };
 
 // Dark theme configuration
@@ -88,11 +94,14 @@ export const darkTheme: Theme = {
   backgroundBox: '#444950',
   textActive: '#ffffff',
   buttonSubmit: '#007BFF',
+  textButtonSubmit: '#fff',
+  inputBackground: '#f4f4f4',
+  borderInputBackground: '#f4f4f4',
 
   //profit
   profit: '#76FA39',
   interest: '#f2df37',
-  error: '#ff2d46',
+  error: '#ff6666',
 
   tabBarBackground: '#121212',
   tabBarInactive: '#fff',

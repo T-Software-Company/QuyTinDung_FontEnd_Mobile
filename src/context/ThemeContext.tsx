@@ -22,7 +22,7 @@ export const ThemeContext = createContext<ThemeContextType | undefined>(
 // Theme Provider Component
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({children}) => {
   // State to track dark mode preference
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
 
   // Select theme based on dark mode preference
   const theme = isDarkMode ? darkTheme : lightTheme;

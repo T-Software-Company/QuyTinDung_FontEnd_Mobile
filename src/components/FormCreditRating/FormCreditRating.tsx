@@ -19,7 +19,7 @@ import {
   LoanSecurityType,
   LoanCollateralType,
 } from '../../api/types/loanRequest';
-import {loanRequest} from '../../api/services/createLoan';
+import {loanRequest} from '../../api/services/loan';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../navigators/RootNavigator';
 import CustomMultiSelect from '../CustomMultiSelect/CustomMultiSelect';

@@ -99,6 +99,8 @@ const LanguageSetting: React.FC<LanguageSettingProps> = ({navigation}) => {
       flexDirection: 'row',
       alignItems: 'center',
       marginBottom: 10,
+      alignSelf: 'flex-start',
+      paddingVertical: 8,
     },
     radioCircle: {
       height: 20,

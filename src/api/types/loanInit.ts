@@ -1,3 +1,16 @@
+export type StepType = 'ACTION' | 'DEFAULT';
+export type WorkflowStatus =
+  | 'INPROGRESS'
+  | 'DENIED'
+  | 'COMPLETED'
+  | 'CANCELLED';
+export type StepName =
+  | 'init'
+  | 'create-loan-request'
+  | 'add-asset-collateral'
+  | 'create-loan-plan'
+  | 'create-financial-info'
+  | 'create-credit-rating';
 export interface UserInit {
   userId: string | undefined;
 }
@@ -15,15 +28,36 @@ export interface WorkflowResult {
   lastModifiedBy: string;
   createdBy: string;
   targetId: string;
-  prevSteps: string[];
-  currentSteps: string[];
-  nextSteps: string[];
-  workflowStatus: string | null;
+  prevSteps: StepName[];
+  currentSteps: StepName[];
+  nextSteps: StepName[];
+  workflowStatus: WorkflowStatus;
   startTime: string;
-  endTime: string | null;
-  metadata: any | null;
-  steps: WorkflowStep[];
+  endTime: string;
+  metadata: WorkflowMetadata;
+  steps: StepHistoryResponse[];
   deleted: boolean;
+}
+
+interface WorkflowMetadata {
+  histories: History[];
+  [key: string]: any;
+}
+
+export interface StepHistoryResponse {
+  id: string;
+  name: string;
+  startTime: string;
+  endTime: string;
+  nextSteps: string[];
+  status: WorkflowStatus;
+  type: StepType;
+  transactionId: string;
+  metadata: StepMetadata;
+}
+export interface StepMetadata {
+  histories: History[];
+  [key: string]: any;
 }
 
 export interface WorkflowStep {
@@ -75,11 +109,11 @@ export interface LoanApplication {
   currentOutstandingDebt: number | null;
 }
 
-// Step types for workflow
-export type WorkflowStepType =
-  | 'init'
-  | 'create-loan-request'
-  | 'create-loan-plan'
-  | 'create-financial-info'
-  | 'create-credit-rating'
-  | 'add-asset-collateral';
+export interface CancelLoanResponse {
+  code: number;
+  message: string;
+  result: {
+    applicationId?: string;
+    [key: string]: any;
+  };
+}

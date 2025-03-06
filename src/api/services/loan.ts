@@ -3,9 +3,14 @@ import {
   CreateFinancialInfoRequest,
   FinancialInfoResponse,
 } from '../types/financialInfo';
-import {LoanWorkflowResponse, UserInit} from '../types/loanInit';
+import {
+  LoanWorkflowResponse,
+  UserInit,
+  CancelLoanResponse,
+} from '../types/loanInit';
 import {CreateLoanPlanRequest, LoanPlanResponse} from '../types/loanPlan';
 import {LoanRequestBody} from '../types/loanRequest';
+import {Asset, AddAssetsResponse, AssetApiError} from '../types/addAssets';
 
 export const initLoan = async (
   params: UserInit,
@@ -23,9 +28,7 @@ export const fetchWorkflowStatus = async (
   userId: string,
 ): Promise<LoanWorkflowResponse> => {
   await new Promise(resolve => setTimeout(resolve, 500)); // Add 5s delay
-  const response = await axiosInstance.get(
-    `/onboarding-workflows/${userId}`,
-  );
+  const response = await axiosInstance.get(`/onboarding-workflows/${userId}`);
   return response.data;
 };
 
@@ -79,6 +82,42 @@ export const financialInfo = async (
   const response = await axiosInstance.post(
     `/financial-infos?applicationId=${applicationId}`,
     requestBody,
+  );
+  return response.data;
+};
+
+export const addAssetCollateral = async (
+  applicationId: string,
+  assets: Asset | Asset[],
+): Promise<AddAssetsResponse> => {
+  try {
+    const data = Array.isArray(assets) ? assets : [assets];
+    const assetsWithApplication = data.map(asset => ({
+      ...asset,
+      application: {id: applicationId},
+    }));
+
+    const response = await axiosInstance.post(
+      `/assets?applicationId=${applicationId}`,
+      assetsWithApplication,
+    );
+    return response.data;
+  } catch (error: unknown) {
+    const assetError = error as AssetApiError;
+    if (assetError.isAxiosError && assetError.response) {
+      console.log('Asset creation failed:', assetError.response);
+    } else {
+      console.log('Unknown error:', error);
+    }
+    throw assetError;
+  }
+};
+
+export const cancelLoan = async (
+  applicationId: string,
+): Promise<CancelLoanResponse> => {
+  const response = await axiosInstance.post(
+    `/applications/${applicationId}/cancel`,
   );
   return response.data;
 };

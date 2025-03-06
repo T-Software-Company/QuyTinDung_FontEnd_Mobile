@@ -1,5 +1,12 @@
-import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, {useCallback, useState} from 'react';
 import Header from '../components/Header/Header';
 import Table from '../components/Table/Table';
 import BoxAdd from '../components/BoxAdd/BoxAdd';
@@ -8,20 +15,22 @@ import {useTheme} from '../context/ThemeContext';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../navigators/RootNavigator';
 import i18n from '../../i18n';
-import {getApplications} from '../api/services/getApplicationsLoan';
+import {
+  getApplication,
+  getApplications,
+} from '../api/services/getApplicationsLoan';
 import {RootState} from '../store/store';
 import {useSelector} from 'react-redux';
 import {Application} from '../api/types/getApplications';
+import {Theme} from '../theme/colors';
+import {RouteProp, useFocusEffect} from '@react-navigation/native';
 
 type LoanScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Loan'>;
 
+type LoanRouteProp = RouteProp<RootStackParamList, 'Loan'>;
 interface LoanProps {
   navigation: LoanScreenNavigationProp;
-}
-
-interface Theme {
-  background: string;
-  text: string;
+  route: LoanRouteProp;
 }
 
 interface LoanBoxData {
@@ -51,23 +60,30 @@ const Loan: React.FC<LoanProps> = ({navigation}) => {
   const currentLanguage = i18n.language;
   const user = useSelector((state: RootState) => state.user.userData);
   const [loanData, setLoanData] = useState<Application[]>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (user?.id) {
-        try {
-          const applications = await getApplications(user.id);
-          if (applications) {
-            setLoanData(applications);
+  const [dataSpending, setDataSpending] = useState<Application | undefined>(
+    undefined,
+  );
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        if (user?.id) {
+          try {
+            const applications = await getApplications(user.id);
+            if (applications) {
+              setLoanData(applications);
+            }
+            const data = await getApplication(user.id);
+            setDataSpending(data);
+            console.log('Data:', data);
+          } catch (error) {
+            console.error('Error fetching loan data:', error);
           }
-        } catch (error) {
-          console.error('Error fetching loan data:', error);
         }
-      }
-    };
+      };
 
-    fetchData();
-  }, [user]);
+      fetchData();
+    }, [user]),
+  );
 
   console.log(loanData);
 
@@ -187,6 +203,40 @@ const Loan: React.FC<LoanProps> = ({navigation}) => {
   const totalLoanAmount = calculateTotalLoanAmount(data);
 
   console.log(totalLoanAmount);
+
+  const styles = StyleSheet.create({
+    view: {
+      flex: 1,
+    },
+    container: {
+      width: '100%',
+      height: '100%',
+    },
+
+    body: {
+      marginTop: 32,
+      paddingHorizontal: 20,
+      paddingBottom: 20,
+    },
+
+    listLoans: {
+      marginTop: 18,
+    },
+    headingList: {
+      fontSize: 16,
+      fontWeight: 'bold',
+    },
+    wrapContentSpending: {
+      backgroundColor: theme.tableHeaderBackground,
+      padding: 12,
+      borderRadius: 10,
+      marginTop: 12,
+    },
+    contentSpending: {
+      color: theme.text,
+    },
+  });
+
   return (
     <SafeAreaView style={[styles.view, {backgroundColor: theme.background}]}>
       <View style={styles.container}>
@@ -204,7 +254,27 @@ const Loan: React.FC<LoanProps> = ({navigation}) => {
               addText={t('loan.add')}
             />
 
-            <View style={styles.listSaves}>
+            {dataSpending && (
+              <View style={styles.listLoans}>
+                <Text style={[styles.headingList, {color: theme.text}]}>
+                  {t('loan.spendingLoan')}
+                </Text>
+
+                <TouchableOpacity
+                  style={styles.wrapContentSpending}
+                  onPress={() =>
+                    navigation.navigate('InfoCreateLoan', {
+                      appId: dataSpending?.id,
+                    })
+                  }>
+                  <Text style={styles.contentSpending}>
+                    Bạn đang có 1 khoản vay đang tạo
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+
+            <View style={styles.listLoans}>
               <Text style={[styles.headingList, {color: theme.text}]}>
                 {t('loan.loanList')}
               </Text>
@@ -224,27 +294,3 @@ const Loan: React.FC<LoanProps> = ({navigation}) => {
 };
 
 export default Loan;
-
-const styles = StyleSheet.create({
-  view: {
-    flex: 1,
-  },
-  container: {
-    width: '100%',
-    height: '100%',
-  },
-
-  body: {
-    marginTop: 32,
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-  },
-
-  listSaves: {
-    marginTop: 18,
-  },
-  headingList: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-});

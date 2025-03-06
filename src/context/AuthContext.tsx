@@ -2,8 +2,6 @@ import React, {createContext, useState, useContext, useEffect} from 'react';
 import {AuthContextType, UserData} from '../types/auth.types';
 import {authService} from '../services/auth.service';
 import {getAccessToken, isTokenExpired} from '../../tokenStorage';
-import {navigationRef} from '../navigators/RootNavigator';
-import {CommonActions} from '@react-navigation/native';
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -24,11 +22,25 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({
   const checkAuthState = async () => {
     try {
       const token = await getAccessToken();
-      if (token && !isTokenExpired(token)) {
-        setIsAuthenticated(true);
+      if (token) {
+        if (isTokenExpired(token)) {
+          const refreshed = await authService.refreshToken();
+          if (!refreshed) {
+            setIsAuthenticated(false);
+            setError('Session expired. Please login again.');
+          } else {
+            setIsAuthenticated(true);
+          }
+        } else {
+          setIsAuthenticated(true);
+        }
+      } else {
+        setIsAuthenticated(false);
       }
     } catch (err) {
-      console.error('Auth state check failed:', err);
+      console.log('Auth state check failed:', err.response);
+      setIsAuthenticated(false);
+      setError('Authentication check failed');
     } finally {
       setLoading(false);
     }
@@ -57,31 +69,36 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({
     },
     logout: async () => {
       try {
-        // 1. Set auth state to false first
-        setIsAuthenticated(false);
-
-        // 2. Small delay to let UI update
-        await new Promise(resolve => setTimeout(resolve, 10));
-
-        // 3. Reset navigation with custom transition
-        navigationRef.current?.dispatch(
-          CommonActions.reset({
-            routes: [{name: 'Login'}],
-            index: 0,
-          }),
-        );
-
-        // 4. Clear tokens after navigation starts
         await authService.logout();
-      } catch (error) {
-        console.error('Logout error:', error);
+        // setIsAuthenticated(false);
+      } catch (err) {
+        // Vẫn set isAuthenticated về false ngay cả khi có lỗi
+        // vì người dùng có ý định logout
+        setIsAuthenticated(false);
+        setError('Có lỗi xảy ra khi đăng xuất');
+        console.log('Logout error:', err);
       }
     },
-    refreshToken: authService.refreshToken.bind(authService),
+    refreshToken: async () => {
+      try {
+        const result = await authService.refreshToken();
+        if (!result) {
+          setIsAuthenticated(false);
+          setError('Failed to refresh token');
+          return false;
+        }
+        return true;
+      } catch (err) {
+        setIsAuthenticated(false);
+        setError('Failed to refresh token');
+        return false;
+      }
+    },
     register: async (userData: UserData) => {
       setLoading(true);
       try {
-        return await authService.register(userData);
+        const result = await authService.register(userData);
+        return result !== undefined ? result : false;
       } catch (err: any) {
         setError(err.message);
         return false;

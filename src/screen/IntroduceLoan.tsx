@@ -17,7 +17,7 @@ import {RootStackParamList} from '../navigators/RootNavigator';
 import i18n from '../../i18n';
 import {useSelector} from 'react-redux';
 import {RootState} from '../store/store';
-import {initLoan} from '../api/services/createLoan';
+import {initLoan} from '../api/services/loan';
 
 type IntroduceLoanNavigationProp = StackNavigationProp<
   RootStackParamList,

@@ -11,6 +11,7 @@ import {
 import {CreateLoanPlanRequest, LoanPlanResponse} from '../types/loanPlan';
 import {LoanRequestBody} from '../types/loanRequest';
 import {Asset, AddAssetsResponse, AssetApiError} from '../types/addAssets';
+import {CreditRatingRequest, CreditRatingResponse} from '../types/creditRating';
 
 export const initLoan = async (
   params: UserInit,
@@ -111,6 +112,24 @@ export const addAssetCollateral = async (
     }
     throw assetError;
   }
+};
+
+export const createCreditRating = async (
+  applicationId: string,
+  ratingData: Omit<CreditRatingRequest, 'application'>,
+): Promise<CreditRatingResponse> => {
+  const requestBody: CreditRatingRequest = {
+    ...ratingData,
+    application: {
+      id: applicationId,
+    },
+  };
+
+  const response = await axiosInstance.post(
+    `/credit-ratings?applicationId=${applicationId}`,
+    requestBody,
+  );
+  return response.data;
 };
 
 export const cancelLoan = async (

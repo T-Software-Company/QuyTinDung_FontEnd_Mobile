@@ -18,7 +18,8 @@ type ScreenName =
   | 'CreateLoanPlan'
   | 'CreateFinancialInfo'
   | 'CreditRating'
-  | 'AssetCollateral';
+  | 'AssetCollateral'
+  | 'InfoCreateLoan';
 
 // Define the step to screen mapping with proper types
 const stepToScreenMap: Record<StepName, ScreenName> = {
@@ -54,8 +55,38 @@ const LoadingWorkflowLoan: React.FC<LoadingWorkflowLoanProps> = ({
 
   const findNextScreen = (
     prevSteps: string[],
+    currentSteps: string[],
     nextSteps: string[],
   ): ScreenName => {
+    // Check if all required steps are completed or in progress
+    const allRequiredSteps = [
+      'init',
+      'create-loan-request',
+      'create-loan-plan',
+      'create-financial-info',
+      'create-credit-rating',
+      'add-asset-collateral',
+    ];
+
+    const completedAndInProgressSteps = [...prevSteps, ...currentSteps];
+    const isAllRequiredStepsHandled = allRequiredSteps.every(step =>
+      completedAndInProgressSteps.includes(step),
+    );
+
+    // If we have a current step that is in progress (add-asset-collateral in your example)
+    if (currentSteps.length > 0) {
+      const currentStep = currentSteps[0] as StepName;
+
+      // If all required steps are either completed or in progress, show the InfoCreateLoan screen
+      if (isAllRequiredStepsHandled) {
+        return 'InfoCreateLoan';
+      }
+
+      // Otherwise navigate to the current step screen
+      return stepToScreenMap[currentStep];
+    }
+
+    // If no current steps but we have not initialized yet
     if (!prevSteps.includes('init')) {
       return 'IntroduceLoan';
     }
@@ -100,6 +131,9 @@ const LoadingWorkflowLoan: React.FC<LoadingWorkflowLoanProps> = ({
         break;
       case 'AssetCollateral':
         navigation.replace('AssetCollateral', {appId});
+        break;
+      case 'InfoCreateLoan':
+        navigation.replace('InfoCreateLoan', {appId});
         break;
     }
   };
@@ -148,10 +182,20 @@ const LoadingWorkflowLoan: React.FC<LoadingWorkflowLoanProps> = ({
           return;
         }
         console.log('Workflow status:', response);
-        const {prevSteps, nextSteps} = response.result;
-        const nextScreen = findNextScreen(prevSteps, nextSteps);
 
-        await AsyncStorage.setItem('currentStep', nextSteps[0] || 'init');
+        const {prevSteps, currentSteps, nextSteps} = response.result;
+        const nextScreen = findNextScreen(
+          prevSteps || [],
+          currentSteps || [],
+          nextSteps || [],
+        );
+
+        if (currentSteps && currentSteps.length > 0) {
+          await AsyncStorage.setItem('currentStep', currentSteps[0]);
+        } else if (nextSteps && nextSteps.length > 0) {
+          await AsyncStorage.setItem('currentStep', nextSteps[0] || 'init');
+        }
+
         console.log('Navigating to:', nextScreen);
         navigateToScreen(nextScreen, appId.id);
       } catch (error) {
@@ -178,14 +222,14 @@ const LoadingWorkflowLoan: React.FC<LoadingWorkflowLoanProps> = ({
     },
     loadingText: {
       marginTop: 12,
-      color: theme.text,
+      color: theme.borderInputBackground,
       fontSize: 16,
     },
   });
 
   return (
     <View style={styles.container}>
-      <ActivityIndicator size="large" color={theme.text} />
+      <ActivityIndicator size="large" color={theme.borderInputBackground} />
       <Text style={styles.loadingText}>Đang lấy dữ liệu...</Text>
     </View>
   );

@@ -14,17 +14,21 @@ import {vehicleFields, vehicleMetadataFields, commonFields} from './formFields';
 import {createStyles} from './styles';
 import {Theme} from '../../theme/colors';
 import KeyboardWrapper from '../KeyboardWrapper/KeyboardWrapper';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../../navigators/RootNavigator';
 
 interface FormVehicleFieldsProps {
   theme: Theme;
   appId: string;
-  onSuccess: () => void;
+  onSuccess?: () => void;
+  navigation: StackNavigationProp<RootStackParamList>;
 }
 
 const FormVehicleFields: React.FC<FormVehicleFieldsProps> = ({
   theme,
   appId,
   onSuccess,
+  navigation,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedDateField, setSelectedDateField] = useState<string | null>(
@@ -36,7 +40,7 @@ const FormVehicleFields: React.FC<FormVehicleFieldsProps> = ({
     title: '',
     ownershipType: 'INDIVIDUAL',
     proposedValue: 0,
-    documents: [],
+    documents: ['vehicle_reg.pdf', 'insurance.pdf'],
     application: {id: appId},
     vehicle: {
       model: '',
@@ -67,7 +71,7 @@ const FormVehicleFields: React.FC<FormVehicleFieldsProps> = ({
       },
     },
   });
-
+  console.log('formData', formData);
   const styles = createStyles(theme);
 
   const handleChange = (field: string, value: any) => {
@@ -106,9 +110,11 @@ const FormVehicleFields: React.FC<FormVehicleFieldsProps> = ({
     try {
       setIsLoading(true);
       await addAssetCollateral(appId, formData);
-      onSuccess();
+
+      // Navigate to CreditRating with the appId
+      navigation.replace('CreditRating', {appId});
     } catch (error) {
-      console.error(error);
+      console.log('Error submitting vehicle details:', error.response);
     } finally {
       setIsLoading(false);
     }
@@ -139,7 +145,11 @@ const FormVehicleFields: React.FC<FormVehicleFieldsProps> = ({
 
   const handleDateConfirm = (dateString: string) => {
     if (selectedDateField) {
-      handleChange(selectedDateField, dateString);
+      // Convert the date to the required format: YYYY-MM-DDT00:00:00Z
+      const date = new Date(dateString);
+      const formattedDate = date.toISOString().split('T')[0] + 'T00:00:00Z';
+
+      handleChange(selectedDateField, formattedDate);
       setSelectedDateField(null);
     }
   };

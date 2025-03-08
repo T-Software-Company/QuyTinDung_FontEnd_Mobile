@@ -444,7 +444,7 @@
         "linkedBanks": "Linked Banks",
         "selectBank": "Select Bank",
         "searchBank": "Search for banks...",
-        "emptyState": "No banks linked yet. Click the button below to link a bank account.",
+        "emptyState": "No banks linked yet",
         "linkBankButton": "Link Bank Account",
         "removeBank": "Remove Link",
         "removeBankConfirm": "Are you sure you want to remove this bank link?",

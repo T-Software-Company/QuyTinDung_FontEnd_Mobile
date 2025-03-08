@@ -20,7 +20,7 @@ import {useTranslation} from 'react-i18next';
 import {useTheme} from '../context/ThemeContext';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../navigators/RootNavigator';
-import {AppIcons, Icons} from '../icons';
+import {AppIcons} from '../icons';
 
 type LinkingBankNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -39,12 +39,19 @@ interface Bank {
 
 // Use actual bank icons or default to bank icon
 const mockBanks: Bank[] = [
-  {id: '1', name: 'VietcomBank', icon: Icons.qr.tpBIDV},
-  {id: '2', name: 'BIDV', icon: Icons.qr.tpBIDV},
-  {id: '3', name: 'Techcombank', icon: Icons.qr.tpBank},
-  {id: '4', name: 'MB Bank', icon: Icons.qr.tpBank},
-  {id: '5', name: 'ACB', icon: Icons.qr.tpBank},
-  {id: '6', name: 'VPBank', icon: Icons.qr.tpBank},
+  {id: '1', name: 'VietcomBank', icon: AppIcons.vcb},
+  {id: '2', name: 'BIDV', icon: AppIcons.BIDV},
+  {id: '11', name: 'Agribank', icon: AppIcons.agr},
+  {id: '8', name: 'Vietinbank', icon: AppIcons.ctg},
+  {id: '3', name: 'Techcombank', icon: AppIcons.tcb},
+  {id: '4', name: 'MB Bank', icon: AppIcons.mbb},
+  {id: '5', name: 'ACB', icon: AppIcons.acb},
+  {id: '6', name: 'VP Bank', icon: AppIcons.vpb},
+  {id: '7', name: 'Sacombank', icon: AppIcons.stb},
+  {id: '9', name: 'HD Bank', icon: AppIcons.hdb},
+  {id: '10', name: 'SHB', icon: AppIcons.shb},
+  {id: '12', name: 'MSB', icon: AppIcons.msb},
+  {id: '13', name: 'TP Bank', icon: AppIcons.tpBank},
 ];
 
 const LinkingBank: React.FC<LinkingBankProps> = ({navigation}) => {
@@ -231,7 +238,7 @@ const LinkingBank: React.FC<LinkingBankProps> = ({navigation}) => {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      paddingTop: 40,
+      paddingTop: 0,
     },
     emptyStateText: {
       fontSize: 16,
@@ -274,16 +281,19 @@ const LinkingBank: React.FC<LinkingBankProps> = ({navigation}) => {
       padding: 5,
     },
     bankIcon: {
-      width: 32,
-      height: 32,
-      borderRadius: 16,
+      width: 50,
+      height: 50,
+      borderRadius: 8,
       overflow: 'hidden',
       marginRight: 10,
+      backgroundColor: theme.backgroundBox,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     bankIconImage: {
-      width: '100%',
-      height: '100%',
-      resizeMode: 'cover',
+      width: '80%',
+      height: '80%',
+      resizeMode: 'contain',
     },
     icon: {
       width: 24,
@@ -304,8 +314,8 @@ const LinkingBank: React.FC<LinkingBankProps> = ({navigation}) => {
       tintColor: theme.error,
     },
     alertIcon: {
-      width: 60,
-      height: 60,
+      width: 40,
+      height: 40,
       resizeMode: 'contain',
       tintColor: theme.noteText,
     },

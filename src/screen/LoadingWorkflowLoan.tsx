@@ -58,58 +58,52 @@ const LoadingWorkflowLoan: React.FC<LoadingWorkflowLoanProps> = ({
     currentSteps: string[],
     nextSteps: string[],
   ): ScreenName => {
-    // Check if all required steps are completed or in progress
-    const allRequiredSteps = [
-      'init',
-      'create-loan-request',
-      'create-loan-plan',
-      'create-financial-info',
-      'create-credit-rating',
-      'add-asset-collateral',
-    ];
+    console.log('Finding next screen with:', {
+      prevSteps,
+      currentSteps,
+      nextSteps,
+    });
 
-    const completedAndInProgressSteps = [...prevSteps, ...currentSteps];
-    const isAllRequiredStepsHandled = allRequiredSteps.every(step =>
-      completedAndInProgressSteps.includes(step),
-    );
-
-    // If we have a current step that is in progress (add-asset-collateral in your example)
-    if (currentSteps.length > 0) {
-      const currentStep = currentSteps[0] as StepName;
-
-      // If all required steps are either completed or in progress, show the InfoCreateLoan screen
-      if (isAllRequiredStepsHandled) {
-        return 'InfoCreateLoan';
-      }
-
-      // Otherwise navigate to the current step screen
-      return stepToScreenMap[currentStep];
-    }
-
-    // If no current steps but we have not initialized yet
+    // If no initialization yet, go to IntroduceLoan
     if (!prevSteps.includes('init')) {
+      console.log('Init not done yet, showing IntroduceLoan');
       return 'IntroduceLoan';
     }
 
-    // Convert workflow steps to screen names
-    const completedScreens = prevSteps.map(
-      step => stepToScreenMap[step as StepName],
-    );
-    const nextScreens = nextSteps.map(
-      step => stepToScreenMap[step as StepName],
-    );
+    // IMPORTANT: We prioritize nextSteps here, ignoring currentSteps
+    // Convert nextSteps to screen names
+    if (nextSteps.length > 0) {
+      const nextScreenNames = nextSteps
+        .map(step => stepToScreenMap[step as StepName])
+        .filter(Boolean);
 
-    // Find the first screen in sortScreen that hasn't been completed
-    for (const screenName of sortScreen) {
-      if (
-        !completedScreens.includes(screenName as ScreenName) &&
-        nextScreens.includes(screenName as ScreenName)
-      ) {
-        return screenName as ScreenName;
+      console.log('Next screen names:', nextScreenNames);
+
+      // Check if any nextScreens match our sortScreen order
+      const validNextScreens = nextScreenNames.filter(screen =>
+        sortScreen.includes(screen as string),
+      );
+
+      console.log('Valid next screens:', validNextScreens);
+
+      // If none of the nextScreens match our sortScreen, go to InfoCreateLoan
+      if (validNextScreens.length === 0) {
+        console.log('No valid next screens, showing InfoCreateLoan');
+        return 'InfoCreateLoan';
+      }
+
+      // Find the first screen in our sort order that appears in nextScreens
+      for (const screenName of sortScreen) {
+        if (nextScreenNames.includes(screenName as ScreenName)) {
+          console.log(`Found next screen in sort order: ${screenName}`);
+          return screenName as ScreenName;
+        }
       }
     }
 
-    return 'IntroduceLoan';
+    // If there are no next steps, we've completed everything
+    console.log('No next steps available, showing InfoCreateLoan');
+    return 'InfoCreateLoan';
   };
 
   const navigateToScreen = (screen: ScreenName, appId: string) => {
@@ -190,10 +184,11 @@ const LoadingWorkflowLoan: React.FC<LoadingWorkflowLoanProps> = ({
           nextSteps || [],
         );
 
-        if (currentSteps && currentSteps.length > 0) {
+        // Save currentStep to AsyncStorage if available, otherwise use first nextStep
+        if (nextSteps && nextSteps.length > 0) {
+          await AsyncStorage.setItem('currentStep', nextSteps[0]);
+        } else if (currentSteps && currentSteps.length > 0) {
           await AsyncStorage.setItem('currentStep', currentSteps[0]);
-        } else if (nextSteps && nextSteps.length > 0) {
-          await AsyncStorage.setItem('currentStep', nextSteps[0] || 'init');
         }
 
         console.log('Navigating to:', nextScreen);

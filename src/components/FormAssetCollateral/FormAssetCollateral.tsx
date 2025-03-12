@@ -10,21 +10,30 @@ import FormMarketStallsFields from './FormMarketStallsFields';
 import FormOthersFields from './FormOthersFields';
 import {createStyles} from './styles';
 import {Theme} from '../../theme/colors';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../../navigators/RootNavigator';
+import FormLandAndImprove from './FormLandAndImprove';
 
 export interface FormAssetCollateralProps {
   theme: Theme;
   appId: string;
-  onSuccess: () => void;
+  navigation: StackNavigationProp<RootStackParamList>;
 }
 
 const FormAssetCollateral: React.FC<FormAssetCollateralProps> = ({
   theme,
   appId,
-  onSuccess,
+  navigation,
 }) => {
   const [assetType, setAssetType] = useState<AssetType | null>('VEHICLE');
   const [isLoading, setIsLoading] = useState(true);
   const styles = createStyles(theme);
+
+  // Add onSuccess function that can be passed to child components
+  const onSuccess = () => {
+    console.log('Asset added successfully');
+    // Additional success handling if needed
+  };
 
   useEffect(() => {
     const fetchAssetType = async () => {
@@ -62,14 +71,14 @@ const FormAssetCollateral: React.FC<FormAssetCollateralProps> = ({
     switch (assetType) {
       case 'LAND':
         return (
-          <FormLandFields theme={theme} appId={appId} onSuccess={onSuccess} />
+          <FormLandFields theme={theme} appId={appId} navigation={navigation} />
         );
       case 'APARTMENT':
         return (
           <FormApartmentFields
             theme={theme}
             appId={appId}
-            onSuccess={onSuccess}
+            navigation={navigation}
           />
         );
       case 'VEHICLE':
@@ -77,7 +86,7 @@ const FormAssetCollateral: React.FC<FormAssetCollateralProps> = ({
           <FormVehicleFields
             theme={theme}
             appId={appId}
-            onSuccess={onSuccess}
+            navigation={navigation}
           />
         );
       case 'MACHINERY':
@@ -85,7 +94,7 @@ const FormAssetCollateral: React.FC<FormAssetCollateralProps> = ({
           <FormMachineryFields
             theme={theme}
             appId={appId}
-            onSuccess={onSuccess}
+            navigation={navigation}
           />
         );
       case 'MARKET_STALLS':
@@ -93,12 +102,25 @@ const FormAssetCollateral: React.FC<FormAssetCollateralProps> = ({
           <FormMarketStallsFields
             theme={theme}
             appId={appId}
-            onSuccess={onSuccess}
+            navigation={navigation}
+          />
+        );
+      case 'LAND_AND_IMPROVEMENT':
+        return (
+          <FormLandAndImprove
+            theme={theme}
+            appId={appId}
+            navigation={navigation}
           />
         );
       case 'OTHER':
         return (
-          <FormOthersFields theme={theme} appId={appId} onSuccess={onSuccess} />
+          <FormOthersFields
+            theme={theme}
+            appId={appId}
+            onSuccess={onSuccess}
+            navigation={navigation}
+          />
         );
       default:
         return null;

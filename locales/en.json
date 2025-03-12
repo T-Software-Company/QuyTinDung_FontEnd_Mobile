@@ -22,9 +22,7 @@
         "linkBank": "Link Bank",
         "help": "How can I help you?",
         "titleLoanProduct": "Loan for life",
-        "descLoanProduct": "A loan to pay expenses for personal and family consumption and living purposes.",
-        "descQuestion1": "Deposit/withdrawal instructions",
-        "descQuestion2": "Chat with staff"
+        "descLoanProduct": "A loan to pay expenses for personal and family consumption and living purposes."
     },
     "save": {
         "title": "Saving",

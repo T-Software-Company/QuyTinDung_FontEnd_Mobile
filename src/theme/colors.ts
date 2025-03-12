@@ -17,6 +17,7 @@ export interface Theme {
   backgroundIcon: string;
   iconColor: string;
   iconColorActive: string;
+  iconPrimaryColor: string;
 
   // Box and container colors
   backgroundBox: string;
@@ -62,6 +63,7 @@ export const lightTheme: Theme = {
   textButtonSubmit: '#fff',
   inputBackground: '#ffffff',
   borderInputBackground: '#007BFF',
+  iconPrimaryColor: '#FFFFFF',
 
   //profit
   profit: '#18DD12',
@@ -97,6 +99,7 @@ export const darkTheme: Theme = {
   textButtonSubmit: '#fff',
   inputBackground: '#f4f4f4',
   borderInputBackground: '#f4f4f4',
+  iconPrimaryColor: '#FFFFFF',
 
   //profit
   profit: '#76FA39',

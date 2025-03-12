@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import InputBackground from '../InputBackground/InputBackground';
+import CurrencyInput from '../CurrencyInput/CurrencyInput';
 import {useTranslation} from 'react-i18next';
 import {Theme} from '../../theme/colors';
 import {financialInfo} from '../../api/services/loan';
@@ -322,15 +323,14 @@ const FormCreateFinancialInfo: React.FC<FormCreateFinancialInfoProps> = ({
           <Text style={styles.headingTitle}>
             {t('formCreateLoan.financialInfo.totalIncome')}
           </Text>
-          <InputBackground
+          <CurrencyInput
             placeholder={t(
               'formCreateLoan.financialInfo.totalIncomePlaceholder',
             )}
-            keyboardType="numeric"
-            onChangeText={(value: string) =>
-              handleOnchange('totalIncome', Number(value))
+            onChangeText={(value: number) =>
+              handleOnchange('totalIncome', value)
             }
-            value={formData.totalIncome.toString()}
+            value={formData.totalIncome}
           />
         </View>
 
@@ -338,15 +338,14 @@ const FormCreateFinancialInfo: React.FC<FormCreateFinancialInfoProps> = ({
           <Text style={styles.headingTitle}>
             {t('formCreateLoan.financialInfo.monthlyExpense')}
           </Text>
-          <InputBackground
+          <CurrencyInput
             placeholder={t(
               'formCreateLoan.financialInfo.monthlyExpensePlaceholder',
             )}
-            keyboardType="numeric"
-            onChangeText={(value: string) =>
-              handleOnchange('monthlyExpense', Number(value))
+            onChangeText={(value: number) =>
+              handleOnchange('monthlyExpense', value)
             }
-            value={formData.monthlyExpense.toString()}
+            value={formData.monthlyExpense}
           />
         </View>
 
@@ -354,15 +353,14 @@ const FormCreateFinancialInfo: React.FC<FormCreateFinancialInfoProps> = ({
           <Text style={styles.headingTitle}>
             {t('formCreateLoan.financialInfo.monthlySaving')}
           </Text>
-          <InputBackground
+          <CurrencyInput
             placeholder={t(
               'formCreateLoan.financialInfo.monthlySavingPlaceholder',
             )}
-            keyboardType="numeric"
-            onChangeText={(value: string) =>
-              handleOnchange('monthlySaving', Number(value))
+            onChangeText={(value: number) =>
+              handleOnchange('monthlySaving', value)
             }
-            value={formData.monthlySaving.toString()}
+            value={formData.monthlySaving}
           />
         </View>
 
@@ -370,15 +368,14 @@ const FormCreateFinancialInfo: React.FC<FormCreateFinancialInfoProps> = ({
           <Text style={styles.headingTitle}>
             {t('formCreateLoan.financialInfo.monthlyDebt')}
           </Text>
-          <InputBackground
+          <CurrencyInput
             placeholder={t(
               'formCreateLoan.financialInfo.monthlyDebtPlaceholder',
             )}
-            keyboardType="numeric"
-            onChangeText={(value: string) =>
-              handleOnchange('monthlyDebt', Number(value))
+            onChangeText={(value: number) =>
+              handleOnchange('monthlyDebt', value)
             }
-            value={formData.monthlyDebt.toString()}
+            value={formData.monthlyDebt}
           />
         </View>
 
@@ -386,15 +383,14 @@ const FormCreateFinancialInfo: React.FC<FormCreateFinancialInfoProps> = ({
           <Text style={styles.headingTitle}>
             {t('formCreateLoan.financialInfo.monthlyLoanPayment')}
           </Text>
-          <InputBackground
+          <CurrencyInput
             placeholder={t(
               'formCreateLoan.financialInfo.monthlyLoanPaymentPlaceholder',
             )}
-            keyboardType="numeric"
-            onChangeText={(value: string) =>
-              handleOnchange('monthlyLoanPayment', Number(value))
+            onChangeText={(value: number) =>
+              handleOnchange('monthlyLoanPayment', value)
             }
-            value={formData.monthlyLoanPayment.toString()}
+            value={formData.monthlyLoanPayment}
           />
         </View>
 

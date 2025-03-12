@@ -8,17 +8,14 @@ import {
   ImageStyle,
 } from 'react-native';
 import React from 'react';
+import {Theme} from '../../theme/colors';
 
 interface ButtonShortCutProps {
   name: string;
   urlIcon: ImageSourcePropType;
   styleCustom?: ImageStyle;
   onPress: () => void;
-  theme: {
-    backgroundIcon: string;
-    iconColor: string;
-    text: string;
-  };
+  theme: Theme;
 }
 
 const ButtonShortCut: React.FC<ButtonShortCutProps> = ({
@@ -40,7 +37,7 @@ const ButtonShortCut: React.FC<ButtonShortCutProps> = ({
       width: 54,
       height: 54,
       borderRadius: 9999,
-      backgroundColor: '#f4f4f4',
+      backgroundColor: theme.iconColorActive,
       justifyContent: 'center',
       alignItems: 'center',
       marginBottom: 8,
@@ -52,18 +49,14 @@ const ButtonShortCut: React.FC<ButtonShortCutProps> = ({
       width: 24,
       height: 24,
       resizeMode: 'contain',
+      tintColor: theme.iconPrimaryColor,
     },
   });
 
   return (
     <View style={styles.wrapButton}>
-      <TouchableOpacity
-        style={[styles.borderButton, {backgroundColor: theme.backgroundIcon}]}
-        onPress={onPress}>
-        <Image
-          style={[styles.styleIcon, styleCustom, {tintColor: theme.iconColor}]}
-          source={urlIcon}
-        />
+      <TouchableOpacity style={[styles.borderButton]} onPress={onPress}>
+        <Image style={[styles.styleIcon, styleCustom]} source={urlIcon} />
       </TouchableOpacity>
       <Text style={[styles.textButton, {color: theme.text}]}>{name}</Text>
     </View>

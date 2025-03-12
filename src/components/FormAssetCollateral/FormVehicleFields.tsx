@@ -7,6 +7,7 @@ import {
   ScrollView,
 } from 'react-native';
 import InputBackground from '../InputBackground/InputBackground';
+import CurrencyInput from '../CurrencyInput/CurrencyInput';
 import DatePicker from '../DatePicker/DatePicker';
 import {formatDate} from '../../utils/dateUtils';
 import {addAssetCollateral} from '../../api/services/loan';
@@ -16,18 +17,17 @@ import {Theme} from '../../theme/colors';
 import KeyboardWrapper from '../KeyboardWrapper/KeyboardWrapper';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../navigators/RootNavigator';
+import {VehicleFormData} from '../../api/types/addAssets';
 
 interface FormVehicleFieldsProps {
   theme: Theme;
   appId: string;
-  onSuccess?: () => void;
   navigation: StackNavigationProp<RootStackParamList>;
 }
 
 const FormVehicleFields: React.FC<FormVehicleFieldsProps> = ({
   theme,
   appId,
-  onSuccess,
   navigation,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -35,7 +35,7 @@ const FormVehicleFields: React.FC<FormVehicleFieldsProps> = ({
     null,
   );
   const [tempDate, setTempDate] = useState(new Date());
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<VehicleFormData>({
     assetType: 'VEHICLE',
     title: '',
     ownershipType: 'INDIVIDUAL',
@@ -109,10 +109,12 @@ const FormVehicleFields: React.FC<FormVehicleFieldsProps> = ({
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
-      await addAssetCollateral(appId, formData);
+      const response = await addAssetCollateral(appId, formData);
 
       // Navigate to CreditRating with the appId
-      navigation.replace('CreditRating', {appId});
+      if (response) {
+        navigation.replace('CreditRating', {appId});
+      }
     } catch (error) {
       console.log('Error submitting vehicle details:', error.response);
     } finally {
@@ -171,9 +173,13 @@ const FormVehicleFields: React.FC<FormVehicleFieldsProps> = ({
     return cleanedValue;
   };
 
-  const renderField = (field: any, value: string, fieldPath: string) => {
+  const renderField = (
+    field: any,
+    value: string | number,
+    fieldPath: string,
+  ) => {
     if (field.isDate) {
-      const displayValue = value ? formatDate(new Date(value)) : '';
+      const displayValue = value ? formatDate(new Date(value as string)) : '';
       return (
         <TouchableOpacity
           style={styles.dateInput}
@@ -185,6 +191,16 @@ const FormVehicleFields: React.FC<FormVehicleFieldsProps> = ({
             {displayValue || field.placeholder}
           </Text>
         </TouchableOpacity>
+      );
+    }
+
+    if (field.isCurrency) {
+      return (
+        <CurrencyInput
+          value={typeof value === 'number' ? value : 0}
+          onChangeText={(numValue: number) => handleChange(fieldPath, numValue)}
+          placeholder={field.placeholder}
+        />
       );
     }
 
@@ -215,27 +231,29 @@ const FormVehicleFields: React.FC<FormVehicleFieldsProps> = ({
           {/* Common Fields */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Thông tin cơ bản</Text>
-            {commonFields.map(({field, label, placeholder, numeric}) => (
-              <View key={field} style={styles.fieldContainer}>
-                <Text style={styles.label}>{label}</Text>
-                {renderField(
-                  {field, label, placeholder, numeric},
-                  getInputValue(formData[field]),
-                  field,
-                )}
-              </View>
-            ))}
+            {commonFields.map(
+              ({field, label, placeholder, numeric, isCurrency}) => (
+                <View key={field} style={styles.fieldContainer}>
+                  <Text style={styles.label}>{label}</Text>
+                  {renderField(
+                    {field, label, placeholder, numeric, isCurrency},
+                    getInputValue(formData[field]),
+                    field,
+                  )}
+                </View>
+              ),
+            )}
           </View>
 
           {/* Vehicle Fields */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Thông tin xe</Text>
             {vehicleFields.map(
-              ({field, label, placeholder, numeric, isDate}) => (
+              ({field, label, placeholder, numeric, isDate, isCurrency}) => (
                 <View key={field} style={styles.fieldContainer}>
                   <Text style={styles.label}>{label}</Text>
                   {renderField(
-                    {field, label, placeholder, numeric, isDate},
+                    {field, label, placeholder, numeric, isDate, isCurrency},
                     getInputValue(
                       formData.vehicle[field as keyof typeof formData.vehicle],
                     ),
@@ -250,12 +268,17 @@ const FormVehicleFields: React.FC<FormVehicleFieldsProps> = ({
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Thông tin bổ sung</Text>
             {vehicleMetadataFields.map(
-              ({field, label, placeholder, isDate}) => (
+              ({field, label, placeholder, isDate, numeric, isCurrency}) => (
                 <View key={field} style={styles.fieldContainer}>
                   <Text style={styles.label}>{label}</Text>
                   {renderField(
-                    {field, label, placeholder, isDate},
-                    getInputValue(formData.vehicle.metadata[field]),
+                    {field, label, placeholder, isDate, numeric, isCurrency},
+                    // Use type assertion to tell TypeScript this is a valid key
+                    getInputValue(
+                      formData.vehicle.metadata[
+                        field as keyof typeof formData.vehicle.metadata
+                      ],
+                    ),
                     `vehicle.metadata.${field}`,
                   )}
                 </View>

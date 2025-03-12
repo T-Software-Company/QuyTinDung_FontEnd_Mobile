@@ -8,6 +8,7 @@ import {
   Switch,
 } from 'react-native';
 import InputBackground from '../InputBackground/InputBackground';
+import CurrencyInput from '../CurrencyInput/CurrencyInput';
 import DatePicker from '../DatePicker/DatePicker';
 import {formatDate} from '../../utils/dateUtils';
 import {addAssetCollateral} from '../../api/services/loan';
@@ -19,25 +20,33 @@ import {
 import {createStyles} from './styles';
 import {Theme} from '../../theme/colors';
 import KeyboardWrapper from '../KeyboardWrapper/KeyboardWrapper';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../../navigators/RootNavigator';
+import {MarketStallsFormData} from '../../api/types/addAssets';
 
 interface FormMarketStallsFieldsProps {
   theme: Theme;
   appId: string;
-  onSuccess: () => void;
+  onSuccess?: () => void;
+  navigation: StackNavigationProp<RootStackParamList>;
 }
 
 const FormMarketStallsFields: React.FC<FormMarketStallsFieldsProps> = ({
   theme,
   appId,
-  onSuccess,
+  navigation,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
+  const [selectedDateField, setSelectedDateField] = useState<string | null>(
+    null,
+  );
+  const [tempDate, setTempDate] = useState(new Date());
+  const [formData, setFormData] = useState<MarketStallsFormData>({
     assetType: 'MARKET_STALLS',
     title: '',
     ownershipType: 'INDIVIDUAL',
     proposedValue: 0,
-    documents: [],
+    documents: ['market_stall_contract.pdf'],
     application: {id: appId},
     marketStalls: {
       stallName: '',
@@ -60,25 +69,10 @@ const FormMarketStallsFields: React.FC<FormMarketStallsFieldsProps> = ({
     },
   });
 
-  const [selectedDateField, setSelectedDateField] = useState<string | null>(
-    null,
-  );
-  const [tempDate, setTempDate] = useState(new Date());
-
   const styles = createStyles(theme);
 
   const handleChange = (field: string, value: any) => {
     setFormData(prev => {
-      if (field.startsWith('marketStalls.')) {
-        const marketField = field.split('.')[1];
-        return {
-          ...prev,
-          marketStalls: {
-            ...prev.marketStalls,
-            [marketField]: value,
-          },
-        };
-      }
       if (field.startsWith('marketStalls.metadata.')) {
         const metadataField = field.split('.')[2];
         return {
@@ -92,6 +86,16 @@ const FormMarketStallsFields: React.FC<FormMarketStallsFieldsProps> = ({
           },
         };
       }
+      if (field.startsWith('marketStalls.')) {
+        const marketField = field.split('.')[1];
+        return {
+          ...prev,
+          marketStalls: {
+            ...prev.marketStalls,
+            [marketField]: value,
+          },
+        };
+      }
       return {
         ...prev,
         [field]: value,
@@ -102,22 +106,85 @@ const FormMarketStallsFields: React.FC<FormMarketStallsFieldsProps> = ({
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
-      await addAssetCollateral(appId, formData);
-      onSuccess();
+      const response = await addAssetCollateral(appId, formData);
+
+      // Navigate to CreditRating with the appId
+      if (response) {
+        navigation.replace('CreditRating', {appId});
+      }
     } catch (error) {
-      console.error(error);
+      console.log('Error submitting market stall details:', error.response);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const renderField = (field: any, value: any, fieldPath: string) => {
+  const getInputValue = (value: any): string => {
+    if (value === undefined || value === null) return '';
+    if (typeof value === 'object') return JSON.stringify(value);
+    return String(value);
+  };
+
+  const validateNumericInput = (value: string): string => {
+    // Remove any non-numeric characters except dots for decimal numbers
+    const cleanedValue = value.replace(/[^0-9.]/g, '');
+
+    // Ensure only one decimal point
+    const parts = cleanedValue.split('.');
+    if (parts.length > 2) {
+      return parts[0] + '.' + parts[1];
+    }
+
+    return cleanedValue;
+  };
+
+  const handleDatePress = (fieldPath: string) => {
+    let currentValue = null;
+    const pathParts = fieldPath.split('.');
+
+    if (pathParts.length === 2) {
+      currentValue =
+        formData.marketStalls[
+          pathParts[1] as keyof typeof formData.marketStalls
+        ];
+    } else if (pathParts.length === 3) {
+      const section = formData.marketStalls[
+        pathParts[1] as keyof typeof formData.marketStalls
+      ] as any;
+      currentValue = section[pathParts[2]];
+    }
+
+    setTempDate(currentValue ? new Date(currentValue) : new Date());
+    setSelectedDateField(fieldPath);
+  };
+
+  const handleDateConfirm = (dateString: string) => {
+    if (selectedDateField) {
+      // Convert the date to the required format: YYYY-MM-DDT00:00:00Z
+      const date = new Date(dateString);
+      const formattedDate = date.toISOString().split('T')[0] + 'T00:00:00Z';
+
+      handleChange(selectedDateField, formattedDate);
+      setSelectedDateField(null);
+    }
+  };
+
+  const handleDateChange = (date: Date) => {
+    setTempDate(date);
+  };
+
+  const renderField = (
+    field: any,
+    value: any, // Change to any type to accept objects
+    fieldPath: string,
+  ) => {
     if (field.isDate) {
-      const displayValue = value ? formatDate(new Date(value)) : '';
+      const displayValue =
+        typeof value === 'string' ? formatDate(new Date(value)) : '';
       return (
         <TouchableOpacity
           style={styles.dateInput}
-          onPress={() => setSelectedDateField(fieldPath)}>
+          onPress={() => handleDatePress(fieldPath)}>
           <Text
             style={
               displayValue ? styles.dateInputText : styles.dateInputPlaceholder
@@ -131,67 +198,91 @@ const FormMarketStallsFields: React.FC<FormMarketStallsFieldsProps> = ({
     if (field.isBoolean) {
       return (
         <Switch
-          value={value}
+          value={!!value}
           onValueChange={value => handleChange(fieldPath, value)}
+        />
+      );
+    }
+
+    if (field.isCurrency) {
+      return (
+        <CurrencyInput
+          value={typeof value === 'number' ? value : 0}
+          onChangeText={(numValue: number) => handleChange(fieldPath, numValue)}
+          placeholder={field.placeholder}
         />
       );
     }
 
     return (
       <InputBackground
-        value={String(value || '')}
-        onChangeText={value =>
-          handleChange(fieldPath, field.numeric ? Number(value) : value)
-        }
+        value={getInputValue(value)} // getInputValue should handle objects properly
+        onChangeText={value => {
+          if (field.numeric) {
+            const validatedValue = validateNumericInput(value);
+            handleChange(
+              fieldPath,
+              validatedValue ? Number(validatedValue) : 0,
+            );
+          } else {
+            handleChange(fieldPath, value);
+          }
+        }}
         placeholder={field.placeholder}
-        keyboardType={field.numeric ? 'numeric' : 'default'}
+        keyboardType={field.numeric ? 'decimal-pad' : 'default'}
       />
     );
   };
 
-  const getFieldValue = (fieldPath: string): any => {
-    const pathParts = fieldPath.split('.');
-    if (pathParts.length === 2) {
-      return formData.marketStalls[
-        pathParts[1] as keyof typeof formData.marketStalls
-      ];
-    } else if (pathParts.length === 3) {
-      return formData.marketStalls.metadata[
-        pathParts[2] as keyof typeof formData.marketStalls.metadata
-      ];
-    }
-    return formData[fieldPath as keyof typeof formData];
-  };
-
   return (
     <KeyboardWrapper>
-      <View style={styles.wrapper}>
+      <View style={[styles.wrapper, {minHeight: '100%'}]}>
         <ScrollView style={styles.container} scrollEnabled={!selectedDateField}>
           {/* Common Fields */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Thông tin cơ bản</Text>
-            {commonFields.map(({field, label, placeholder, numeric}) => (
-              <View key={field} style={styles.fieldContainer}>
-                <Text style={styles.label}>{label}</Text>
-                {renderField(
-                  {field, label, placeholder, numeric},
-                  getFieldValue(field),
-                  field,
-                )}
-              </View>
-            ))}
+            {commonFields.map(
+              ({field, label, placeholder, numeric, isCurrency}) => (
+                <View key={field} style={styles.fieldContainer}>
+                  <Text style={styles.label}>{label}</Text>
+                  {renderField(
+                    {field, label, placeholder, numeric, isCurrency},
+                    getInputValue(formData[field as keyof typeof formData]), // Add type assertion
+                    field,
+                  )}
+                </View>
+              ),
+            )}
           </View>
 
           {/* Market Stall Fields */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Thông tin gian hàng</Text>
             {marketStallFields.map(
-              ({field, label, placeholder, isDate, numeric, isBoolean}) => (
+              ({
+                field,
+                label,
+                placeholder,
+                isDate,
+                numeric,
+                isBoolean,
+                isCurrency,
+              }) => (
                 <View key={field} style={styles.fieldContainer}>
                   <Text style={styles.label}>{label}</Text>
                   {renderField(
-                    {field, label, placeholder, isDate, numeric, isBoolean},
-                    getFieldValue(`marketStalls.${field}`),
+                    {
+                      field,
+                      label,
+                      placeholder,
+                      isDate,
+                      numeric,
+                      isBoolean,
+                      isCurrency,
+                    },
+                    formData.marketStalls[
+                      field as keyof typeof formData.marketStalls
+                    ],
                     `marketStalls.${field}`,
                   )}
                 </View>
@@ -207,7 +298,9 @@ const FormMarketStallsFields: React.FC<FormMarketStallsFieldsProps> = ({
                 <Text style={styles.label}>{label}</Text>
                 {renderField(
                   {field, label, placeholder},
-                  getFieldValue(`marketStalls.metadata.${field}`),
+                  formData.marketStalls.metadata[
+                    field as keyof typeof formData.marketStalls.metadata
+                  ],
                   `marketStalls.metadata.${field}`,
                 )}
               </View>
@@ -230,9 +323,9 @@ const FormMarketStallsFields: React.FC<FormMarketStallsFieldsProps> = ({
           <DatePicker
             isVisible={!!selectedDateField}
             onClose={() => setSelectedDateField(null)}
-            onConfirm={date => handleChange(selectedDateField, date)}
+            onConfirm={handleDateConfirm}
             value={tempDate}
-            onChange={setTempDate}
+            onChange={handleDateChange}
             theme={theme}
             locale="vi-VN"
           />

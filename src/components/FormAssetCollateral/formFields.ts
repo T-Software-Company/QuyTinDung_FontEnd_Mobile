@@ -105,12 +105,18 @@ export const landFields = [
 ];
 
 export const commonFields = [
-  {field: 'title', label: 'Tên tài sản', placeholder: 'Nhập tên tài sản'},
+  {
+    field: 'title',
+    label: 'Tên tài sản',
+    placeholder: 'Nhập tên tài sản',
+    numeric: false,
+  },
   {
     field: 'proposedValue',
-    label: 'Giá trị đề xuất',
-    placeholder: 'Nhập giá trị',
+    label: 'Giá trị ước tính',
+    placeholder: 'Nhập giá trị ước tính',
     numeric: true,
+    isCurrency: true,
   },
 ];
 
@@ -126,6 +132,7 @@ export const ownerInfoFields = [
     field: 'idCardNumber',
     label: 'Số CMND/CCCD',
     placeholder: 'Nhập số CMND/CCCD',
+    numeric: true,
   },
   {
     field: 'permanentAddress',
@@ -135,76 +142,149 @@ export const ownerInfoFields = [
 ];
 
 export const vehicleFields = [
-  {field: 'model', label: 'Model', placeholder: 'Nhập model xe'},
+  {
+    field: 'model',
+    label: 'Model',
+    placeholder: 'Nhập model xe',
+    numeric: false,
+  },
   {
     field: 'ownerName',
     label: 'Tên chủ sở hữu',
     placeholder: 'Nhập tên chủ sở hữu',
+    numeric: false,
   },
-  {field: 'address', label: 'Địa chỉ', placeholder: 'Nhập địa chỉ'},
-  {field: 'engineNumber', label: 'Số máy', placeholder: 'Nhập số máy'},
-  {field: 'chassisNumber', label: 'Số khung', placeholder: 'Nhập số khung'},
-  {field: 'brand', label: 'Hãng xe', placeholder: 'Nhập hãng xe'},
-  {field: 'modelNumber', label: 'Số model', placeholder: 'Nhập số model'},
-  {field: 'vehicleType', label: 'Loại xe', placeholder: 'Nhập loại xe'},
+  {
+    field: 'address',
+    label: 'Địa chỉ',
+    placeholder: 'Nhập địa chỉ',
+    numeric: false,
+  },
+  {
+    field: 'engineNumber',
+    label: 'Số máy',
+    placeholder: 'Nhập số máy',
+    numeric: false,
+  },
+  {
+    field: 'chassisNumber',
+    label: 'Số khung',
+    placeholder: 'Nhập số khung',
+    numeric: false,
+  },
+  {
+    field: 'brand',
+    label: 'Nhãn hiệu',
+    placeholder: 'Nhập nhãn hiệu',
+    numeric: false,
+  },
+  {
+    field: 'modelNumber',
+    label: 'Số model',
+    placeholder: 'Nhập số model',
+    numeric: false,
+  },
+  {
+    field: 'vehicleType',
+    label: 'Loại xe',
+    placeholder: 'Nhập loại xe',
+    numeric: false,
+  },
   {
     field: 'engineCapacity',
-    label: 'Dung tích động cơ (cc)',
-    placeholder: 'Nhập dung tích',
+    label: 'Dung tích động cơ',
+    placeholder: 'Nhập dung tích động cơ (cc)',
     numeric: true,
   },
-  {field: 'color', label: 'Màu sắc', placeholder: 'Nhập màu sắc'},
+  {
+    field: 'color',
+    label: 'Màu xe',
+    placeholder: 'Nhập màu xe',
+    numeric: false,
+  },
   {
     field: 'loadCapacity',
-    label: 'Tải trọng (kg)',
+    label: 'Tải trọng',
     placeholder: 'Nhập tải trọng',
-    numeric: true,
+    numeric: false,
   },
   {
     field: 'seatCapacity',
     label: 'Số chỗ ngồi',
-    placeholder: 'Nhập số chỗ',
+    placeholder: 'Nhập số chỗ ngồi',
     numeric: true,
   },
   {
     field: 'registrationExpiryDate',
     label: 'Ngày hết hạn đăng ký',
-    placeholder: 'Chọn ngày',
+    placeholder: 'Chọn ngày hết hạn',
+    numeric: false,
     isDate: true,
   },
   {
     field: 'licensePlateNumber',
     label: 'Biển số xe',
-    placeholder: 'Nhập biển số',
+    placeholder: 'Nhập biển số xe',
+    numeric: false,
   },
   {
     field: 'firstRegistrationDate',
     label: 'Ngày đăng ký đầu tiên',
-    placeholder: 'Chọn ngày',
+    placeholder: 'Chọn ngày đăng ký',
+    numeric: false,
     isDate: true,
   },
   {
     field: 'issueDate',
     label: 'Ngày cấp',
-    placeholder: 'Chọn ngày',
+    placeholder: 'Chọn ngày cấp',
+    numeric: false,
     isDate: true,
   },
   {
     field: 'registrationCertificateNumber',
     label: 'Số giấy đăng ký',
     placeholder: 'Nhập số giấy đăng ký',
+    numeric: false,
   },
-  {field: 'note', label: 'Ghi chú', placeholder: 'Nhập ghi chú'},
+  {
+    field: 'note',
+    label: 'Ghi chú',
+    placeholder: 'Nhập ghi chú',
+    numeric: false,
+  },
   {
     field: 'kilometersDriven',
     label: 'Số km đã đi',
-    placeholder: 'Nhập số km',
+    placeholder: 'Nhập số km đã đi',
     numeric: true,
   },
   {
     field: 'inspectionCertificateNumber',
-    label: 'Số giấy đăng kiểm',
-    placeholder: 'Nhập số đăng kiểm',
+    label: 'Số giấy chứng nhận kiểm định',
+    placeholder: 'Nhập số giấy kiểm định',
+    numeric: false,
+  },
+  {
+    field: 'currentValue',
+    label: 'Giá trị hiện tại',
+    placeholder: 'Nhập giá trị hiện tại',
+    numeric: true,
+    isCurrency: true,
+  },
+  {
+    field: 'purchasePrice',
+    label: 'Giá mua ban đầu',
+    placeholder: 'Nhập giá mua ban đầu',
+    numeric: true,
+    isCurrency: true,
+  },
+  {
+    field: 'repairCosts',
+    label: 'Chi phí sửa chữa',
+    placeholder: 'Nhập chi phí sửa chữa',
+    numeric: true,
+    isCurrency: true,
   },
 ];
 
@@ -222,13 +302,27 @@ export const vehicleMetadataFields = [
   {
     field: 'lastService',
     label: 'Lần bảo dưỡng cuối',
-    placeholder: 'Chọn ngày',
+    placeholder: 'Chọn ngày bảo dưỡng',
     isDate: true,
   },
   {
     field: 'warranty',
     label: 'Bảo hành',
     placeholder: 'Nhập thông tin bảo hành',
+  },
+  {
+    field: 'insuranceCost',
+    label: 'Chi phí bảo hiểm',
+    placeholder: 'Nhập chi phí bảo hiểm',
+    numeric: true,
+    isCurrency: true,
+  },
+  {
+    field: 'annualTax',
+    label: 'Thuế hàng năm',
+    placeholder: 'Nhập thuế hàng năm',
+    numeric: true,
+    isCurrency: true,
   },
 ];
 
@@ -295,6 +389,7 @@ export const transferInfoFields = [
     field: 'idCardNumber',
     label: 'Số CMND/CCCD',
     placeholder: 'Nhập số CMND/CCCD',
+    numeric: true,
   },
   {
     field: 'permanentAddress',
@@ -339,6 +434,21 @@ export const machineryFields = [
     label: 'Giá mua',
     placeholder: 'Nhập giá mua',
     numeric: true,
+    isCurrency: true,
+  },
+  {
+    field: 'currentValue',
+    label: 'Giá trị hiện tại',
+    placeholder: 'Nhập giá trị hiện tại',
+    numeric: true,
+    isCurrency: true,
+  },
+  {
+    field: 'maintenanceCost',
+    label: 'Chi phí bảo trì',
+    placeholder: 'Nhập chi phí bảo trì',
+    numeric: true,
+    isCurrency: true,
   },
   {field: 'serialNumber', label: 'Số sê-ri', placeholder: 'Nhập số sê-ri'},
   {field: 'location', label: 'Vị trí', placeholder: 'Nhập vị trí'},
@@ -363,6 +473,13 @@ export const machineryMetadataFields = [
     placeholder: 'Nhập công suất tiêu thụ',
   },
   {field: 'precision', label: 'Độ chính xác', placeholder: 'Nhập độ chính xác'},
+  {
+    field: 'insuranceCost',
+    label: 'Chi phí bảo hiểm',
+    placeholder: 'Nhập chi phí bảo hiểm',
+    numeric: true,
+    isCurrency: true,
+  },
 ];
 
 export const marketStallFields = [
@@ -392,6 +509,21 @@ export const marketStallFields = [
     label: 'Giá thuê',
     placeholder: 'Nhập giá thuê',
     numeric: true,
+    isCurrency: true,
+  },
+  {
+    field: 'monthlyRevenue',
+    label: 'Doanh thu hàng tháng',
+    placeholder: 'Nhập doanh thu hàng tháng',
+    numeric: true,
+    isCurrency: true,
+  },
+  {
+    field: 'monthlyExpense',
+    label: 'Chi phí hàng tháng',
+    placeholder: 'Nhập chi phí hàng tháng',
+    numeric: true,
+    isCurrency: true,
   },
   {
     field: 'rentStartDate',
@@ -437,6 +569,20 @@ export const marketStallMetadataFields = [
     label: 'Không gian lưu trữ',
     placeholder: 'Nhập thông tin',
   },
+  {
+    field: 'maintenanceFee',
+    label: 'Phí bảo trì',
+    placeholder: 'Nhập phí bảo trì',
+    numeric: true,
+    isCurrency: true,
+  },
+  {
+    field: 'utilityFee',
+    label: 'Phí tiện ích',
+    placeholder: 'Nhập phí tiện ích',
+    numeric: true,
+    isCurrency: true,
+  },
 ];
 
 export const otherAssetFields = [
@@ -449,6 +595,27 @@ export const otherAssetFields = [
     field: 'location',
     label: 'Vị trí',
     placeholder: 'Nhập vị trí',
+  },
+  {
+    field: 'purchasePrice',
+    label: 'Giá mua',
+    placeholder: 'Nhập giá mua',
+    numeric: true,
+    isCurrency: true,
+  },
+  {
+    field: 'currentValue',
+    label: 'Giá trị hiện tại',
+    placeholder: 'Nhập giá trị hiện tại',
+    numeric: true,
+    isCurrency: true,
+  },
+  {
+    field: 'maintenanceCost',
+    label: 'Chi phí bảo trì',
+    placeholder: 'Nhập chi phí bảo trì',
+    numeric: true,
+    isCurrency: true,
   },
 ];
 
@@ -484,6 +651,21 @@ export const pieceFields = [
     label: 'Giá trị',
     placeholder: 'Nhập giá trị',
     numeric: true,
+    isCurrency: true,
+  },
+  {
+    field: 'appraisedValue',
+    label: 'Giá trị thẩm định',
+    placeholder: 'Nhập giá trị thẩm định',
+    numeric: true,
+    isCurrency: true,
+  },
+  {
+    field: 'purchasePrice',
+    label: 'Giá mua',
+    placeholder: 'Nhập giá mua',
+    numeric: true,
+    isCurrency: true,
   },
 ];
 
@@ -503,6 +685,21 @@ export const insuranceFields = [
     label: 'Giá trị bảo hiểm',
     placeholder: 'Nhập giá trị bảo hiểm',
     numeric: true,
+    isCurrency: true,
+  },
+  {
+    field: 'premium',
+    label: 'Phí bảo hiểm',
+    placeholder: 'Nhập phí bảo hiểm',
+    numeric: true,
+    isCurrency: true,
+  },
+  {
+    field: 'deductible',
+    label: 'Mức khấu trừ',
+    placeholder: 'Nhập mức khấu trừ',
+    numeric: true,
+    isCurrency: true,
   },
 ];
 
@@ -516,5 +713,106 @@ export const storageFields = [
     field: 'security',
     label: 'Hệ thống bảo mật',
     placeholder: 'Nhập thông tin bảo mật',
+  },
+  {
+    field: 'storageFee',
+    label: 'Phí lưu trữ',
+    placeholder: 'Nhập phí lưu trữ',
+    numeric: true,
+    isCurrency: true,
+  },
+];
+
+export const landAndImprovementFields = [
+  {field: 'typeOfHousing', label: 'Loại nhà ở', placeholder: 'Nhập loại nhà ở'},
+  {
+    field: 'floorArea',
+    label: 'Diện tích sàn (m²)',
+    placeholder: 'Nhập diện tích sàn',
+    numeric: true,
+  },
+  {
+    field: 'ancillaryFloorArea',
+    label: 'Diện tích phụ (m²)',
+    placeholder: 'Nhập diện tích phụ',
+    numeric: true,
+  },
+  {
+    field: 'structureType',
+    label: 'Loại kết cấu',
+    placeholder: 'Nhập loại kết cấu',
+  },
+  {
+    field: 'numberOfFloors',
+    label: 'Số tầng',
+    placeholder: 'Nhập số tầng',
+    numeric: true,
+  },
+  {
+    field: 'constructionYear',
+    label: 'Năm xây dựng',
+    placeholder: 'Nhập năm xây dựng',
+    numeric: true,
+  },
+  {
+    field: 'typeOfOwnership',
+    label: 'Loại sở hữu',
+    placeholder: 'Nhập loại sở hữu',
+  },
+  {
+    field: 'ownershipTerm',
+    label: 'Thời hạn sở hữu',
+    placeholder: 'Chọn thời hạn',
+    isDate: true,
+  },
+  {
+    field: 'sharedFacilities',
+    label: 'Tiện ích chung',
+    placeholder: 'Nhập tiện ích chung',
+  },
+  {
+    field: 'certificateNumber',
+    label: 'Số chứng nhận',
+    placeholder: 'Nhập số chứng nhận',
+  },
+  {
+    field: 'certificateBookNumber',
+    label: 'Số sổ chứng nhận',
+    placeholder: 'Nhập số sổ',
+  },
+  {
+    field: 'issuingAuthority',
+    label: 'Cơ quan cấp',
+    placeholder: 'Nhập cơ quan cấp',
+  },
+  {
+    field: 'issueDate',
+    label: 'Ngày cấp',
+    placeholder: 'Chọn ngày cấp',
+    isDate: true,
+  },
+];
+
+export const landAndImprovementMetadataFields = [
+  {
+    field: 'constructionPermit',
+    label: 'Giấy phép xây dựng',
+    placeholder: 'Nhập số giấy phép',
+  },
+  {
+    field: 'lastRenovation',
+    label: 'Lần cải tạo cuối',
+    placeholder: 'Nhập năm cải tạo cuối',
+  },
+  {
+    field: 'buildingMaterials',
+    label: 'Vật liệu xây dựng',
+    placeholder: 'Nhập vật liệu',
+  },
+  {
+    field: 'parkingSpaces',
+    label: 'Số chỗ đậu xe',
+    placeholder: 'Nhập số chỗ đậu xe',
+    numeric: true,
   },
 ];

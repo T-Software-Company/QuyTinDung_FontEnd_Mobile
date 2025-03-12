@@ -7,6 +7,7 @@ import {
   ScrollView,
 } from 'react-native';
 import InputBackground from '../InputBackground/InputBackground';
+import CurrencyInput from '../CurrencyInput/CurrencyInput';
 import DatePicker from '../DatePicker/DatePicker';
 import {formatDate} from '../../utils/dateUtils';
 import {addAssetCollateral} from '../../api/services/loan';
@@ -20,20 +21,23 @@ import {
 import {createStyles} from './styles';
 import {Theme} from '../../theme/colors';
 import KeyboardWrapper from '../KeyboardWrapper/KeyboardWrapper';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../../navigators/RootNavigator';
+import {LandFormData} from '../../api/types/addAssets';
 
 interface FormLandFieldsProps {
   theme: Theme;
   appId: string;
-  onSuccess: () => void;
+  navigation: StackNavigationProp<RootStackParamList>;
 }
 
 const FormLandFields: React.FC<FormLandFieldsProps> = ({
   theme,
   appId,
-  onSuccess,
+  navigation,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<LandFormData>({
     assetType: 'LAND',
     title: '',
     ownershipType: 'INDIVIDUAL',
@@ -76,34 +80,68 @@ const FormLandFields: React.FC<FormLandFieldsProps> = ({
   );
   const [tempDate, setTempDate] = useState(new Date());
 
+  console.log('formData', formData);
+
   const styles = createStyles(theme);
 
   const handleChange = (field: string, value: any) => {
     setFormData(prev => {
-      if (field.startsWith('landAsset.')) {
-        const landField = field.split('.')[1];
+      // Handle nested paths like 'landAsset.ownerInfo.fullName'
+      const pathParts = field.split('.');
+
+      if (pathParts.length === 1) {
+        // Direct field on formData
+        return {
+          ...prev,
+          [field]: value,
+        };
+      } else if (pathParts.length === 2 && pathParts[0] === 'landAsset') {
+        // Simple landAsset field (e.g., 'landAsset.plotNumber')
         return {
           ...prev,
           landAsset: {
             ...prev.landAsset,
-            [landField]: value,
+            [pathParts[1]]: value,
           },
         };
+      } else if (pathParts.length === 3 && pathParts[0] === 'landAsset') {
+        // Nested landAsset field (e.g., 'landAsset.ownerInfo.fullName')
+        const section = pathParts[1]; // 'ownerInfo', 'metadata', or 'transferInfo'
+        const field = pathParts[2]; // The actual field name
+
+        // Create a safe copy of the section
+        const sectionData =
+          prev.landAsset[section as keyof typeof prev.landAsset];
+
+        // Make sure it's an object before spreading
+        if (sectionData && typeof sectionData === 'object') {
+          return {
+            ...prev,
+            landAsset: {
+              ...prev.landAsset,
+              [section]: {
+                ...sectionData,
+                [field]: value,
+              },
+            },
+          };
+        }
       }
-      return {
-        ...prev,
-        [field]: value,
-      };
+
+      // Return unchanged state if path format is not recognized
+      return prev;
     });
   };
 
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
-      await addAssetCollateral(appId, formData);
-      onSuccess();
+      const response = await addAssetCollateral(appId, formData);
+      if (response) {
+        navigation.replace('CreditRating', {appId});
+      }
     } catch (error) {
-      console.error(error);
+      console.error(error.response);
     } finally {
       setIsLoading(false);
     }
@@ -112,6 +150,14 @@ const FormLandFields: React.FC<FormLandFieldsProps> = ({
   const getInputValue = (value: any): string => {
     if (value === undefined || value === null) return '';
     return String(value);
+  };
+
+  // Utility function to format dates to required API format
+  const formatDateForAPI = (date: Date): string => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}T00:00:00Z`;
   };
 
   const handleDatePress = (fieldPath: string) => {
@@ -135,13 +181,15 @@ const FormLandFields: React.FC<FormLandFieldsProps> = ({
   const handleDateConfirm = (dateString: string) => {
     if (selectedDateField) {
       const pathParts = selectedDateField.split('.');
+      // Format the date in the required format for API
+      const formattedDate = formatDateForAPI(new Date(dateString));
 
       if (pathParts.length === 2) {
         setFormData(prev => ({
           ...prev,
           landAsset: {
             ...prev.landAsset,
-            [pathParts[1]]: dateString,
+            [pathParts[1]]: formattedDate,
           },
         }));
       } else if (pathParts.length === 3) {
@@ -151,7 +199,7 @@ const FormLandFields: React.FC<FormLandFieldsProps> = ({
             ...prev.landAsset,
             [pathParts[1]]: {
               ...prev.landAsset[pathParts[1] as keyof typeof prev.landAsset],
-              [pathParts[2]]: dateString,
+              [pathParts[2]]: formattedDate,
             },
           },
         }));
@@ -164,22 +212,24 @@ const FormLandFields: React.FC<FormLandFieldsProps> = ({
     setTempDate(date);
   };
 
-  const getFieldValue = (fieldPath: string): string => {
-    const pathParts = fieldPath.split('.');
-    if (pathParts.length === 2) {
-      return formData.landAsset[
-        pathParts[1] as keyof typeof formData.landAsset
-      ] as string;
-    } else if (pathParts.length === 3) {
-      const section = formData.landAsset[
-        pathParts[1] as keyof typeof formData.landAsset
-      ] as any;
-      return section[pathParts[2]] as string;
+  const validateNumericInput = (value: string): string => {
+    // Remove any non-numeric characters except dots for decimal numbers
+    const cleanedValue = value.replace(/[^0-9.]/g, '');
+
+    // Ensure only one decimal point
+    const parts = cleanedValue.split('.');
+    if (parts.length > 2) {
+      return parts[0] + '.' + parts[1];
     }
-    return '';
+
+    return cleanedValue;
   };
 
-  const renderField = (field: any, value: string, fieldPath: string) => {
+  const renderField = (
+    field: any,
+    value: string | number,
+    fieldPath: string,
+  ) => {
     if (field.isDate) {
       const displayValue = value ? formatDate(new Date(value)) : '';
       return (
@@ -196,12 +246,30 @@ const FormLandFields: React.FC<FormLandFieldsProps> = ({
       );
     }
 
+    if (field.isCurrency) {
+      return (
+        <CurrencyInput
+          value={Number(value) || 0}
+          onChangeText={numValue => handleChange(fieldPath, numValue)}
+          placeholder={field.placeholder}
+        />
+      );
+    }
+
     return (
       <InputBackground
         value={getInputValue(value)}
-        onChangeText={value =>
-          handleChange(fieldPath, field.numeric ? Number(value) : value)
-        }
+        onChangeText={value => {
+          if (field.numeric) {
+            const validatedValue = validateNumericInput(value);
+            handleChange(
+              fieldPath,
+              validatedValue ? Number(validatedValue) : 0,
+            );
+          } else {
+            handleChange(fieldPath, value);
+          }
+        }}
         placeholder={field.placeholder}
         keyboardType={field.numeric ? 'numeric' : 'default'}
       />
@@ -218,18 +286,20 @@ const FormLandFields: React.FC<FormLandFieldsProps> = ({
           {/* Common Fields */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Thông tin cơ bản</Text>
-            {commonFields.map(({field, label, placeholder, numeric}) => (
-              <View key={field} style={styles.fieldContainer}>
-                <Text style={styles.label}>{label}</Text>
-                {renderField(
-                  {field, label, placeholder, numeric},
-                  getInputValue(formData[field]),
-                  field,
-                )}
-              </View>
-            ))}
+            {commonFields.map(
+              ({field, label, placeholder, numeric, isCurrency}) => (
+                <View key={field} style={styles.fieldContainer}>
+                  <Text style={styles.label}>{label}</Text>
+                  {renderField(
+                    {field, label, placeholder, numeric, isCurrency},
+                    getInputValue(formData[field as keyof typeof formData]),
+                    field,
+                  )}
+                </View>
+              ),
+            )}
           </View>
-  
+
           {/* Land Fields */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Thông tin đất</Text>
@@ -239,14 +309,16 @@ const FormLandFields: React.FC<FormLandFieldsProps> = ({
                 {renderField(
                   {field, label, placeholder, numeric, isDate},
                   getInputValue(
-                    formData.landAsset[field as keyof typeof formData.landAsset],
+                    formData.landAsset[
+                      field as keyof typeof formData.landAsset
+                    ],
                   ),
                   `landAsset.${field}`,
                 )}
               </View>
             ))}
           </View>
-  
+
           {/* Owner Info Fields */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Thông tin chủ sở hữu</Text>
@@ -265,7 +337,7 @@ const FormLandFields: React.FC<FormLandFieldsProps> = ({
               </View>
             ))}
           </View>
-  
+
           {/* Land Metadata Fields */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Thông tin bổ sung</Text>
@@ -284,7 +356,7 @@ const FormLandFields: React.FC<FormLandFieldsProps> = ({
               </View>
             ))}
           </View>
-  
+
           {/* Transfer Info Fields */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Thông tin chuyển nhượng</Text>
@@ -303,7 +375,7 @@ const FormLandFields: React.FC<FormLandFieldsProps> = ({
               </View>
             ))}
           </View>
-  
+
           {/* Submit Button */}
           <TouchableOpacity
             style={styles.submitButton}
@@ -316,7 +388,7 @@ const FormLandFields: React.FC<FormLandFieldsProps> = ({
             )}
           </TouchableOpacity>
         </ScrollView>
-  
+
         {/* Move DatePicker outside ScrollView */}
         {selectedDateField && (
           <DatePicker

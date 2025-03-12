@@ -10,6 +10,8 @@ import {
 import React, {useRef, useState} from 'react';
 import DropdownComponent from '../DropdownComponent/DropdownComponent';
 import InputBackground from '../InputBackground/InputBackground';
+// Import the CurrencyInput component
+import CurrencyInput from '../CurrencyInput/CurrencyInput';
 import {useTranslation} from 'react-i18next';
 import i18n from '../../../i18n';
 import {Theme} from '../../theme/colors';
@@ -145,7 +147,7 @@ const FormCreateLoanRequest: React.FC<FormCreateLoanRequestProps> = ({
     if (!formData.amount || formData.amount <= 999999) {
       newErrors.amount =
         currentLanguage === 'vi'
-          ? 'Vui lòng nhập số tiền lớn hơn 1000000'
+          ? 'Vui lòng nhập số tiền lớn hơn 1,000,000 đ'
           : 'Please enter a valid amount';
       isValid = false;
     }
@@ -220,7 +222,7 @@ const FormCreateLoanRequest: React.FC<FormCreateLoanRequestProps> = ({
         navigation.replace('CreateLoanPlan', {appId});
       }
     } catch (error) {
-      console.error('Error creating loan request:', error);
+      console.log('Error creating loan request:', error.response);
       Alert.alert(
         currentLanguage === 'vi' ? 'Lỗi' : 'Error',
         currentLanguage === 'vi'
@@ -350,15 +352,13 @@ const FormCreateLoanRequest: React.FC<FormCreateLoanRequestProps> = ({
         <Text style={styles.headingTitle}>
           {currentLanguage === 'vi' ? 'Số tiền vay' : 'Loan Amount'}
         </Text>
-        <InputBackground
+        {/* Use the CurrencyInput component */}
+        <CurrencyInput
           placeholder={
             currentLanguage === 'vi' ? 'Nhập số tiền' : 'Enter amount'
           }
-          keyboardType="numeric"
-          onChangeText={(value: string) =>
-            handleOnchange('amount', Number(value))
-          }
-          value={formData.amount.toString()}
+          onChangeText={(value: number) => handleOnchange('amount', value)}
+          value={formData.amount}
         />
         {errors.amount && <Text style={styles.errorText}>{errors.amount}</Text>}
       </View>

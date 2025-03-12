@@ -12,25 +12,27 @@ import DatePicker from '../DatePicker/DatePicker';
 import {formatDate} from '../../utils/dateUtils';
 import {addAssetCollateral} from '../../api/services/loan';
 import {
-  machineryFields,
   commonFields,
-  machineryMetadataFields,
+  landFields,
+  ownerInfoFields,
+  transferInfoFields,
+  landAndImprovementFields,
+  landAndImprovementMetadataFields,
 } from './formFields';
 import {createStyles} from './styles';
 import {Theme} from '../../theme/colors';
 import KeyboardWrapper from '../KeyboardWrapper/KeyboardWrapper';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../navigators/RootNavigator';
-import {MachineryFormData} from '../../api/types/addAssets';
+import {LandAndImprovementFormData} from '../../api/types/addAssets';
 
-interface FormMachineryFieldsProps {
+interface FormLandAndImproveProps {
   theme: Theme;
   appId: string;
-  onSuccess?: () => void;
   navigation: StackNavigationProp<RootStackParamList>;
 }
 
-const FormMachineryFields: React.FC<FormMachineryFieldsProps> = ({
+const FormLandAndImprove: React.FC<FormLandAndImproveProps> = ({
   theme,
   appId,
   navigation,
@@ -40,57 +42,110 @@ const FormMachineryFields: React.FC<FormMachineryFieldsProps> = ({
     null,
   );
   const [tempDate, setTempDate] = useState(new Date());
-  const [formData, setFormData] = useState<MachineryFormData>({
-    assetType: 'MACHINERY',
+  const [formData, setFormData] = useState<LandAndImprovementFormData>({
+    assetType: 'LAND_AND_IMPROVEMENT',
     title: '',
     ownershipType: 'INDIVIDUAL',
     proposedValue: 0,
-    documents: ['machinery_specs.pdf', 'warranty.pdf'],
+    documents: ['deed.pdf', 'construction_permit.pdf'],
     application: {id: appId},
-    machinery: {
-      name: '',
-      model: '',
-      manufacturer: '',
-      manufactureDate: '',
-      purchaseDate: '',
-      purchasePrice: 0,
-      serialNumber: '',
-      location: '',
-      status: '',
-      note: '',
+    landAndImprovement: {
+      plotNumber: '',
+      mapNumber: '',
+      address: '',
+      area: 0,
+      purpose: '',
+      expirationDate: '',
+      originOfUsage: '',
+      typeOfHousing: '',
+      floorArea: 0,
+      ancillaryFloorArea: '',
+      structureType: '',
+      numberOfFloors: 0,
+      constructionYear: 0,
+      typeOfOwnership: '',
+      ownershipTerm: '',
+      notes: '',
+      sharedFacilities: '',
+      certificateNumber: '',
+      certificateBookNumber: '',
+      issuingAuthority: '',
+      issueDate: '',
+      ownerInfo: {
+        fullName: '',
+        dayOfBirth: '',
+        idCardNumber: '',
+        permanentAddress: '',
+      },
+      transferInfo: {
+        fullName: '',
+        dayOfBirth: '',
+        idCardNumber: '',
+        permanentAddress: '',
+        transferDate: '',
+        transferRecordNumber: '',
+      },
       metadata: {
-        warranty: '',
-        maintenanceSchedule: '',
-        powerConsumption: '',
-        precision: '',
+        constructionPermit: '',
+        lastRenovation: '',
+        buildingMaterials: '',
+        parkingSpaces: 0,
       },
     },
   });
+
+  console.log('formData', formData);
 
   const styles = createStyles(theme);
 
   const handleChange = (field: string, value: any) => {
     setFormData(prev => {
-      if (field.startsWith('machinery.metadata.')) {
+      if (field.startsWith('landAndImprovement.metadata.')) {
         const metadataField = field.split('.')[2];
         return {
           ...prev,
-          machinery: {
-            ...prev.machinery,
+          landAndImprovement: {
+            ...prev.landAndImprovement,
             metadata: {
-              ...prev.machinery.metadata,
+              ...prev.landAndImprovement.metadata,
               [metadataField]: value,
             },
           },
         };
       }
-      if (field.startsWith('machinery.')) {
-        const machineryField = field.split('.')[1];
+      if (field.startsWith('landAndImprovement.ownerInfo.')) {
+        const ownerInfoField = field.split('.')[2];
         return {
           ...prev,
-          machinery: {
-            ...prev.machinery,
-            [machineryField]: value,
+          landAndImprovement: {
+            ...prev.landAndImprovement,
+            ownerInfo: {
+              ...prev.landAndImprovement.ownerInfo,
+              [ownerInfoField]: value,
+            },
+          },
+        };
+      }
+      if (field.startsWith('landAndImprovement.transferInfo.')) {
+        const transferInfoField = field.split('.')[2];
+        return {
+          ...prev,
+          landAndImprovement: {
+            ...prev.landAndImprovement,
+            transferInfo: {
+              ...prev.landAndImprovement.transferInfo,
+              [transferInfoField]: value,
+            },
+          },
+        };
+      }
+      if (field.startsWith('landAndImprovement.')) {
+        const landField = field.split('.')[1];
+        return {
+          ...prev,
+          landAndImprovement: {
+            ...prev.landAndImprovement,
+            [landField]: value,
           },
         };
       }
@@ -105,23 +160,16 @@ const FormMachineryFields: React.FC<FormMachineryFieldsProps> = ({
     try {
       setIsLoading(true);
       const response = await addAssetCollateral(appId, formData);
-      console.log('Successfully submitted machinery details:', response);
 
       // Navigate to CreditRating with the appId
       if (response) {
         navigation.replace('CreditRating', {appId});
       }
     } catch (error) {
-      // Properly handle the error with safe access to properties
-      console.log('Error submitting machinery details:', error);
-
-      // Log more detailed information if available
-      if (error && error.response) {
-        console.log('Response:', error.response);
-      }
-
-      // Show an alert or feedback to the user
-      // You might want to add a state for error message and display it in the UI
+      console.log(
+        'Error submitting land and improvement details:',
+        error.response,
+      );
     } finally {
       setIsLoading(false);
     }
@@ -138,12 +186,16 @@ const FormMachineryFields: React.FC<FormMachineryFieldsProps> = ({
 
     if (pathParts.length === 2) {
       currentValue =
-        formData.machinery[pathParts[1] as keyof typeof formData.machinery];
+        formData.landAndImprovement[
+          pathParts[1] as keyof typeof formData.landAndImprovement
+        ];
     } else if (pathParts.length === 3) {
-      const section = formData.machinery[
-        pathParts[1] as keyof typeof formData.machinery
+      const section = formData.landAndImprovement[
+        pathParts[1] as keyof typeof formData.landAndImprovement
       ] as any;
-      currentValue = section[pathParts[2]];
+      if (section) {
+        currentValue = section[pathParts[2]];
+      }
     }
 
     setTempDate(currentValue ? new Date(currentValue) : new Date());
@@ -242,7 +294,7 @@ const FormMachineryFields: React.FC<FormMachineryFieldsProps> = ({
                   <Text style={styles.label}>{label}</Text>
                   {renderField(
                     {field, label, placeholder, numeric, isCurrency},
-                    getInputValue(formData[field as keyof typeof formData]), // Add type assertion
+                    getInputValue(formData[field]),
                     field,
                   )}
                 </View>
@@ -250,21 +302,82 @@ const FormMachineryFields: React.FC<FormMachineryFieldsProps> = ({
             )}
           </View>
 
-          {/* Machinery Fields */}
+          {/* Land Fields */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Thông tin máy móc</Text>
-            {machineryFields.map(
-              ({field, label, placeholder, isDate, numeric, isCurrency}) => (
+            <Text style={styles.sectionTitle}>Thông tin đất</Text>
+            {landFields.map(({field, label, placeholder, numeric, isDate}) => (
+              <View key={field} style={styles.fieldContainer}>
+                <Text style={styles.label}>{label}</Text>
+                {renderField(
+                  {field, label, placeholder, numeric, isDate},
+                  getInputValue(
+                    formData.landAndImprovement[
+                      field as keyof typeof formData.landAndImprovement
+                    ],
+                  ),
+                  `landAndImprovement.${field}`,
+                )}
+              </View>
+            ))}
+          </View>
+
+          {/* Land and Improvement Fields */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Thông tin cải tạo</Text>
+            {landAndImprovementFields.map(
+              ({field, label, placeholder, numeric, isDate}) => (
                 <View key={field} style={styles.fieldContainer}>
                   <Text style={styles.label}>{label}</Text>
                   {renderField(
-                    {field, label, placeholder, isDate, numeric, isCurrency},
+                    {field, label, placeholder, numeric, isDate},
                     getInputValue(
-                      formData.machinery[
-                        field as keyof typeof formData.machinery
+                      formData.landAndImprovement[
+                        field as keyof typeof formData.landAndImprovement
                       ],
                     ),
-                    `machinery.${field}`,
+                    `landAndImprovement.${field}`,
+                  )}
+                </View>
+              ),
+            )}
+          </View>
+
+          {/* Owner Information */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Thông tin chủ sở hữu</Text>
+            {ownerInfoFields.map(
+              ({field, label, placeholder, isDate, numeric}) => (
+                <View key={field} style={styles.fieldContainer}>
+                  <Text style={styles.label}>{label}</Text>
+                  {renderField(
+                    {field, label, placeholder, isDate, numeric},
+                    getInputValue(
+                      formData.landAndImprovement.ownerInfo[
+                        field as keyof typeof formData.landAndImprovement.ownerInfo
+                      ],
+                    ),
+                    `landAndImprovement.ownerInfo.${field}`,
+                  )}
+                </View>
+              ),
+            )}
+          </View>
+
+          {/* Transfer Information */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Thông tin chuyển nhượng</Text>
+            {transferInfoFields.map(
+              ({field, label, placeholder, isDate, numeric}) => (
+                <View key={field} style={styles.fieldContainer}>
+                  <Text style={styles.label}>{label}</Text>
+                  {renderField(
+                    {field, label, placeholder, isDate, numeric},
+                    getInputValue(
+                      formData.landAndImprovement.transferInfo[
+                        field as keyof typeof formData.landAndImprovement.transferInfo
+                      ],
+                    ),
+                    `landAndImprovement.transferInfo.${field}`,
                   )}
                 </View>
               ),
@@ -274,24 +387,25 @@ const FormMachineryFields: React.FC<FormMachineryFieldsProps> = ({
           {/* Metadata Fields */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Thông tin bổ sung</Text>
-            {machineryMetadataFields.map(
-              ({field, label, placeholder, numeric, isCurrency}) => (
+            {landAndImprovementMetadataFields.map(
+              ({field, label, placeholder, numeric}) => (
                 <View key={field} style={styles.fieldContainer}>
                   <Text style={styles.label}>{label}</Text>
                   {renderField(
-                    {field, label, placeholder, numeric, isCurrency},
+                    {field, label, placeholder, numeric},
                     getInputValue(
-                      formData.machinery.metadata[
-                        field as keyof typeof formData.machinery.metadata
+                      formData.landAndImprovement.metadata[
+                        field as keyof typeof formData.landAndImprovement.metadata
                       ],
                     ),
-                    `machinery.metadata.${field}`,
+                    `landAndImprovement.metadata.${field}`,
                   )}
                 </View>
               ),
             )}
           </View>
 
+          {/* Submit Button */}
           <TouchableOpacity
             style={styles.submitButton}
             onPress={handleSubmit}
@@ -320,4 +434,4 @@ const FormMachineryFields: React.FC<FormMachineryFieldsProps> = ({
   );
 };
 
-export default FormMachineryFields;
+export default FormLandAndImprove;

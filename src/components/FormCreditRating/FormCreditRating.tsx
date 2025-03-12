@@ -54,12 +54,12 @@ const FormCreditRating: React.FC<FormCreditRatingProps> = ({
   const {t} = useTranslation();
 
   const ratingLevels = [
-    {value: 'AAA', label: 'AAA'},
-    {value: 'AA', label: 'AA'},
     {value: 'A', label: 'A'},
-    {value: 'BBB', label: 'BBB'},
-    {value: 'BB', label: 'BB'},
+    {value: 'AA', label: 'AA'},
     {value: 'B', label: 'B'},
+    {value: 'BB', label: 'BB'},
+    {value: 'C', label: 'C'},
+    {value: 'CC', label: 'CC'},
   ];
 
   const riskLevels = [
@@ -82,6 +82,8 @@ const FormCreditRating: React.FC<FormCreditRatingProps> = ({
     },
   });
 
+  console.log('formData', formData);
+
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -90,15 +92,21 @@ const FormCreditRating: React.FC<FormCreditRatingProps> = ({
   const handleOnchange = (field: string, value: any): void => {
     setFormData(prev => {
       if (field.includes('.')) {
-        const [parent, child] = field.split('.');
-        return {
-          ...prev,
-          [parent]: {
-            ...prev[parent],
-            [child]: value,
-          },
-        };
+        const [parent, child] = field.split('.') as [keyof FormData, string];
+
+        // Type guard to ensure parent is a valid key of FormData
+        if (parent === 'ratingByCriteria' || parent === 'ratingByCIC') {
+          return {
+            ...prev,
+            [parent]: {
+              ...prev[parent],
+              [child]: value,
+            },
+          };
+        }
       }
+      // This case shouldn't be reached with the current form structure,
+      // but keeping it for any potential direct field updates
       return {
         ...prev,
         [field]: value,
@@ -174,17 +182,38 @@ const FormCreditRating: React.FC<FormCreditRatingProps> = ({
         ratingByCIC: formData.ratingByCIC,
       };
 
-      await createCreditRating(appId, ratingData);
+      const response = await createCreditRating(appId, ratingData);
 
-      navigation.navigate('HomeTabs', {screen: 'Loan'});
-    } catch (error) {
+      if (response) {
+        navigation.replace('HomeTabs', {screen: 'Loan'});
+      }
+    } catch (error: unknown) {
       console.log('Error creating credit rating:', error.response);
-      Alert.alert(
-        currentLanguage === 'vi' ? 'Lỗi' : 'Error',
-        currentLanguage === 'vi'
-          ? 'Có lỗi xảy ra khi tạo đánh giá tín dụng'
-          : 'Error occurred while creating credit rating',
-      );
+
+      // Type guard to check if error is an object with response property
+      const errorResponse = (error as any)?.response ?? null;
+
+      const errorMessage = errorResponse?.data?.message || '';
+
+      // Check for specific dependency error
+      if (
+        errorMessage ===
+        'Dependency step not completed (create-financial-info:inprogress)'
+      ) {
+        Alert.alert(
+          currentLanguage === 'vi' ? 'Thông báo' : 'Notification',
+          currentLanguage === 'vi'
+            ? 'Vui lòng đợi mục thông tin tài chính xác nhận'
+            : 'Please wait for financial information to be confirmed',
+        );
+      } else {
+        Alert.alert(
+          currentLanguage === 'vi' ? 'Lỗi' : 'Error',
+          currentLanguage === 'vi'
+            ? 'Có lỗi xảy ra khi tạo đánh giá tín dụng'
+            : 'Error occurred while creating credit rating',
+        );
+      }
     } finally {
       setIsLoading(false);
     }
@@ -222,14 +251,21 @@ const FormCreditRating: React.FC<FormCreditRatingProps> = ({
       color: theme.text,
     },
     dateInput: {
-      backgroundColor: '#f4f4f4',
-      borderRadius: 8,
       padding: 12,
+      borderRadius: 8,
+      marginTop: 4,
+      backgroundColor: theme.inputBackground,
+      borderWidth: 1,
+      borderColor: theme.borderInputBackground,
     },
     dateInputText: {
+      fontSize: 14,
+      fontWeight: '400',
       color: '#000',
     },
     dateInputPlaceholder: {
+      fontSize: 14,
+      fontWeight: '400',
       color: '#999',
     },
     btn: {

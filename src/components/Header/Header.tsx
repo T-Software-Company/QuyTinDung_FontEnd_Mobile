@@ -313,7 +313,7 @@ const Header: React.FC<HeaderProps> = ({Navbar, navigation, name}) => {
             <Image source={AppIcons.back} style={styles.icon} />
           </TouchableOpacity>
           <View>
-            <Text style={styles.heading}>{t('internetBill.title')}</Text>
+            <Text style={styles.heading}>{t('Bill.title')}</Text>
           </View>
           <TouchableOpacity style={[styles.borderArrow, styles.hidden]}>
             <Image source={AppIcons.notification} style={styles.icon} />

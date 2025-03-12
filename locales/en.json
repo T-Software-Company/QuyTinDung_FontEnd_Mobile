@@ -22,9 +22,7 @@
         "linkBank": "Link Bank",
         "help": "How can I help you?",
         "titleLoanProduct": "Loan for life",
-        "descLoanProduct": "A loan to pay expenses for personal and family consumption and living purposes.",
-        "descQuestion1": "Deposit/withdrawal instructions",
-        "descQuestion2": "Chat with staff"
+        "descLoanProduct": "A loan to pay expenses for personal and family consumption and living purposes."
     },
     "save": {
         "title": "Saving",
@@ -444,7 +442,7 @@
         "linkedBanks": "Linked Banks",
         "selectBank": "Select Bank",
         "searchBank": "Search for banks...",
-        "emptyState": "No banks linked yet. Click the button below to link a bank account.",
+        "emptyState": "No banks linked yet",
         "linkBankButton": "Link Bank Account",
         "removeBank": "Remove Link",
         "removeBankConfirm": "Are you sure you want to remove this bank link?",

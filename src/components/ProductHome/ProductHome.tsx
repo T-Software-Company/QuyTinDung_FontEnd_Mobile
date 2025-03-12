@@ -34,6 +34,14 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     gap: 8,
     backgroundColor: '#f4f4f4',
+    shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 5,
+      elevation: 4,
   },
   headerProduct: {
     fontWeight: 'bold',

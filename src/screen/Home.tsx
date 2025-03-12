@@ -17,6 +17,7 @@ import {useAppSelector, useAppDispatch} from '../store/hooks';
 import {setUserData, setLoading, setError} from '../store/slices/userSlice';
 import {getAccessToken, isTokenExpired} from '../../tokenStorage';
 import {useFocusEffect} from '@react-navigation/native';
+import { Theme } from '../theme/colors';
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 
@@ -24,13 +25,7 @@ interface HomeProps {
   navigation: HomeScreenNavigationProp;
 }
 
-interface Theme {
-  background: string;
-  backgroundIcon: string;
-  iconColor: string;
-  text: string;
-  backgroundBox: string;
-}
+
 
 const Home: React.FC<HomeProps> = ({navigation}) => {
   const {theme} = useTheme() as {theme: Theme};

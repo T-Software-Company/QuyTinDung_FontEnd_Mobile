@@ -356,7 +356,7 @@ const InfoCreateLoan: React.FC<InfoCreateLoanProps> = ({navigation, route}) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.button, styles.continueButton]}
-            onPress={() => navigation.navigate('LoadingWorkflowLoan')}>
+            onPress={() => navigation.replace('LoadingWorkflowLoan')}>
             <Text style={styles.buttonText}>Tiếp tục</Text>
           </TouchableOpacity>
         </View>

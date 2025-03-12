@@ -18,7 +18,8 @@ type ScreenName =
   | 'CreateLoanPlan'
   | 'CreateFinancialInfo'
   | 'CreditRating'
-  | 'AssetCollateral';
+  | 'AssetCollateral'
+  | 'InfoCreateLoan';
 
 // Define the step to screen mapping with proper types
 const stepToScreenMap: Record<StepName, ScreenName> = {
@@ -54,31 +55,55 @@ const LoadingWorkflowLoan: React.FC<LoadingWorkflowLoanProps> = ({
 
   const findNextScreen = (
     prevSteps: string[],
+    currentSteps: string[],
     nextSteps: string[],
   ): ScreenName => {
+    console.log('Finding next screen with:', {
+      prevSteps,
+      currentSteps,
+      nextSteps,
+    });
+
+    // If no initialization yet, go to IntroduceLoan
     if (!prevSteps.includes('init')) {
+      console.log('Init not done yet, showing IntroduceLoan');
       return 'IntroduceLoan';
     }
 
-    // Convert workflow steps to screen names
-    const completedScreens = prevSteps.map(
-      step => stepToScreenMap[step as StepName],
-    );
-    const nextScreens = nextSteps.map(
-      step => stepToScreenMap[step as StepName],
-    );
+    // IMPORTANT: We prioritize nextSteps here, ignoring currentSteps
+    // Convert nextSteps to screen names
+    if (nextSteps.length > 0) {
+      const nextScreenNames = nextSteps
+        .map(step => stepToScreenMap[step as StepName])
+        .filter(Boolean);
 
-    // Find the first screen in sortScreen that hasn't been completed
-    for (const screenName of sortScreen) {
-      if (
-        !completedScreens.includes(screenName as ScreenName) &&
-        nextScreens.includes(screenName as ScreenName)
-      ) {
-        return screenName as ScreenName;
+      console.log('Next screen names:', nextScreenNames);
+
+      // Check if any nextScreens match our sortScreen order
+      const validNextScreens = nextScreenNames.filter(screen =>
+        sortScreen.includes(screen as string),
+      );
+
+      console.log('Valid next screens:', validNextScreens);
+
+      // If none of the nextScreens match our sortScreen, go to InfoCreateLoan
+      if (validNextScreens.length === 0) {
+        console.log('No valid next screens, showing InfoCreateLoan');
+        return 'InfoCreateLoan';
+      }
+
+      // Find the first screen in our sort order that appears in nextScreens
+      for (const screenName of sortScreen) {
+        if (nextScreenNames.includes(screenName as ScreenName)) {
+          console.log(`Found next screen in sort order: ${screenName}`);
+          return screenName as ScreenName;
+        }
       }
     }
 
-    return 'IntroduceLoan';
+    // If there are no next steps, we've completed everything
+    console.log('No next steps available, showing InfoCreateLoan');
+    return 'InfoCreateLoan';
   };
 
   const navigateToScreen = (screen: ScreenName, appId: string) => {
@@ -100,6 +125,9 @@ const LoadingWorkflowLoan: React.FC<LoadingWorkflowLoanProps> = ({
         break;
       case 'AssetCollateral':
         navigation.replace('AssetCollateral', {appId});
+        break;
+      case 'InfoCreateLoan':
+        navigation.replace('InfoCreateLoan', {appId});
         break;
     }
   };
@@ -148,10 +176,21 @@ const LoadingWorkflowLoan: React.FC<LoadingWorkflowLoanProps> = ({
           return;
         }
         console.log('Workflow status:', response);
-        const {prevSteps, nextSteps} = response.result;
-        const nextScreen = findNextScreen(prevSteps, nextSteps);
 
-        await AsyncStorage.setItem('currentStep', nextSteps[0] || 'init');
+        const {prevSteps, currentSteps, nextSteps} = response.result;
+        const nextScreen = findNextScreen(
+          prevSteps || [],
+          currentSteps || [],
+          nextSteps || [],
+        );
+
+        // Save currentStep to AsyncStorage if available, otherwise use first nextStep
+        if (nextSteps && nextSteps.length > 0) {
+          await AsyncStorage.setItem('currentStep', nextSteps[0]);
+        } else if (currentSteps && currentSteps.length > 0) {
+          await AsyncStorage.setItem('currentStep', currentSteps[0]);
+        }
+
         console.log('Navigating to:', nextScreen);
         navigateToScreen(nextScreen, appId.id);
       } catch (error) {
@@ -178,14 +217,14 @@ const LoadingWorkflowLoan: React.FC<LoadingWorkflowLoanProps> = ({
     },
     loadingText: {
       marginTop: 12,
-      color: theme.text,
+      color: theme.borderInputBackground,
       fontSize: 16,
     },
   });
 
   return (
     <View style={styles.container}>
-      <ActivityIndicator size="large" color={theme.text} />
+      <ActivityIndicator size="large" color={theme.borderInputBackground} />
       <Text style={styles.loadingText}>Đang lấy dữ liệu...</Text>
     </View>
   );

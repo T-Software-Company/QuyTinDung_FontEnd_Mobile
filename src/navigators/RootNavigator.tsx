@@ -1,5 +1,5 @@
 /* eslint-disable react/react-in-jsx-scope */
-import {Text, View, Image, StyleSheet} from 'react-native';
+import {Text, View, Image, StyleSheet, ImageSourcePropType} from 'react-native';
 import {
   NavigationContainer,
   NavigationContainerRef,
@@ -50,6 +50,7 @@ import ForgetPasswordScreen from '../screen/ForgetPassword';
 import RegisterScreen from '../screen/Register';
 import RegisterAddressScreen from '../screen/RegisterAddress';
 import PrivacyScreen from '../screen/Privacy';
+import QuestionsScreen from '../screen/Questions';
 import TotalAssetsScreen from '../screen/TotalAssets';
 import DetailTransactionScreen from '../screen/DetailTransaction';
 import TransactionHistoryScreen from '../screen/TransactionHistory';
@@ -87,6 +88,14 @@ export interface DataTransaction {
   date: string;
   status: string;
   source: string;
+}
+
+interface Question {
+  id: string;
+  question: string;
+  answer: string;
+  icon: ImageSourcePropType;
+  relatedQuestions: string[];
 }
 
 export type RootStackParamList = {
@@ -149,6 +158,12 @@ export type RootStackParamList = {
     dataTransaction: DataTransaction;
   };
   TransactionHistory: undefined;
+  Questions: {
+    questionData: Question;
+    allQuestions: Question[];
+  };
+  // Add other routes as needed
+  [key: string]: any;
 };
 
 export type TabParamList = {
@@ -312,6 +327,7 @@ const AppStack = () => (
     <Stack.Screen name="InternetBill" component={InternetBillScreen} />
     <Stack.Screen name="DarkModeSetting" component={DarkModeSettingScreen} />
     <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
+    <Stack.Screen name="Questions" component={QuestionsScreen} />
     <Stack.Screen
       name="Notification"
       component={NotificationScreen}

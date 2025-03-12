@@ -7,22 +7,18 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import React, {useState, useRef} from 'react';
+import React, {useState} from 'react';
 import DropdownComponent from '../DropdownComponent/DropdownComponent';
 import InputBackground from '../InputBackground/InputBackground';
 import {useTranslation} from 'react-i18next';
 import i18n from '../../../i18n';
 import {Theme} from '../../theme/colors';
-import {
-  LoanRequestBody,
-  BorrowerType,
-  LoanSecurityType,
-  LoanCollateralType,
-} from '../../api/types/loanRequest';
-import {loanRequest} from '../../api/services/loan';
+import {createCreditRating} from '../../api/services/loan';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../navigators/RootNavigator';
-import CustomMultiSelect from '../CustomMultiSelect/CustomMultiSelect';
+import DatePicker from '../DatePicker/DatePicker';
+import {formatDate} from '../../utils/dateUtils';
+import {RatingByCriteria, RatingByCIC} from '../../api/types/creditRating';
 
 interface FormCreditRatingProps {
   theme: Theme;
@@ -35,17 +31,18 @@ interface TargetItem {
   label: string;
 }
 
-interface FormData extends Omit<LoanRequestBody, 'application'> {
-  selectedRate?: TargetItem;
-  method?: string;
+interface FormData {
+  ratingByCriteria: RatingByCriteria;
+  ratingByCIC: RatingByCIC;
 }
 
 interface FormErrors {
-  amount?: string;
-  purpose?: string;
-  asset?: string;
-  note?: string;
-  loanCollateralTypes?: string;
+  'ratingByCriteria.score'?: string;
+  'ratingByCriteria.ratingLevel'?: string;
+  'ratingByCIC.score'?: string;
+  'ratingByCIC.riskLevel'?: string;
+  'ratingByCIC.document'?: string;
+  'ratingByCIC.term'?: string;
 }
 
 const FormCreditRating: React.FC<FormCreditRatingProps> = ({
@@ -56,113 +53,114 @@ const FormCreditRating: React.FC<FormCreditRatingProps> = ({
   const currentLanguage = i18n.language;
   const {t} = useTranslation();
 
-  const borrowerTypes = [
-    {
-      value: 'INDIVIDUAL',
-      label: currentLanguage === 'vi' ? 'Cá nhân' : 'Individual',
-    },
-    {
-      value: 'BUSINESS',
-      label: currentLanguage === 'vi' ? 'Doanh nghiệp' : 'Business',
-    },
+  const ratingLevels = [
+    {value: 'A', label: 'A'},
+    {value: 'AA', label: 'AA'},
+    {value: 'B', label: 'B'},
+    {value: 'BB', label: 'BB'},
+    {value: 'C', label: 'C'},
+    {value: 'CC', label: 'CC'},
   ];
 
-  const securityTypes = [
-    {
-      value: 'MORTGAGE',
-      label: currentLanguage === 'vi' ? 'Thế chấp' : 'Mortgage',
-    },
-    {
-      value: 'UNSECURED',
-      label: currentLanguage === 'vi' ? 'Tín chấp' : 'Unsecured',
-    },
-  ];
-
-  const collateralTypes = [
-    {
-      value: 'VEHICLE',
-      label: currentLanguage === 'vi' ? 'Phương tiện' : 'Vehicle',
-    },
-    {
-      value: 'PROPERTY',
-      label: currentLanguage === 'vi' ? 'Bất động sản' : 'Property',
-    },
-    {
-      value: 'EQUIPMENT',
-      label: currentLanguage === 'vi' ? 'Thiết bị' : 'Equipment',
-    },
+  const riskLevels = [
+    {value: '01', label: '01 - Low Risk'},
+    {value: '02', label: '02 - Medium Risk'},
+    {value: '03', label: '03 - High Risk'},
   ];
 
   const [formData, setFormData] = useState<FormData>({
-    purpose: '',
-    amount: 0,
-    borrowerType: 'INDIVIDUAL',
-    asset: '',
-    loanSecurityType: 'UNSECURED',
-    loanCollateralTypes: [],
-    note: '',
-    metadata: {
-      key1: '',
-      key2: '',
+    ratingByCriteria: {
+      score: 85.5,
+      ratingLevel: 'AA',
+    },
+    ratingByCIC: {
+      score: 750.5,
+      riskLevel: '01',
+      scoringDate: new Date().toISOString().split('T')[0] + 'T00:00:00Z', // Format as 2024-12-31T00:00:00Z
+      document: 'CIC_REPORT_123.pdf',
+      term: 15,
     },
   });
 
+  console.log('formData', formData);
+
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
-  const [isOpen, setIsOpen] = useState(false);
-  const multiSelectRef = useRef<View>(null);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [tempDate, setTempDate] = useState(new Date());
 
-  const handleOnchange = (field: keyof FormData, value: any): void => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value,
-    }));
+  const handleOnchange = (field: string, value: any): void => {
+    setFormData(prev => {
+      if (field.includes('.')) {
+        const [parent, child] = field.split('.') as [keyof FormData, string];
+
+        // Type guard to ensure parent is a valid key of FormData
+        if (parent === 'ratingByCriteria' || parent === 'ratingByCIC') {
+          return {
+            ...prev,
+            [parent]: {
+              ...prev[parent],
+              [child]: value,
+            },
+          };
+        }
+      }
+      // This case shouldn't be reached with the current form structure,
+      // but keeping it for any potential direct field updates
+      return {
+        ...prev,
+        [field]: value,
+      };
+    });
   };
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
     let isValid = true;
 
-    if (!formData.amount || formData.amount <= 1000000) {
-      newErrors.amount =
+    if (!formData.ratingByCriteria.score) {
+      newErrors['ratingByCriteria.score'] =
         currentLanguage === 'vi'
-          ? 'Vui lòng nhập số tiền lớn hơn 1000000'
-          : 'Please enter a valid amount';
+          ? 'Vui lòng nhập điểm đánh giá'
+          : 'Please enter rating score';
       isValid = false;
     }
 
-    if (!formData.purpose.trim()) {
-      newErrors.purpose =
+    if (!formData.ratingByCriteria.ratingLevel) {
+      newErrors['ratingByCriteria.ratingLevel'] =
         currentLanguage === 'vi'
-          ? 'Vui lòng nhập mục đích vay'
-          : 'Please enter loan purpose';
+          ? 'Vui lòng chọn cấp độ đánh giá'
+          : 'Please select rating level';
       isValid = false;
     }
 
-    if (!formData.asset.trim()) {
-      newErrors.asset =
+    if (!formData.ratingByCIC.score) {
+      newErrors['ratingByCIC.score'] =
         currentLanguage === 'vi'
-          ? 'Vui lòng nhập tài sản'
-          : 'Please enter asset';
+          ? 'Vui lòng nhập điểm CIC'
+          : 'Please enter CIC score';
       isValid = false;
     }
 
-    if (!formData.note.trim()) {
-      newErrors.note =
+    if (!formData.ratingByCIC.riskLevel) {
+      newErrors['ratingByCIC.riskLevel'] =
         currentLanguage === 'vi'
-          ? 'Vui lòng nhập ghi chú'
-          : 'Please enter a note';
+          ? 'Vui lòng chọn mức độ rủi ro'
+          : 'Please select risk level';
       isValid = false;
     }
 
-    if (
-      !formData.loanCollateralTypes ||
-      formData.loanCollateralTypes.length === 0
-    ) {
-      newErrors.loanCollateralTypes =
+    if (!formData.ratingByCIC.document) {
+      newErrors['ratingByCIC.document'] =
         currentLanguage === 'vi'
-          ? 'Vui lòng chọn ít nhất một loại tài sản'
-          : 'Please select at least one collateral type';
+          ? 'Vui lòng nhập tên tài liệu'
+          : 'Please enter document name';
+      isValid = false;
+    }
+
+    if (!formData.ratingByCIC.term) {
+      newErrors['ratingByCIC.term'] =
+        currentLanguage === 'vi' ? 'Vui lòng nhập kỳ hạn' : 'Please enter term';
       isValid = false;
     }
 
@@ -171,7 +169,6 @@ const FormCreditRating: React.FC<FormCreditRatingProps> = ({
   };
 
   const handleSubmit = async () => {
-    console.log('Form data:', formData);
     if (!validateForm()) {
       return;
     }
@@ -179,68 +176,98 @@ const FormCreditRating: React.FC<FormCreditRatingProps> = ({
     try {
       setIsLoading(true);
 
-      const loanData = {
-        purpose: formData.purpose,
-        amount: formData.amount,
-        borrowerType: formData.borrowerType,
-        asset: formData.asset,
-        loanSecurityType: formData.loanSecurityType,
-        loanCollateralTypes: formData.loanCollateralTypes,
-        note: formData.note,
-        metadata: {
-          key1: '',
-          key2: '',
-        },
+      // Submit credit rating
+      const ratingData = {
+        ratingByCriteria: formData.ratingByCriteria,
+        ratingByCIC: formData.ratingByCIC,
       };
-      console.log('Loan data:', loanData, appId);
 
-      const response = await loanRequest(appId, loanData);
-      console.log('Loan request response:', response);
+      const response = await createCreditRating(appId, ratingData);
 
       if (response) {
-        navigation.replace('CreateLoanPlan', {appId});
+        navigation.replace('HomeTabs', {screen: 'Loan'});
       }
-    } catch (error) {
-      console.error('Error creating loan request:', error);
-      Alert.alert(
-        currentLanguage === 'vi' ? 'Lỗi' : 'Error',
-        currentLanguage === 'vi'
-          ? 'Có lỗi xảy ra khi tạo khoản vay'
-          : 'Error occurred while creating loan request',
-      );
+    } catch (error: unknown) {
+      console.log('Error creating credit rating:', error.response);
+
+      // Type guard to check if error is an object with response property
+      const errorResponse = (error as any)?.response ?? null;
+
+      const errorMessage = errorResponse?.data?.message || '';
+
+      // Check for specific dependency error
+      if (
+        errorMessage ===
+        'Dependency step not completed (create-financial-info:inprogress)'
+      ) {
+        Alert.alert(
+          currentLanguage === 'vi' ? 'Thông báo' : 'Notification',
+          currentLanguage === 'vi'
+            ? 'Vui lòng đợi mục thông tin tài chính xác nhận'
+            : 'Please wait for financial information to be confirmed',
+        );
+      } else {
+        Alert.alert(
+          currentLanguage === 'vi' ? 'Lỗi' : 'Error',
+          currentLanguage === 'vi'
+            ? 'Có lỗi xảy ra khi tạo đánh giá tín dụng'
+            : 'Error occurred while creating credit rating',
+        );
+      }
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleDatePress = () => {
+    setShowDatePicker(true);
+    setTempDate(
+      formData.ratingByCIC.scoringDate
+        ? new Date(formData.ratingByCIC.scoringDate)
+        : new Date(),
+    );
+  };
+
+  const handleDateConfirm = (dateString: string) => {
+    // Convert the date to the required format: YYYY-MM-DDT00:00:00Z
+    const date = new Date(dateString);
+    const formattedDate = date.toISOString().split('T')[0] + 'T00:00:00Z';
+
+    handleOnchange('ratingByCIC.scoringDate', formattedDate);
+    setShowDatePicker(false);
+  };
+
+  const handleDateChange = (date: Date) => {
+    setTempDate(date);
   };
 
   const styles = StyleSheet.create({
     boxInput: {
       marginBottom: 12,
     },
-
     headingTitle: {
       fontWeight: 'bold',
       marginBottom: 8,
       color: theme.text,
     },
-    textInput: {
-      backgroundColor: '#f4f4f4',
+    dateInput: {
+      padding: 12,
       borderRadius: 8,
-      height: 40,
-      paddingLeft: 15,
-      paddingRight: 15,
-      paddingTop: 10,
-      paddingBottom: 10,
-      color: '#000',
-      paddingVertical: 0,
-      textAlignVertical: 'center',
+      marginTop: 4,
+      backgroundColor: theme.inputBackground,
+      borderWidth: 1,
+      borderColor: theme.borderInputBackground,
     },
-
-    selectedTextStyle: {
-      color: '#000',
+    dateInputText: {
       fontSize: 14,
+      fontWeight: '400',
+      color: '#000',
     },
-
+    dateInputPlaceholder: {
+      fontSize: 14,
+      fontWeight: '400',
+      color: '#999',
+    },
     btn: {
       width: '100%',
       backgroundColor: '#007BFF',
@@ -248,396 +275,172 @@ const FormCreditRating: React.FC<FormCreditRatingProps> = ({
       borderRadius: 12,
       marginTop: 8,
     },
-
-    hidden: {
-      opacity: 0,
-      pointerEvents: 'none',
-    },
-
-    // dropdown: {
-    //   borderColor: '#ccc',
-    //   borderWidth: 1,
-    //   borderRadius: 5,
-    //   height: 50,
-    //   zIndex: 5000,
-    // },
-    dropdownContainer: {
-      borderColor: '#ccc',
-      zIndex: 5000,
-      position: 'absolute',
-    },
-
-    rateText: {
-      marginTop: 12,
-      fontSize: 14,
-      color: '#007BFF',
-    },
-    textWhite: {
-      color: 'white',
-    },
     errorText: {
       color: 'red',
       fontSize: 12,
       marginTop: 8,
     },
-    checkboxContainer: {
-      flexDirection: 'column',
-      flexWrap: 'wrap',
-      gap: 12,
+    textWhite: {
+      color: 'white',
     },
-    checkboxItem: {
-      // flexDirection: 'row',
-      alignItems: 'center',
-      backgroundColor: '#f4f4f4',
-      padding: 10,
-      borderRadius: 8,
-      borderWidth: 1,
-      borderColor: '#ddd',
-    },
-    checkboxSelected: {
-      backgroundColor: '#e3f0ff',
-      borderColor: '#007BFF',
-    },
-    checkboxText: {
-      color: '#000',
-    },
-    checkboxTextSelected: {
-      color: '#007BFF',
-    },
-    multiSelect: {
-      backgroundColor: '#f4f4f4',
-      borderRadius: 8,
-      minHeight: 50,
-      paddingHorizontal: 8,
-      paddingVertical: 4,
-    },
-    selectedItemsContainer: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      alignItems: 'center',
-    },
-    selectedItem: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      backgroundColor: '#e3f0ff',
-      borderRadius: 4,
-      paddingHorizontal: 8,
-      paddingVertical: 4,
-      margin: 2,
-    },
-    selectedItemText: {
-      fontSize: 14,
-      color: '#007BFF',
-      marginRight: 4,
-    },
-    deleteButton: {
-      padding: 2,
-    },
-    deleteButtonText: {
-      color: '#007BFF',
-      fontSize: 16,
-    },
-    clearAllButton: {
-      marginLeft: 'auto',
-      padding: 4,
-    },
-    selectedStyle: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      borderRadius: 20, // More rounded corners
-      backgroundColor: '#007BFF',
-      paddingHorizontal: 12,
-      paddingVertical: 6,
-      margin: 4,
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.1,
-      shadowRadius: 2,
-      elevation: 2,
-    },
-    placeholderStyle: {
-      fontSize: 14,
-      color: '#aaa',
-    },
-    chipContainer: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      padding: 4,
-    },
-    closeIcon: {
-      color: '#fff',
-      fontSize: 16,
-      marginLeft: 4,
-    },
-    dropdownStyle: {
-      backgroundColor: '#fff',
-      borderRadius: 12,
-      marginTop: 8,
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 4,
-      },
-      shadowOpacity: 0.2,
-      shadowRadius: 5,
-      elevation: 8,
-      borderWidth: 1,
-      borderColor: 'rgba(0,0,0,0.05)',
-    },
-    itemStyle: {
-      padding: 16,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      borderBottomWidth: 1,
-      borderBottomColor: 'rgba(0,0,0,0.05)',
-    },
-    itemText: {
-      fontSize: 14,
-      color: '#333',
-      fontWeight: '500',
-    },
-    itemSelected: {
-      backgroundColor: 'rgba(0,123,255,0.05)',
-    },
-    noDataText: {
-      textAlign: 'center',
-      padding: 16,
-      color: '#666',
-    },
-    searchInput: {
-      backgroundColor: '#f8f9fa',
-      padding: 12,
-      borderRadius: 8,
-      marginHorizontal: 8,
-      marginVertical: 4,
-    },
-    multiSelectContainer: {
-      position: 'relative',
-    },
-    inputContainer: {
-      backgroundColor: '#f4f4f4',
-      borderRadius: 8,
-      padding: 8,
-      minHeight: 45,
-      flexDirection: 'row',
-      alignItems: 'center',
-      position: 'relative',
-    },
-    tag: {
-      backgroundColor: '#e3f0ff',
-      borderRadius: 16,
-      flexDirection: 'row',
-      alignItems: 'center',
-      paddingVertical: 4,
-      paddingHorizontal: 8,
-    },
-    tagText: {
-      color: '#007BFF',
-      fontSize: 14,
-      marginRight: 4,
-    },
-    removeTag: {
-      color: '#007BFF',
-      fontSize: 16,
-      fontWeight: '600',
-    },
-    clearAll: {
-      padding: 8,
-      marginRight: 4,
-    },
-    clearAllText: {
-      color: '#666',
-      fontSize: 16,
-      fontWeight: '500',
-    },
-    tagsContainer: {
-      flex: 1,
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      gap: 6,
-    },
-    placeholder: {
-      color: '#999',
-      fontSize: 14,
-    },
-    dropdown: {
-      position: 'absolute',
-      top: '100%',
-      left: 0,
-      right: 0,
-      backgroundColor: 'white',
-      marginTop: 4,
-      borderRadius: 8,
-      padding: 8,
-      shadowColor: '#000',
-      shadowOffset: {width: 0, height: 2},
-      shadowOpacity: 0.1,
-      shadowRadius: 8,
-      elevation: 3,
-      zIndex: 1000,
-    },
-    option: {
-      padding: 12,
-      borderRadius: 6,
-      marginVertical: 2,
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-    },
-    optionSelected: {
-      backgroundColor: '#f0f9ff',
-    },
-    optionText: {
-      fontSize: 14,
-      color: '#333',
-    },
-    checkmark: {
-      color: '#007BFF',
-      fontWeight: 'bold',
-    },
-    arrowIcon: {
-      padding: 8,
-      color: '#666',
-    },
-    rightContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
+    // ...other styles
   });
-
-  const handleCollateralTypeChange = (value: LoanCollateralType) => {
-    setFormData(prev => {
-      const currentTypes = prev.loanCollateralTypes || [];
-      const newTypes = currentTypes.includes(value)
-        ? currentTypes.filter(type => type !== value)
-        : [...currentTypes, value];
-
-      return {
-        ...prev,
-        loanCollateralTypes: newTypes,
-      };
-    });
-  };
 
   return (
     <View>
+      {/* Credit Rating Criteria Section */}
+      <View style={{marginTop: 20}}>
+        <Text style={[styles.headingTitle, {fontSize: 16}]}>
+          {currentLanguage === 'vi' ? 'Đánh giá tín dụng' : 'Credit Rating'}
+        </Text>
+      </View>
+
       <View style={styles.boxInput}>
         <Text style={styles.headingTitle}>
-          {currentLanguage === 'vi' ? 'Số tiền vay' : 'Loan Amount'}
+          {currentLanguage === 'vi' ? 'Điểm đánh giá' : 'Rating Score'}
         </Text>
         <InputBackground
           placeholder={
-            currentLanguage === 'vi' ? 'Nhập số tiền' : 'Enter amount'
+            currentLanguage === 'vi' ? 'Nhập điểm số' : 'Enter score'
           }
           keyboardType="numeric"
           onChangeText={(value: string) =>
-            handleOnchange('amount', Number(value))
+            handleOnchange('ratingByCriteria.score', Number(value))
           }
-          value={formData.amount.toString()}
+          value={formData.ratingByCriteria.score.toString()}
         />
-        {errors.amount && <Text style={styles.errorText}>{errors.amount}</Text>}
-      </View>
-
-      <View style={styles.boxInput}>
-        <Text style={styles.headingTitle}>
-          {currentLanguage === 'vi' ? 'Mục đích vay' : 'Loan Purpose'}
-        </Text>
-        <InputBackground
-          placeholder={
-            currentLanguage === 'vi' ? 'Nhập mục đích' : 'Enter purpose'
-          }
-          onChangeText={(value: string) => handleOnchange('purpose', value)}
-          value={formData.purpose}
-        />
-        {errors.purpose && (
-          <Text style={styles.errorText}>{errors.purpose}</Text>
+        {errors['ratingByCriteria.score'] && (
+          <Text style={styles.errorText}>
+            {errors['ratingByCriteria.score']}
+          </Text>
         )}
       </View>
 
       <View style={styles.boxInput}>
         <Text style={styles.headingTitle}>
-          {currentLanguage === 'vi' ? 'Loại người vay' : 'Borrower Type'}
+          {currentLanguage === 'vi' ? 'Cấp độ đánh giá' : 'Rating Level'}
         </Text>
         <DropdownComponent
-          value={formData.borrowerType}
-          data={borrowerTypes}
-          placeholder={currentLanguage === 'vi' ? 'Chọn loại' : 'Select type'}
+          value={formData.ratingByCriteria.ratingLevel}
+          data={ratingLevels}
+          placeholder={
+            currentLanguage === 'vi' ? 'Chọn cấp độ' : 'Select rating level'
+          }
           onChange={(value: TargetItem) =>
-            handleOnchange('borrowerType', value.value as BorrowerType)
+            handleOnchange('ratingByCriteria.ratingLevel', value.value)
           }
         />
+        {errors['ratingByCriteria.ratingLevel'] && (
+          <Text style={styles.errorText}>
+            {errors['ratingByCriteria.ratingLevel']}
+          </Text>
+        )}
+      </View>
+
+      {/* CIC Rating Section */}
+      <View style={{marginTop: 20}}>
+        <Text style={[styles.headingTitle, {fontSize: 16}]}>
+          {currentLanguage === 'vi'
+            ? 'Đánh giá từ Trung tâm CIC'
+            : 'CIC Rating'}
+        </Text>
       </View>
 
       <View style={styles.boxInput}>
         <Text style={styles.headingTitle}>
-          {currentLanguage === 'vi' ? 'Tài sản' : 'Asset'}
+          {currentLanguage === 'vi' ? 'Điểm số CIC' : 'CIC Score'}
         </Text>
         <InputBackground
           placeholder={
-            currentLanguage === 'vi' ? 'Nhập tài sản' : 'Enter asset'
+            currentLanguage === 'vi' ? 'Nhập điểm số' : 'Enter score'
           }
-          onChangeText={(value: string) => handleOnchange('asset', value)}
-          value={formData.asset}
+          keyboardType="numeric"
+          onChangeText={(value: string) =>
+            handleOnchange('ratingByCIC.score', Number(value))
+          }
+          value={formData.ratingByCIC.score.toString()}
         />
-        {errors.asset && <Text style={styles.errorText}>{errors.asset}</Text>}
+        {errors['ratingByCIC.score'] && (
+          <Text style={styles.errorText}>{errors['ratingByCIC.score']}</Text>
+        )}
       </View>
 
       <View style={styles.boxInput}>
         <Text style={styles.headingTitle}>
-          {currentLanguage === 'vi' ? 'Hình thức bảo đảm' : 'Security Type'}
+          {currentLanguage === 'vi' ? 'Mức độ rủi ro' : 'Risk Level'}
         </Text>
         <DropdownComponent
-          value={formData.loanSecurityType}
-          data={securityTypes}
+          value={formData.ratingByCIC.riskLevel}
+          data={riskLevels}
           placeholder={
-            currentLanguage === 'vi' ? 'Chọn hình thức' : 'Select type'
+            currentLanguage === 'vi' ? 'Chọn mức độ' : 'Select risk level'
           }
           onChange={(value: TargetItem) =>
-            handleOnchange('loanSecurityType', value.value as LoanSecurityType)
+            handleOnchange('ratingByCIC.riskLevel', value.value)
           }
         />
+        {errors['ratingByCIC.riskLevel'] && (
+          <Text style={styles.errorText}>
+            {errors['ratingByCIC.riskLevel']}
+          </Text>
+        )}
       </View>
 
       <View style={styles.boxInput}>
         <Text style={styles.headingTitle}>
-          {currentLanguage === 'vi'
-            ? 'Loại tài sản đảm bảo'
-            : 'Collateral Type'}
+          {currentLanguage === 'vi' ? 'Ngày đánh giá' : 'Scoring Date'}
         </Text>
-        <CustomMultiSelect
-          ref={multiSelectRef}
-          value={formData.loanCollateralTypes}
-          options={collateralTypes}
+        <TouchableOpacity style={styles.dateInput} onPress={handleDatePress}>
+          <Text
+            style={
+              formData.ratingByCIC.scoringDate
+                ? styles.dateInputText
+                : styles.dateInputPlaceholder
+            }>
+            {formData.ratingByCIC.scoringDate
+              ? formatDate(new Date(formData.ratingByCIC.scoringDate))
+              : currentLanguage === 'vi'
+              ? 'Chọn ngày'
+              : 'Select date'}
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.boxInput}>
+        <Text style={styles.headingTitle}>
+          {currentLanguage === 'vi' ? 'Tài liệu' : 'Document'}
+        </Text>
+        <InputBackground
           placeholder={
             currentLanguage === 'vi'
-              ? 'Chọn loại tài sản'
-              : 'Select collateral types'
+              ? 'Nhập tên tài liệu'
+              : 'Enter document name'
           }
-          onChange={value => handleOnchange('loanCollateralTypes', value)}
-          onItemSelect={handleCollateralTypeChange}
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
+          onChangeText={(value: string) =>
+            handleOnchange('ratingByCIC.document', value)
+          }
+          value={formData.ratingByCIC.document}
         />
-        {errors.loanCollateralTypes && (
-          <Text style={styles.errorText}>{errors.loanCollateralTypes}</Text>
+        {errors['ratingByCIC.document'] && (
+          <Text style={styles.errorText}>{errors['ratingByCIC.document']}</Text>
         )}
       </View>
 
       <View style={styles.boxInput}>
         <Text style={styles.headingTitle}>
-          {currentLanguage === 'vi' ? 'Ghi chú' : 'Note'}
+          {currentLanguage === 'vi' ? 'Kỳ hạn (tháng)' : 'Term (months)'}
         </Text>
         <InputBackground
-          placeholder={currentLanguage === 'vi' ? 'Nhập ghi chú' : 'Enter note'}
-          onChangeText={(value: string) => handleOnchange('note', value)}
-          value={formData.note}
+          placeholder={currentLanguage === 'vi' ? 'Nhập kỳ hạn' : 'Enter term'}
+          keyboardType="numeric"
+          onChangeText={(value: string) =>
+            handleOnchange('ratingByCIC.term', Number(value))
+          }
+          value={formData.ratingByCIC.term.toString()}
         />
-        {errors.note && <Text style={styles.errorText}>{errors.note}</Text>}
+        {errors['ratingByCIC.term'] && (
+          <Text style={styles.errorText}>{errors['ratingByCIC.term']}</Text>
+        )}
       </View>
 
       <TouchableOpacity
@@ -656,6 +459,18 @@ const FormCreditRating: React.FC<FormCreditRatingProps> = ({
           </Text>
         )}
       </TouchableOpacity>
+
+      {showDatePicker && (
+        <DatePicker
+          isVisible={showDatePicker}
+          onClose={() => setShowDatePicker(false)}
+          onConfirm={handleDateConfirm}
+          value={tempDate}
+          onChange={handleDateChange}
+          theme={theme}
+          locale="vi-VN"
+        />
+      )}
     </View>
   );
 };

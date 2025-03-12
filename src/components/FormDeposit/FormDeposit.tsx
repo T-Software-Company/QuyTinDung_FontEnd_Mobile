@@ -459,7 +459,7 @@ const FormDeposit: React.FC<FormDepositProps> = ({theme}) => {
                     selectedBank === 'BIDV' && styles.activeBank,
                   ]}
                   onPress={() => setSelectedBank('BIDV')}>
-                  <Image style={styles.iconBank} source={AppIcons.tpBIDV} />
+                  <Image style={styles.iconBank} source={AppIcons.BIDV} />
                   <Text style={styles.textBank}>BIDV</Text>
                 </Pressable>
               </View>

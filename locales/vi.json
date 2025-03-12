@@ -143,9 +143,7 @@
         "linkBank": "Liên kết ngân hàng",
         "titleLoanProduct": "Vay phục vụ đời sống",
         "descLoanProduct": "Là khoản vay để thanh toán các chi phí cho mục đích tiêu dùng, sinh hoạt của cá nhân, gia đình.",
-        "help": "Bạn cần hỗ trợ gì?",
-        "descQuestion1": "Hướng dẫn nạp/rút tiền",
-        "descQuestion2": "Chat với nhân viên"
+        "help": "Bạn cần hỗ trợ gì?"
     },
     "save": {
         "title": "Sổ tiết kiệm",
@@ -427,7 +425,7 @@
         "linkedBanks": "Ngân hàng đã liên kết",
         "selectBank": "Chọn ngân hàng",
         "searchBank": "Tìm kiếm ngân hàng...",
-        "emptyState": "Chưa có ngân hàng liên kết. Nhấn nút bên dưới để liên kết tài khoản ngân hàng.",
+        "emptyState": "Chưa có ngân hàng liên kết",
         "linkBankButton": "Liên kết tài khoản ngân hàng",
         "removeBank": "Gỡ bỏ liên kết",
         "removeBankConfirm": "Bạn có chắc chắn muốn gỡ bỏ liên kết với ngân hàng này?",

@@ -67,6 +67,12 @@ export interface ApartmentAsset extends BaseAsset {
   };
 }
 
+// Form data type for the apartment component
+export interface ApartmentFormData extends Omit<ApartmentAsset, 'application'> {
+  application: {id: string};
+  [key: string]: any; // Index signature to allow dynamic access
+}
+
 // Land Asset
 export interface LandAsset extends BaseAsset {
   assetType: 'LAND';
@@ -96,12 +102,21 @@ export interface LandAsset extends BaseAsset {
   };
 }
 
+// Form data type for the land component
+export interface LandFormData extends Omit<LandAsset, 'application'> {
+  application: {id: string};
+  [key: string]: any; // Index signature to allow dynamic access
+}
+
 // Vehicle Asset
 interface VehicleMetadata {
   fuelType: string;
   transmission: string;
   lastService: string;
   warranty: string;
+  insuranceCost?: number;
+  annualTax?: number;
+  [key: string]: any; // Add index signature to allow dynamic access
 }
 
 export interface VehicleAsset extends BaseAsset {
@@ -131,6 +146,12 @@ export interface VehicleAsset extends BaseAsset {
   };
 }
 
+// Form data type for the vehicle component
+export interface VehicleFormData extends Omit<VehicleAsset, 'application'> {
+  application: {id: string};
+  [key: string]: any; // Index signature to allow dynamic access
+}
+
 // Market Stalls Asset
 export interface MarketStallsAsset extends BaseAsset {
   assetType: 'MARKET_STALLS';
@@ -153,6 +174,13 @@ export interface MarketStallsAsset extends BaseAsset {
       storageSpace: string;
     };
   };
+}
+
+// Form data type for the market stalls component
+export interface MarketStallsFormData
+  extends Omit<MarketStallsAsset, 'application'> {
+  application: {id: string};
+  [key: string]: any; // Index signature to allow dynamic access
 }
 
 // Machinery Asset
@@ -178,6 +206,12 @@ export interface MachineryAsset extends BaseAsset {
   };
 }
 
+// Form data type for the machinery component
+export interface MachineryFormData extends Omit<MachineryAsset, 'application'> {
+  application: {id: string};
+  [key: string]: any; // Index signature to allow dynamic access
+}
+
 // Land and Improvement Asset
 export interface LandAndImprovementAsset extends BaseAsset {
   assetType: 'LAND_AND_IMPROVEMENT';
@@ -187,6 +221,8 @@ export interface LandAndImprovementAsset extends BaseAsset {
     address: string;
     area: number;
     purpose: string;
+    expirationDate: string;
+    originOfUsage: string;
     typeOfHousing: string;
     floorArea: number;
     ancillaryFloorArea: string;
@@ -194,11 +230,41 @@ export interface LandAndImprovementAsset extends BaseAsset {
     numberOfFloors: number;
     constructionYear: number;
     typeOfOwnership: string;
+    ownershipTerm: string;
+    notes: string;
+    sharedFacilities: string;
     certificateNumber: string;
     certificateBookNumber: string;
     issuingAuthority: string;
     issueDate: string;
+    ownerInfo: {
+      fullName: string;
+      dayOfBirth: string;
+      idCardNumber: string;
+      permanentAddress: string;
+    };
+    transferInfo: {
+      fullName: string;
+      dayOfBirth: string;
+      idCardNumber: string;
+      permanentAddress: string;
+      transferDate: string;
+      transferRecordNumber: string;
+    };
+    metadata: {
+      constructionPermit: string;
+      lastRenovation: string;
+      buildingMaterials: string;
+      parkingSpaces: number;
+    };
   };
+}
+
+// Form data type for the component (can be exported for use in the component)
+export interface LandAndImprovementFormData
+  extends Omit<LandAndImprovementAsset, 'application'> {
+  application: {id: string};
+  [key: string]: any; // Index signature to allow dynamic access
 }
 
 export interface ArtPiece {

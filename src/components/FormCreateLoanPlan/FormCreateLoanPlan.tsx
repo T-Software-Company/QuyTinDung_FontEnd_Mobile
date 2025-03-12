@@ -10,6 +10,7 @@ import {
 import React, {useState} from 'react';
 import DropdownComponent from '../DropdownComponent/DropdownComponent';
 import InputBackground from '../InputBackground/InputBackground';
+import CurrencyInput from '../CurrencyInput/CurrencyInput';
 import {useTranslation} from 'react-i18next';
 import i18n from '../../../i18n';
 import {Theme} from '../../theme/colors';
@@ -208,15 +209,14 @@ const FormCreateLoanPlan: React.FC<FormCreateLoanPlanProps> = ({
             ? 'Tổng vốn yêu cầu'
             : 'Total Capital Requirement'}
         </Text>
-        <InputBackground
+        <CurrencyInput
           placeholder={
             currentLanguage === 'vi' ? 'Nhập số tiền' : 'Enter amount'
           }
-          keyboardType="numeric"
-          onChangeText={(value: string) =>
-            handleOnchange('totalCapitalRequirement', Number(value))
+          value={formData.totalCapitalRequirement}
+          onChangeText={(value: number) =>
+            handleOnchange('totalCapitalRequirement', value)
           }
-          value={formData.totalCapitalRequirement.toString()}
         />
       </View>
 
@@ -224,15 +224,12 @@ const FormCreateLoanPlan: React.FC<FormCreateLoanPlanProps> = ({
         <Text style={styles.headingTitle}>
           {currentLanguage === 'vi' ? 'Vốn tự có' : 'Own Capital'}
         </Text>
-        <InputBackground
+        <CurrencyInput
           placeholder={
             currentLanguage === 'vi' ? 'Nhập số tiền' : 'Enter amount'
           }
-          keyboardType="numeric"
-          onChangeText={(value: string) =>
-            handleOnchange('ownCapital', Number(value))
-          }
-          value={formData.ownCapital.toString()}
+          value={formData.ownCapital}
+          onChangeText={(value: number) => handleOnchange('ownCapital', value)}
         />
       </View>
 
@@ -242,15 +239,14 @@ const FormCreateLoanPlan: React.FC<FormCreateLoanPlanProps> = ({
             ? 'Đề xuất hạn mức vay'
             : 'Proposed Loan Amount'}
         </Text>
-        <InputBackground
+        <CurrencyInput
           placeholder={
             currentLanguage === 'vi' ? 'Nhập số tiền' : 'Enter amount'
           }
-          keyboardType="numeric"
-          onChangeText={(value: string) =>
-            handleOnchange('proposedLoanAmount', Number(value))
+          value={formData.proposedLoanAmount}
+          onChangeText={(value: number) =>
+            handleOnchange('proposedLoanAmount', value)
           }
-          value={formData.proposedLoanAmount.toString()}
         />
       </View>
 
@@ -258,15 +254,14 @@ const FormCreateLoanPlan: React.FC<FormCreateLoanPlanProps> = ({
         <Text style={styles.headingTitle}>
           {currentLanguage === 'vi' ? 'Thu nhập hàng tháng' : 'Monthly Income'}
         </Text>
-        <InputBackground
+        <CurrencyInput
           placeholder={
             currentLanguage === 'vi' ? 'Nhập thu nhập' : 'Enter income'
           }
-          keyboardType="numeric"
-          onChangeText={(value: string) =>
-            handleOnchange('monthlyIncome', Number(value))
+          value={formData.monthlyIncome}
+          onChangeText={(value: number) =>
+            handleOnchange('monthlyIncome', value)
           }
-          value={formData.monthlyIncome.toString()}
         />
       </View>
 
